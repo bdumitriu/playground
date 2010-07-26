@@ -1,11 +1,11 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
 
 import org.junit.*;
 
@@ -22,7 +22,7 @@ public class BookTest {
 
 	@BeforeClass
 	public static void initEntityManager() {
-		entityManagerFactory = Persistence.createEntityManagerFactory("chapter02PU");
+		entityManagerFactory = Persistence.createEntityManagerFactory("chapter03PU");
 		entityManager = entityManagerFactory.createEntityManager();
 	}
 
@@ -53,10 +53,11 @@ public class BookTest {
 
 		assertNotNull("ID should not be null", book.getId());
 
-		final List books = entityManager.createNamedQuery("findAllBooks").getResultList();
-		assertNotNull(books);
-		assertEquals(1, books.size());
+		final Book retrievedBook = entityManager.find(Book.class, book.getId());
+		assertNotNull(retrievedBook);
+		assertEquals("Goedel, Escher & Bach", retrievedBook.getDescription());
 
 		entityManager.remove(book);
+		assertNull(entityManager.find(Book.class, book.getId()));
 	}
 }

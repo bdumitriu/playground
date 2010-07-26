@@ -4,17 +4,14 @@ import javax.persistence.*;
  * @author Bogdan Dumitriu
  */
 @Entity
-@NamedQueries({
-		@NamedQuery(name = "findAllBooks", query = "select b from Book b"),
-		@NamedQuery(name = "findBookByTitle", query = "select b from Book b where b.title = 'GEB'")
-})
+@Table(name = "t_book")
 public class Book {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(name = "book_title", nullable = false, updatable = false)
 	private String title;
 
 	private Float price;
@@ -24,6 +21,7 @@ public class Book {
 
 	private String isbn;
 
+	@Column(name = "nb_of_page", nullable = false)
 	private Integer nbOfPages;
 
 	private Boolean illustrations;

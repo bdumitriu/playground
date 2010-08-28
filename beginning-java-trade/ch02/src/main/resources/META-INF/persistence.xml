@@ -9,7 +9,7 @@
 			<property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/chapter02DB;create=true" />
 			<property name="javax.persistence.jdbc.user" value="APP" />
 			<property name="javax.persistence.jdbc.password" value="APP" />
-			<!--<property name="eclipselink.ddl-generation" value="create-tables" />-->
+			<property name="eclipselink.ddl-generation" value="create-tables" />
 			<property name="eclipselink.logging.level" value="INFO" />
 		</properties>
 	</persistence-unit>

@@ -20,7 +20,7 @@ public class NewsTest {
 
 	@BeforeClass
 	public static void initEntityManager() {
-		entityManagerFactory = Persistence.createEntityManagerFactory("chapter03PU");
+		entityManagerFactory = Persistence.createEntityManagerFactory("chapter03PUTest");
 		entityManager = entityManagerFactory.createEntityManager();
 	}
 

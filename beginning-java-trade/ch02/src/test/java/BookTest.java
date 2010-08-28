@@ -22,7 +22,7 @@ public class BookTest {
 
 	@BeforeClass
 	public static void initEntityManager() {
-		entityManagerFactory = Persistence.createEntityManagerFactory("chapter02PU");
+		entityManagerFactory = Persistence.createEntityManagerFactory("chapter02PUTest");
 		entityManager = entityManagerFactory.createEntityManager();
 	}
 

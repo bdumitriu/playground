@@ -1,13 +1,17 @@
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 /**
+ * This class is kept only for reference purposes. Nobody uses it.
+ *
  * @author Bogdan Dumitriu
  */
 @Entity
-public class Address {
+@Table(name = "t_address")
+@SecondaryTables({
+	@SecondaryTable(name = "t_city"),
+	@SecondaryTable(name = "t_country")
+})
+public class AddressTableSplitExample {
 
 	@Id
 	@GeneratedValue
@@ -17,16 +21,25 @@ public class Address {
 
 	private String street2;
 
+	@Column(table = "t_city")
 	private String city;
 
+	@Column(table = "t_city")
 	private String state;
 
+	@Column(table = "t_city")
 	private String zipcode;
 
+	@Column(table = "t_country")
 	private String country;
 
-	@OneToOne(mappedBy = "address")
-	private Customer customer;
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getStreet1() {
 		return street1;

@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 
 import javax.persistence.*;
@@ -46,13 +47,17 @@ public class NewsTest {
 		transaction.commit();
 
 		assertNotNull("ID should not be null", news.getId());
+
+		entityManager.clear();
+
 		final News retrievedNews = entityManager.find(News.class,
 				new NewsId("Reforma expertizelor judiciare - Propuneri noi care bat pasul pe loc", "RO"));
+		assertNotSame(news, retrievedNews);
 		assertNotNull(retrievedNews);
 		assertEquals("Acum citeva luni scriam de bulibaseala nationala in materia expertizei in IT.",
 				retrievedNews.getContent());
 
-		entityManager.remove(news);
+		entityManager.remove(retrievedNews);
 		assertNull(entityManager.find(News.class,
 				new NewsId("Reforma expertizelor judiciare - Propuneri noi care bat pasul pe loc", "RO")));
 	}

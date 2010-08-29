@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
 	<persistence-unit name="chapter03PUTest" transaction-type="RESOURCE_LOCAL">
+
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+
+		<mapping-file>META-INF/table_name_mappings.xml</mapping-file>
+
+		<class>Address</class>
 		<class>Book</class>
+		<class>CD</class>
+		<class>Customer</class>
 		<class>News</class>
+
 		<properties>
 			<property name="eclipselink.target-database" value="DERBY" />
 			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
@@ -13,5 +21,6 @@
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 			<property name="eclipselink.logging.level" value="FINE" />
 		</properties>
+
 	</persistence-unit>
 </persistence>

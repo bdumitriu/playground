@@ -8,19 +8,27 @@ import java.util.Date;
  * @author Bogdan Dumitriu
  */
 @Entity
+@Access(AccessType.FIELD)
 public class Customer {
 
 	@Id
 	@GeneratedValue
 	private Long id;
 
+	@Column(name = "first_name", nullable = false, length = 50)
 	private String firstName;
 
+	@Column(name = "last_name", nullable = false, length = 50)
 	private String lastName;
 
 	private String email;
 
+	@Column(name = "phone_number", length = 15)
 	private String phoneNumber;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "address_fk")
+	private Address address;
 
 	@Temporal(DATE)
 	private Date dateOfBirth;
@@ -69,6 +77,14 @@ public class Customer {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	public Date getDateOfBirth() {

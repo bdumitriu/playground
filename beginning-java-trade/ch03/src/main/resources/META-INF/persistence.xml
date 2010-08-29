@@ -5,8 +5,13 @@
 
 	<persistence-unit name="chapter03PU" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+
+		<class>Address</class>
 		<class>Book</class>
+		<class>CD</class>
+		<class>Customer</class>
 		<class>News</class>
+
 		<properties>
 			<property name="eclipselink.target-database" value="DERBY" />
 			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver" />

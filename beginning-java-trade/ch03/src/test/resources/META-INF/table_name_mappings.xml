@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" version="2.0">
+	<description>
+		I've only added the xml file to have an example of how it can be connected via persistence.xml.
+	</description>
+	<entity class="Address">
+		<table name="test_address" />
+	</entity>
+	<entity class="Book">
+		<table name="test_book" />
+		<attributes>
+			<element-collection name="tags" fetch="LAZY">
+				<column name="value" />
+				<collection-table name="test_tag" />
+			</element-collection>
+		</attributes>
+	</entity>
+	<entity class="CD">
+		<table name="test_cd" />
+		<attributes>
+			<element-collection name="tracks" fetch="LAZY">
+				<map-key-column name="position" />
+				<column name="title" />
+				<collection-table name="test_track" />
+			</element-collection>
+		</attributes>
+	</entity>
+	<entity class="Customer">
+		<table name="test_customer" />
+	</entity>
+	<entity class="News">
+		<table name="test_news" />
+	</entity>
+</entity-mappings>

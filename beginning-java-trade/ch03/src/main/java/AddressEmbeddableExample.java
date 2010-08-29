@@ -1,17 +1,11 @@
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 /**
  * @author Bogdan Dumitriu
  */
-@Entity
-public class Address {
-
-	@Id
-	@GeneratedValue
-	private Long id;
+@Embeddable
+@Access(AccessType.PROPERTY)
+public class AddressEmbeddableExample {
 
 	private String street1;
 
@@ -25,9 +19,6 @@ public class Address {
 
 	private String country;
 
-	@OneToOne(mappedBy = "address")
-	private Customer customer;
-
 	public String getStreet1() {
 		return street1;
 	}
@@ -36,6 +27,7 @@ public class Address {
 		this.street1 = street1;
 	}
 
+	@Column(nullable = false)
 	public String getStreet2() {
 		return street2;
 	}
@@ -44,6 +36,7 @@ public class Address {
 		this.street2 = street2;
 	}
 
+	@Column(nullable = false, length = 50)
 	public String getCity() {
 		return city;
 	}
@@ -52,6 +45,7 @@ public class Address {
 		this.city = city;
 	}
 
+	@Column(length = 3)
 	public String getState() {
 		return state;
 	}
@@ -60,6 +54,7 @@ public class Address {
 		this.state = state;
 	}
 
+	@Column(name = "zip_code", length = 10)
 	public String getZipcode() {
 		return zipcode;
 	}

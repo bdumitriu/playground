@@ -1,4 +1,6 @@
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Bogdan Dumitriu
@@ -25,6 +27,11 @@ public class Book {
 	private Integer nbOfPages;
 
 	private Boolean illustrations;
+
+	@ElementCollection(fetch = FetchType.LAZY)
+	@CollectionTable(name = "tag")
+	@Column(name = "value")
+	private List<String> tags = new ArrayList<String>();
 
 	public Long getId() {
 		return id;
@@ -80,5 +87,21 @@ public class Book {
 
 	public void setIllustrations(Boolean illustrations) {
 		this.illustrations = illustrations;
+	}
+
+	public void addTag(String tag) {
+		tags.add(tag);
+	}
+
+	public void removeTag(String tag) {
+		tags.remove(tag);
+	}
+
+	public void clearTags() {
+		tags.clear();
+	}
+
+	public List<String> getTags() {
+		return tags;
 	}
 }

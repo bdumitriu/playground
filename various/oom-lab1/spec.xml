@@ -1,0 +1,22 @@
+<form>
+	<group label="Group 1">
+		<checkbox label="Checkbox 1" />
+		<radio>
+			<button label="Radio Button 1.1" />
+			<button label="Radio Button 1.2" />
+			<button label="Radio Button 1.3" />
+		</radio>
+		<text label="Text 1" />
+	</group>
+	<checkbox label="Checkbox 2" />
+	<group label="Group 2">
+		<checkbox label="Checkbox 3" />
+		<group label="Group 2.1">
+			<radio>
+				<button label="Radio Button 2.1" />
+				<button label="Radio Button 2.2" />
+			</radio>
+			<text label="Text 2" />
+		</group>
+	</group>
+</form>

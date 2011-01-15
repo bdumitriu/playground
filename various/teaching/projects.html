@@ -1,0 +1,244 @@
+<html>
+
+<style type="text/css">
+html body {
+  font-family: verdana, lucida, helvetica, sans-serif;
+  font-size: 14;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: verdana, lucida, helvetica, sans-serif;
+  line-height: 104%;
+  padding: 0;
+  margin: 1em 0 0.1em 0;
+  color: #005aa0;
+}
+
+h1 {
+  font-size: 210%;
+  margin: 0 0 0.1em 0;
+}
+
+h2 {
+  font-size: 145%;
+  display: block;
+  background-color: #d9e3ea;
+  padding: 0.2em 0.7em;
+  margin: 1em -0.7em 0.15em -0.7em;
+  height: auto;
+}
+</style>
+
+<head>
+<title>List of projects for OOM 2008</title>
+</head>
+
+<body>
+
+<h2>Project 1: UI Component for automatic text completion</h2>
+<br />
+
+Implement a component for supplying text completion functionality:
+<ul>
+<li>client must be able to associate the component with some editor component of
+    the selected framework (javax.swing.text.JTextComponent in Swing or
+    org.eclipse.swt.widgets.Text in SWT or etc.)</li>
+<li>client must be able to register multiple sets of words (e.g., set of
+    variable names, set of method names, set of type names etc.)</li>
+<li>there should be a way for the client to dynamically update the sets of words
+    registered with the component</li>
+<li>the client must have the possibility of associating descriptions to the
+    words on display (these can be supplied either upon registration of the
+    sets of words, or upon request from the component)</li>
+<li>client must be able to register keyboard shortcuts - at least one shortcut
+    (but preferably any number of shortcuts) for each set of words (e.g.,
+    Ctrl+Space for variable names, Ctrl+Shift+Space for method names etc.)</li>
+<li>when the user activates one of the shortcuts, a popup needs to be shown with
+    all the words (from the right set) that begin with the prefix already typed
+    in by the user</li>
+<li>the position and dimension of this popup must be fully in the control of the
+    client (with some default implementation(s) available for the client to
+    select when needed)</li>
+<li>as the user types in more letters, the list of words in the popup needs to
+    be filtered</li>
+<li>the user must be able to navigate in the list of words using arrow keys,
+    PgUp/PgDown, Home/End etc.</li>
+<li>when the user hits Enter, the currently selected word needs to be added to
+    the text in the right position</li>
+<li>the client must have at least the choice between an <i>overwrite</i> and an
+    <i>insert</i> policy available (this refers to the fashion in which the
+    selected word is added to the text)</li>
+<li><b>non functional requirement</b>: anything that can be configurable should
+    be configurable in order to allow for maximum flexibility, but there should
+    be default implementations for virtually everything that is configurable
+    such that it is easy enough to use the basic functionality (i.e., without
+    having to implement more than a couple of interface methods)</li>
+<li><b>non functional requirement</b>: on an average machine, the delay between
+    the key press and when the popup appears should be unnoticeable</li>
+</ul>
+
+<h2>Project 2: Source code editing support</h2>
+<br />
+
+When editing source code (and not only source code) it is always nice to have a
+bit of help from the editor. General purpose GUI frameworks like Swing or SWT
+usually provide generic text components (javax.swing.text.JTextComponent,
+org.eclipse.swt.widgets.Text) that support basic editing, font changing, font
+coloring and a few other things, but unfortunately little or no help for tasks
+specific to source code editing. The goal of this project is to provide such
+extended capabilities to one of these generic text components.
+<br /><br />
+Your task is to come up with a framework consisting of a set of interfaces (and
+supporting implementation) that would allow clients of this framework to easily
+customize various aspects of the editor. In addition, you need to define an
+implementation of this set of interfaces for at least one programming language
+of your choice in order to validate your design. During design, you will have to
+consider a number of unrelated languages (e.g., Java and C are very similar,
+whereas Java, SQL and HTML are different enough) in order for your result to be
+equally applicable to as wide a range of languages as possible.
+<br /><br />
+Your framework will need to support at least these features:
+<ul>
+<li>code formatting (indentation, alignment, spacing, parenthesis placement,
+    line break positions etc.)</li>
+<li>support for intelligent caret placement when user hits Enter</li>
+<li>syntax highlighting (at least keywords, strings, comments and coloring of
+    regular expressions (e.g., for integer, floats etc.))</li>
+</ul>
+
+Your framework may optionally include support for:
+<ul>
+<li>error underlining</li>
+<li>parenthesis matching, highlighting and navigation</li>
+<li>context-aware syntax highlighting</li>
+<li>embedded languages (e.g., when highlighting JSP, the HTML editing module
+    needs to be in effect outside JSP tags, while the JSP+Java editing module
+    needs to be in effect inside JSP tags)</li>
+<li>other features you may find interesting to implement</li>
+</ul>
+
+You also need to come up with a configurable way to associate editing modes with
+specific file extensions. One way to do this is by defining
+(extension, implementation class) pairs in a file (whether it be XML, properties
+file or your own format). Another way to do this is to define a registration
+process that users can access directly from their code.
+
+<h2>Project 3: UI configuration management</h2>
+<br />
+
+Virtually any program out there needs to be configurable. Configuration comes in 
+many shapes and sizes, one of which is the GUI-aided configuration. Like with
+most other GUI-related aspects, configuration screens use a varied, but limited
+amount of concepts. Typical configurable properties are on/off options, choice
+options, text entry options, number entry options and so on. Behind the GUI,
+there is usually a file (or even a database) where the user choices are stored
+and read from by various program components. The goal of this project is to make
+this process as automatic as possible.
+<br /><br />
+You will need to design a framework of GUI components that can be
+programatically assembled together in order to create any configuration screen
+that might be needed (within reason). You will have to examine configuration
+screens of multiple programs of your own choice in order to identify the types
+of controls that occur frequently, define a list of these and make them
+available as part of your implementation. You should come up with at least 7 or
+8 different types of controls (some degree of control inheritance is allowed and
+recommended). On top of this, also take layout and grouping aspects into
+account (most times the clients of the framework will need flexibility in
+defining the layout of the controls in the screen as well as group them
+together according to configuration categories).
+<br /><br />
+Make sure your design is consistent enough such that once the client understands
+the basic idea, there is a minimum learning curve for using any of the
+components available (the java.util package provides a nice example of this type
+of consistency).
+<br /><br />
+At the same time, you will also need to supply functionality for transparently
+connecting the configuration screens to files where the data is stored. You may
+choose any format you find suitable in order to load/store the configuration
+data including, but not restricted to, XML files and/or property files. You
+might also want to consider how to deal with defining and dealing with default
+values for the configuration options.
+
+<h2>Project 4: License management</h2>
+<br />
+
+Organizations that sell licensed software need to be able to properly manage the
+set of licenses they give out to their customers: adapt these licenses as the
+customer needs evolve, invalidate them, reuse client information when generating
+new licenses as well as a number of other related tasks. In this project, you
+will need to consider such a license management system and design the software
+that supports it.
+<br /><br />
+To begin with, you will need to come up with a database design for handling
+concepts such as licensable components, license details (names, license
+expiration date(s) etc.), client hardware information and activation information
+(upon installation, each client will have to be able to activate his/her license
+online).
+<br /><br />
+On top of this database design, you will need to provide an application (with a
+GUI) for supporting at least the following scenarios (the actor who can perform
+the action is specified in parenthesis at the end of each scenario):
+<ul>
+<li>specify the details for a license and enter it in the database. The result
+    of this operation should be a license id that can be issued to the
+    customer [software company]</li>
+<li>specify customer information (name, phone number, payment details etc.) in
+    association with a license (but consider that the same customer may acquire
+    additional software in the future) [software company]</li>
+<li>allow online activation of a pre-configured license. This will require the
+    customer to submit his/her license id together with hardware information.
+    Based on this, a valid license has to be issued to the customer (activation
+    can only be done once) [customer]</li>
+<li>modify the details of a license and reissue it using the old submitted
+    hardware information [software company]</li>
+<li>modify the hardware information of a customer (usually as a result of
+    hardware change on his/her side) and reissue a license with the old
+    configured license details [software company sets things up, then customer
+    performs a new online activation]</li>
+<li>issue a new license (usually for different software components) for an old
+    customer. There should be an option for this license to use the already
+    submitted customer hardware information, in which case activation is no
+    longer needed or allowed [software company]</li>
+<li>allow for the reset of the activated/not activated status [software company]
+    </li>
+<li>provide notification if there are attempts to (re)activate a license that
+    has already been activated [to the software company]</li>
+</ul>
+
+<h2>Project 5: Interactive query definition</h2>
+<br />
+
+For (database) programmers it is very easy to define SQL queries and run them
+against a database. But creating reports is often a task that has to be
+performed by people with little or no knowledge of SQL and related concepts. For
+such users, it is very useful to have a graphical way in which to define their
+queries. Defining such a graphical tool will be the goal of this project.
+<br /><br />
+Come up with a subset of SQL which is appropriate for graphical manipulation and
+design a GUI that allows a user to create queries map to this subset. Also, your
+application should support the displaying of the result of the query (you may
+use a general purpose table component for this or generate a HTML table and
+display it in an browser integrated in your GUI).
+<br /><br />
+At least the following SQL features should be supported:
+<ul>
+<li>database and table(s) selection</li>
+<li>join conditions</li>
+<li>column selection</li>
+<li>grouping</li>
+<li>filter definition (for rows and for grouping results)</li>
+<li></li>
+</ul>
+
+The idea is <b>not</b> to create a number of text boxes in which the user can
+enter the same text that (s)he would otherwise enter directly in the query, but
+rather to come up with graphical ways of specifying all of the above such that
+the non-technical user can still benefit from the software.
+<br /><br />
+In addition to this, you should make sure that your application is
+DBMS-independent, such that with some adaptation it can be used with any
+reasonable DMBS out there. Of course, for testing and illustration purposes, you
+should provide an implementation that links to a DBMS of your choice.
+</body>
+
+</html>

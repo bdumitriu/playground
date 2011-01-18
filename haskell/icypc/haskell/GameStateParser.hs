@@ -47,11 +47,11 @@ fieldLine = do fields <- fieldContents `sepBy` (char ' ')
 
 fieldContents = fieldWithUnknownContents <|> fieldWithKnownContents
 
-fieldWithUnknownContents = string "**" >> return Unknown
+fieldWithUnknownContents = string "**" >> return buildUnknownFieldSpace
 
 fieldWithKnownContents = do snowHeight <- digit
                             fieldContents <- oneOf ['a'..'j']
-                            return (buildFieldSpace (read [snowHeight]) fieldContents)
+                            return (buildKnownFieldSpace (read [snowHeight]) fieldContents)
 
 childLine = do child <- childLineContents
                newline
@@ -59,7 +59,7 @@ childLine = do child <- childLineContents
 
 childLineContents = unknownChildLine <|> knownChildLine
 
-unknownChildLine = char '*' >> return InvisibleChild
+unknownChildLine = char '*' >> return Nothing
 
 knownChildLine = do posX <- number
                     char ' '

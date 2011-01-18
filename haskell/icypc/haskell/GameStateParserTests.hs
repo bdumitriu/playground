@@ -48,14 +48,14 @@ sampleInitialState = unlines [
     "*"]
 
 testInitialState = TestCase (do let gameState = parseGameState sampleInitialState
-                                    redChild3 = getChild3 . redChildren $ gameState
+                                    Just redChild3 = getChild3 . redChildren $ gameState
                                 assertEqual "initial state turn is 0" 0 (turnNumber gameState)
                                 assertEqual "initial state scores are 0" (0, 0) (scoreRed gameState, scoreBlue gameState)
-                                assertEqual "visible field is ok" (Empty 3) ((field gameState)!(7, 7))
-                                assertEqual "invisible field is ok" Unknown ((field gameState)!(7, 8))
-                                assertEqual "3rd red child is in pos (2, 1)" (2, 1) (let VisibleChild info = redChild3 in position info)
-                                assertEqual "3rd red child holds NotMuch" NotMuch (let VisibleChild info = redChild3 in holds info)
-                                assertEqual "2nd blue child is invisible" InvisibleChild (getChild2 . blueChildren $ gameState)
+                                assertEqual "visible field is ok" (Empty 3) (contents ((field gameState)!(7, 7)))
+                                assertEqual "invisible field is ok" Unknown (contents ((field gameState)!(7, 8)))
+                                assertEqual "3rd red child is in pos (2, 1)" (2, 1) (position redChild3)
+                                assertEqual "3rd red child holds NotMuch" NotMuch (payload redChild3)
+                                assertEqual "2nd blue child is invisible" Nothing (getChild2 . blueChildren $ gameState)
                             )
 
 tests = TestList [TestLabel "testInitialState" testInitialState]

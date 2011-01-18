@@ -3,8 +3,16 @@ module GameState (
 
 , Score
 
+, FieldContents(..)
+, buildFieldContents
+
 , FieldSpace(..)
 , buildFieldSpace
+, buildKnownFieldSpace
+, buildUnknownFieldSpace
+, updateInfoAgeInFieldSpace
+, incInfoAgeInFieldSpace
+, updateChildInFieldSpace
 , snowHeightAt
 
 , Field
@@ -12,9 +20,6 @@ module GameState (
 
 , ChildPayload(..)
 , buildChildPayload
-
-, ChildInfo(..)
-, childIsStanding
 
 , Child(..)
 , buildChild
@@ -31,24 +36,31 @@ module GameState (
 , getDazedChildren
 
 , GameState(..)
+, updateFieldInGameState
 ) where
 
 import Data.Array
 
 type Score = Int
 
-data FieldSpace = Unknown
-                | Empty Int
-                | Tree Int
-                | S_SnowBall Int
-                | M_SnowBall Int
-                | MS_SnowBall Int
-                | L_SnowBall Int
-                | LM_SnowBall Int
-                | LS_SnowBall Int
-                | RedSnowman Int
-                | BlueSnowman Int
-                  deriving (Eq, Show)
+data FieldContents = Unknown
+                   | Empty Int
+                   | Tree Int
+                   | S_SnowBall Int
+                   | M_SnowBall Int
+                   | MS_SnowBall Int
+                   | L_SnowBall Int
+                   | LM_SnowBall Int
+                   | LS_SnowBall Int
+                   | RedSnowman Int
+                   | BlueSnowman Int
+                     deriving (Eq, Show)
+
+data FieldSpace = FieldSpace {
+      infoAge  :: Int
+    , childIn  :: Maybe Child
+    , contents :: FieldContents
+} deriving (Eq, Show)
 
 type Field = Array (Int, Int) FieldSpace
 
@@ -59,18 +71,14 @@ data ChildPayload = NotMuch
                   | LSnowBall
                     deriving (Eq, Show)
 
-data ChildInfo = ChildInfo {
+data Child = Child {
       position     :: (Int, Int)
     , isStanding   :: Bool
-    , holds        :: ChildPayload
+    , payload      :: ChildPayload
     , dazedAnother :: Int
 } deriving (Eq, Show)
 
-data Child = InvisibleChild
-           | VisibleChild ChildInfo
-             deriving (Eq, Show)
-
-type Team = [Child]
+type Team = [Maybe Child]
 
 data GameState = GameState {
       turnNumber   :: Int
@@ -81,30 +89,51 @@ data GameState = GameState {
     , blueChildren :: Team
 } deriving (Eq, Show)
 
-buildFieldSpace :: Int -> Char -> FieldSpace
-buildFieldSpace snowHeight 'a' = Empty snowHeight
-buildFieldSpace snowHeight 'b' = Tree snowHeight
-buildFieldSpace snowHeight 'c' = S_SnowBall snowHeight
-buildFieldSpace snowHeight 'd' = M_SnowBall snowHeight
-buildFieldSpace snowHeight 'e' = MS_SnowBall snowHeight
-buildFieldSpace snowHeight 'f' = L_SnowBall snowHeight
-buildFieldSpace snowHeight 'g' = LM_SnowBall snowHeight
-buildFieldSpace snowHeight 'h' = LS_SnowBall snowHeight
-buildFieldSpace snowHeight 'i' = RedSnowman snowHeight
-buildFieldSpace snowHeight 'j' = BlueSnowman snowHeight
+buildFieldContents :: Int -> Char -> FieldContents
+buildFieldContents snowHeight 'a' = Empty snowHeight
+buildFieldContents snowHeight 'b' = Tree snowHeight
+buildFieldContents snowHeight 'c' = S_SnowBall snowHeight
+buildFieldContents snowHeight 'd' = M_SnowBall snowHeight
+buildFieldContents snowHeight 'e' = MS_SnowBall snowHeight
+buildFieldContents snowHeight 'f' = L_SnowBall snowHeight
+buildFieldContents snowHeight 'g' = LM_SnowBall snowHeight
+buildFieldContents snowHeight 'h' = LS_SnowBall snowHeight
+buildFieldContents snowHeight 'i' = RedSnowman snowHeight
+buildFieldContents snowHeight 'j' = BlueSnowman snowHeight
+
+buildFieldSpace :: FieldContents -> FieldSpace
+buildFieldSpace = FieldSpace 0 Nothing
+
+buildKnownFieldSpace :: Int -> Char -> FieldSpace
+buildKnownFieldSpace snowHeight = buildFieldSpace . buildFieldContents snowHeight
+
+buildUnknownFieldSpace :: FieldSpace
+buildUnknownFieldSpace = buildFieldSpace Unknown
+
+updateInfoAgeInFieldSpace :: FieldSpace -> Int -> FieldSpace
+updateInfoAgeInFieldSpace (FieldSpace _ c cts) newInfoAge = FieldSpace newInfoAge c cts
+
+incInfoAgeInFieldSpace :: FieldSpace -> FieldSpace
+incInfoAgeInFieldSpace (FieldSpace a c cts) = FieldSpace (a + 1) c cts
+
+updateChildInFieldSpace :: FieldSpace -> Maybe Child -> FieldSpace
+updateChildInFieldSpace (FieldSpace a _ c) newChild = FieldSpace a newChild c
+
+snowHeightAtFC :: FieldContents -> Maybe Int
+snowHeightAtFC Unknown         = Nothing
+snowHeightAtFC (Empty h)       = Just h
+snowHeightAtFC (Tree h)        = Just h
+snowHeightAtFC (S_SnowBall h)  = Just h
+snowHeightAtFC (M_SnowBall h)  = Just h
+snowHeightAtFC (MS_SnowBall h) = Just h
+snowHeightAtFC (L_SnowBall h)  = Just h
+snowHeightAtFC (LM_SnowBall h) = Just h
+snowHeightAtFC (LS_SnowBall h) = Just h
+snowHeightAtFC (RedSnowman h)  = Just h
+snowHeightAtFC (BlueSnowman h) = Just h
 
 snowHeightAt :: FieldSpace -> Maybe Int
-snowHeightAt Unknown         = Nothing
-snowHeightAt (Empty h)       = Just h
-snowHeightAt (Tree h)        = Just h
-snowHeightAt (S_SnowBall h)  = Just h
-snowHeightAt (M_SnowBall h)  = Just h
-snowHeightAt (MS_SnowBall h) = Just h
-snowHeightAt (L_SnowBall h)  = Just h
-snowHeightAt (LM_SnowBall h) = Just h
-snowHeightAt (LS_SnowBall h)  = Just h
-snowHeightAt (RedSnowman h)  = Just h
-snowHeightAt (BlueSnowman h) = Just h
+snowHeightAt = snowHeightAtFC . contents
 
 buildField :: [[FieldSpace]] -> Field
 buildField fieldSpaces = array ((0, 0), (30, 30)) (zip ranges (concat fieldSpaces))
@@ -125,38 +154,41 @@ childIsStanding :: Char -> Bool
 childIsStanding 'S' = True
 childIsStanding 'C' = False
 
-buildChild :: Int -> Int -> Char -> Char -> Int -> Child
-buildChild posX posY standingOrCrouching payload dazedFor = VisibleChild (ChildInfo (posX, posY) (childIsStanding standingOrCrouching) (buildChildPayload payload) dazedFor)
+buildChild :: Int -> Int -> Char -> Char -> Int -> Maybe Child
+buildChild posX posY standingOrCrouching payload dazedAnother = Just (Child (posX, posY) (childIsStanding standingOrCrouching) (buildChildPayload payload) dazedAnother)
 
-buildTeam :: Child -> Child -> Child -> Child -> Team
+buildTeam :: Maybe Child -> Maybe Child -> Maybe Child -> Maybe Child -> Team
 buildTeam c1 c2 c3 c4 = [c1, c2, c3, c4]
 
-getChild1 :: Team -> Child
+getChild1 :: Team -> Maybe Child
 getChild1 (c:_) = c
 
-getChild2 :: Team -> Child
+getChild2 :: Team -> Maybe Child
 getChild2 (_:c:_) = c
 
-getChild3 :: Team -> Child
+getChild3 :: Team -> Maybe Child
 getChild3 (_:_:c:_) = c
 
-getChild4 :: Team -> Child
+getChild4 :: Team -> Maybe Child
 getChild4 (_:_:_:c:[]) = c
 
-getChildren :: Team -> (Child, Child, Child, Child)
+getChildren :: Team -> (Maybe Child, Maybe Child, Maybe Child, Maybe Child)
 getChildren (c1:c2:c3:c4:[]) = (c1, c2, c3, c4)
 
-getChildrenAsList :: Team -> [Child]
+getChildrenAsList :: Team -> [Maybe Child]
 getChildrenAsList t = t
 
-getUndazedChildren :: Team -> [Child]
+getUndazedChildren :: Team -> [Maybe Child]
 getUndazedChildren = filter predicateUndazed
-    where predicateUndazed :: Child -> Bool
-          predicateUndazed (VisibleChild c) = dazedAnother c == 0
-          predicateUndazed InvisibleChild = False
+    where predicateUndazed :: Maybe Child -> Bool
+          predicateUndazed (Just c) = dazedAnother c == 0
+          predicateUndazed Nothing  = False
 
-getDazedChildren :: Team -> [Child]
+getDazedChildren :: Team -> [Maybe Child]
 getDazedChildren = filter predicateDazed
-    where predicateDazed :: Child -> Bool
-          predicateDazed (VisibleChild c) = dazedAnother c > 0
-          predicateDazed InvisibleChild = False
+    where predicateDazed :: Maybe Child -> Bool
+          predicateDazed (Just c) = dazedAnother c > 0
+          predicateDazed Nothing  = False
+
+updateFieldInGameState :: GameState -> Field -> GameState
+updateFieldInGameState (GameState t sr sb _ rc bc) newField = GameState t sr sb newField rc bc

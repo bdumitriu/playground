@@ -36,4 +36,3 @@ tests = TestList [
         ]
 
 main = runTestTT tests
-

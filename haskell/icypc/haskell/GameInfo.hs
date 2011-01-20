@@ -2,28 +2,34 @@ module GameInfo (
   module GameState
 
 , GameInfo(..)
-, initialGameInfo
+, emptyGameInfo
+, registerNewState
 , currentState
-, augmentAndAddState
+, currentBareState
 ) where
 
 import GameState
 
 data GameInfo = GameInfo {
-      stateHistory :: [GameState]
+      stateHistory     :: [GameState]
+    , bareStateHistory :: [GameState]
 } deriving (Eq, Show)
 
-initialGameInfo :: GameInfo
-initialGameInfo = GameInfo []
+emptyGameInfo :: GameInfo
+emptyGameInfo = GameInfo [] []
 
 currentState :: GameInfo -> GameState
 currentState = head . stateHistory
 
-augmentAndAddState :: GameInfo -> GameState -> GameInfo
-augmentAndAddState gameInfo newGameState
- | history == [] = GameInfo [addChildrenToField newGameState]
- | otherwise     = GameInfo ((augmentGameState (currentState gameInfo) newGameState) : history)
-    where history = stateHistory gameInfo
+currentBareState :: GameInfo -> GameState
+currentBareState = head . bareStateHistory
+
+registerNewState :: GameInfo -> GameState -> GameInfo
+registerNewState gameInfo newGameState
+ | history == [] = GameInfo [addChildrenToField newGameState] [newGameState]
+ | otherwise     = GameInfo ((augmentGameState (currentState gameInfo) newGameState) : history) (newGameState : bareHistory)
+    where history     = stateHistory gameInfo
+          bareHistory = bareStateHistory gameInfo
 
 augmentGameState :: GameState -> GameState -> GameState
 augmentGameState oldState newState = updateFieldInGameState stateWithChildren (augmentField (field oldState) (field stateWithChildren))

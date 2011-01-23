@@ -1,0 +1,27 @@
+@font-face { font-family: Delicious; src: url('Delicious-Roman.otf'); }
+@font-face { font-family: Delicious; font-weight: bold; src: url('Delicious-Bold.otf'); }
+
+@font-face {
+    font-family: 'DroidSansMonoRegular';
+    src: url('DroidSansMono-webfont.eot');
+    src: local('?'), url('DroidSansMono-webfont.woff') format('woff'), url('DroidSansMono-webfont.ttf') format('truetype'), url('DroidSansMono-webfont.svg#webfontVHHYtszH') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background-color: #F5F6F0;
+    color: #666666;
+    padding-top: 5%;
+    padding-left: 5%;
+    font-family: 'DroidSansMonoRegular', Arial, sans-serif;
+}
+
+p {
+    color: #0099cc;
+    line-height: 1.2;
+}
+
+div.booktitle {
+    text-align: right;
+}

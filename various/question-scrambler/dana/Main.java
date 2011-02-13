@@ -13,12 +13,12 @@ import com.thoughtworks.xstream.XStream;
 public class Main {
 
 	private static final String PATH_TO_QUESTIONS_FILE =
-			"c:\\Documents and Settings\\bdumitriu\\Desktop\\DANA\\examen 7\\varianta 1 an V dec 2010.txt";
+			"d:\\work\\workrepo\\various\\question-scrambler\\v1.txt";
 
-	private static final boolean HAS_ANSWERS = false;
+	private static final boolean HAS_ANSWERS = true;
 
 	private static final String PATH_TO_ANSWERS_FILE =
-			"C:\\Documents and Settings\\bdumitriu\\Desktop\\DANA\\examen 6\\raspunsuri fr dec 2010.txt";
+			"d:\\work\\workrepo\\various\\question-scrambler\\abaca.txt";
 
 	private static final boolean SPACE_BETWEEN_QUESTIONS = true;
 
@@ -91,7 +91,7 @@ public class Main {
 				new File(questionsFile.getParentFile(), "varianta " + shuffleNumber + " (raspunsuri).txt"))) : null;
 		int i = 1;
 		for (Question question : questions.questions) {
-			writer.write(i + ".");
+			writer.write(i + ". ");
 			writer.write(question.question);
 			if (HAS_ANSWERS) {
 				answersWriter.write(i + ". " + question.answer + "\r\n");

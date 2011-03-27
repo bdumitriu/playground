@@ -20,6 +20,15 @@ public class OrderLine {
 
 	private Integer quantity;
 
+	public OrderLine() {
+	}
+
+	public OrderLine(String item, Double unitPrice, Integer quantity) {
+		this.item = item;
+		this.unitPrice = unitPrice;
+		this.quantity = quantity;
+	}
+
 	public Long getId() {
 		return id;
 	}

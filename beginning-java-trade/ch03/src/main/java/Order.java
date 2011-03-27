@@ -15,8 +15,8 @@ public class Order {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationDate;
 
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "jnd_ord_line",
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "jnd_order_line",
 			joinColumns = @JoinColumn(name = "order_fk"),
 			inverseJoinColumns = @JoinColumn(name = "order_line_fk"))
 	private List<OrderLine> orderLines;

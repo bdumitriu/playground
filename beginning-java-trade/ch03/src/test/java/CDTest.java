@@ -7,11 +7,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-
 import java.util.Map;
 
-import org.apache.derby.iapi.store.raw.Transaction;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * @author Bogdan Dumitriu
@@ -54,6 +55,7 @@ public class CDTest {
 		transaction.commit();
 
 		entityManager.clear();
+		entityManagerFactory.getCache().evictAll();
 
 		final CD retrievedCd = entityManager.find(CD.class, cd.getId());
 		assertNotSame(cd, retrievedCd);

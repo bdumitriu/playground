@@ -6,6 +6,9 @@
 	<entity class="Address">
 		<table name="test_address" />
 	</entity>
+	<entity class="Artist">
+		<table name="test_artist" />
+	</entity>
 	<entity class="Book">
 		<table name="test_book" />
 		<attributes>
@@ -30,5 +33,11 @@
 	</entity>
 	<entity class="News">
 		<table name="test_news" />
+	</entity>
+	<entity class="Order">
+		<table name="test_order" />
+	</entity>
+	<entity class="OrderLine">
+		<table name="test_order_line" />
 	</entity>
 </entity-mappings>

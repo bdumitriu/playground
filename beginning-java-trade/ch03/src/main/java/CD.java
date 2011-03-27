@@ -1,5 +1,6 @@
 import javax.persistence.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +27,9 @@ public class CD {
 	@MapKeyColumn(name = "position")
 	@Column(name = "title")
 	private Map<Integer, String> tracks = new HashMap<Integer, String>();
+
+	@ManyToMany(mappedBy = "appearsOn")
+	private List<Artist> createdBy;
 
 	public Long getId() {
 		return id;
@@ -77,5 +81,13 @@ public class CD {
 
 	public Map<Integer, String> getTracks() {
 		return tracks;
+	}
+
+	public List<Artist> getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(List<Artist> createdBy) {
+		this.createdBy = createdBy;
 	}
 }

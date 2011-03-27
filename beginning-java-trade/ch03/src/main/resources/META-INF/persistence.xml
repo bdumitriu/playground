@@ -7,10 +7,13 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
 		<class>Address</class>
+		<class>Artist</class>
 		<class>Book</class>
 		<class>CD</class>
 		<class>Customer</class>
 		<class>News</class>
+		<class>Order</class>
+		<class>OrderLine</class>
 
 		<properties>
 			<property name="eclipselink.target-database" value="DERBY" />

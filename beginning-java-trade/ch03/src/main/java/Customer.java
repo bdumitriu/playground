@@ -27,7 +27,7 @@ public class Customer {
 	private String phoneNumber;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "address_fk")
+	@JoinColumn(name = "add_fk")
 	private Address address;
 
 	@Temporal(DATE)

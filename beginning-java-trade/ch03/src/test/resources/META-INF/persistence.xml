@@ -7,10 +7,13 @@
 		<mapping-file>META-INF/table_name_mappings.xml</mapping-file>
 
 		<class>Address</class>
+		<class>Artist</class>
 		<class>Book</class>
 		<class>CD</class>
 		<class>Customer</class>
 		<class>News</class>
+		<class>Order</class>
+		<class>OrderLine</class>
 
 		<properties>
 			<property name="eclipselink.target-database" value="DERBY" />
@@ -19,7 +22,7 @@
 			<property name="javax.persistence.jdbc.user" value="APP" />
 			<property name="javax.persistence.jdbc.password" value="APP" />
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="eclipselink.logging.level" value="INFO" />
 		</properties>
 
 	</persistence-unit>

@@ -4,9 +4,11 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaQuery;
 
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * @author Bogdan Dumitriu
@@ -49,6 +51,7 @@ public class NewsTest {
 		assertNotNull("ID should not be null", news.getId());
 
 		entityManager.clear();
+		entityManagerFactory.getCache().evictAll();
 
 		final News retrievedNews = entityManager.find(News.class,
 				new NewsId("Reforma expertizelor judiciare - Propuneri noi care bat pasul pe loc", "RO"));

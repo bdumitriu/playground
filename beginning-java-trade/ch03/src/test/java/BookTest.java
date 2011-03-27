@@ -59,6 +59,7 @@ public class BookTest {
 		assertNotNull("ID should not be null", book.getId());
 
 		entityManager.clear();
+		entityManagerFactory.getCache().evictAll();
 
 		final Book retrievedBook = entityManager.find(Book.class, book.getId());
 		assertNotSame(book, retrievedBook);
@@ -84,6 +85,7 @@ public class BookTest {
 		transaction.commit();
 
 		entityManager.clear();
+		entityManagerFactory.getCache().evictAll();
 
 		final Book retrievedBook = entityManager.find(Book.class, book.getId());
 		assertNotSame(book, retrievedBook);
@@ -103,6 +105,7 @@ public class BookTest {
 		transaction.commit();
 
 		entityManager.clear();
+		entityManagerFactory.getCache().evictAll();
 
 		final Book reRetrievedBook = entityManager.find(Book.class, book.getId());
 		Assert.assertNotSame(retrievedBook, reRetrievedBook);

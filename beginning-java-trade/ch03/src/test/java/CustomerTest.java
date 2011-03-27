@@ -1,12 +1,12 @@
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  * @author Bogdan Dumitriu
@@ -37,7 +37,7 @@ public class CustomerTest {
 	}
 
 	@Test
-	public void testAddressOneToOne() {
+	public void testOneToOne() {
 		final Customer customer = new Customer();
 		customer.setFirstName("Sam");
 		customer.setLastName("Sample");
@@ -52,6 +52,15 @@ public class CustomerTest {
 		entityManager.persist(customer);
 		transaction.commit();
 
-		
+		entityManager.clear();
+		entityManagerFactory.getCache().evictAll();
+
+		final Customer retrievedCustomer = entityManager.find(Customer.class, customer.getId());
+		assertNotSame(customer, retrievedCustomer);
+
+		final Address retrievedAddress = retrievedCustomer.getAddress();
+		assertEquals(address.getStreet1(), retrievedAddress.getStreet1());
+		assertEquals(address.getCity(), retrievedAddress.getCity());
+		assertEquals(address.getCountry(), retrievedAddress.getCountry());
 	}
 }

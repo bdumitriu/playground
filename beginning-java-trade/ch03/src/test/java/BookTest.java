@@ -74,6 +74,7 @@ public class BookTest {
 	public void addTagsToBook() {
 		final Book book = new Book();
 		book.setTitle("dummy");
+		book.setPrice(1.49F);
 		book.setNbOfPages(10);
 
 		book.addTag("a");

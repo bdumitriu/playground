@@ -53,10 +53,13 @@ public class ArtistTest {
 
 		final CD cohenAndCashCd = new CD();
 		cohenAndCashCd.setTitle("Cohen & Cash");
+		cohenAndCashCd.setPrice(1.0F);
 		final CD cohenOnlyCd = new CD();
 		cohenOnlyCd.setTitle("Cohen Best Hits");
+		cohenOnlyCd.setPrice(1.0F);
 		final CD cashOnlyCd = new CD();
 		cashOnlyCd.setTitle("Cash Best Hits");
+		cashOnlyCd.setPrice(1.0F);
 
 		final LinkedList<CD> cohenCds = new LinkedList<CD>();
 		Collections.addAll(cohenCds, cohenAndCashCd, cohenOnlyCd);

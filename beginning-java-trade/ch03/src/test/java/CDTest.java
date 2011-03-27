@@ -45,6 +45,8 @@ public class CDTest {
 	@Test
 	public void checkTracksAreRetrievedCorrectly() {
 		final CD cd = new CD();
+		cd.setTitle("my cd");
+		cd.setPrice(5.99F);
 
 		cd.putTrack(1, "track 1");
 		cd.putTrack(2, "track 2");

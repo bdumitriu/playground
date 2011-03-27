@@ -10,7 +10,9 @@
 		<class>Artist</class>
 		<class>Book</class>
 		<class>CD</class>
+		<class>Comment</class>
 		<class>Customer</class>
+		<class>Item</class>
 		<class>News</class>
 		<class>Order</class>
 		<class>OrderLine</class>

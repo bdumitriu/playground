@@ -28,8 +28,14 @@
 			</element-collection>
 		</attributes>
 	</entity>
+	<entity class="Comment">
+		<table name="test_comment" />
+	</entity>
 	<entity class="Customer">
 		<table name="test_customer" />
+	</entity>
+	<entity class="Item">
+		<table name="test_item" />
 	</entity>
 	<entity class="News">
 		<table name="test_news" />

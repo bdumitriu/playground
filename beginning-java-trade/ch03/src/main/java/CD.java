@@ -7,17 +7,16 @@ import java.util.Map;
  * @author Bogdan Dumitriu
  */
 @Entity
-public class CD {
+@DiscriminatorValue("C")
+public class CD extends Item {
 
-	@Id
-	@GeneratedValue
-	private Long id;
+	private String musicCompany;
 
-	private String title;
+	private Integer numberOfCds;
 
-	private Float price;
+	private Float totalDuration;
 
-	private String description;
+	private String gender;
 
 	@Lob
 	private byte[] cover;

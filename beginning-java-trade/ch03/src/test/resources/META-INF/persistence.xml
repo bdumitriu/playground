@@ -5,6 +5,7 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
 		<mapping-file>META-INF/table_name_mappings.xml</mapping-file>
+		<mapping-file>META-INF/listeners.xml</mapping-file>
 
 		<class>Address</class>
 		<class>Artist</class>

@@ -1,0 +1,19 @@
+# QTronic
+admin_cj
+public
+python25
+python26
+
+# IDE
+.idea/
+.settings/
+workspace/
+.classpath
+.project
+*.iml
+*.ipr
+*.iws
+
+# Generated
+derby.log
+target/

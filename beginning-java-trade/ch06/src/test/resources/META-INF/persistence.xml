@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+		version="2.0">
+
+	<persistence-unit name="chapter06PU" transaction-type="JTA">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<!--<jta-data-source>jdbc/__default</jta-data-source>-->
+		<!--
+			You need to create a JDBC connection pool called "Chapter06Pool" using:
+				- datasourceclassname=org.apache.derby.jdbc.ClientDataSource
+				- restype=javax.sql.DataSource
+				- properties:
+					- portNumber=1527
+					- password=APP
+					- user=APP
+					- serverName=localhost
+					- databaseName=chapter06DB
+					- connectionAttributes=;create=true
+			You also need to create a JDBC resource with JNDI name "jdbc/chapter06DS" using:
+				- connectionpoolid Chapter06Pool
+		-->
+		<jta-data-source>jdbc/chapter06DS</jta-data-source>
+		<class>Book</class>
+		<properties>
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+			<property name="eclipselink.logging.level" value="FINE" />
+		</properties>
+	</persistence-unit>
+</persistence>

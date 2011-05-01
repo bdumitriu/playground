@@ -1,0 +1,15 @@
+ - Functia DOS 35h -
+
+Functie:
+    Aflarea adresei unui vector de intrerupere.
+
+Asteapta:
+    ah: 35h
+    al: numarul intreruperii (intre 00h si ffh).
+
+Intoarce:
+    es:bx: adresa vectorului de intrerupere.
+
+Descriere:
+    Intoarce valoarea vectorului de intrerupere pentru intreruperea din al.
+    Incarca bx cu 0000:[al*4] si es cu 0000:[(al*4)+2].

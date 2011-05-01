@@ -1,0 +1,320 @@
+/**
+ * Combined constant, copy, and record propagation
+ */
+module tiger-propagate
+imports
+
+  // Separately compiled Stratego Library
+  libstrategolib
+
+  // Tiger Language
+  Tiger
+
+  // Evaluation rules from tiger-front
+  Eval-Conditional
+  Eval-Operator
+  Eval-Primitive
+  Eval-Iteration
+
+  // Some helper strategies in this directory
+  switch-options
+  tiger-xtc-tools
+
+/**
+ * Entry point stuff
+ */
+strategies
+
+  io-tiger-propagate =
+    xtc-io-wrap(tiger-propagate-options,
+      parse-tiger
+    ; tiger-desugar
+    ; xtc-io-transform(tiger-propagate)
+    ; if-switch-on(!"dead",    tiger-elim-dead)
+    ; if-switch-on(!"ensugar", tiger-ensugar)
+    ; if-switch-on(!"pp",      pp-tiger)
+    )
+
+  tiger-propagate-options =
+      SwitchOption(!"prop",      !"switch to turn off propagation")
+    + SwitchOption(!"dead",      !"switch to turn off dead declaration elimination")
+    + SwitchOption(!"ensugar",   !"switch to turn off ensugaring")
+    + SwitchOption(!"pp",        !"switch to turn off pretty printing")
+
+  tiger-propagate =
+      prop-const
+    ; copy-prop  
+
+/**
+ * Constant propagation
+ */
+strategies
+
+  prop-const = 
+    PropConst
+    <+ prop-const-assign
+    <+ prop-const-declare
+    <+ prop-const-let
+    <+ prop-const-if
+    <+ prop-const-while
+    <+ prop-const-for
+    <+ all(prop-const)
+       ; try(EvalBinOp <+ EvalRelOp <+ EvalString <+ EvalRecord)
+       ; try(PropConst)
+
+/**
+ * Rules for variable assignment constructs
+ */
+strategies
+
+  prop-const-assign =
+    |[ <id:?x> := <prop-const => e> ]|
+    ; if <is-value> e then
+        rules( PropConst.x :  |[ x ]| -> |[ e ]| )
+      else
+        rules( PropConst.x :- |[ x ]| )
+	; where(undefine-PropConst(|x))
+      end
+
+  // I've added this so that in something like list.hd := whatever
+  // copy-prop only gets applied to the rhs (i.e., to whatever)
+  // (well, yes, I also undefine the rules for x)
+  prop-const-assign = 
+    Assign(?FieldVar(Var(x), _), copy-prop)
+    ; rules( PropConst.x :- |[ x ]| )
+
+  prop-const-assign =
+    Assign(Subscript(?Var(x), [Scalar(prop-const => idx)]), prop-const => e)
+    ; if <?Int(val)>idx then
+        if <is-value>e then
+          rules(
+            PropConst.x :
+              Subscript(Var(x), [Scalar(idx)]) -> e
+              depends on [(x,x), (x, <concat-strings>[x, "[", val, "]"])]
+          )
+	else
+          where(undefine-PropConst(|<concat-strings>[x, "[", val, "]"]))
+	end
+      else
+        where(undefine-PropConst(|x))
+      end
+
+  prop-const-declare =
+    ? |[ var x ta ]|
+    ; rules( PropConst+x :- |[ x ]| )
+    ; where(undefine-PropConst(|x))
+
+  prop-const-declare =
+    |[ var <id:?x> <id> := <prop-const => e> ]|
+    ; if <is-value> e then
+        rules( PropConst+x :  |[ x ]| -> |[ e ]| )
+      else 
+        rules( PropConst+x :- |[ x ]| )
+	; where(undefine-PropConst(|x))
+      end
+
+/**
+ * Rules for control-flow constructs
+ */
+strategies
+
+  prop-const-let =
+    ?|[ let d* in e* end ]|
+    ; {| PropConst : all(prop-const) |}
+
+  prop-const-if =
+    |[ if <prop-const> then <id> ]|
+    ; (EvalIf <+ (|[ if <id> then <prop-const> ]| /PropConst\ id))
+
+  prop-const-if =
+    |[ if <prop-const> then <id> else <id> ]|
+    ; (EvalIf; prop-const 
+       <+ (|[ if <id> then <prop-const> else <id> ]| 
+		/PropConst\ |[ if <id> then <id> else <prop-const> ]|))
+
+  prop-const-while =
+    ?|[ while e1 do e2 ]|
+    ; (|[ while <prop-const> do <id> ]|; EvalWhile
+       <+ (/PropConst\* |[ while <prop-const> do <prop-const> ]|))
+
+  prop-const-for =
+    |[ for <?x> := <prop-const> to <prop-const> do <id> ]|
+    ; (EvalFor
+       <+ {| PropConst.x :
+             iterate-for
+             <+ /PropConst\* |[ for <id> := <id> to <id> do <prop-const> ]|
+          |}
+      )
+
+  iterate-for =
+    ?|[ for x := e1 to e2 do e ]|
+    ; where (<?Int(init)>e1)
+    ; where (<?Int(final)>e2)
+    ; iterate-for(|init, final)
+
+  iterate-for(|current, final) =
+   ?|[ for x := e1 to e2 do e ]|
+   ; where( <leqS>(current, final) )
+     < ( where( <prop-const>Seq([Assign(Var(x), Int(current)), e]) )
+       ; iterate-for(|<addS>(current, "1"), final))
+     + id
+
+/**
+ * Copy propagation
+ */
+strategies
+
+  copy-prop = 
+    repeat1(CopyProp)
+    <+ copy-prop-assign
+    <+ copy-prop-declare
+    <+ copy-prop-let
+    <+ copy-prop-if
+    <+ copy-prop-while
+    <+ all(copy-prop)
+       ; try(EvalRecord)
+
+/**
+ * Rules for variable assignment constructs
+ */
+strategies
+
+  copy-prop-let =
+    |[ let <*id> in <*id> end ]|
+    ; {| CopyProp : all(copy-prop) |}
+
+  copy-prop-declare =
+    |[ var <id:?x> <id> := <copy-prop => e1> ]|
+    ; where(new-CopyProp(|x, x))
+    ; where( try(<copy-prop-assign-aux> |[ x := e1 ]|) )
+
+  copy-prop-declare =
+    ?|[ var x ta ]|
+    ; where(new-CopyProp(|x, x))
+
+  copy-prop-assign = 
+    |[ <id:?x> := <copy-prop> ]|
+    ; where(undefine-CopyProp(|x))
+    ; where(try(copy-prop-assign-aux))
+
+  /* <new> */
+  copy-prop-assign = 
+    Assign(?FieldVar(Var(x), _), copy-prop)
+    ; where(undefine-CopyProp(|x))
+
+  copy-prop-assign-aux =
+    ?|[ x := y ]|
+    ; where( <not(eq)>(x,y) )
+    ; where( innermost-scope-CopyProp => z )
+    ; rules(
+        CopyProp.z :
+          |[ x ]| -> |[ y ]|
+          depends on [(x,x), (y,y)]
+      )
+
+  /* <new> */
+  copy-prop-assign-aux =
+    ?|[ x := tid{ f* } ]|
+    ; where(<is-value-or-var>|[ tid{ f* } ]|)
+    ; where(innermost-scope-CopyProp => z)
+    ; where(<get-var-names>|[ tid{ f* } ]| => vn)
+    ; rules(
+        CopyProp.z :
+          |[ x ]| -> |[ tid{ f* } ]|
+          depends on [ (x,x) | <map(\ x -> (x, x) \)>vn ]
+      )
+
+/**
+ * By removing the rules marked with <new> and adding these ones,
+ * propagation of record fields (as well as that of records) is
+ * achieved, but the downside is that nested records no longer
+ * work.
+ *
+  copy-prop-assign = 
+    Assign(?FieldVar(Var(x), f), copy-prop)
+    ; where(undefine-CopyProp(|<concat-strings>[x, "." , f]))
+    ; where(try(copy-prop-assign-aux))
+
+  copy-prop-assign-aux =
+    ?|[ x := tid{ f* } ]|
+    ; <map(try({ x0, y, z:
+            ?InitField|[ x0 = y ]|
+          ; where(<innermost-scope-CopyProp>|[ x := y ]| => z)
+          ; rules(
+              CopyProp.z :
+                |[ x.x0 ]| -> |[ y ]|
+                depends on [(x,x), (x, <concat-strings>[x, ".", x0]), (y,y)]
+            )
+          }))>f*
+
+  copy-prop-assign-aux =
+    ?Assign(FieldVar(Var(x), x0), Var(y))
+    ; where(<innermost-scope-CopyProp>|[ x := y ]| => z)
+    ; rules(
+        CopyProp.z :
+        |[ x.x0 ]| -> |[ y ]|
+        depends on [(x,x), (x, <concat-strings>[x, ".", x0]), (y,y)]
+      )
+ */
+
+  /**
+   * Determines the innermost CopyProp scope for an expression
+   *
+   * @type Exp -> String
+   */
+  innermost-scope-CopyProp =
+    get-var-names => vars
+    ; innermost-scope-CopyProp(where(<elem>(<id>, vars)))
+
+/**
+ * Control-flow constructs
+ */
+strategies
+
+  copy-prop-if =
+    |[ if <copy-prop> then <id> ]|
+    ; (|[ if <id> then <copy-prop> ]| /CopyProp\ id)
+
+  copy-prop-if =
+    |[ if <copy-prop> then <id> else <id> ]|
+    ; ( |[ if <id> then <copy-prop> else <id> ]| 
+	/CopyProp\ |[ if <id> then <id> else <copy-prop> ]|)
+
+  copy-prop-while =
+    |[ while <id> do <id> ]|
+    ; (/CopyProp\* |[ while <copy-prop> do <copy-prop> ]|)
+
+  prop-for =
+    |[ for <?x> := <copy-prop> to <copy-prop> do <id> ]|
+    ; {| CopyProp 
+         : where(new-CopyProp(|x,x))
+         ; /CopyProp\* |[ for <id> := <id> to <id> do <copy-prop> ]|
+      |}
+
+strategies
+
+  /**
+   * Succeeds if an expression is a value.
+   *
+   * @type Exp -> Exp
+   */
+  is-value = 
+    ?|[ i ]| + ?|[ str ]| + Real(id) + ?|[ nil ]| + InitField(id, is-value) + Record(id, map(is-value))
+
+  is-value-or-var =
+    ?|[ i ]| + ?|[ str ]| + Real(id) + ?|[ nil ]| + Var(id) + InitField(id, is-value-or-var) + Record(id, map(is-value-or-var))
+
+  /**
+   * Collects all variable names used in a term.
+   *
+   * @type Exp -> List(String)
+   */
+  get-var-names =
+    collect(?Var(<id>))
+
+rules
+
+  EvalRecord :
+    |[ lv.x ]| -> |[ e ]|
+    where !lv => |[ tid{ f* } ]|
+        ; <fetch(?InitField|[ x = e ]|)>f*

@@ -1,0 +1,628 @@
+\section{Introduction}
+
+\subsection{Motivation}
+\label{sec:motivation}
+
+There are a number of aspects regarding the compilation process that
+have been changing steadily over the years. Compilers have evolved
+from compiling assembly code into machine code to compiling ever
+higher level languages to machine-independent code (such as Java
+bytecode or .NET CIL). The number of intermediate languages (and
+corresponding \emph {compilation phases}) through which a program goes
+has increased as well, since most modern language compilers build on
+already existing ones. The common pattern is to write a compiler which
+produces source code of a lower level language and then piggyback on
+the compiler for that language (with C being the most widely used
+one). The number of such phases increases as languages drift further
+and further away from machine code in terms of abstractions.
+
+While the above mentioned progress can be regarded as only partially
+compiler-specific (with the rest spanning also language and tool
+chain), there is another aspect which remains entirely within the
+bounds of compiler technology: \emph{optimization}. This has been a
+constant preoccupation of compiler writers from the earliest of
+ages. In the beginning, most optimizations were geared towards
+limiting the amount of memory needed by a program, due to the scarcity
+of hardware resources. With time, the goals of optimization have
+widened to cover aspects like instruction locality, computing data
+dependencies for parallelization purposes, reducing the amount of
+branching in code, eliminating redundancy (e.g., loop-invariant code
+motion) and countless others. Nowadays a lot of work still goes into
+refining optimizations, identifying more optimization opportunities
+and optimization algorithms, making more information about the code
+available to the optimization processes, extending optimizations from
+basic peephole ones to whole-program ones, as well as other
+advances. In essence, it is self-evident by following the evolution of
+compiler optimizations that compiler writers and researchers have
+contributed massively to improving the overall quality of generated
+code.
+
+Compilers have also evolved quite a lot where safety of the generated
+programs is concerned.  This is achieved chiefly through advances in
+\emph{type systems}. While type systems have uses beyond safety (such
+as supporting optimizations or acting as documentation to a program),
+it is still the case that we primarily use them for enhancing the
+safety of our programs. A sufficiently advanced type system will point
+out many kinds of errors in our programs at compile time, which is a
+significant advantage according to the general observation that the
+earlier in the development process we identify bugs, the less costly
+it is. Type system have evolved along with compilers from a
+rudimentary int-float-bool-char state to one including enhanced
+notions like polymorphic types, generic types, dependent types or
+recursive types together with various combinations and specializations
+thereof. Such developments illustrate that the type systems that
+compilers support today are a long way from what we have begun with in
+the early days; and type system research is still receiving
+significant effort.
+
+As summarized before, aspects like varying compilation phases,
+optimizations and type systems have all received proper attention both
+from the research world and from the industry. Significant evolutions
+in all these area stand as proof of this. There is at least one path
+related to compiler technology that has been seriously less walked
+until now, namely that of \emph{open compilers}.  Open compilers are
+about user customization of the compilation process. To date, the
+interaction a user can have with the compiler is reduced to specifying
+a number of compiler flags which trigger or prevent the execution of
+specific compiler tasks. Examples of things that can be turned on or
+off by the user are various types of optimizations (including
+machine-dependent ones), the inclusion of debugging information and
+certain types of warnings. The user cannot, however, customize, extend
+or aid any of the compiler tasks, and the one we particularly have in
+mind is optimization.
+
+In general, compiling a program to provably best machine code (either
+in terms or size or speed) is undecidable. In particular, even
+striving for a far less ambitious goal than that still creates enough
+difficulties. It is a fact that optimizers that come with today's
+compilers are far from being smart enough to materialize all the
+optimization potential that exists even at a (theoretically) easily
+available level. This is caused primarily by the \emph{soundness}
+requirement (i.e., the compiler usually has to guarantee that the
+optimization is correct), which forces the optimizers to make
+conservative choices (about various things) whenever there is not
+enough information available. In simpler terms, optimizers are not
+allowed to guess, even if there is a 99.99\% chance that the guess
+will be correct.  This lack of information which optimizers are often
+confronted with can have several causes. It can be that the
+information is simply not there (e.g., compiled libraries for which
+the source code is not available), or that the optimizer is not
+``smart'' enough to extract that information even if it is available,
+or that extracting the information, even if possible, would take more
+time than the user is willing to allow. Whichever the cause, the
+effect is the same: optimizers miss optimizations opportunities
+because they have to make conservative choices.
+
+It is because of that that the idea of open compilers was born. An
+open compiler will offer the user the chance to provide that missing
+information to the optimizer in an easily-accessible form.  This leads
+to the realization that one of the requirements in order to write an
+open compiler is that of facilitating the development of
+\emph{customizable transformations} (or optimizations) so that the
+user can specify this missing or hard to compute information. The kind
+of information that is provided and the form in which it is given will
+vary with the purpose of the optimization, but the basic idea stays
+the same. The Broadway compiler \cite{guyer99annotation,
+guyer-broadway}, for instance, allows the user to specify information
+as trivial as the ``uses'' and ``defs'' for the parameters of a
+subroutine. However trivial, this information is still very useful in
+the case of missing library source code, when the compiler cannot
+infer whether or not a variable will be modified or even accessed
+within a routine call. As a consequence, it will always have to assume
+``the worst'', namely that it is modified, to ensure correct behavior
+in all cases.
+
+Lamping et al. \cite{lamping92compilers} discuss an open compiler for
+Scheme which would allow the user to make the decision of how to
+implement certain variables of interest. The concept they are
+promoting is to let the user benefit from all the advantages of a
+high-level language like Scheme for most purposes, but still have a
+way to influence the low-level representation of the runtime data
+structures pointed to by these user-chosen variables, if this is what
+the user needs. Kickzales et al. abstract away from this idea in a
+later paper \cite{kiczales97open} where they advocate reducing the
+opacity of traditionally black box software modules so that the user
+has better control over the implementation that is used when more that
+one is available.  They no longer discuss open compilers but
+\emph{open implementations}. This idea of letting the user participate
+in the selection of an implementation is not our goal per se, but it
+makes for an interesting analogy. We can parallel the optimizations to
+be applied to the module which used to be a black box and the user
+annotations for customizing them to the mechanism for reducing the
+opacity. In this way, we realize that the two are simply facets of the
+same concept.
+
+Tourw\'e and De Meuter \cite{tourwe99opt} consider a slightly more
+particular case of the general problem of missing information. This
+case refers to object-oriented programs, for which compilers are
+having a difficult time performing virtually any type of whole-program
+optimization. The impossibility arises from the dynamic dispatching of
+method calls, which prevents the compiler from knowing the particular
+definition of a method that a method call really refers to. The
+authors give the example of inlining a method body as an optimization
+which cannot be performed since it is not known at compile time which
+of the potentially many bodies of a method has to be inlined. Further
+on, this problem is aggravated by the fact that modern software
+architectural principles promote the use of objects and methods in a
+way that increases the degree of polymorphism in a program, making it
+ever harder for compilers to optimize. While some researchers (such as
+Dean et al. in \cite{dean95optimization}) worked out methods for
+finding out the precise type an object will have at runtime (with
+considerable success when this is actually possible) and thus replace
+dynamic dispatch with static binding, Tourw\'e and De Meuter chose the
+approach of an open compiler which the user can feed with information
+through Prolog predicates-like annotations. The information given to
+the compiler indicates design patterns in the source code, so that the
+compiler can make architectural optimizations. Using this information
+(and inferring additional one) the compiler performs a
+source-to-source transformation of the code, reimplementing the entire
+design pattern with different, but equivalent code such that the
+resulting implementation reduces the degree of polymorphism as much as
+possible. Then, it is assumed that a source-to-binary compiler will
+properly identify the lack of polymorphism and perform static binding
+of the method calls.
+
+\begin{comment}
+meta object protocol tools (Template Haskell, Magik, ...) ...  most
+focus is on user access at runtime through reflection...  generic
+programming...
+\end{comment}
+
+Steps towards creating an open compiler (for Java) have also been
+taken within the context of Stratego \cite{stratego}. It is not the
+case that Stratego already has a working open compiler implementation.
+What it does have is a set of tools and libraries which will prove to
+be extremely valuable once work on an implementation actually begins.
+First of all, research on the Stratego framework has produced
+significant results regarding the specification of data-flow
+transformations, presented in \cite{bravo05dynrules,
+  karina05dynrules}. We will cover these later, in section
+\ref{sec:dynam-rules-libr} of this proposal. Secondly, Stratego
+already contains two libraries called java-front \cite{javafront} and
+Dryad \cite{dryad}. Java-front offers full parsing and unparsing
+support for Java 5.0, which is useful both for source-to-source and
+source-to-binary transformations, since we can directly manipulate an
+abstract syntax tree (AST) representation of the Java classes without
+having to worry about the rest. Dryad improves an already parsed Java
+AST by qualifying and reclassifying names and typing variables and
+expressions. In addition, Dryad also provides a Java bytecode parser
+and unparser, so with a (currently unavailable) transformation from
+Java AST to Java bytecode AST, we already have a basic working
+compiler.
+
+The final piece in the Stratego support for open compilers puzzle is
+represented by MetaBorg. MetaBorg is a ``method for providing concrete
+syntax for domain abstractions to application programmers''
+\cite{metaborg}. Usually we start with a general purpose language and
+extend it to support a domain specific language which abstracts over
+an existing API. \cite{bravo04metaborg} discusses how Stratego can be
+used to easily achieve the two steps that the method implies:
+\emph{embedding} the syntax definition of the first language into the
+second and \emph{assimilating} the (already parsed) representation of
+one language into that of the other. A number of such embeddings have
+already been developed and are presented in \cite{bravo04metaborg}:
+Swul -- embedding of a DSL for building Swing user interfaces in Java,
+XML in Java, Java in Java, etc. By employing SDF (Syntax Definition
+Formalism) and SGLR (Scannerless Generalized LR) parser (both of them
+part of the Stratego platform), MetaBorg can allow full modularization
+of the language syntax definitions (thanks to generalized LR parser
+and the modularity features of SDF), can automatically generate a
+disambiguating parser for various language combinations (thanks to
+SDF's facilities for disambiguation: priority definitions,
+associativity specifications, reject productions or follow
+restrictions) and can correctly parse tokens of different languages
+depending on the context in which they appear (thanks to the
+scannerless parser).
+
+The question that remains to be answered is how exactly MetaBorg fits
+in the open compiler picture.  A different use of open compilers than
+the one we have already discussed has to be introduced in order to
+answer that. What we want is to let the user intervene in the
+compilation process not only by providing extra information for aiding
+compiler optimizations, but also by potentially extending the source
+language of the open compiler. We clearly only expect a restricted
+category of users (which we call meta programmers) to be interested in
+implementing extensions to a language, but we believe that this
+category is large enough to justify our efforts. The extensions we
+have in mind are exactly the ones that MetaBorg facilitates: that of
+DSLs in general purpose languages, hence answering the question asked
+at the beginning of this paragraph. With the mechanism generically
+referred to as MetaBorg already available, what is left to be done is
+completing the Stratego framework with the proper technologies to
+support \emph{extensible transformations}. More explicitly, we need to
+come up with a mechanism which would allow the transformations defined
+for a language to be easily extended so that they cover the
+user-defined embedding as well.
+
+In essence, we believe that currently there is a serious need for open
+compilers in the object-oriented programming languages community and
+that researchers have to take this necessity into consideration. We
+want to commit our efforts in this direction and contribute to this
+goal. We plan to do this by exploring how an already advanced platform
+like Stratego can be employed for creating such a compiler. As
+explained in this section, we believe the developing of support for
+\emph{extensible and customizable transformations} to be a necessary
+intermediate step. It is unclear at this point where our efforts will
+take us, but we are sure that they will provide valuable observations
+and results for further development.
+
+\subsection{Analysis}
+
+We define the creation of an open compiler for Java using Stratego as
+the combined eventual goal of this project and other projects that
+will follow it. Such a compiler has to differ from existing Java
+compilers in several key points. Most modern Java systems resort to
+just in time (JIT) compilation in order to ensure performance, which
+essentially means that they use a less sophisticated compiler to
+statically transform source code to bytecode and then transform
+bytecode to machine code at runtime. Our compiler should achieve
+performance primarily by means of static code optimizations. This does
+not prevent the ulterior use of a JIT compiler at runtime, in which
+case the performance boost given by optimization would be combined
+with that of JIT compilation.  Furthermore, we aim to differ from
+other compilers by making sure that the meta programmer can easily add
+her extensions to the language.  This can be achieved by employing a
+MetaBorg-style model of embedding concrete syntax for other (domain
+specific) languages in the base language's syntax definition and
+parser. Finally, we want to open up the compiler internals to a level
+that is fully manageable by a regular user so that she can optionally
+intervene in the compilation process (more specifically, in the
+compiler's optimizations).
+
+While the open compiler for Java is the final goal, we are aware that
+the current point of development that the Stratego platform has
+reached prevents us from achieving it within the bounds of this
+thesis. What we propose to do instead is take concrete steps in that
+direction. To that end, we acknowledge that support for data-flow
+analysis (an essential component in an optimizing compiler, as ours
+is intended to be) is still incomplete in Stratego, so one of our
+goals is to contribute to improving this state of affairs. Already
+proved capabilities of Stratego for doing data-flow analysis include
+the possibility of peephole (restricted to a limited number of
+statements) and intraprocedural (restricted to the contents of a
+method) optimizations, as long as only basic control flow (sequencing,
+branching and iteration) is involved. However, there is no support yet
+for more involved control flow (including exception handling or
+handling of break's or continue's to labels). Also, until now there
+have been no experiments with interprocedural control-flow (i.e., code
+with method calls), so a prototype for this is yet to be devised.
+
+The lack of a support for complex control is not the only aspect of
+Stratego which impedes more advanced data-flow analyses. Currently,
+potential implementers of data-flow analyses also have to deal with
+the absence of aliasing information. Aliasing indicates which
+variables, object fields or class fields point to the same memory
+location, or \emph{are aliased}. Such information is indispensable to
+most analyses, at least if we do not want them to be excessively
+conservative. Without aliasing information, an analysis will always
+have to make the conservative assumption that all variables, object
+fields and class fields may point to the same location. This means
+that every time an analysis sees, say, a modification of a variable,
+it has to assume that any other variable could have been changed as
+well (since it could be the case that the latter variable also points
+the memory location that was changed). It quickly becomes obvious
+that with such an assumption the effect of most analyses will be
+severely limited.  Therefore, another goal of this thesis will be to
+strengthen Stratego's support for more precise data-flow analyses by
+implementing an algorithm for computing alias information and making
+this information available to the framework's user in an easily
+accessible way.
+
+There is also another kind of information that can prove useful for a
+limited number of data-flow analyses, namely escape information.
+Escape information indicates whether or not a certain variable escapes
+a method or a thread (by escaping we mean that it is accessible from
+outside the method or the thread). This information is clearly not as
+essential as alias information, but be believe it to be a valuable
+addition to Stratego's facilities nevertheless. Hence, we will
+consider implementing such an analysis as part of this thesis, but
+only as a secondary goal.
+
+Provided successful completion of the above mentioned goals, we can
+finally focus on the aspects we have discussed at length in the
+previous section: \emph{extensible and customizable data-flow
+  transformations}. We propose to investigate both how an existing
+data-flow transformation can be seamlessly extended to cover
+extensions of the language (either with new language constructs or
+with embedded DSLs) and how user annotations can be used to aid such a
+transformation (extended or not). We set this exploration to be our
+last goal on the road to bring the Stratego platform closer to the
+state where it can be employed for writing an open compiler. Support
+for extending and customizing transformations prepares the ground for
+this by already enabling applications like active libraries and DSL
+embeddings. Active libraries is a term coined by contrast to the
+well-known static libraries of today. Their activeness stems from the
+fact that the library is meant to become an active component of the
+compilation process. The user will be given an (annotation) language
+which she will use to specify compilation information and/or
+compilation actions. These will be used by the compiler wherever the
+compilation process encounters code that uses the library in order to
+produce a user-customized result (usually for purposes of optimizing
+the way the library is used). The concept of active libraries will be
+further detailed in section \ref{sec:extend-comp-transf}. This and
+other similar applications should be supported by our customizable
+transformations (perhaps with some further adaptation).
+
+DSL embeddings have already been introduced in the previous section in
+the context of MetaBorg. Extensible transformations should come to
+complete MetaBorg with a means to extend transformation along with
+syntax. The general idea is that we have a general purpose language
+\emph{and} a number of transformations (optimizing or otherwise)
+defined to support all the constructs of the language. MetaBorg
+provides a method for extending the language with additional concrete
+syntax that supports domain-specific operations. What is still missing
+is a method for extending the transformations defined for the base
+language as well so that they support the additional constructs. Of
+course, one solution is to leave the transformations as they are and
+apply them only after the statements specified in the embedded DSL
+have been assimilated to base language constructs, but this often
+results in missing optimization opportunities due to the loss of
+semantics that is inevitable in the assimilation process. Therefore,
+we consider extending the transformations to cover the new syntax as
+well to be a more attractive solution, since it will likely result in
+better optimization.
+
+We are particularly interested in investigating a mechanism for
+developing these extensions in the context of the Stratego framework
+because of the high level mechanisms it contains. These make it easy
+to use by the potential meta programmers who do not want to invest a
+large amount of time in figuring out how to use such a platform, but
+do want to readily benefit from its capabilities. The very elegant,
+powerful and intuitive SDF formalism for extending the syntax (already
+promoted by MetaBorg), on the one hand, and Stratego's model for high
+level specification of transformation strategies and rewrite rules, on
+the other, recommend it as a good choice for such purposes.
+
+\subsection{Research Questions}
+
+Now that we have sketched the general topics that this thesis will
+comprise of, we can advance to defining the research questions that
+will guide our work. While we are confident that some of them will
+find their answer during this project, it is also possible that some
+will be considered only partially and some even not at all. The degree
+to which these questions will be answered heavily depends on the
+difficulties that will be encountered along the way.
+
+\begin{itemize}
+\item \textbf{The Stratego model for data-flow analysis.} Related to
+  this, we will try to answer questions like: ``how complete is the
+  support currently offered by Stratego for managing control flow?'',
+  ``what is still needed to ensure proper abstractions for dealing
+  with all constructs of modern object-oriented languages (and Java in
+  particular)?'', ``what is the most appropriate mechanism which we
+  can provide within Stratego for dealing with non-sequential control
+  flow (such as exception handling or breaking and continuing)?'',
+  ``can we build this mechanism in a layered way, with intermediate
+  level abstractions and high level abstractions built on top of
+  them?'', ``if so, what are these intermediate level abstractions?'',
+  ``what is a good model for building interprocedural data-flow
+  analyses in Stratego?''.
+\item \textbf{Information for data-flow analyses.} Our efforts in this
+  area will be guided by the following questions: ``how can we use the
+  Stratego model to implement essential analyses like pointer analysis
+  and escape analysis?'', ``can we compute this information on demand
+  or does it have to be done a priori?'', ``what is a proper way to
+  represent such information (i.e., the user has to query for, say,
+  the aliases of a variable, but a variable name is not an unique
+  identifier, so how do we compose a key that is natural enough for
+  the user to use easily)?'', ``is the accuracy of the proposed
+  context-insensitive and flow-insensitive pointer analysis good
+  enough for providing a real benefit to other data-flow analyses?'',
+  ``for both the pointer and the alias analysis we need a call graph:
+  can we use the information provided by Dryad to build one
+  efficiently?''.
+\item \textbf{Extensible and customizable transformations.} The
+  questions that we will focus on in our experiments with extensible
+  and customizable transformation are as follows: ``how can a
+  transformation be extended in a modular way in order to support new
+  syntactic constructs in a language?'', ``do we need a new way in
+  which to compose transformations for allowing modular extension?'',
+  ``how can the user interact with transformations in particular
+  cases?'', ``how can this be generalized so that virtually any
+  transformation can be customized?'', ``how useful is it, in the
+  context of customization, to provide a generic mechanism for
+  propagating typestate?'', ``does the customization mechanism
+  naturally scale to cover extended transformations as well?'', ``what
+  mechanisms (except the ones covered by this thesis) are still needed
+  for writing an open compiler for Java?''.
+\end{itemize}
+
+\subsection{Thesis Preview}
+
+The work we propose to pursue in this thesis can be structured in
+three distinct layers, each with its own objectives. We give a quick
+preview of these three layers here and we then discuss them at length
+in the remaining sections of this proposal. A number of the tasks are
+marked as secondary. This means that they will only be addressed if
+time allows it. Whether this will be the case or not depends on how
+work on the other (primary) ones goes.
+
+Here are, then, the three layers and their subdivisions:
+
+\begin{itemize}
+
+\item extend and improve dynamic rules library by:
+  \begin{itemize}
+  \item \textit{writing an extensive unit test suite based on
+      TIL}\footnote{TIL stands for Tiny Imperative Language, it
+      represents the very thing its name suggests, and will be
+      described later.}: the dynamic rules library of Stratego is only
+    partially tested at this point, and tests have not kept up with
+    development lately. A proper and complete test suite for this
+    library is severely needed due to its increased complexity.
+  \item \textit{fix library code based on unit testing results}: we
+    are already aware of one bug in the dynamic rules library and we
+    expect a full-fledged test suite to reveal more. A mature library
+    used for data-flow analyses (or anything else, for that matter),
+    is naturally expected to have all known bugs fixed.
+  \item \textit{provide support for break and continue statements with
+      Java labels}: the Java language allows a controlled form of the
+    goto statement through labels combined with the break and continue
+    statements. Currently, the dynamic rules library does not provide
+    any abstractions for handling such statements elegantly.
+  \item \textit{provide support for Java exceptions}: an abstraction
+    for handling exceptions lacks as well.
+  \item \textit{extend constant propagation to handle break, continue
+      and exceptions}: this would be a proof-of-concept implementation
+    of a flow sensitive data-flow analysis for a fully-fledged
+    object-oriented language (Java) which is meant to validate and
+    illustrate the support for break, continue and exceptions.
+  \item (secondary) \textit{come up with intermediate level
+      abstractions for the various operations involving dynamic
+      rules}: with the addition of support for break, continue and
+    exception handling, a considerable amount of duplication of
+    (conceptual) operations will probably appear. It would be
+    desirable to identify and extract common operations and rebuild
+    existing abstractions on top of them. This would avoid duplication
+    \emph{and} allow a power user to reuse the intermediate level
+    abstractions in different, unforeseen contexts.
+  \end{itemize}
+
+\item implement escape \& pointer analysis:
+  \begin{itemize}
+  \item \textit{construct a call graph for Java programs}: this
+    information is needed by both the pointer and escape analyses, but
+    it can prove useful to a number of other data-flow analyses as
+    well.
+  \item \textit{implement pointer analysis}: as discussed, the results
+    of this analysis are needed if we ever intend Stratego to be used
+    for developing any other data-flow analysis effectively.  However,
+    it is not only the need for the alias information itself which
+    motivates this, but also the fact that we want an example of a
+    reasonably complex data-flow analysis done in Stratego in order to
+    validate the model in a ``real-life'' case.
+  \item (secondary) \textit{implement escape analysis}: escape
+    information is particularly useful for removing unneeded
+    synchronization and allocating Java objects that are local to a
+    method on the stack instead of the heap, so a future compiler that
+    would perform these two optimizations would benefit from escape
+    analysis. It would also provide further experience with using
+    Stratego for complex data-flow analyses.
+  \end{itemize}
+
+\item explore customizing and extending of transformations:
+  \begin{itemize}
+  \item \textit{experiment with some simple cases to find out how
+      transformations can be extended along with extensions to a
+      language}: we will try to find a structured way in which to
+    extend transformations for supporting additional syntax added to a
+    language.
+  \item \textit{experiment with propagation of typestates}: typestates
+    represents states of variables that can be computed and propagated
+    at compile time. The state information thus propagated can be used
+    by the compiler to infer potential problems in the semantics of
+    the program. We expect the model for user customization of
+    data-flow transformations to be related to typestate propagation,
+    so work on the latter should provide insight on the former.
+  \item \textit{experiment with an optimization which can benefit from
+      user annotations}: in order to find out how exactly a user can
+    aid optimizing transformations, we plan to imagine such an
+    optimization and discover where and what kind of user input is
+    valuable.
+  \item (secondary) \textit{create a generalized symbolic merge
+      operation for typestates}: currently, Stratego allows union and
+    intersection of dynamic rules to be used as merge operations after
+    a two-way split in the control flow. We would like to generalize
+    this to support random merge operations for multi-way split. This
+    requires investigating how the current model for representing
+    dynamic rules can be adapted to support this. Typestates in
+    particular motivate implementing this because they usually have to
+    be merged according to custom rules (i.e., not by intersection or
+    union).
+  \end{itemize}
+\end{itemize}
+
+\subsection{Proposal Overview}
+
+The rest of this proposal is organized as follows. Section
+\ref{sec:project-setting} discusses the set up of our project,
+focusing on the tools and technologies that will be employed, studied
+or worked in. The following three section describe the three layers
+(or phases) this thesis is structured on. All of them have the same
+organization: an overview subsection, a related work subsection and a
+proposed work subsection. Thus, sections \ref{sec:dynam-rules-libr},
+\ref{sec:point-escape-analys} and \ref{sec:extend-comp-transf}
+describe our proposed work on the dynamic rules library, on pointer
+and escape analysis and on extensible and customizable
+transformations, respectively. We end this proposal with section
+\ref{sec:planning}, which gives a tentative planning for the work
+planned herein.
+
+\begin{comment}
+  Discuss importance of compiler optimizations in general and in the
+  context of object-oriented programming languages (explain virtual
+  dispatching and why it slows down execution). Focus of Java being
+  rather inefficient (Sun compiler doesn't optimize much, all objects
+  allocated on heap and garbage collected with low priority, etc.) and
+  that therefore optimizing tools are necessary.  Make a distinction
+  between just-in-time compilation (and the types of optimization that
+  come with it) and static optimization (and its opportunities).
+
+  ~\\
+  Make the shift from the compilation process to the source-to-source
+  transformation process and detail the difficulties introduced by the
+  latter (no simplification possible since the programmer still has to
+  recognize the source after the transformation; techniques based on
+  control flow graph not applicable since reconstructing the original
+  source from an optimized control flow graph is close to impossible).
+  Explain that there is a point to source-to-source optimizations
+  since they will translate into optimized compiled programs after
+  compilation does take place (e.g., the effects of constant
+  propagation at the source level will be maintained after
+  compilation).
+
+  ~\\
+  \ldots (come up with a couple of more things to discuss here to put
+  the thesis into perspective)
+
+  ~\\
+  Explain what data-flow analyses are all about and how they relate to
+  optimizations. Discuss flow-sensitivity vs. flow-insensitivity,
+  context-sensitivity vs. context-insensitivity, intra- vs.
+  interprocedural.
+
+  ~\\
+  Provide some examples of data-flow analyses:
+  \begin{itemize}
+  \item constant propagation
+  \item common subexpression elimination
+  \item dead code elimination
+  \item pointer analysis (discuss at more length than others, given
+    that it's a main topic of the thesis)
+  \item escape analysis (discuss at more length than others, given
+    that it's a main topic of the thesis)
+  \item etc.
+  \end{itemize}
+
+  ~\\
+  Contrast how data-flow analysis is done ``traditionally'' and how it
+  is done in Stratego.  Basic idea: we don't use a flow graph and some
+  custom data structure to run the analysis, but instead generic
+  traversal strategies customized with specific behavior for relevant
+  constructs.  Explain how dynamic rules are used to (1) propagate
+  context specific information (2) store intermediate and final
+  results of the analysis. Emphasize how control flow is handled with
+  merging and fix point application and how currently there is no
+  support for break of control flow (continue, break, exceptions).
+
+  ~\\
+  Show how data-flow analyses are different for object-oriented
+  programming languages than for procedural languages (the main
+  distinction, as far as I can see, is that due to virtual dispatch,
+  we no longer know for sure in all cases what the exact code that
+  will be invoked by a method call is; we also have to consider the
+  implicit \code{this} parameter for every dynamic - i.e., non-static
+  - method call, but this is more of a technicality than a real
+  issue).  Any other differences??
+
+  ~\\
+  Discuss why we would like to have extensible and customizable
+  data-flow analyses.  Extensible: a language gets changed or gets
+  extended with a new domain specific language, so the data-flow
+  transformations have to be updated as well in a straightforward
+  manner.  Customizable: computers analyses are limited in the
+  assumptions they can make since first and foremost they have to
+  ensure soundness. User input (user tips) can be valuable to greatly
+  improve the precision of analyses. Introduce active libraries at
+  this point and relate them to the customizable aspect.
+\end{comment}

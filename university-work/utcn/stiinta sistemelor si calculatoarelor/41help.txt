@@ -1,0 +1,28 @@
+ - Functia DOS 41h -
+
+Functie:
+    Stergerea unui fisier.
+
+Asteapta:
+    ah: 41h
+    ds:dx: adresa unui  sir de caractere care se  termina cu nul (cod ascii
+        00h) si care reprezinta fisierul de creat.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag e setat.
+
+Descriere:
+    In urma apelului functiei se va  sterge fisierul specificat daca acesta
+    exista si  nu are atributul  read-only setat. ds:dx  trebuie sa contina
+    adresa unui sir de forma:
+        [d:][\cale\]nume_fisier.ext
+    care identifica locatia si numele  fisierului ce trebuie sters. Daca se
+    omit litera ce identifica drive-ul urmata de : si/sau calea, se iau va-
+    lorile implicite.
+    
+    Daca Carry Flag e  setat la iesirea din functie  atunci a avut loc o e-
+    roare si codul acestei se afla  in ax. In acest caz, fisierul nu a fost
+    sters.
+
+Nota:
+    Daca fisierul are atributul read-only setat, el nu va fi sters.

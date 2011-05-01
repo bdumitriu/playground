@@ -1,0 +1,12 @@
+
+Requires ghc 6.2.1 (http://www.haskell.org/ghc/).
+Visualizer also need wxHaskell.
+
+Assumes the maps are in tools/maps
+
+Running make in the simulator and visualizer directories will build them.
+
+Then in ants:
+./run.sh GaneshTest GaneshTest sample0 100000 -1
+(reduce 100000 for fewer steps)
+

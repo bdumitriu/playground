@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<styles default="StyleOne">
+
+	<colors>
+
+		<color>
+			<color-id>gray</color-id>
+			<rgb-values>
+				<r>128</r>
+				<g>128</g>
+				<b>128</b>
+			</rgb-values>
+		</color>
+
+		<color>
+			<color-id>magenta</color-id>
+			<color-name>magenta</color-name>
+		</color>
+
+		<color>
+			<color-id>blue</color-id>
+			<color-name>blue</color-name>
+		</color>
+
+		<color>
+			<color-id>purple</color-id>
+			<color-name>red</color-name>
+		</color>
+
+		<color>
+			<color-id>green</color-id>
+			<rgb-values>
+				<r>0</r>
+				<g>128</g>
+				<b>0</b>
+			</rgb-values>
+		</color>
+
+	</colors>
+
+	<style name="StyleOne">
+
+		<style-params>
+			<name>comments</name>
+			<color>grey</color>
+			<italic>yes</italic>
+			<bold>no</bold>
+		</style-params>
+
+		<style-params>
+			<name>operators</name>
+			<color>blue</color>
+			<italic>no</italic>
+			<bold>yes</bold>
+		</style-params>
+
+		<style-params>
+			<name>variables</name>
+			<color>purple</color>
+			<italic>no</italic>
+			<bold>no</bold>
+		</style-params>
+
+		<style-params>
+			<name>stringAndQuotes</name>
+			<color>green</color>
+			<italic>no</italic>
+			<bold>no</bold>
+		</style-params>
+
+		<style-params>
+			<name>functors</name>
+			<color>red</color>
+			<italic>no</italic>
+			<bold>no</bold>
+		</style-params>
+
+		<token>
+			<token-type>single line comment element</token-type>
+			<style-ref>comments</style-ref>
+		</token>
+
+		<token>
+			<token-type>multi line comment element</token-type>
+			<style-ref>comments</style-ref>
+		</token>
+
+		<token>
+			<token-type>unclosed single line comment element</token-type>
+			<style-ref>comments</style-ref>
+		</token>
+
+		<token>
+			<token-type>unclosed multi line comment element</token-type>
+			<style-ref>comments</style-ref>
+		</token>
+
+		<token>
+			<token-type>operator element</token-type>
+			<style-ref>operators</style-ref>
+		</token>
+
+		<token>
+			<token-type>variable element</token-type>
+			<style-ref>variables</style-ref>
+		</token>
+
+		<token>
+			<token-type>word element</token-type>
+			<style-ref>functors</style-ref>
+		</token>
+
+		<token>
+			<token-type>string element</token-type>
+			<style-ref>stringAndQuotes</style-ref>
+		</token>
+
+		<token>
+			<token-type>quoted item element</token-type>
+			<style-ref>stringAndQuotes</style-ref>
+		</token>
+
+		<token>
+			<token-type>unclosed string element</token-type>
+			<style-ref>stringAndQuotes</style-ref>
+		</token>
+
+		<token>
+			<token-type>unclosed quoted item element</token-type>
+			<style-ref>stringAndQuotes</style-ref>
+		</token>
+
+	</style>
+
+</styles>

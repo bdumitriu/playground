@@ -1,0 +1,118 @@
+\chapter{Guide to the Architecture}
+
+\section{Incremental approach}
+We have created our architecture in such a way that the transformation
+of the old system into the new one takes place in several phases. This is
+necessary because of the desire to have an incremental upgrade and is
+also profitable for the acquirer as it ensures early benefit of the changes
+that are already made. In addition, it is better for testing and user
+acceptance of the new system in small steps. As mentioned, during this
+transition the system will have to be working correctly and be usable
+the whole time. The transition, as explained, will consist of several
+phases, each of them including a number of steps. There will also be
+steps that span across 2 phases, but these represent isolated
+cases, as most steps will be completed in one phase only. Below, we
+describe the steps we have divided the upgrade into.
+
+\begin{enumerate}
+
+\item \textbf{UCIS refactoring to benefit from on-demand proposal request
+processing by STIFF}: We do this step as soon as possible because it
+implies quite small changes and because it is necessary in order
+to allow the customer (which, at first will be just the Call-Center
+employee, but once step 5 is also completed, will also be the regular
+customer) to benefit from real time proposal calculation
+
+\item \textbf{Create STIFF wrapper to emulate future on-demand protocol
+on old STIFF system}: STIFF currently calculates the proposal request
+over night. After the addition STIFF will be able to do calculations
+right away. We achieve this by adding a wrapper which will start
+STIFF on request. This might not be real time yet, but still it will be
+considerably faster than before
+
+\item \textbf{Migration of ForSure data from Office documents to Oracle database}:
+Currently, the data of ForSure is spread in a non-standardized
+way among a number of Microsoft Office documents. Clearly, it is
+impossible for an automated system to work with such data, which
+implies that all of it has to be transferred into the Oracle database
+of Zeker \& Vast, where it will be stored in a structured manner
+
+\item \textbf{Rest of UCIS refactoring with GOC integration}: We refactor the
+business logic of the UCIS system so that all the business logic currently
+existing on the client-side is moved to the server-side, leaving nothing
+but the presentation to be done on the client. This step is necessary
+before we can advance to the next one, in which we transform
+the presentation layer into HTML. During the refactoring, we also need
+to have in mind that all output has to be now forwarded to the GOC
+component, which is also introduced as part of this step
+
+\item \textbf{Porting of UCIS client GUI to website}: This will be the step
+at the end of which it will be possible for customers to access SureThing's
+system directly, through the Internet
+
+\item \textbf{Update CHIPS and BuRP to interface with the new UCIS}: As UCIS
+is modified, CHIPS \& BuRP will have to be updated in order to use the
+new interfaces of UCIS (if necessary)
+
+\item \textbf{Rewriting of STIFF in Java for scalability and caching of data}: While
+STIFF is still in its current form, running multiple instances of STIFF at the
+same time is not possible (reasons are explained in the process view),
+which means that it cannot be scaled to run on multiple machines at the
+same time. In order to allow such scalability, we need to rewrite STIFF
+from scratch and, since we are doing it anyway, we propose to rewrite it
+in Java since this way it would integrate easier with UCIS (which is also
+written in Java).
+
+We will also want to make the response time even smaller by caching
+product information from the database in STIFF's memory. There is a point
+to this since we expect product information to change very rarely (in terms of
+days). There is thus no point in rereading such information from the
+database every time a proposal has to be computed. However, in order
+for this system to work, STIFF has to be notified when the product
+information in the database changes. Creating such a notification
+mechanism is also the purpose of this step.
+
+\item \textbf{Migration of product data from ProD to Oracle database}: Alongside
+with rewriting STIFF, we naturally want to drop the text database (ProD)
+and move all the data found therein into the Oracle database, together
+with the customer information. Also connected to this step is the necessity
+of creating a database schema for the products that is flexible enough
+to allow for future product customization
+
+\item \textbf{Use Oracle stored procedures to centralize the SQL code}: This step is
+concerned with creating stored procedures in the Oracle database which
+provide all the data access that is now randomly spread through the
+sub component of the system. In this way, we would ensure that the
+application will not be sensible to future changes in the data model,
+as long as the stored procedures are updated accordingly
+
+\end{enumerate}
+
+Steps 1 through 3 are planned to be finished by the end of phase 1, steps 4
+through 6 by the end of phase 2 and the other steps by the end of phase 3. We
+also include an additional phase (phase 4) which is meant for testing the system
+and deciding if the load is properly dealt with or hardware additions are
+necessary. This division of steps into phases will also be discussed in more
+detail in the development view.
+
+\section{\textcolor{red}{Guide for stakeholders}}
+
+The interesting part of this document for the users is the
+scenarios view (ref).
+
+The part of this document that is of interest of the acquirers is
+the Physical view (ref).
+
+The parts of interest for the developers and the project manager
+of this document are the Logical view (ref), the Process view
+(ref) and the Development view (ref).
+
+The parts of interest for the maintainers of this document are the
+Logical view (ref), the Process view (ref) and the Development
+view (ref).
+
+The parts of this document that are of interest of the system
+administrator are the Process view (ref) and the Physical view
+(ref).
+
+The parts of interest for the management are ...

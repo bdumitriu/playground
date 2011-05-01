@@ -1,0 +1,55 @@
+ - Functia DOS 0ah -
+
+Functie:
+    Citire a unui sir de caractere folosind un tampon.
+
+Asteapta:
+    ah: 0ah
+    ds:dx: adresa unui tampon de intrare care are pe prima pozitie un numar
+        intre 1 si 254.
+
+Intoarce:
+    ds:dx:  tamponul contine  datele introduse  terminate cu  caracterul CR
+        (13h in ascii) si contine pe a  doua pozitia numarul efectiv de ca-
+        ractere citite.
+
+Descriere:
+    In urma apelului functiei  se citeste o linie de text (maxim 254 de oc-
+    teti) de la intrarea  standard intr-un tampon furnizat la apel. In res-
+    pectivul tampon trebuie specificata lungimea maxima permisa a textului.
+    
+    La intrare, tamponul de la adresa ds:dx trebuie aranjat astfel:
+    
+    +-----+---+---+---+---+---+---+---+---+-
+    | max | ? | ? | ? | ? | ? | ? | ? | ? |
+    +-----+---+---+---+---+---+---+---+---+-
+    
+    unde max reprezinta lungimea maxima  permisa (trebuie sa fie intre 1 si
+    254). La iesire, tamponul va fi umplut dupa cum urmeaza:
+    
+    +-----+-----+---+---+---+---+-----+---+-
+    | max | lun | t | e | x | t | 0dh | ? | 
+    +-----+-----+---+---+---+---+-----+---+-
+    
+    unde lun reprezinta lungimea efectiva a textului introdus mai putin ca-
+    racterul CR (in exemplul de mai sus ar fi 04h).
+    
+    Caracterele  sunt citite de la  intrarea standard pana  la introducerea
+    caracterului CR sau pana la introducerea de max-1 caractere. Daca se a-
+    tinge un numar  de max-1 caractere, se  va genera un sunet  la apasarea
+    oricarei alte taste decat CR.
+    
+    Cel de-al doilea octet din tampon  este scris cu numarul efectiv de ca-
+    ractere citite,  mai putin caracterul  CR. Ultimul caracter  din tampon
+    este intotdeauna CR.
+
+Note:
+    1. Exista anumite taste care sunt tratate special. Spre exemplu:
+    ESC afiseaza "\" si  apoi se reporneste introducerea  de caractere pe o  
+        linie noua.
+    F3  afiseaza o secventa salvata cu F5.
+    F5  afiseaza "@" si salveaza caracterele introduse ca o secventa.
+    <-  sterge caractere precum BACKSPACE.
+    
+    2. Daca se deteceaza apasarea combinatiei  de taste Ctrl+Break, se ape-
+    leaza intreruprea 23h si tamponul este lasat neatins.

@@ -1,0 +1,524 @@
+module extract-method
+imports
+
+  dryad/structure/*
+  dryad/jls/types/Subtyping
+  dryad/type-check/*
+
+  liblib
+
+  JavaExtractMethod
+
+signature
+  constructors
+    AfterExtract : List(A) -> B
+    MarkedMethod : A -> B
+    MarkedClass  : A -> B
+    NoInit       : A
+    Exceptions   : List(A) -> B
+
+strategies
+
+  /**
+   * The main strategy. Calls sglri with the new parse table for Java
+   * (including the notation for code to be extracted), then removes the
+   * Extract markup to make it usable by dryad, then applies
+   * dryad-reclassify-ambnames and then puts back the Extract markup.
+   * After that, it extracts the fragment to a new method, if possible.
+   * Rewriting will fail if extraction is not possible.
+   */
+  main =
+    xtc-io-wrap(xtc-transform(!"sglri", !["-p", "NewJava.tbl", "-s", "CompilationUnit"])
+              ; read-from
+              ; strip-extract
+              ; write-to
+              ; xtc-transform(!"dryad-reclassify-ambnames")
+	      ; xtc-transform(!"dryad-type-checker")
+              ; read-from
+              ; add-extract
+              ; observables-wrap(extract-method)
+              ; write-to
+    )
+
+strategies
+
+  /**
+   * Takes away the Extract markup and annotates the statements which are part
+   * of the fragment to extract so that they can be restored later, after dryad
+   * has been run on the code.
+   */
+  strip-extract =
+    topdown(try(AnnotateExtract))
+
+  /**
+   * Puts back the Extract markup based on the annotations created by the
+   * strip-extract strategy and adds an AfterExtract markup for the statements
+   * that come after the fragment to extract.
+   */
+  add-extract =
+    topdown(try(RestoreExtract))
+
+  /**
+   * Annotates all the statements in the body of an Extract, given the ATerm
+   * marked by Extract.
+   */
+  annotate-extract =
+    ?Extract(Id(theId), body)
+    ; <map(\ x -> x {"extract-ann", theId} \)>body
+
+  /**
+   * Restores the Extract markup and adds the AfterExtract markup as well, given
+   * the block in which the annotated statements are.
+   */
+  restore-extract(s) =
+    where (filter(s) => extractStmts)
+    ; where (split-fetch-keep(s) => (before, split {"extract-ann", theId}, after))
+    ; <concat>[ before,
+                [Extract(Id(theId), <map(\ x {_, _} -> x{} \)>extractStmts)],
+                [AfterExtract(<drop(<length>extractStmts; dec)>after)]
+	      ]
+
+rules
+
+  AnnotateExtract :
+    Block(body) -> Block(newBody)
+    where <split-fetch-keep(annotate-extract)>body => (before, split, after)
+	; <concat>[before, split, after] => newBody
+
+  AnnotateExtract :
+    ConstrBody(x, body) -> ConstrBody(x, newBody)
+    where <split-fetch-keep(annotate-extract)>body => (before, split, after)
+	; <concat>[before, split, after] => newBody
+
+  RestoreExtract :
+    Block(body) -> Block(newBody)
+    where <restore-extract(?_ {"extract-ann", _})>body => newBody
+
+  RestoreExtract :
+    ConstrBody(x, body) -> ConstrBody(x, newBody)
+    where <restore-extract(?_ {"extract-ann", _})>body => newBody
+
+strategies
+
+  /**
+   * The main strategy for method extraction.
+   */
+  extract-method =
+    mark-and-extract
+    ; where(collect-various-info)
+    ; where(change-var-lists)
+    ; where(extraction-possible)
+    ; perform-extraction
+
+strategies
+
+  /**
+   * A custom traversal of a compilation unit which:
+   *
+   * - puts the Extract & AfterExtract ATerms in the config hash table.
+   * - marks the method and the class which contain the fragment to be
+   *   extracted with the MarkedClass & MarkedMethod constructors.
+   */
+  mark-and-extract =
+       ?Extract(_, _)
+       ; rules (ContainsExtract : x -> x)
+       ; where(<set-config>("extract", <id>))
+
+    <+ ?AfterExtract(_)
+       ; where(<set-config>("afterExtract", <id>))
+
+    <+ (?ConstrDec(_, _) + ?MethodDec(_, _))
+       ; {| ContainsExtract :
+              all(mark-and-extract)
+	      ; if ContainsExtract then
+	          where(<set-config>("method", <id>))
+                  ; !MarkedMethod(<id>)
+                  ; rules (ContainsMarkedMethod : x -> x)
+		else
+                  id
+                end
+         |}
+
+    <+ ?ClassDec(_, _)
+       ; {| ContainsMarkedMethod :
+              all(mark-and-extract)
+	      ; if ContainsMarkedMethod then
+                  !MarkedClass(<id>)
+                else
+                  id
+                end
+         |}
+
+    <+ all(mark-and-extract)
+
+/**
+ * Strategies related to collection of information about variables, exceptions
+ * and so on.
+ */
+strategies
+
+  collect-various-info =
+    <get-config>"extract"
+    ; <set-config>("assignedToVars", <assigned-to-variables>)
+    ; <get-config>"extract"
+    ; <set-config>("usedVars", <used-variables>)
+    ; <get-config>"afterExtract"
+    ; <set-config>("usedAfterVars", <used-variables>)
+    ; <get-config>"method"
+    ; <set-config>("types", <get-var-types>)
+    ; <get-config>"extract"
+    ; <set-config>("declaredVars", <declared-variables>)
+    ; <get-config>"extract"
+    ; <set-config>("exceptions", <get-exceptions>)
+
+  change-var-lists =
+    <get-config>"usedVars" => uv
+    ; <get-config>"assignedToVars" => av
+    ; <get-config>"usedAfterVars" => uav
+    ; <get-config>"declaredVars" => dv
+
+    ; <diff>(dv, uav) => dv'
+    ; <diff>(uv, dv') => uv'
+    ; <diff>(av, dv') => av'
+    ; <isect>(av', uav) => av''
+    ; <isect>(uav, dv) => uav'
+
+    ; <set-config>("usedVars", uv')
+    ; <set-config>("assignedToVars", av'')
+    ; <set-config>("usedAfterVars", uav')
+
+/**
+ * Strategies related to exception handling.
+ */
+strategies
+
+  /**
+   * Returns a list of all the exceptions thrown in the fragment to which
+   * it is applied.
+   */
+  get-exceptions =
+    define-exception-rules
+    ; <union>(<bagof-TempException>(), <bagof-PermException>())
+
+  /**
+   * A custom traversal which looks for exceptions and defines dynamic
+   * rules for them.
+   */
+  define-exception-rules =
+       ?Try(block, catches)
+       ; {| TempException, InTry :
+             rules(InTry : () -> ())
+             ; Try(define-exception-rules, id)
+	     ; where( <map(?Catch(Param(_, <id>, _), _))>catches
+	              ; eliminate-caught-exceptions
+                      ; ?exceptions
+		    )
+         |}
+       ; Try(id, define-exception-rules)
+       ; where(   <InTry>()
+	        < <map(\ x -> x where rules(TempException :+ () -> x ) \)>exceptions
+                + <map(\ x -> x where rules(PermException :+ () -> x ) \)>exceptions
+              )
+
+    <+ ?Try(block, catches, finally)
+       ; {| TempException, InTry :
+             rules(InTry : () -> ())
+             ; Try(define-exception-rules, id, id)
+	     ; where( <map(?Catch(Param(_, <id>, _), _))>catches
+	              ; eliminate-caught-exceptions
+                      ; ?exceptions
+		    )
+         |}
+       ; Try(id, define-exception-rules, define-exception-rules)
+       ; where(   <InTry>()
+	        < <map(\ x -> x where rules(TempException :+ () -> x ) \)>exceptions
+                + <map(\ x -> x where rules(PermException :+ () -> x ) \)>exceptions
+              )
+
+    <+ ?Invoke(methodid, args)
+       ; Invoke(id, define-exception-rules)
+       ; where(get-exceptions-of-invocation)
+
+    <+ all(define-exception-rules)
+
+  /**
+   * Defines TempException dynamic rules for all the exceptions thrown
+   * by a method invocation.
+   */
+  get-exceptions-of-invocation =
+    ?e@Invoke(methodid, _)
+    ; <dryad-tc-search-class-of-method>methodid => class
+    ; <determine-method-signature(|class)>e
+    ; get-exceptions-of-method
+    ; map(\ x -> x where rules(TempException :+ () -> x) \)
+
+  /**
+   * Returns a list with all the exceptions thrown by a method.
+   */
+  get-exceptions-of-method =
+    ?Method(_, _, _, Attributes(<fetch(?Exceptions(es))>))
+    ; !es
+    ; map(?Class(<id>); <bytecode-type-to-source-type>ObjectType(<id>))
+    <+ ![]
+
+  eliminate-caught-exceptions =
+    ?caughtExceptions
+    ; <bagof-TempException>()
+    ; filter(not(caught(|caughtExceptions)))
+    
+  caught(|caughtExceptions) =
+    ?exception
+    ; <fetch({caughtException: ?caughtException; <is-subtype(|caughtException)>exception})>caughtExceptions
+
+strategies
+
+  /**
+   * A custom traversal of the compilation unit which performs the actual method
+   * extraction.
+   */
+  perform-extraction =
+       ?MarkedClass(<id>)
+       ; all(perform-extraction)
+       ; ?ClassDec(cHead, ClassBody(cBody))
+       ; <get-config>"extract" => Extract(Id(x), stmts)
+       ; <get-config>"assignedToVars" => av
+       ; (<eq>(<length>av, 1) < !av => [y]; <conc>(stmts, [ |[ return y; ]| ]) + !stmts) => emBody
+       ; (<eq>(<length>av, 1) < !av => [y]; <lookup>(y, <get-config>"types") => (t, _) + !Void() => t)
+       ; <get-config>"usedVars"
+       ; map(\ x -> Param([], <Fst>(<lookup>(x, <get-config>"types")), Id(x)) \) => param*
+       ; <process-declarations>emBody => bstm*
+       ; <get-config>"exceptions" => exceptions
+       ; (<?[]>exceptions 
+         < !MethodDec(MethodDecHead([Private()], None(), t, Id(x), [param*], None), Block([ bstm* ])) => em
+         + !MethodDec(MethodDecHead([Private()], None(), t, Id(x), [param*], Some(ThrowsDec(exceptions))), Block([ bstm* ])) => em
+	 )
+       ; <conc>(cBody, [em]) => newCBody
+       ; !ClassDec(cHead, ClassBody(newCBody))
+
+    <+ ?ClassDec(_, _)
+       // this is to avoid unnecessary traversal
+
+    <+ ?MarkedMethod(<id>)
+       ; all(perform-extraction)
+
+    <+ ?MethodDec(_, _)
+       // this is to avoid unnecessary traversal
+
+    <+ ?Block(_)
+       ; all(perform-extraction)
+       ; ?Block(<id>)
+       ; !Block(<flatten-list>)
+
+    <+ ?ConstrBody(_, _)
+       ; all(perform-extraction)
+       ; ?ConstrBody(x, body)
+       ; !ConstrBody(x, <flatten-list>body)
+
+    <+ ?Extract(Id(x), _)
+       ; <get-config>"assignedToVars" => av
+       ; <get-config>"usedAfterVars" => uav
+       ; <get-config>"usedVars"
+       ; map(\ x -> ExprName(Id(x)) \) => e*
+       ; <define-declarations>uav => decs
+       ; (    <eq>(<length>av, 0)
+              ; <conc>(decs, [ |[ x(e*); ]| ])
+           <+ !av => [y]
+	      ; <conc>(decs, [ |[ y = x(e*); ]| ])
+         )
+
+    <+ ?AfterExtract(<id>)
+
+    <+ all(perform-extraction)
+
+  define-declarations =
+    where(<get-config>"types" => typeList)
+    ; map(\ x -> [ |[ ~<Fst>(<lookup>(x, typeList)) x; ]| ] \)
+
+  process-declarations =
+    map(?LocalVarDecStm(<id>) < generate-new-declarations + id)
+    ; flatten-list
+
+  generate-new-declarations =
+    where(<get-config>"usedAfterVars" => uav)
+    ; var-dec
+    ; map({x, t, e: ?(x, (t, e))
+          ; ( <elem>(x, uav)
+              < (<?NoInit()>e < ![] + !|[ x = e; ]|)
+              + (<?NoInit()>e < !LocalVarDecStm(lvdec|[ t x ]|) + !LocalVarDecStm(lvdec|[ t x = e ]|))
+            )
+         })
+    ; filter(not(?[]))
+
+/**
+ * Strategies related to collection of variables.
+ */
+strategies
+
+  /**
+   * Collects all the variables which are changed (by assigning to them) in
+   * a fragment of code.
+   */
+  assigned-to-variables =
+    generic-collect-vars(var-assign)
+
+  /**
+   * Collects all the variables which are used in a fragment of code.
+   */
+  used-variables =
+    generic-collect-vars(var-use)
+
+  /**
+   * This is a generic strategy to collect free variables (i.e., those not
+   * defined in the piece of code to which the strategy is applied) which match
+   * the strategy var-match. This strategy should return a singleton list
+   * containing the variable. The strategy can be applied to any piece of code.
+   */
+  generic-collect-vars(var-match) =
+    where (new-iset => set)
+    ; topdown(try(where(add-var(var-match | set))))
+    ; <iset-elements>set => collectedVars
+    ; <iset-destroy>set
+    ; !collectedVars
+
+  /**
+   * Collects all the variables which are declared in a fragment of code.
+   */
+  declared-variables =
+    where (new-iset => set)
+    ; topdown(try(where(add-if-declared(|set))))
+    ; <iset-elements>set => collectedDecs
+    ; <iset-destroy>set
+    ; !collectedDecs
+
+  /**
+   * If the var-dec strategy succeeds on the current term, then it adds each
+   * variable in the list returned by var-dec to the set.
+   */
+  add-if-declared(|set) =
+    where (var-dec => varDecs)
+    ; <map(\
+        (var, (type, init)) -> (var, (type, init))
+	where <iset-add(|var)>set
+      \)>varDecs
+
+  /**
+   * If the var-match strategy succeeds on the current term, then it adds the variable
+   * returned by var-match to the set.
+   */
+  add-var(var-match | set) =
+    var-match
+    ; ?[x]
+    ; <iset-add(|x)>set
+
+  /**
+   * Succeeds if applied to an assignment to a variable and returns the variable
+   * name to which the assignment is made as a singleton list.
+   */
+  var-assign =
+    ?Assign(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?AssignMul(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?AssignDiv(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?AssignRemain(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?AssignPlus(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?AssignMinus(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?AssignLeftShift(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?AssignRightShift(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?AssignURightShift(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?AssignAnd(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?AssignExcOr(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?AssignOr(ExprName(Id(<make-singleton-list>)), _)
+    <+ ?VarDec(Id(<make-singleton-list>), _)
+
+  /**
+   * Succeeds if applied to the usage of a variable and returns the used
+   * variable as a singleton list.
+   */
+  var-use =
+    ?ExprName(Id(<make-singleton-list>))
+
+  make-singleton-list =
+    ![<id>]
+
+  /**
+   * Returns a list containing (var, type) tuples with all the variables
+   * declared in the ATerm the strategy is applied to.
+   */
+  get-var-types =
+    collect-all(var-dec, conc, SkipNewScopes)
+    ; flatten-list
+
+  /**
+   * If applied to a variable declaration, it returns a list of
+   * (var, (type, initExpr)) tuples.
+   */
+  var-dec =
+       ?LocalVarDec(_, type, varDecs)
+       ; <get-var-type-tuples>(type, varDecs)
+    <+ ?MethodDecHead(_, _, _, _, paramDecs, _)
+       ; <get-param-type-tuples>paramDecs
+    <+ ?ConstrDecHead(_, _, _, cparamDecs, _)
+       ; <get-param-type-tuples>cparamDecs
+
+  /**
+   * Takes of tuple containing a type and a list of variable declarations and
+   * returns a list of (var, type) tuples using the same type (received as a
+   * parameter) for each of the variables in the list of variable declarations
+   * (also received as a parameter).
+   */
+  get-var-type-tuples =
+    ?(type, varDecs)
+    ; <map(VarType(|type))>varDecs
+
+  /**
+   * Takes a list of parameter declarations and returs a simplified list which
+   * only contains tuples with the names of the defined parameters and their
+   * types.
+   */
+  get-param-type-tuples =
+    map(ParamType)
+    
+rules
+
+  VarType(|type) :
+    VarDec(Id(x)) -> (x, (type, NoInit()))
+
+  VarType(|type) :
+    VarDec(Id(x), init) -> (x, (type, init))
+
+  ParamType :
+    Param(_, type, Id(x)) -> (x, (type, NoInit()))
+
+  // for skipping anonymous classes
+  SkipNewScopes :
+    NewInstance(_, _, _, _) -> []
+
+/**
+ * Strategies for sanity checks on the fragment to extract.
+ */
+strategies
+
+  /**
+   * The strategy succeeds if the extract fragment can indeed be extracted. This
+   * means that:
+   *
+   * - there are no control flow statements in the fragment (return, break,
+   *   continue or label definitions).
+   * - there is at most one single free variable to which an assignment is
+   *   made.
+   */
+  extraction-possible =
+    <get-config>"extract"
+    ; (not(has-control-flow) <+ (say(!"\nExtraction cannot be done because of control flow.\n"); <exit>1))
+    ; <get-config>"assignedToVars"
+    ; (<leq>(<length>, 1) <+ (say(!"\nExtraction cannot be done because of more than one assignment to a variable in the fragment to extract.\n"); <exit>1))
+
+  /**
+   * The strategy succeeds if there are control flow statements (return, break,
+   * continue or label definitions) in the term to which it is applied.
+   */
+  has-control-flow =
+       ?Return(_)
+    <+ ?Break(_)
+    <+ ?Continue(_)
+    <+ ?Labeled(_, _)
+    <+ some(has-control-flow)

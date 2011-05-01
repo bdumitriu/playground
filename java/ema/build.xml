@@ -1,0 +1,44 @@
+<project name="EMA" default="tests" basedir=".">
+
+	<description>The Ant build file for the EMA project.</description>
+
+	<!-- set global properties for this build -->
+	<property name="src" location="src"/>
+	<property name="build" location="classes"/>
+	<property name="dist"  location="dist"/>
+
+	<target name="init">
+		<!-- create the time stamp -->
+		<tstamp />
+		<!-- create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the source" >
+		<!-- compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" />
+	</target>
+
+	<target name="rmic" depends="compile" description="generate all stubs/skeletons">
+		<!-- generate stubs/skeletons for all classes of type *Impl.class -->
+		<rmic base="${build}" includes="server/*Impl.class" />
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution" >
+		<!-- create the distribution directory -->
+		<mkdir dir="${dist}/lib" />
+		<!-- put everything in ${build} into the ema-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/lib/ema-${DSTAMP}.jar" basedir="${build}" />
+	</target>
+
+	<target name="clean" description="clean up" >
+		<!-- delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+
+	<target name="tests" description="compile test ">
+		<javac srcdir="${src}/test" destdir="${build}" />
+	</target>
+
+</project>

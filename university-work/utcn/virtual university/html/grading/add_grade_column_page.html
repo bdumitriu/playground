@@ -1,0 +1,57 @@
+<html>
+
+<link rel="stylesheet" href="../../style/vu_main.css" type="text/css" />
+<script language="javaScript" src="../../js/utils.js"></script>
+
+<body>
+
+<table class="container">
+<td class="container">
+
+<h2>Add grade column.</h2>
+
+<br />
+
+<table>
+<tr>
+<td align="centered">
+Enter the name of the new grade column. Beware that the name does
+<b>NOT</b> identify uniquely the columns, <br /> but the inner mechanism
+within the database does. This means that if you are not carefull
+you might find <br />yourself having two grade columns with the same name.
+</td>
+</tr>
+</table>
+
+<br />
+
+<form method="POST" action="addGradeColumn.do">
+
+<table>
+<tr>
+<td align="right">Enter the name of the grade column:</td>
+<td align="left">
+<input type="text" name="grade_column" value="" />
+</td>
+</tr>
+
+
+<tr>
+<td align="center" colspan="2">
+<br />
+<br />
+<input class="button" type="reset" value=" << Reset >> "></input>
+<input class="button" type="submit" value=" << Create >> "></input>
+</td>
+</tr>
+
+</table>
+
+</form>
+
+</td>
+</table>
+
+</body>
+
+</html>

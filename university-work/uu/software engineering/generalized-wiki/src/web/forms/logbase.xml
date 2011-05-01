@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <group>logtest</group>
+  <edit>
+    <displayedit />
+  </edit>
+  <view>
+    <displayedit />
+  </view>
+  <formbase>
+    <Date />
+    <Description />
+    <Duration>0</Duration>
+  </formbase>
+</root>
+

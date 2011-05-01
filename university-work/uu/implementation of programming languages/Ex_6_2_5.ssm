@@ -1,0 +1,7 @@
+LDC	3
+LDC	2
+MUL
+LDC	5
+LDC	6
+DIV
+ADD

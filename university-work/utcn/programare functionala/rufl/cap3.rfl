@@ -1,0 +1,213 @@
+import Library
+
+type Numar_mare = [Int]
+type Set alpha = [alpha]
+
+dec writeIntLists::[[Int]]->[Int]
+def writeIntLists [] = []
+    writeIntLists (x:xs) = seq
+	writeInts x
+	putch ' '
+	writeIntLists xs
+
+dec writePairs::[(Int, String)]->[alpha]
+def writePairs [] = []
+    writePairs ((x,y):xs) = seq
+	putch '('
+	writeInt x
+	putch ','
+	writeString y
+	putch ')'
+	putch ' '
+	writePairs xs
+
+dec prodl::[Int]->Int
+def prodl [] = 1
+    prodl (x:xs) = x*prodl xs
+
+dec maxl::[Int]->Int
+def maxl [x] = x
+    maxl (x:xs) =
+	let
+		maxp = maxl xs
+	in
+		if x > maxp then
+			x
+		else
+			maxp
+
+dec my_null::[alpha]->Bool
+def my_null [] = True
+    my_null (_:_) = False
+
+dec my_hd::[alpha]->alpha
+def my_hd (x:_) = x
+
+dec my_tl::[alpha]->[alpha]
+def my_tl (_:xs) = xs
+
+dec my_length::[alpha]->Int
+def my_length [] = 0
+    my_length (_:xs) = 1+my_length xs
+
+dec my_take::Int->[alpha]->[alpha]
+def my_take 0 _ = []
+    my_take n [] = []
+    my_take n (x:xs) = x: my_take (n-1) xs
+
+dec my_drop::Int->[alpha]->[alpha]
+def my_drop 0 l = l
+    my_drop n [] = []
+    my_drop n (x:xs) = my_drop (n-1) xs
+
+infix 300 +++
+dec (+++)::[alpha]->[alpha]->[alpha]
+def []+++l = l
+    (x:xs)+++l = x:(xs+++l)
+
+dec inv::[alpha]->[alpha]
+def inv [] = []
+    inv (x:xs) = inv xs +++ [x]
+
+dec inv_eficient::[alpha]->[alpha]
+def inv_eficient l = inv_ef l []
+	where
+		inv_ef [] linv = linv
+		inv_ef (x:xs) linv = inv_ef xs (x:linv)
+
+dec prod::Numar_mare->Int->Numar_mare
+def prod nr i = inv_eficient (prod' (inv_eficient nr) 0)
+	where
+		prod' [] 0 = []
+		prod' [] c = (c%10):prod' [] (c/10)
+		prod' (x:xs) c =
+			let
+				k = x*i+c
+			in
+				(k%10):prod' xs (k/10)
+
+dec fact::Int->Numar_mare
+def fact 0 = [1]
+    fact n = prod (fact (n-1)) n
+
+-- operatii pe liste/multimi
+
+dec my_member::alpha->[alpha]->Bool
+def my_member x [] = False
+    my_member x (y:ys) = (x == y) || member x ys
+
+dec add::alpha->[alpha]->[alpha]
+def add x l = l,	if my_member x l
+    add x l = x:l,	otherwise
+
+dec elim_duplicate::[alpha]->[alpha]
+def elim_duplicate [] = []
+    elim_duplicate (x:xs) = add x (elim_duplicate xs)
+
+dec reun::[alpha]->[alpha]->[alpha]
+def reun [] l = l
+    reun (x:xs) l = add x (reun xs l)
+
+dec inters::[alpha]->[alpha]->[alpha]
+def inters [] l = []
+    inters (x:xs) l = x:inters xs l,	if my_member x l
+    inters (x:xs) l = inters xs l,	otherwise
+
+dec subset::[alpha]->[alpha]->Bool
+def subset [] l = True
+    subset (x:xs) l = my_member x l && subset xs l
+
+dec eqset::[alpha]->[alpha]->Bool
+def eqset l1 l2 = subset l1 l2 && subset l2 l1
+
+dec putere_set::[alpha]->[alpha]->[[alpha]]
+def putere_set [] baza = [baza]
+    putere_set (x:xs) baza = putere_set xs baza +++ putere_set xs (x:baza)
+
+dec prod_cart::[alpha]->[beta]->[(alpha,beta)]
+def prod_cart [] _ = []
+    prod_cart (x:xs) l = adauga x l ++ prod_cart xs l
+	where
+		adauga x [] = []
+		adauga x (y:ys) = (x,y):adauga x ys
+
+-- operatii pe multimi ordonate crescator
+
+dec card::Set alpha->Int
+def card s = my_length s
+
+dec adElem::alpha->Set alpha->Set alpha
+def adElem x [] = [x]
+    adElem x (y:ys) = x:y:ys,		if x < y
+		    = y:ys,		if x == y
+		    = y:adElem x ys,	otherwise
+
+dec elElem::alpha->Set alpha->Set alpha
+def elElem x [] = []
+    elElem x (x:xs) = xs
+    elElem x (y:ys) = y:elElem x ys
+
+dec reun_s::Set alpha->Set alpha->Set alpha
+def reun_s [] l = l
+    reun_s l [] = l
+    reun_s (x:xs) (y:ys) = x:reun_s xs (y:ys),	if x < y
+			 = y:reun_s (x:xs) ys,	if x > y
+			 = x:reun_s xs ys,	otherwise
+
+dec inters_s::Set alpha->Set alpha->Set alpha
+def inters_s [] l = []
+    inters_s l [] = []
+    inters_s (x:xs) (y:ys) = inters_s xs (y:ys),	if x < y
+			   = inters_s (x:xs) ys,	if x > y
+			   = x:inters_s xs ys,		otherwise
+
+dec subset_s::Set alpha->Set alpha->Bool
+def subset_s [] l = True
+    subset_s l [] = False
+    subset_s (x:xs) (y:ys) = False,		if x < y
+			   = subset (x:xs) ys,	if x > y
+			   = subset xs ys,	otherwise
+
+-- pt. generare lista de tipul: [1,3..11] sau [10,8..2]
+
+dec my_fromtostep::Int->Int->Int->[Int]
+def my_fromtostep a b limita =
+	let
+		inc = b-a
+		test = if a < b then (>) else (<)
+	in
+		if test a limita then
+			[]
+		else
+			a:my_fromtostep (a+inc) (b+inc) limita
+
+-- "=>" pus dupa un argument forteaza evaluarea sa "by value"
+-- in loc de cea implicita "by need"
+
+dec my_filter::(alpha->Bool)->[alpha]=>[alpha]
+def my_filter p [] = []
+    my_filter p (x:xs) = x:my_filter p xs,	if p x
+		       = my_filter p xs,	otherwise
+
+dec filtru::Int->Bool
+def filtru x = True,	if x >= 10
+	     = False,	otherwise
+
+dec prod_cartezian::[alpha]->[beta]->[(alpha,beta)]
+def prod_cartezian xs ys = [(x,y) | x <- xs | y <- ys]
+
+dec quicksort::[alpha]->[alpha]
+def quicksort [] = []
+    quicksort (x:xs) =
+	let
+		maimici = [y | y <- xs, y <= x]
+		maimari = [y | y <- xs, y > x]
+	in
+		quicksort maimici ++ x:quicksort maimari
+
+dec perm::[alpha]->[[alpha]]
+def perm [] = [[]]
+    perm lst = [x:p | x <- lst | p <- perm (lst\\[x])]
+
+def main = seq
+	writeIntLists(perm [])

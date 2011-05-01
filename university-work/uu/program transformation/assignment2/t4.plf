@@ -1,0 +1,1 @@
+forall m: forall n: exists i: lessThan(m, i) /\ lessThan(i, n) /\ lessThan(a(i), i0)

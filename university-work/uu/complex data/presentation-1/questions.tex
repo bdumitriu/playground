@@ -1,0 +1,76 @@
+\documentclass{article}
+
+\title{Session 1: Sequence Alignment}
+\author{Bogdan Dumitriu}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+Here are your questions:
+
+\begin{enumerate}
+
+\item {\bf (Bram)} What kind of statistical methods can be used
+to evaluate the significance of an alignment score? How are these
+methods used to distinguish true alignments form spurious alignments?
+
+\item {\bf (Marjolijn)} The article says that ``The assumption of
+independence appears to be a reasonable approximation for DNA and
+protein sequences [...] However, it is seriously inaccurate for
+structural RNAs, where base pairing introduces very important
+long-range dependencies.'' (section 2.2 page 14)
+
+How is it possible that independence holds for DNA and not for RNA
+when you think of the fact that RNA is a copy of a small piece of DNA?
+
+\item {\bf (Jacob)} Why is (equation 2.10) $\displaystyle \sum_{a,b}q_a q_b \log \frac{q_a q_b}{p_{ab}}$
+equal to the relative entropy $H(q^2 || p)$ and furthermore,
+what \emph{is} this entropy and what has it to do with this local
+alignment algorithm?
+
+\item {\bf (Ingmar)} I have a question about the dynamic programming
+part. I understand how they build up a matrix as shown in picture 2.5,
+however I do not completely understand how they derive an optimal
+alignment from this matrix. It seems that when a letter matches a
+letter they will go up diagonal in the matrix. When there is no
+match they make a gap in the string for which the penalty is lowest.
+However if you look at the bottom right of this matrix, then why do
+they go from 1 to -5 instead of from 1 to 2 (it seems to me that 2
+is better then -5 even though E matches with E).
+
+So my question is: How do you determine which step backwards to take
+in the matrix and why?
+
+\item {\bf (Adriano)} In this paper we have seen different kinds of
+alignment algorithms to find an optimal alignment for a pair of
+sequences (Global Alignment, Local Alignment, Repeat Matches, Overlap
+Matches and Hybrid Match Conditions), each one with complexity $O(n^2)$.
+I think that it could be possible to find an optimal alignment
+considering three (or more) sequences using the same intuition of
+these algorithms, but this would lead to have a complexity $O(n^3)$
+and in same cases (using dynamic programming with more complex models)
+$O(n^9)$.
+
+Is my hypothesis possible?
+
+If it were possible, it seems to me that it has high complexity to be
+used. $O(n^3)$ algorithms are only feasible for very short sequences.
+Would you agree?
+
+\item {\bf (Marjolijn)} Is it possible that you get the same
+alignment when using the Needleman-Wunsch algorithm (global) and
+the Smith-Waterman algorithm (local) to align two different
+sequences? If it is not, what are the differences in alignment
+and score?
+
+\item {\bf (Lee)} Exercise 2.9 gives you a little assignment to
+calculate the dynamic programming matrix and an optimal alignment
+for two given DNA sequences. It gives a linear gap penalty of d = 2
+however. Shouldn't penalties be negative? So I assume this is just a
+type mistake from the authors?
+
+\end{enumerate}
+
+\end{document}

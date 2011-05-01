@@ -1,0 +1,243 @@
+<HTML>
+<HEAD>
+<TITLE>class FileSystemDriver</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>class FileSystemDriver</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1">the primary interface to the file system.
+ <small><A HREF="#longdesc">More...</A></small></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="so___include___driver___FileSystemDriver_h.html">so/include/driver/FileSystemDriver.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-FileSystemDriver.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Methods</h4><ul><LI>unsigned char &nbsp;<b><A HREF="#ref1">initializeDriver</A></b> () 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref2">createFile</A></b> (const char* fileName, int fileType) 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref3">readBytesFromFile</A></b> (const char* fileName, long offset, void* inBuffer, long noBytes) 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref4">writeBytesInFile</A></b> (const char* fileName, long offset, void* outBuffer, long noBytes) 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref5">deleteFile</A></b> (const char* fileName) 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref6">renameFile</A></b> (const char* oldFileName, const char* newFileName) 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref7">getFileSize</A></b> (const char* fileName, unsigned long* fileSize) 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref8">listFiles</A></b> (const char* directoryName, <A HREF="DirectoryListing.html">DirectoryListing</A>** dirListing) 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref9">formatHDD</A></b> () 
+</LI>
+</ul><h4>Private Members</h4><ul><LI>BlockMap* <b><A HREF="#ref10">blockMap</A></b></LI>
+<LI>InodeMap* <b><A HREF="#ref11">inodeMap</A></b></LI>
+<LI>HDD* <b><A HREF="#ref12">hdd</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><p>
+ This class represents the primary interface to the file system. It
+ should be the only one the user should interact with. It provides
+ complete access to the file system functionality.
+</p>
+<p></p>
+<A NAME="initializeDriver"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>initializeDriver</strong> ()
+<br>throw(<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>initializeDriver</strong></h3></td></tr></table><p></p><p>
+ Initializes the internal structures of the driver. No other
+ method can be run successfully before this method is
+ run successfully.
+</p>
+<p> The method throws:
+ <ul>
+ <li> IOException* if an I/O error occured during operation.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Returns</b>: 0 if operation was successful / error code otherwise. The error
+	codes can be found in include/defs.h.
+	 </p>
+<A NAME="createFile"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>createFile</strong> (const char* fileName, int fileType)
+<br>throw(<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>createFile</strong></h3></td></tr></table><p></p><p>
+ Creates a new empty file having the specified filename and type.
+</p>
+<p> The method throws:
+ <ul>
+ <li> IOException* if an I/O error occured during operation.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileName</i></TD><TD align="left" valign="top">the name of the file/directory to be created.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>fileType</i></TD><TD align="left" valign="top">discriminates between ordinary files, folders & other types of files
+	(see & use file type definitions in defs.h for type consistency).
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 0 if operation was successful / error code otherwise. The error
+	codes can be found in include/defs.h.
+	 </p>
+<A NAME="readBytesFromFile"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>readBytesFromFile</strong> (const char* fileName, long offset, void* inBuffer, long noBytes)
+<br>throw(<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>readBytesFromFile</strong></h3></td></tr></table><p></p><p>
+ Reads a number of <code>noBytes</code> bytes from the specified file
+ starting from the specified offset into the <code>inBuffer</code> buffer.
+</p>
+<p> The method throws:
+ <ul>
+ <li> IOException* if an I/O error occured during operation.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileName</i></TD><TD align="left" valign="top">the name of the file to read from.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>offset</i></TD><TD align="left" valign="top">the offset in the file where to start reading from.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>inBuffer</i></TD><TD align="left" valign="top">the buffer in which to insert the read data.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>noBytes</i></TD><TD align="left" valign="top">the number of bytes to read.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 0 if operation was successful / error code otherwise. The error
+	codes can be found in include/defs.h.
+	 </p>
+<A NAME="writeBytesInFile"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>writeBytesInFile</strong> (const char* fileName, long offset, void* outBuffer, long noBytes)
+<br>throw(<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>writeBytesInFile</strong></h3></td></tr></table><p></p><p>
+ Writes a number of <code>noBytes</code> bytes to the specified file
+ starting from the specified offset of the <code>outBuffer</code> buffer.
+</p>
+<p> The method throws:
+ <ul>
+ <li> IOException* if an I/O error occured during operation.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileName</i></TD><TD align="left" valign="top">the name of the file to write to.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>offset</i></TD><TD align="left" valign="top">the offset in the file where to start writing from.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>outBuffer</i></TD><TD align="left" valign="top">the buffer containing the data to be written.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>noBytes</i></TD><TD align="left" valign="top">the number of bytes to write.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 0 if operation was successful / error code otherwise. The error
+	codes can be found in include/defs.h.
+	 </p>
+<A NAME="deleteFile"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>deleteFile</strong> (const char* fileName)
+<br>throw(<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>deleteFile</strong></h3></td></tr></table><p></p><p>
+ Deletes the file having the specified name. The name must represent
+ the absolute path if directories are supported. Also, if fileName
+ denotes a directory, it has to be empty in order to be deleted.
+</p>
+<p> The method throws:
+ <ul>
+ <li> IOException* if an I/O error occured during operation.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileName</i></TD><TD align="left" valign="top">the name of the file to be deleted.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 0 if operation was successful / error code otherwise. The error
+	codes can be found in include/defs.h.
+	 </p>
+<A NAME="renameFile"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>renameFile</strong> (const char* oldFileName, const char* newFileName)
+<br>throw(<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>renameFile</strong></h3></td></tr></table><p></p><p>
+ Renames the file having the name specified by the first argument with
+ the name specified by the second argument.
+</p>
+<p> The method throws:
+ <ul>
+ <li> IOException* if an I/O error occured during operation.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>oldFileName</i></TD><TD align="left" valign="top">the original file name.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>newFileName</i></TD><TD align="left" valign="top">the new file name.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 0 if operation was successful / error code otherwise. The error
+	codes can be found in include/defs.h.
+	 </p>
+<A NAME="getFileSize"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>getFileSize</strong> (const char* fileName, unsigned long* fileSize)
+<br>throw(<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>getFileSize</strong></h3></td></tr></table><p></p><p>
+ Returns the size of the file specified by <code>fileName</code>
+ in the <code>fileSize</code> parameter. If anything goes wrong,
+ <code>fileSize</code> will be set to 0.
+</p>
+<p> The method throws:
+ <ul>
+ <li> IOException* if an I/O error occured during operation.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileName</i></TD><TD align="left" valign="top">the name of the file whose size you want.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>fileSize</i></TD><TD align="left" valign="top">the output parameter which will contain the file size.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 0 if operation was successful / error code otherwise. The error
+	codes can be found in include/defs.h.
+	 </p>
+<A NAME="listFiles"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>listFiles</strong> (const char* directoryName, <A HREF="DirectoryListing.html">DirectoryListing</A>** dirListing)
+<br>throw(<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>listFiles</strong></h3></td></tr></table><p></p><p>
+ Returns a DirectoryListing object containing data about all the
+ files in the <code>directoryName</code> directory in the
+ <code>dirListing</code> parameter. If anything goes wrong,
+ <code>dirListing</code> will be set to NULL.
+</p>
+<p> The method throws:
+ <ul>
+ <li> IOException* if an I/O error occured during operation.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>directoryName</i></TD><TD align="left" valign="top">the name of the directory whose contents
+	you want.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>dirListing</i></TD><TD align="left" valign="top">a pointer to a DirectoryListing* where the
+	DirectoryListing will be stored.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 0 if operation was successful / error code otherwise. The error
+	codes can be found in include/defs.h.
+    	 </p>
+<A NAME="formatHDD"></A><A NAME="ref9"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>formatHDD</strong> ()
+<br>throw(<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>formatHDD</strong></h3></td></tr></table><p></p><p>
+ Formats the hard disk drive. This function formats the special
+ hard disk structures in order to support the filesystem.
+</p>
+<p> The method throws:
+ <ul>
+ <li> IOException* if an I/O error occured during operation.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Returns</b>: 0 if operation was successful / error code otherwise. The error
+	codes can be found in include/defs.h.
+	 </p>
+<A NAME="blockMap"></A><A NAME="ref10"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="BlockMap.html">BlockMap</A>*  <strong>blockMap</strong>
+</td><td align="right"><h3><strong>blockMap</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="inodeMap"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="InodeMap.html">InodeMap</A>*  <strong>inodeMap</strong>
+</td><td align="right"><h3><strong>inodeMap</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="hdd"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="HDD.html">HDD</A>*  <strong>hdd</strong>
+</td><td align="right"><h3><strong>hdd</strong></h3></td></tr></table><p> <small>[private]</small></p><HR><UL><LI><i>Version</i>: 0.1
+ </LI><LI><i>Author</i>: Bogdan DUMITRIU
+</LI><LI><i>Generated</i>: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</LI></UL></BODY></HTML>

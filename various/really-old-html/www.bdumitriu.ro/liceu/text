@@ -1,0 +1,254 @@
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ Caractere romanesti: ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+    &atilde - a(acasA) &#227
+    &Atilde - A(acasA) &#195
+    &acirc  - a(atAt)  &#226
+    &acirc  - A(atAt)  &#194
+    &icirc  - i(Inca)  &#238
+    &Icirc  - I(Inca)  &#206
+
+ ÚÄÄÄÄÄÄÄÄÄÄ¿
+ ³ Exemple: ³
+ ÀÄÄÄÄÄÄÄÄÄÄÙ
+    
+    <i></i> ITALIC
+    <b></b> BOLD
+    <HR> insereaza o linie orizontala in locul in care apare.
+    <IMG SRC="nume_poza.gif"> specifica inserarea in rand a unei imagini.
+    <IMG SRC="..." ALIGN="bottom">
+    <A HREF="nume_document.html"> Text activ </A> legaturi html
+    <A HREF="nume_poza_mare.gif"><IMG SRC="nume_poza_mica.gif"></A>
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ Comentariu: ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+    <!-- comentariul -->  
+
+ ÚÄÄÄÄÄÄÄÄÄÄ¿
+ ³ Titluri: ³
+ ÀÄÄÄÄÄÄÄÄÄÄÙ
+      
+    <H1> Titlu de nivel 1 </H1>
+    <H2> Titlu de nivel 2 </H2>
+    <H3> Titlu de nivel 3 </H3>
+    <H4> Titlu de nivel 4 </H4>
+    <H5> Titlu de nivel 5 </H5>
+    <H6> Titlu de nivel 6 </H6>
+
+ ÚÄÄÄÄÄÄÄÄ¿
+ ³ Liste: ³
+ ÀÄÄÄÄÄÄÄÄÙ
+
+    <OL> ... </OL> ordered list    (adica cu 1, 2, 3, 4, ...)
+    <UL> ... </UL> unordered list  (adica cu bullets)
+
+    Ex:
+       
+    <MENU>   <!-- meniuri -->
+    <LI> primul element din meniu
+    <LI> al doilea element din meniu
+    <LI> al treilea element din meniu
+    </MENU>
+
+    <DIR>    <!-- directoare -->
+    <LI>fisiere/
+    <LI>aplicatii/
+    <LI>posta/
+    </DIR>
+
+    <DL>     <!-- DefinitionList -->
+       <DT>termen ce urmeaza a fi definit
+          <DD>definitia termenului
+       <DT>alt termen
+          <DD>alta definitie
+       <DT>etc.
+          <DD>etc.
+    </DL>
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ Stiluri de caractere: ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+     ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+      Tag                        Utilizare
+     ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+       <EM> ... </EM>             Text accentuat
+       <STRONG> ... </STRONG>     Textul marcat va fi mai puternica accen-
+                                  tuat decat in cazul <EM>
+       <CODE> ... </CODE>         Secvanta de cod afisata cu font fix
+       <SAMP> ... </SAMP>         Esantion; similar lui <CODE>
+       <KBD> ... </KBD>           Text tastat de utilizator
+       <VAR> ... </VAR>           Nume de variabila
+       <DFN> ... </DFN>           Definitie (cuvant care va fi definit)
+       <CITE> ... </CITE>         Un scurt citat
+
+       <B> ... </B>               Bold
+       <I> ... </I>               Italic
+       <TT> ... </TT>             Text monospatiat
+       <PRE> ... </PRE>           Pt. a ramane paragraful exact cum l-am
+                                  scris in sursa (cu toate spatiile & ENTER)
+
+ ÚÄÄÄÄÄÄÄÄ¿
+ ³ Linii: ³
+ ÀÄÄÄÄÄÄÄÄÙ
+
+    <HR> insereaza o linie orizontala
+    <BR> insereaza terminator de rand
+
+ ÚÄÄÄÄÄÄÄÄÄ¿
+ ³ Adrese: ³
+ ÀÄÄÄÄÄÄÄÄÄÙ
+
+    <ADDRESS> Informatii de contact </ADDRESS>
+
+ ÚÄÄÄÄÄÄÄÄÄ¿
+ ³ Citate: ³
+ ÀÄÄÄÄÄÄÄÄÄÙ
+
+    <BLOCKQUOTE> citat lung </BLOCKQUOTE>
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ Legaturi: ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÙ
+
+    <A HREF="localizarea documentului ce trebuie incarcat"> Textul activ care
+    selectat determina incarcarea </A>
+
+    Legaturi locale:
+   ------------------
+
+       se precizeaza calea relativa a documentului
+
+       Ex:
+
+       ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+       Cale                            Semnificatie
+       ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+       HREF="doc.html"                 doc.html se gasete in directorul cur.
+       HREF="dir/doc.html"             doc.html este in directorul dir
+       HREF="dir/subdir/doc.html"      doc.html este in directorul dir,
+                                       subdirectorul subdir
+       HREF="../doc.html"              doc.html se afla intr-un director cu
+                                       un nivel mai sus decat cel curent
+       HREF="../../subdir/doc.html"    doc.html se afla intr-un director
+                                       aflat in cel cu doua nivele mai sus
+                                       decat cel curent
+
+    Referinte absolute:
+   ---------------------
+       
+       Ex:
+
+       http:  //   www.agora.ro/     cpa/      cpa.html
+     protocol       nume sistem    director   nume_fisier
+                       gazda
+
+       ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+       Cale                              Semnificatie
+       ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+       HREF="/home/publicatii/doc.html"  doc.html se gaseste in directorul
+                                         /home/publicatii
+       HREF="/c|/publicatii/doc.html     doc.html se gaseste in c:\publicatii
+       HREF="/Fleetwood/Agora/doc.html"  doc.html se afla pe discul Fleerwood
+                                         in directorul Agora (Machintosh)
+
+    Legaturi indepartate:
+   -----------------------
+
+       Ex:
+
+       <A HREF="http://www.w3.org/">  The WWW Consortium  </A>
+              tag de inceput          text ce poate fi    tag de
+                                         selectat         sfarsit
+
+    Legaturi interne si intre sectiuni:
+   -------------------------------------
+
+       <A NAME="cuvant_cheie"> Paragraf tinta </A>
+
+       Ex:
+
+       <A HREF="cale/doc.html#cuvant_cheie"> Salt la paragraful tinta </A>
+        => navigatorul va incarca doc.html si va derula pana paragraful ce
+        incepe cu cuvant_cheie va ajunge in partea de sus a ecranului
+
+ ÚÄÄÄÄÄÄÄÄÄ¿
+ ³ Tabele: ³
+ ÀÄÄÄÄÄÄÄÄÄÙ
+
+    <TABLE> ... </TABLE>
+    <CAPTION> ... </CAPTION> explicatia tabelului
+    <TR> ... </TR>      inceputul/sfarsitul randului
+    <TH> ... </TH>      celula cap de tabel
+    <TD> ... </TD>      celula din rand
+    atribute:
+    BORDER[=x]    - chenar [de dimensiunea x]
+    CELLSPACING=x - spatiul dintre celulele tabelului
+    CELLPADDING=x - spatiul dintre marginile celulelor si continut
+    WIDTH=x       - latimea tabelului pe pagina
+    ALIGN=        - pentru aliniere orizontala (TOP/BOTTOM - pt. CAPTION)
+                                              (LEFT/RIGHT/CENTER - pt. celule)
+    VALIGN=       - pentru aliniere verticala (TOP/BOTTOM/MIDDLE/BASELINE -pt.
+                    celule)
+
+    Tip: Pentru a obtine o plasare corecta a pozelor in tabel puneti toate
+         tag-urile in acelasi rand.
+
+    COLSPAN=x   - pe cate coloane sa se extinda \ folosite cu
+    ROWSPAN=x   - pe cate radnuri sa se extinda / <TH> si <TD>
+    NOWRAP      - previne navigatorul de la a curge continutul unei celule
+                  in alta (se foloseste cu <TH> sau <TD>
+
+ ÚÄÄÄÄÄÄÄÄÄÄ¿
+ ³ Imagini: ³
+ ÀÄÄÄÄÄÄÄÄÄÄÙ
+
+    <IMG>       pentru inserare de imagini
+    atribute:
+    SRC          pentru cautare
+    ALT          specifica textul ce va inlocui imaginea in navigatoarele text
+    ALIGN        TOP/BOTTOM/MIDDLE alinierea pozei cu linia de text alaturata
+    WIDTH        latime in pixeli pt. imagine
+    HEIGHT       inaltime in pixeli pt. imagine
+    ALIGN        TEXTOP - aliniaza partea de sus a imaginii cu cele mai inalte
+                 caractere din rand
+                 ABSMIDDLE - aliniaza mijlocul imaginii cu mijlocul celui mai
+                 inalt element de pe rand
+                 BASELINE - aliniaza partea de jos a imaginii cu linia de baza
+                 a textului
+                 ABSBOTTOM - aliniaza partea de jos a imaginii cu cea mai de
+                 jos parte a unui element de pe rand
+                 LEFT/RIGHT - aliniaza imaginea in staga/dreapta paginii
+    VSPACE=x     spatiul dintre imagine si textul aflat deasupra si dedesub-
+                 tul imaginii
+    HSPACE=x     spatiul dintre imagine si textul aflat la stanga si dreapta
+                 imaginii
+    BORDER=x     chenar pt. imagine
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ Formulare: ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+    <FORM> ... </FORM>
+    atribute:
+    ACTION=            "SEARCH" specifica un program care va trata valorile
+                                intrate in campurile formularului ca un set
+                                de cuvinte cheie, corelate intre ele cu ope-
+                                ratori logici, pentru a defini o cautare.
+                       "URL"    specifica URL-ul programului ce va fi execu-
+                                tat.
+                       "mailto:adresa@domeniu" specifica un program de expe-
+                                               diere a continutului formularu-
+                                               lui
+    METHOD             specifica metoda prin care se vor trimite datele speci-
+                       ficate in ACTION.
+    <INPUT>    creeaza mai multe tipuri de controale
+      TYPE:
+      ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+      Valoare pt. TYPE            Descriere
+      ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+      Check box
+      Radio button

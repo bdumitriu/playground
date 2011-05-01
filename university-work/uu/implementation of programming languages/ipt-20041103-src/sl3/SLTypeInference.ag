@@ -1,0 +1,153 @@
+{-# LINE 12 "SLTypeInference.lag" #-}
+imports
+{
+import SLUnification
+import SLTypes
+}
+
+{
+type Assumptions = [(String,Type)]
+}
+
+ATTR Root [  |  | tp :Type]
+SEM Root
+  | Root  expr.gamma          = initgamma
+          expr.unique         = 1
+          expr.subst          = emptysubst
+          lhs.tp              = abstract initgamma @expr.tp
+	  expr.finalSubst     = @expr.subst
+          
+ATTR Expr [ gamma : Assumptions finalSubst : Subst | unique : Int subst : Subst | tp : Type]
+SEM Expr
+  | Unit        lhs.tp                              =  unittype
+  | Intexpr     lhs.tp                              =  inttype
+  | Boolexpr    lhs.tp                              =  booltype
+  | Ident       loc.(tp,unq)                        =  instantiate  @lhs.unique 
+                                                                    (@lhs.subst  |=> 
+                                                                      (lookupVar  @var  @lhs.gamma))
+                loc.(tp',errmsg)                    =  getErrorMsg  @tp
+                lhs.tp                              =  @tp'
+                lhs.unique                          =  @unq
+  | Op          loc.opType                          =  lookupVar  @op  @lhs.gamma
+                lhs.unique                          =  @lhs.unique + 1
+                loc.(lSubs, leType)                 =  unify (getArgType  @opType) (@le.tp)
+                loc.(rSubs, reType)                 =  unify  (getArgType (getResultType  @opType))
+                                                              (@re.tp)
+                loc.(lerr,rerr,areErrs)             =  getOpErrors (@leType,@reType)
+                lhs.tp                              =  if  @areErrs 
+                                                         then anytype 
+                                                         else getResultType (getResultType  @opType)
+                lhs.subst                           =  @lSubs  |||  @rSubs  |||  @re.subst
+  | If          loc.(condSubst, condType, condErr)  =  unifyMsg booltype  @cond.tp
+                thenExpr.subst                      =  @condSubst  |||  @cond.subst
+                loc.(resSubst, resType, ifErr)      =  unifyMsg  (@elseExpr.subst  |=>  @thenExpr.tp) 
+                                                                 @elseExpr.tp
+                lhs.subst                           =  @resSubst  |||  @elseExpr.subst
+                lhs.tp                              =  @resType
+  | Let         lhs.tp                              =  @expr.tp
+  | Assign      lhs.tp                              =  unittype
+                loc.(exprTp,exprErr)                =  getErrorMsg @expr.tp
+                loc.(newSubs,_,varErr)              =  unifyMsg  (lookupVar  @var  @lhs.gamma) 
+                                                                 (@expr.tp)
+                lhs.subst                           =  @newSubs  |||  @expr.subst
+  | Apply       func.unique                         =  @lhs.unique + 1
+                loc.(newSubs, funcType, argErr)     =  unifyMsg (@arg.subst |=>  @func.tp)
+                                                                (@arg.tp `arrow` (TVar  @lhs.unique))
+                loc.(tp,funcErr)                    =  getErrorMsg (getResultType  @funcType)
+                lhs.tp                              =  @tp
+                lhs.subst                           =  @newSubs  |||  @arg.subst
+  | Lam         loc.argTypes                        =  map (@expr.subst |=>)  @vars.tps
+                lhs.tp                              =  foldr arrow  @expr.tp  @argTypes
+                loc.bodyErr                         =  empty
+                loc.argErr                          =  empty
+  | Seq         lhs.tp                              =  if null  @exprs.tps 
+                                                       then anytype 
+                                                       else last @exprs.tps
+
+ATTR Exprs [ gamma : Assumptions finalSubst : Subst | subst : Subst unique : Int | tps : Types]
+SEM Exprs
+  | Cons        lhs.tps                             =  @hd.tp :  @tl.tps
+  | Nil         lhs.tps                             =  []
+
+ATTR Decls Decl [ finalSubst : Subst | gamma : Assumptions subst : Subst unique : Int |  ]
+SEM Decl
+  | Decl        expr.unique                       = @lhs.unique + 1
+                loc.varTp                         = TVar  @lhs.unique
+                expr.gamma                        = (@var,@varTp) :  @lhs.gamma
+                loc.(sub,declTp,derr)             = unifyMsg  @varTp  @expr.tp
+                loc.(annoteSub,annoteTp,declErr)  = unifyPossiblyAnnoted  @type  @declTp
+                loc.subs                          = @annoteSub ||| (@sub |||  @expr.subst)
+                loc.declType                      = abstract 
+                                                      (mapSnd (@subs  |=> )  @lhs.gamma)
+                                                      @annoteTp
+                lhs.subst                         = @subs
+                lhs.gamma                         = (@var, @declType) :  @lhs.gamma
+                loc.inferredType                  = (text . show )  @declType
+
+                  
+ATTR Vars [  | gamma : Assumptions unique : Int | tps : Types]
+SEM Vars
+  | Cons  tl.gamma                                  = (@hd,TVar @lhs.unique ) :  @lhs.gamma
+          tl.unique                                 = @lhs.unique + 1
+          lhs.tps                                   = TVar  @lhs.unique :  @tl.tps
+  | Nil   lhs.tps                                   = []
+
+{-# LINE 106 "SLTypeInference.lag" #-}
+{
+initgamma = 
+             [("&&",bool2bool2bool),
+              ("||",bool2bool2bool),
+              ("==",int2int2bool),
+              ("/=",int2int2bool),
+              ("<",int2int2bool),
+              (">",int2int2bool),
+              ("<=",int2int2bool),
+              (">=",int2int2bool),
+              ("+",int2int2int),
+              ("-",int2int2int),
+              ("*",int2int2int),
+              ("/",int2int2int)]
+
+lookupVar x [] = TError "Variable not introduced"
+lookupVar x ((v,t):vs) = if x == v then t else lookupVar x vs
+
+instantiate unique (TForall i t) = 
+  let recurse t = case t of
+                    TBound x     -> TVar (unique + x)
+                    TFunc a b    -> TFunc (recurse a) (recurse b)
+                    TForall _ _  -> sysError "Non-flat type in instantiation."
+                    _            -> t
+  in (recurse t, unique + i)
+instantiate unique t = (t,unique)
+
+abstract env tp  = 
+  let  (names, resType)  = abs tp []
+       abs t ns  = case t of
+                     TVar v       ->  case lookup v ns of
+                                        Just i   ->  (ns, TBound i)
+                                        Nothing  ->  if v `notFreeIn` env
+                                                     then  (ns, TVar v)
+                                                     else  let newPos = length ns
+                                                           in (ns ++ [(v,newPos)], TBound newPos)
+                     TFunc a b    ->  let  (nsA,tpA) = abs a ns
+                                           (nsB,tpB) = abs b nsA
+                                      in (nsB, TFunc tpA tpB)
+                     TInt         ->  (ns,t)
+                     TBool        ->  (ns,t)
+                     TUnit        ->  (ns,t)
+                     TAny         ->  (ns,t)
+                     TError _     ->  (ns,t)
+                     TForall _ _  ->  sysError "Non-flat type in type abstraction."
+                     TBound _     ->  sysError "In type abstraction."
+  in if null names then tp else TForall (length names) resType
+
+notFreeIn var env = or (map (notFreeInType . snd) env)
+  where notFreeInType t = case t of
+                            TVar v        -> v == var
+                            TFunc a b     -> notFreeInType a || notFreeInType b
+                            TForall i tp  -> notFreeInType tp 
+                            _             -> False
+
+mapSnd f xys = [(x, f y) | (x,y) <- xys]
+            
+}

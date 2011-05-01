@@ -1,0 +1,47 @@
+testsuite Forms
+topsort Form
+
+test and operator
+	"a /\ b"		-> And(Prop("a"), Prop("b"))
+
+test or operator
+	"a \/ b"		-> Or(Prop("a"), Prop("b"))
+
+test equiv operator
+	"a <-> b"		-> Equiv(Prop("a"), Prop("b"))
+
+test forall construct
+	"forall a : a \/ b"	-> ForAll("a", _)
+
+test exists construct
+	"exists a : a /\ b"	-> Exists("a", _)
+
+test predicates & not
+	"not (Father(a, b))"	-> Not(Pred(_, _))
+
+test boolean constants
+	"true \/ not false"	-> Or(True, Not(False))
+
+test forall/exists combination & associativity of /\
+	"forall a : exists b : forall c : a /\ b /\ c"	-> ForAll("a", Exists("b", ForAll("c", And(And(_, _), _))))
+
+test priority check
+	"not a /\ b"		-> And(Not(Prop("a")), Prop("b"))
+
+test disambiguation check 1
+	"foralla : a"		fails
+
+test see README
+	"not exists a : a"	fails
+
+test assignment example 1
+	file t1.plf succeeds
+
+test assignment example 2
+	file t2.plf succeeds
+
+test assignment example 3
+	file t3.plf succeeds
+
+test assignment example 4
+	file t4.plf succeeds

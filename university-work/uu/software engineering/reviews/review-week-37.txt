@@ -1,0 +1,129 @@
+The paper by Walter Tichy offers an overview of the state-of-art in
+Software Configuration Management (SCM) at the time of writing. The
+field is presented in a nicely structured manner, going from the very
+basic building blocks to most of the specific areas of concern, such
+as version management and software configuration. Notably, it lacks
+insight about software deployment, which (from what was mentioned
+during the lecture) seems not to have been considered that important
+at the time the paper was written.
+
+The problems addressed by the field are clearly stated in the
+introductory section in the form of questions. The main issues
+mentioned are =identification= (specifying the various parts of
+software), =change tracking= (what has changed and who operated
+the change?), =version selection and baselining= (deciding what
+to put in a release version of a product), =software manufacture=
+(how to build your software automatically?),
+=managing simultaneous update= (deal with the fact that more
+than one person could be working on the same part of the software
+at the same time).
+
+Underlying SCM are concepts like =software object=, =configuration=,
+=composite= and =sequence=. A software object is roughly any file
+- source code, model, etc. - that is part of a project. An identifier
+and a set of attributes are usually associated with each (version of
+the) object to support various operations (change tracking,
+composition and the like). =Source objects= are software objects
+created by hand, while =derived objects= are generated automatically
+by some tool (e.g. compiler, parser generator). Configurations are
+ways to aggregate undecomposable software objects, i.e. the
+=atomic objects=, as well as other configurations together. Sequences
+and composites are the two flavours of configurations that are used
+in SCM. They differ in that sequences are homogenous in terms of the
+software objects they contain, while composites are heterogenous.
+Both types of configurations can be either =generic= (meaning there
+is still some variability in one or more of their components) or
+=baseline= (meaning that all their components are fixed).
+
+The variability mentioned above appears in a software project in the
+form of =source versions= and =derived versions= (corresponding to
+source objects and derived objects, respectively). Various versions
+of the same object are grouped in so called =version groups=, by either
+=revision-of= or =variant-of= relations. Such groups provide
+variability in software configurations because we can choose to select
+one version or another from the version group to include in a
+configuration of the product. Revision-of and variant-of differ in
+that the latter usually maintains a set of invariants unchanged between
+the versions, allowing clients to use them interchangeably, while
+with the former this is often not the case.
+
+The (already) traditional process of managing version groups is
+by using the check-out/edit/check-in operations. This allows
+(semi-)automatic management of relations among versions and proper
+maintenance of identification and attribute sets, enforcing a high
+degree of traceability. Various systems supporting a wide range of
+capabilities are discussed further in the article.
+
+Getting from a generic configuration to a baseline one implies a
+selection process which is to fix each version group to one of its
+members in such a way that the overall result is a correctly working
+product. This process (or problem) can be modeled as a search problem
+in an AND/OR graph. Ongoing research is mentioned to be targeted at
+ways of specifying constraints based on the attributes of versions
+which would allow timely solutions to the selection problem. Another
+discussed approach implies defining interfaces between components
+and making sure each explored configuration is type-safe in terms
+of these interfaces.
+
+After reviewing a series of software manufacturing tools which all
+try to ensure, in various ways, that recompilation is kept to a
+minimum, the article ends by explaining that SCM should be driven
+by =modification requests= (MRs). Such requests should be viewed as the
+foundations to which all objects and activities that are related
+to a software project can eventually be traced back to. MRs also
+introduce two new relations, =has-change= and =has-MR=, which are
+to be used for tracing purposes.
+
+This paper broadly refers to two main aspects of software engineering,
+namely how to properly keep track of the software one is developing
+and how to transfer the responsability of building components of
+software together in a single, usable product from man to machine.
+The discussion relates to "best practices" in software engineering,
+such as using versioning systems both to track changes and to allow
+simultaneous editing of software documents, applying automatic
+selection tools in order to choose various valid configurations of
+products based on easy-to-express criteria, or making use of
+automatic build systems in order to relieve developers from the
+tedious and error-prone task of building their software.
+
+The only law I have found to be related to the subject of this article
+is <nop>DeRemer's law (=what applies to small systems does not apply to large ones=),
+which can be viewed as the basic motivation behind SCM.
+Clearly, if we could build large systems like we do small ones, we
+wouldn't need either version management systems or automated building
+tools. All this could be relatively easily managed by hand. Since this
+is not the case, however, SCM comes into play to aid in dealing with
+the increased complexity and range of problems introduced by large
+scale systems.
+
+Some other laws could, with some effort, be remotely linked to the
+subject of the article, but the connection would be a forced one at best.
+
+More interestingly, perhaps, is that the paper does not address any
+of the laws or principles from chapter 7
+(=System manufacturing, distribution, and installation=), although
+this (except maybe chapter 4) is the chapter most related to the
+article. The reason for this, I have found, is that the article
+really ignores matters regarding distribution and deployment of
+software altogether, in spite of the clear connection between
+software configuration and deployment (software is configured
+and produced in order to be deployed). If the paper were updated
+to today's software engineering practices, I am convinced that
+it would have to cover these aspects as well.
+
+In my opinion, the paper offers a very systematic approach to most
+of the aspects of SCM, recommending itself as appropriate
+introductory material into the subject. Since it is mostly a
+(unifying) review of the field, there is not much room for
+discussion, except than to say that the usefulness of the methods
+it proposes (version control, automatic configuration, automatic
+building) is already beyond doubt in the software world and that
+it would be ideal to see more people using them. Personally, I
+found the novelty of the approach to lie in the introduction of
+modification requests as part (actually, as foundation) of the SCM
+process. I regard MRs as an useful aid for a more complete tracking
+of the evolution of a system. What I have not found to be
+explanatory enough (and, in a certain sense, convincing enough)
+was the section on selecting configurations automatically, but
+since the author also mentions that this is an area of active
+research, I suppose I should have some more patience.

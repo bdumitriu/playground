@@ -1,0 +1,7 @@
+let function f(): int =
+      let function g(): int =
+            4
+       in g()
+      end
+ in printint(f())
+end

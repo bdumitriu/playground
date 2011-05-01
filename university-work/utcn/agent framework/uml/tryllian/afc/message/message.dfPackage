@@ -1,0 +1,27 @@
+package id26a68deikzvd2deilmbzb;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#tryllian.afc.message.DefaultMessage:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#tryllian.afc.message.DefaultMessage:oiref>=99,97,104,82,1:oigroup>
+*/
+class __positions {
+}

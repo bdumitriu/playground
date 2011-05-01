@@ -1,0 +1,4 @@
+
+GHC=ghc -Wall -O2
+#GHC=ghc -Wall -O2 -prof -auto-all
+

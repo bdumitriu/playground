@@ -1,0 +1,68 @@
+{-# LINE 11 "DowJones4AG.lag" #-}
+{
+import UU.Parsing
+}
+
+DATA Sequence  | NextDay delta : Int  past : Sequence
+               | Start
+
+ATTR Sequence [ |  | index : Int]
+
+SEM Sequence
+  | Start    lhs.index      =  0
+  | NextDay  loc.index      =  @delta + @past.index
+             lhs.index      =  @index
+
+ATTR Sequence [ |  | low : Int]
+
+SEM Sequence
+  | Start    lhs.low        =  0
+  | NextDay  loc.low        =  @index `min` @past.low
+             lhs.low        =  @low
+
+ATTR Sequence [ |  | maxprofit : Int]
+
+SEM Sequence
+  | Start    lhs.maxprofit  =  0
+  | NextDay  lhs.maxprofit  =  (@index - @low) `max` @past.maxprofit
+{-# LINE 40 "DowJones4AG.lag" #-}
+{
+dj :: Sequence
+dj = Sequence_NextDay (-2)
+      (Sequence_NextDay 4
+        (Sequence_NextDay 1
+          (Sequence_NextDay (-1)
+            (Sequence_NextDay 3
+              (Sequence_NextDay (-5)
+                (Sequence_NextDay 0
+                  (Sequence_NextDay 4 Sequence_Start
+      ) ) ) ) ) ) )
+
+dj_bestinvest :: Sequence -> Int
+dj_bestinvest deltas
+  =  let  (_,_,maxprofit) = sem_Sequence deltas
+     in   maxprofit
+
+instance Symbol Char
+
+string2int = foldl (\val dig -> (10*val + ord dig -ord '0')) 0
+{-# LINE 63 "DowJones4AG.lag" #-}
+pPosInt  ::  IsParser a Char => a Int
+pPosInt  =   string2int <$> pList1 ('0' <..> '9')
+
+pInt     ::  IsParser a Char => a Int
+pInt     =   (negate <$ (pSym '-') `opt` id) <*> pPosInt
+
+pSpaces  ::  IsParser a Char => a String
+pSpaces  =   pList (pSym ' ')
+
+pDJ      ::  IsParser a Char => a (Int,Int,Int)
+pDJ      =   pFoldrSep (sem_Sequence_NextDay,sem_Sequence_Start) pSpaces pInt
+
+dj_bestinvest' inp
+  = do  {  (_,_,maxprofit) <- parseIO pDJ inp
+        ;  putStr (show maxprofit)
+        }
+
+main = dj_bestinvest' "-2 4 1 -1 3 -5 0 4"
+}

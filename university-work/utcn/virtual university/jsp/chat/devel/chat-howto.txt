@@ -1,0 +1,19 @@
+-- compile all classes
+javac ro/utcluj/vu/chat/*.java
+
+-- compile rmi stubs & skeletons
+rmic ro.utcluj.vu.chat.ClassServer
+rmic ro.utcluj.vu.chat.MyRemoteServer
+rmic ro.utcluj.vu.chat.Client
+
+-- create jar file
+jar cvfm chat.jar mymanifest ro/utcluj/vu/chat/*.class
+
+-- generate a key valid for aprox. 30 years
+keytool -genkey -alias coned -keyalg rsa -validity 11000
+
+-- export already generated key into a file
+keytool -export -v -alias coned -file coned.crt
+
+-- sign jar file with generated key
+jarsigner chat.jar coned

@@ -1,0 +1,972 @@
+\section{Pointer and Escape Analysis}
+\label{sec:point-escape-analys}
+
+In this section we discuss the second layer of our work which consists
+of increasing the usability of the Stratego platform for writing
+transformations for Java programs by adding alias information to the
+list of features offered to its users. As a side result, we will also
+compute (and make available) information that links call sites with
+method definitions. Since Java programs usually involve a lot of
+pointer aliasing, and since this information is quite difficult to
+compute, we believe that having the Stratego platform offer it will be
+a great aid to the writing of any non-trivial transformations for
+Java. Method call information is equally indispensable for any kind of
+interprocedural analysis.
+
+\subsection{Overview}
+
+There are two main features of modern languages that make the lives of
+compiler writers difficult: exceptions and wide-spread use of
+pointers. We have already explained in the previous section why the
+complex control flow introduced by exception mechanisms complicates
+optimizations of programs. In this section, we will focus on the
+second of the two aspects: \emph{pointers}.
+
+Languages like Java and C\# have integrated pointers into the language
+so much that it is impossible to avoid using them. This means that
+even the most basic of programs written in such languages is still
+almost certain to employ pointers. Basic compilation is not affected
+by the presence of pointers, since pointers boil down to memory
+addresses, and there is no inherent difficulty in dealing with memory
+addresses. As soon as we want to turn our compiler into an optimizing
+one, however, we run into trouble when pointers are involved. The
+reason for this is that virtually all data flow analyses stop working
+as they used to when pointers were not in the picture. If the same
+memory location can be referred by different variables, then our
+analyses can no longer use variable names as unique identifiers of
+memory locations. This creates a problem because a program is
+specified in terms of variable stores and loads and not in terms of
+memory location stores and loads. Without pointers, we had a
+one-to-one mapping between the two, so we could use them
+interchangeably. In the presence of pointers, this mapping no longer
+holds, leading to the need of very conservative assumptions in order
+to ensure the soundness of analyses.
+
+To explain why this is, consider the following example:
+
+\begin{javacode}
+    void foo() {
+      BitSet x = new BitSet();
+      BigSet y = x;
+      y.set(3);
+      if (x.isEmpty()) {
+        System.out.println("some text");
+      }
+    }
+\end{javacode}
+
+A pointer-unaware analysis could conclude that, since between the
+\icode{x = new BitSet()} and the test \icode{x.isEmpty()} the variable
+\icode{x} is not changed by any other instruction, the test can be
+safely eliminated since we know at compile time that it will always
+evaluate to true. This would yield the following optimized version of
+the program above:
+
+\begin{javacode}
+    void foo() {
+      BitSet x = new BitSet();
+      BigSet y = x;
+      y.set(3);
+      System.out.println("some text");
+    }
+\end{javacode}
+
+However, this pointer-unaware optimization is wrong in the context of
+a language like Java, since Java uses pointers, so the simple fact
+that the literal variable \icode{x} is not modified is not a
+guarantee that the contents of the memory location \icode{x} points to
+is not modified. In fact, in our example code, it is the case that the
+memory location is modified through the variable \icode{y}, which is
+an alias of \icode{x} (or, alternatively, which points to the same
+memory location as x). As you can see, the presence of pointer
+invalidates otherwise valid optimizations.
+
+We can deal with this in two ways. The easier, but essentially
+inefficient one, is to make the most conservative assumption of all,
+namely that any variable in the program (including instance
+variables, class variables, local variables and method arguments) can
+be an alias of any other variable. Such an assumption makes our
+analysis perfectly sound, but utterly useless, since any store to any
+variable in our program would have to be interpreted as a potential
+store to any other variable. This means that we can only perform
+optimizations between stores to variables. While making this
+assumption is an option, it is clearly a poor one.
+
+The alternative to this is to collect pointer information from the
+program in order to have more precise knowledge about what variables
+may point to what other variables. This process of collecting
+information about pointer is called \emph{pointer analysis}. In fact,
+pointer analysis comes in more shapes and sizes, depending of what
+kind of pointer information we are looking for and how we represent
+it. We distinguish \emph{alias analysis} as the pointer analysis that
+creates pairs of variables which can be aliases of one another:
+$(x,y)$ indicates that $x$ and $y$ could point to the same memory
+location. A more space-efficient alternative to alias analysis is
+\emph{points-to analysis}. Points-to analysis computes what memory
+location(s) a variable can point to. We know that two variables can be
+aliases of one another if they can point to the same memory location.
+\emph{Shape analysis} goes beyond simple aliasing information and
+computes what ``shape'' the data structures represented in memory have
+(graph-like, tree-like, list-like, etc.). Finally, \emph{escape
+  analysis} computes whether or not a heap location allocated in a
+method (or thread) can escape that method (or thread). A heap location
+can escape a method, for example, if that method returns a pointer to
+it or if it passes a pointer to it to a different method. Knowing that
+a heap location cannot escape a method (or thread) can enable certain
+optimizations. Since all these analyses have to analyze pointer
+assignments (or equivalent code which translates to pointer
+assignments) in order to compute their result, they are all referred to
+as pointer analyses.\footnote{The use of the terms ``pointer
+  analysis'', ``escape analysis'' and ``points-to analysis'' throughout
+  this section might be confusing, since at this point we have
+  mentioned escape analysis as a special type of pointer analysis, but
+  hereafter as well as in the title we use the two to refer to
+  different things. To clarify, when we oppose pointer analysis to
+  escape analysis, we intend the term pointer analysis as a synonym
+  for points-to analysis (or alias analysis).}
+
+Pointer analyses can be \emph{context-sensitive} or
+\emph{context-insensitive}. Context-insensitive analyses do not
+consider the calling context of a method (i.e., it does not make a
+distinction between calls to the same method based on the caller).
+This has the effect that there will be a unification of pointer
+information among all the call sites of a method, resulting in the
+transfer of information from each call site to all others.  This will
+generate less precise aliasing information, since it will determine a
+potential aliasing relationship between variables that could never
+point to the same memory location. Notice that this is not wrong, but
+simply less precise (or conservative). What would be wrong is for the
+analysis to conclude that two variables cannot be aliased when in fact
+they can, according to the program. Context-sensitive analysis, by
+contrast, does consider calling contexts, thereby producing more
+precise points-to information\footnote{We use the terms ``aliasing
+  information'' and ``points-to information'' interchangeably since
+  any of them can be directly derived from the other.}.
+
+Another distinction of pointer analyses refers to whether or not we
+consider control flow. Based on this, we have \emph{flow-sensitive}
+and \emph{flow-insensitive} pointer analysis. Flow-sensitive analysis
+differs from flow-insensitive one by computing separate pointer
+information for each program point. Flow-insensitive analysis computes
+a single ``batch'' of information (e.g., a single points-to graph) for
+the entire program. The information computed by flow-insensitive
+analyses is valid for all points of a program, whereas each ``batch''
+of information computed by flow-sensitive analyses is only valid at
+the particular program point with which it is associated. Naturally,
+flow-sensitive analyses are more precise, especially given that the
+points-to information of a program changes a lot during its execution.
+By computing only one ``batch'' of information per entire program (as
+is the case with flow-insensitive analysis), it is clear that there
+will be a lot of unnecessary unification of points-to sets, which
+leads to loss of precision (for clarification, the least precise
+information is when we have a single points-to set, i.e., we know that
+any variable can point to any other variable).
+
+Both in the case of context-insensitive vs. context-sensitive and the
+case of flow-insensitive vs. flow-sensitive, the gain of precision
+that corresponds to the sensitive versions translates to a loss of
+efficiency. Thus, the balance that has to be found both in terms of
+context and flow sensitiveness is that between the precision of the
+results and the cost (both of time and space) of the analysis. A more
+precise analysis will take more time and space to compute and will not
+be scalable to large code bases. A less precise analysis, while less
+costly, will open fewer optimization opportunities. Depending on each
+particular situation, combinations of these variants can be used.
+
+Another important aspect which distinguishes pointer analyses is
+whether or not they take type information into consideration. It is
+generally a good idea to consider type information because it incurs
+little extra cost, but it can significantly increase precision. Type
+information is useful to discard spurious aliasing. If we know that
+two variables have incompatible types, then we can conclude that they
+can never alias each other.
+
+Pointer analysis is required for many kinds of data-flow
+transformations. Constant propagation cannot be performed with much
+efficiency if we do not have pointer information since each store to a
+variable disallows any further propagation. Dead-code elimination
+cannot be done without pointer information either because, for
+example, we cannot assume an assignment to a variable is useless just
+because that particular variable is not used further on in the
+program. It could be that the memory location modified by the store
+through that variable is accessed later on in the program through
+another, so removing it would yield incorrect results. Even common
+subexpression elimination can be incorrect if we do not consider
+pointers. For instance, if we have a sequence of assignments like
+\icode{x = a * b; c = 5; y = a * b;}, it would be incorrect to replace
+it with \icode{x = a * b; c = 5; y = x;} if we do not know for a fact
+that c is \emph{not} aliased with any of \icode{x}, \icode{a} or
+\icode{b}. Without alias information, we have to assume that, for all
+we know, \emph{it may be aliased}, so we have to conservatively
+disallow replacing \icode{a * b} with \icode{x}.
+
+These are just a few examples of data-flow optimizations which have to
+consider pointer information in order to behave correctly. Like them
+there are many others. This generalized need for pointer information
+makes us conclude that if Stratego is to be used for writing data-flow
+transformations that can apply to real programs, it desperately needs
+to provide pointer information. This is why we plan to implement a
+points-to analysis for Java as part of this thesis, and make it easily
+accessible to the users of Stratego.
+
+Aside from points-to information, we also intend to provide similar
+support for escape information, if time allows it. Escape information
+is by far less generally useful than pointer information. Actually,
+throughout the literature there are only two optimizations which
+appear over and over in connection with escape analysis (for Java).
+The first of them is stack allocation of local variables. By default,
+the Java compiler allocates all objects, local or not, on the heap.
+However, this is not always necessary. If we know that an object
+\emph{does not escape} the body a method (or, in other words, cannot
+be accessed from anywhere outside that method), then we can allocate
+that object on the stack.\footnote{It is recommended that, aside from
+  escape information, the size of the object is also taken into
+  account when deciding whether or not to allocate it on the stack,
+  but this a different issue which does not concern us.} The second
+optimization which is enabled by escape analysis is synchronization
+removal for thread-local objects. A thread-local object is an object
+which \emph{does not escape} a thread (or cannot be accessed by any
+other thread). If we know this for a fact, then whenever that object
+is used in a synchronized environment, we can safely remove the
+synchronization. Since there is only a limited number of optimizations
+(we only know of these two) that use escape information, we do not
+regard providing it to be a task of similar priority as that of
+providing points-to information. We therefore consider it to be a
+goal of secondary importance to this thesis to implement escape
+analysis in Stratego.
+
+When performing any kind of interprocedural data-flow analysis (as
+points-to and escape analysis both are), we need to be able to know
+which body of a method to inspect when we encounter a method call in
+the analyzed code. Since object-oriented programming languages use
+the dynamic dispatch mechanism in order to decide which method to call,
+it is not so straightforward to find out which body a method call will
+actually execute. In fact, there are many cases where it is not
+decidable at compile time which of a number of potential methods will
+be executed. Consider the following code, for example:
+
+\begin{minipage}{0.5\linewidth}
+\begin{javacode}
+    A o;
+    n = System.in.read();
+    if (n == 0) {
+      o = new B();
+    } else {
+      o = new C();
+    }
+    o.someMethod();
+\end{javacode}
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+\begin{javacode}
+    abstract class A {
+      abstract void someMethod();
+    }
+    class B extends A {
+      void someMethod() {...}
+    }
+    class C extends A {
+      void someMethod() {...}
+    }
+\end{javacode}
+\end{minipage}
+
+There is no way of telling at compile time if method
+\icode{someMethod} of class B or the same method of class C will be
+called at the call site \icode{o.someMethod()} in the code on the
+left. In such cases, we have no other option than to consider all
+options and merge the results (this will translate to a loss of
+precision for points-to analysis, for example).
+
+In order to find out what code we have to analyze, we can choose
+between a basic lookup of all potential methods which might be referred
+by a call site or a more efficient computation as, for example, Class
+Hierarchy Analysis, described in \cite{dean95optimization}. The idea
+of both is the same: we consider the declared type of the expression
+which is the target of the method call and we need all matching
+methods in the declared class and all of its subclasses. The
+difference is whether we compute this information on the spot, by
+traversing the class hierarchy or we precompute it in a more
+integrated way, aiming for better efficiency. We plan to evaluate
+these options as part of our work on pointer analysis.
+
+\subsection{Related Work}
+\label{sec:pe-related-work}
+
+Pointer analysis has been an active field of research for over 20
+years, with a huge amount of work being put in. In a paper from 2001
+\cite{hind01pointer}, Michael Hind gives a measure of ``over
+seventy-five papers and nine Ph.D. theses'' that have been dealing
+with this subject. According to the same paper, there are a number of
+reasons why this problem is not yet considered solved. All these
+reasons are really different facets of the same core one: there is so
+much variability that has to be dealt with in what pointer analysis is
+concerned, that all this work has not yet managed to cover all there
+is cover.
+
+Among the open issues that still remain are things like how to improve
+scalability and precision at the same time (i.e., find ways in which
+we can achieve better precision, but still be able to apply the
+techniques to very large code bases), offering pointer analysis
+options based on the needs of the client analysis that uses its
+results, implementing demand-driven analyses and tuning the analyses
+to deal with incomplete programs.
+
+Efforts in pointer analysis far precede the birth of the Java
+programming language, so much of this research is related to analyzing
+C/C++ programs. Although some of the results are still applicable,
+there is much difference between the approaches. The main aspects of
+Java which make pointer analysis distinct than in C/C++ is the absence
+of multi-level dereferencing of pointers and the lack of function
+pointers. We have focused our interest on pointer analyses that were
+implemented specifically for Java, since this is what we plan to
+use as our target language in this thesis.
+
+\subsubsection{Pointer Analysis}
+\label{sec:pointer-analysis}
+
+Rountev et al. \cite{rountev-oopsla01} took a constraint-based
+approach for doing points-to analysis for Java. They model the
+semantics of assignment statements and method calls (the two relevant
+types of statements that any points-to analysis has to consider) using
+\emph{annotated inclusion constraints}. Annotated inclusion
+constraints refer to set-inclusion relations that can optionally be
+annotated ($L \subseteq_a R$). To illustrate, the constraint
+$ref(o,v_o,\overline{v_o}) \subseteq v_r$ indicates that reference
+variable $r$ refers to object $o$ (why object $o$ is represented by
+$ref(o,v_o,\overline{v_o})$ is less important). Annotated constraints
+are used when object fields or method calls are involved. For
+instance, the annotated constraint
+$ref(o_2,v_{o_2},\overline{v_{o_2}}) \subseteq_f v_{o_1}$ indicates
+that field $f$ of object $o$ ($o_1.f$) points to object $o_2$. In the
+case of methods, annotations are used to identify the compile-time
+method that is called. Annotated inclusion constraints can be
+represented as a directed multi-graph\footnote{A multi-graph is a
+  graph which allows multiple edges between any pair of nodes.}, with
+the annotations labeling the edges. First, the entire program is
+traversed in order to generate the system of constraints. Then, a
+generic algorithm is applied to the multi-graph representation of the
+constraints in order to compute its transitive closure. The edges in
+the resulting graph represent the the points-to relations of the
+program. The analysis of Rountev et al. is context- and
+flow-insensitive.
+
+Whaley and Rinard propose a combined pointer and escape analysis in
+\cite{whaley99compositional}. The analysis is flow-sensitive and
+context-sensitive and its result is a so-called \emph{points-to escape
+  graph}, which is a quadruple consisting of a set of outside edges
+(representing references to object allocation sites that are outside
+the current analysis scope), a set of inside edges (references within
+the current analysis scope), an escape function (indicates for each
+node what unanalyzed methods it escapes to) and a return set (what
+objects are returned): $\langle O,I,e,r \rangle$. One such graph is
+associated with each program point (since this is a flow-sensitive
+analysis) and there are two program points for each statement, before
+and after it executes. The nodes of the graph can be of several types:
+inside nodes (objects created in the analyzed scope), thread nodes
+(thread creation sites, subtype of inside nodes), outside nodes
+(objects created outside of analyzed scope) and class nodes (one per
+class, as a container for static fields). Outside nodes further
+subdivide in parameter, global, load and return nodes. This complex
+structure is used to represent all types of statements that are
+interesting for pointer analysis. For instance, an object creation
+site (\icode{l = new cl}) represents the new object with an inside
+node and creates an edge form the node representing \icode{l} (which
+could be a parameter node or a global node, for example) to the newly
+created node. The intraprocedural part of the analysis implies
+creating and deleting edges at each analyzed statement. A pass through
+a method will start with an initial points-to graph which contains
+parameter nodes and global nodes along with edges pointing to them as
+well as an escape function returning the empty set for any node and an
+empty return set. Statements are then analyzed according to the
+control-flow graph and the points-to graph is updated and stored
+accordingly for each program point. In the end, an exit points-to
+graph will be obtained. Interprocedural analysis uses a mapping
+algorithm to produce the graph for an invocation type, taking the
+graph before the site and the entry and exit graphs for the invoked
+method into consideration. After the analysis of the entire program is
+completed, we have accurate points-to information and escape for each
+program point.
+
+S\u{a}lcianu set out in his master thesis \cite{salcianu01pointer} to
+provide the correctness proof for the analysis of Whaley and Rinard
+discussed above. To make reasoning easier, a reformalization of the
+original method was needed, which actually resulted in a significantly
+distinct formalism. The idea and type of the analysis have remained
+similar, nevertheless. The representation was switched from a
+quadruple to a five-tuple, $\langle I^a,O^a,L^a,S^a,U^a
+\rangle$\footnote{The superscript $^a$ stands for the program point
+  for which the graph is computed.}, consisting of inside edges
+($I^a$) and outside edges ($O^a$) just like before, and the abstract
+state of local variables ($L^a$, maps each variable to the set of
+nodes it might point to), the set of threads started by the analyzed
+scope ($T^a$) and the set of nodes that escape to unanalyzed methods
+($S^a$). The last two components are used for modeling sources of
+escape information. The rest of the algorithm is similar to the one
+described above (by defining what edges and nodes are created or
+deleted by each statement and how mapping is performed at call sites).
+The bulk of the thesis, however, focuses on proving the correctness of
+the proposed method, which is of less interest to us.
+
+Research on pointer analysis has also been done within the Soot
+framework for analyzing Java programs \cite{vall99soot}. Ond\v{r}ej
+Lhot\'ak has begun work on pointer analysis as part of his master
+thesis \cite{lhot02spark} by creating Spark (Soot Pointer Analysis
+Research Kit). Spark is a generic implementation of pointer analysis,
+the goal of which is to compare different approaches within the same
+conditions, in order to provide results about how things like taking
+type declarations into consideration during the analysis or performing
+points-to graph simplification steps influence speed, memory
+consumption and precision of the results. The method proposed in
+\cite{lhot02spark} and then further refined in \cite{lhot03spark}
+implies the construction of a \emph{pointer assignment graph} in order
+to represent the initial points-to relationships in the program, the
+optional simplification of this graph and then the propagation of the
+information along the edges. Since we intend to adapt this method to a
+Stratego implementation ourselves, we postpone the details until the
+section about our proposed work.
+
+The same group of people working on Soot have come up with an
+interesting idea afterwards, in order to allow better scaling of the
+original method. In the work described above they were using a hybrid
+set representation to represent points-to sets in the pointer
+assignment graph (points-to sets are sets containing object allocation
+sites which are associated with certain nodes of the graph). These
+hybrid sets use an array of pointer representation if the set contains
+16 elements or less and a bitset representation otherwise. Even with
+this optimization, the algorithm can require a lot of memory for large
+code bases. In this newer approach \cite{berndl03bdd}, the authors
+propose the use of Binary Decision Diagrams (BDDs) in order to
+represent points-to sets.  After proper tuning of the representation,
+the benchmarks show that the analysis time is somewhat larger, but the
+memory requirements drop to 4 up to 6-7 times less, which allows the
+analysis of programs that were previously not analyzable. The BDD
+representation is so efficient because it allows maximal sharing of
+set elements representation. This means that in order to represent
+sets $S_1, S_2, \dotsc, S_n$ we need roughly the same space as if we
+were to represent their union. This clearly saves a lot of space when
+there is considerable overlap between the sets (as is the case for
+points-to sets).
+
+\cite{whaley04cloningbased} also proposes the use of BDDs for pointer
+analysis, but for a different purpose than in \cite{berndl03bdd}.
+Their approach is to obtain a context-sensitive pointer analysis by
+running a context-insensitive one over an extended call graph in which
+a different node is used for every call to a method (meaning that
+calls to the same method will be represented by edges to clones of the
+same node). It is clear that even for reasonably sized programs, such
+an extended graph would explode beyond representation capabilities,
+making it impractical, if not impossible, to compute with it. The
+context-insensitive analysis that is implemented is actually the one
+in \cite{berndl03bdd}, to which type information is added to improve
+precision. The entire algorithm (including the cloning of the call
+graph nodes in order to turn the context-insensitive analysis into a
+context-sensitive one) is represented in Datalog. Datalog is a
+language for specifying database relations with Prolog-style
+predicates and the paper explains how automatic translation from
+Datalog to a BDD implementation can be done. This automatic
+translation is used to transform the Datalog representation of the
+pointer analysis into BDDs. What is achieved is that the huge extended
+call graph is now represented and manipulated using BDDs, thus making
+the whole process feasible.
+
+\subsubsection{Escape Analysis}
+
+We have already discussed the approach that Whaley and Rinard took in
+\cite{whaley99compositional} for a composed pointer and escape
+analysis, as well as the transformed algorithm proposed by
+S\u{a}lcianu in \cite{salcianu01pointer}. Both these analyses define
+escape predicates which indicate whether or not objects escape either
+a method or a thread, but they do not make a distinction between the
+two. In particular, there are no objects that escape the method in
+which they have been defined, but do not escape the thread in which
+they have been defined. This approach is weaker (or more conservative)
+than necessary in that it prevents performing the optimization of
+\emph{synchronization removal} for many objects. In theory, objects
+that do not escape their methods can be allocated on the stack and
+objects that do not escape their threads can have all synchronization
+around them removed. Any object that does not escape its method will
+not escape its thread either, but there can be objects that do escape
+their method but not their thread. For these objects, we can still
+perform the removal of synchronization. However, since these two
+analyses \cite{whaley99compositional, salcianu01pointer} do not
+differentiate between the two types of escaping, as soon as an object
+escapes its method, it will automatically be assumed that it escapes
+its thread too (although this is many times not the case), thereby
+preventing the synchronization removal optimization.
+
+Choi et al. propose a different solution in \cite{choi99escape} that
+accommodates this distinction between objects escaping a method and
+objects escaping a thread. They define an ``escapement lattice
+consisting of three elements: \emph{NoEscape} ($\top$),
+\emph{ArgEscape}, and \emph{GlobalEscape} ($\bot$).'' These three
+values represent the three distinct possibilities: the object does not
+escape its method or thread (\emph{NoEscape}), the object escapes its
+method, but not its thread (\emph{ArgEscape}) and the object escapes
+both its method and its thread (\emph{GlobalEscape}). The algorithm
+uses an abstraction called a \emph{connection graph} whose nodes
+represent objects, reference variables, non-static fields and static
+fields and whose edges can be points-to edges (from anything but
+object nodes to object nodes), deferred edges (between any types of
+nodes except object nodes) and field edges (from object nodes to field
+nodes). The authors define the basic idea behind the algorithm to be
+the following:
+
+\begin{quote}
+  Let CG be a connection graph for a method M, and let O be an object
+  node in CG. If O can be reached in CG from any node whose escape state
+  is not NoEscape, then O escapes M. The intuition easily extends to
+  the escapement of an object from a thread.
+\end{quote}
+
+The intraprocedural part of the analysis is quite straightforward. The
+various types of assignments are handled as expected, by introducing
+the correct type of edges (and nodes) in the connection graph. What is
+interesting is that the analysis can be performed both in a
+flow-sensitive and a flow-insensitive manner. The distinction between
+the two is whether or not a so-called \emph{ByPass} function is run
+before adding the new edge. This function applies to a node and
+removes all incoming and outgoing edges from this node, introducing
+all the necessary extra edges between all its predecessors and
+successors. ByPass is called in order to remove deferred edges after a
+reassignment (i.e, if reference variable $p$ was pointing to object
+$o_1$ and reference variable $r$ had a deferred edge to $p$, then
+after assigning $o_2$ to $p$, ByPass($p$) will remove the deferred
+edge between $r$ and $p$ so that $r$ remains pointing to $o_1$, but
+does not end up pointing to $o_2$ as well). Interprocedural analysis
+is handled by producing summary connection graphs at each method entry
+and method exit. These summary graphs contain a new type of node,
+called a \emph{phantom node}, to represent input parameters and return
+values.  These nodes are used to update the connection graph across a
+method call by mapping real nodes from the graph before the method
+call to them. The analysis results into a single connection graph in
+which each node is annotated with one of the three escape states
+(\emph{NoEscape}, \emph{ArgEscape} or \emph{GlobalEscape}).
+
+\begin{comment}
+\subsubsection{Call Graph}
+Apparently all pointer \& escape analyses in the literature rely on CHA (Class Hierarchy
+Analysis) \cite{dean95optimization} for building a call graph. Explain what static class
+analysis is and how CHA improves it.
+\end{comment}
+
+\subsection{Proposed Work}
+
+\subsubsection{Program Call Graph Construction}
+\label{sec:program-call-graph}
+
+In order to implement the pointer analysis algorithm (as well as any
+other flow-sensitive analysis or transformation), we need information
+about what method body corresponds to a method call. This is because
+when we encounter a call site in our analyzed code, we want to be able
+to enter the body of the method that is called and analyze the code it
+contains. This was easy in the absence of virtual dispatching, since
+there could always be only one function with a particular name and set
+of parameters in scope. In the case of virtual dispatching, however,
+this is no longer true. The runtime type of the object that is the
+target of the method call will determine exactly which of the
+potentially many method definitions with the same signature that are
+in scope will be executed.
+
+Most literature mentions one form or another of the so-called
+\emph{call graph} which is used for this purpose. A call graph has a
+conceptually simple definition. Its nodes represent methods and its
+edges represent method calls. An edge between the node representing
+method $m_1$ and the node representing method $m_2$ indicates that
+$m_1$ calls $m_2$. Figure \ref{fig:cg} shows the call graph that
+corresponds to the following Java code:
+
+\begin{minipage}{0.45\linewidth}
+\begin{javacode}
+class Foo {
+  public void foo(Vehicle v) {
+    System.out.println(
+      "Vehicle details:");
+    System.out.println(
+      "color: " + v.getColor());
+    System.out.println(
+      "number of wheels: " +
+      v.getWheels());
+  }
+}
+\end{javacode}
+\end{minipage}
+\begin{minipage}{0.55\linewidth}
+\begin{javacode}
+abstract class Vehicle {
+  private Color color;
+  public abstract int getWheels();
+  public Color getColor() {return color;}
+}
+
+class Car extends Vehicle {
+  public int getWheels() {return 4;}
+}
+
+class Bike extends Vehicle {
+  public int getWheels() {return 2;}
+}
+\end{javacode}
+\end{minipage}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.75]{fig/cg}
+\caption{Call graph}
+\label{fig:cg}
+\end{center}
+\end{figure}
+
+Notice that although there is only one call to the method
+\icode{getWheels} in \icode{foo}, we have an edge both to
+\icode{Car.getWheels()} and to \icode{Bike.getWheels()}. This is
+because any of the two methods could be executed as a result of the
+call \icode{v.getWheels()} in method \icode{foo}.
+
+Such a call graph contains more information that we really need, since
+all we are interested in is which method body (or bodies) we have to
+analyze. This can be done in the most basic of ways by looking at the
+entire hierarchy of classes which is rooted in the declared class of
+the object that is the target of the method call. We search in this
+entire hierarchy all the methods that have a signature that matches
+the method being called. We then have to analyze all these methods,
+since any of them could be the one run at runtime. Depending on the
+semantics of our analysis, we will then have to somehow merge the
+results of the analysis on all these methods. In the case of pointer
+analysis, this will simply mean that edges introduced by all the
+analyses of the methods will be kept in the points-to graph, in order
+to ensure that all possible pointer relationships are considered.
+
+At this point, Stratego does not have this information available
+through any of its libraries. The closest we have to this is a
+\icode{is-subclass} function, which indicates if a class is a subclass
+of another. We thus need to implement a method of analyzing an entire
+code base and creating a tree to represent the subtyping
+relationships of all classes. With this structure, we can then look at
+the entire subtree of a class and analyze it (on demand) for
+occurrences of a particular method signature.
+
+Analyzing such a subtree for each call site might render our analysis
+quite slow, due to the usually large number of method calls in an
+object-oriented program and the potentially large number of subclasses
+of a class. In order to alleviate this, we might have to consider
+implementing a version of Class Hierarchy Analysis
+\cite{dean95optimization}, which precomputes (or computes on demand
+and saves) the so-called method \emph{applies-to set}. This set
+indicates all the classes to which a method call might refer. Assuming
+we encounter a call like \icode{o.m()} in our code, by running
+\emph{applies-to(m)} we obtain one or more classes which contain
+definitions of method \icode{m()}. We have to consider the definitions
+of \icode{m()} in each of these classes in our analysis.
+
+While saving applies-to information on disk for reusing it across runs
+of data-flow transformations is clearly to be desired, we do not
+estimate going in this direction within the bounds of this thesis.
+
+We envisage a possible optimization which would increase the precision
+of our analysis, namely to consider the extra information provided by
+object creation sites. If we have code that assigns a new instance of
+class \icode{Foo} to a reference variable (\icode{v = new Foo()}),
+then until v is reassigned, we know that the runtime type of \icode{v}
+is \icode{Foo}, so we do not need to analyze the entire set of
+subtypes of whatever the declared type of \icode{v} is.
+
+It can also be the case that a method is not defined in the declared
+class of its target object or in any of its subclasses. In this case,
+we need to progressively go up in the hierarchy until we reach the
+first class that defines that method. In this case, we know for sure
+that it is that method definition and no other that will be run.
+Fortunately, this kind of information is already available in
+Stratego, where the call \icode{get-declaring-class} takes a method
+specification as an argument and returns the class that declares it as
+the result.
+
+\subsubsection{Pointer Analysis}
+\label{sec:pointer-analysis-1}
+
+The bulk of our proposed work for this phase of the thesis project
+consists in implementing pointer analysis for Java and making its
+results readily available to Stratego users. We have investigated a
+number of approaches to pointer analysis, and eventually we have
+decided on adopting the one described in \cite{lhot02spark,
+  lhot03spark}. This is a context insensitive and flow insensitive
+analysis, which thus produces a points-to graph per program. This
+graph can then be used as a resource for other data-flow
+transformations.
+
+We have chosen this particular method for a number of reasons. To
+start with, ours will be the first attempt of implementing a pointer
+analysis in Stratego and as there is no previous experience to build
+on, we preferred choosing an analysis which was clearly described and
+rather straightforward to implement. We believe the process of
+implementing such an analysis in Stratego will be complicated enough
+even without adding more complexity by choosing a more demanding
+analysis. Secondly, there is a version of this same analysis
+(presented in \cite{berndl03bdd}) which reduces the space requirements
+by using Binary Decision Diagrams (BDDs) for representing points-to
+sets (see section \ref{sec:pointer-analysis}). As part of this thesis,
+we plan to provide the basic implementation and once this is working
+and tested, a future effort can be directed towards binding Stratego
+with an existing C library for working with BDDs and replacing the
+data structures used by our analysis with BDDs.  Finally, we chose a
+context insensitive and flow insensitive analysis to ensure a
+reasonable efficiency so that it can be immediately used (i.e.,
+without requiring further optimization) in our data-flow
+transformations. Granted, its precision will suffer from both
+insensitivities, but we regard this as an acceptable compromise in
+this phase.
+
+There are several aspects of the original analysis in
+\cite{lhot02spark, lhot03spark} that have to be addressed. The most
+important one is that the analysis is performed on Java bytecode. The
+results of our analysis, on the other hand, will have to be used
+mainly in source-to-source transformations. This means that we cannot
+proceed with a bytecode analysis, but we have to adapt it to source
+code. Moreover, the original analysis assumes a normalized form of the
+bytecode, in which only the most basic of assignments and method calls
+have to be handled (i.e., a method call like \icode{foo(new
+  MyClass())} will never be analyzed; it is assumed that it will be
+normalized to \icode{MyClass o = new MyClass(); foo(o);}). We are
+reluctant to perform such a normalization (even at the source code
+level) before running the analysis, because this will change the code
+beyond recognition (an unacceptable prospect for source-to-source
+transformations). Under these circumstances, we will have to come up
+with other ways of containing the number of types of statements that
+we have to support.
+
+Moving on to another aspect, the original analysis is designed so that
+it accommodates a lot of variation in the algorithm. This is because
+Spark (the name of the pointer analysis framework) is built to allow
+experimentation with various implementations of pointer algorithms. We
+choose to fix a number of aspects and only implement support for
+those. We choose to use a subset-based approach in propagating
+points-to sets (as opposed to a equality-based approach), to consider
+declared types and type casts in our analysis, to use an initial
+approximation of the call graph (as opposed to building it as pointer
+information is computed), to do a \emph{field-sensitive} analysis
+(i.e., consider fields separately for each instance), not to simplify
+the pointer assignment graph (at least not in our first implementation
+attempt) and we choose to implement the worklist-based algorithm. Some
+of these notions might not yet be clear, but they will become so as we
+advance with our presentation.
+
+We use the rest of this section to provide an overview of the aspects
+of the pointer analysis that we intend to implement. For a more
+detailed description, we refer the reader to \cite{lhot02spark}.
+
+\paragraph{Pointer Assignment Graph}
+
+The pointer analysis uses a graph structure called a \emph{pointer
+  assignment graph} in order to represent the program under analysis.
+The nodes of the graph are of four different types, each type
+representing memory locations used by the program:
+
+\begin{itemize}
+\item \textbf{allocation nodes}: each such node stands for a set of
+  runtime objects. Each allocation site of the program (i.e., each
+  \icode{new SomeClass(...)}) will be represented by such a node.
+  Allocation nodes stand for sets of objects and not single objects
+  because the same allocation site could allocate an indefinite number
+  of objects (consider an allocation site in a for loop, for
+  instance).
+\item \textbf{variable nodes}: used to represent a set of memory
+  locations that may hold pointers to objects. One such node will be
+  associated with each local variable, each method parameter and each
+  static field (which can be regarded as global variables).
+\item \textbf{field reference nodes}: used to represent pointer
+  dereferences (e.g., \icode{p.f}). The semantics of field references
+  (from a pointer analysis perspective) is similar to that of normal
+  variables (i.e., they both hold pointers to objects), so each field
+  reference node has a variable node as its base to which it adds a
+  field name.
+\item \textbf{concrete field nodes}: this type of node only comes into
+  play during the propagation of points-to sets (see below). One such
+  node is used to represent each field of objects represented by an
+  allocation node.
+\end{itemize}
+
+The eventual purpose of our analysis is to find out what allocation
+nodes each variable node, field reference node and concrete field node
+can point to. This information will be stored in so-called
+\emph{points-to sets}, which are associated with all types of nodes
+except allocation nodes. In addition to points-to sets, in order to
+take type information into account, we will associate a type with
+allocation nodes, variable nodes and field reference nodes. This type
+will be the declared type of the object, variable and field,
+respectively. The points-to sets of variable and field reference nodes
+will have to only contain pointers to allocation nodes annotated with
+types that are compatible with the type associated with the
+variable/field reference node.
+
+There are also four different type of edges that can appear in the
+pointer assignment graph, as follows:
+
+\begin{itemize}
+\item \textbf{allocation edges}: goes from an allocation node to a
+  variable node and indicates that the variable may point to any of
+  the objects represented by the allocation node.\footnote{Edges in
+    the graph are in the opposite direction of the points-to
+    relationship. This is because during the run of the algorithm,
+    information has to ``flow'' from source (pointed) to destination
+    (pointer).}
+\item \textbf{assignment edges}: an edge between variable nodes,
+  representing an assignment of one variable to another (which creates
+  a points-to relationship). \icode{q = p} will introduce an edge from
+  \icode{p} to \icode{q}. This edge indicates that the all elements in
+  the points-to set of \icode{p} will have to appear in the points-to
+  set of \icode{q} as well (notice again that the direction of the
+  edge indicates the flow of points-to information). Method calls and
+  returns are also modeled using assignment edges.
+\item \textbf{store edges}: link a variable node to a field reference
+  node. An edge from \icode{p} to \icode{q.f} is used to represent
+  assignments of the type \icode{q.f = p}.
+\item \textbf{load edges}: link a field reference node to a variable
+  node. An edge from \icode{p.f} to \icode{q} is used to represent
+  assignments of the type \icode{q = p.f}.
+\end{itemize}
+
+The idea behind how the pointer assignment graph is built is to add
+nodes and edges that represent all possible points-to relationships
+that are introduced by the semantics of Java. As such, variable nodes
+are built for local variables, static fields, method parameters and
+return values. All exceptions are represented with a single variable
+node. This is done to simplify handling of exceptions, since in this
+way we can link (with allocation edges) this single allocation node
+with all variable nodes representing the variables in catch clauses.
+Otherwise, we would need to infer the types of exceptions in order to
+match them with the proper variable node. Aside from statements we
+have already discussed while explaining the types of edges, there will
+also be edges added for pointers that are passed to a method and that
+are returned by methods. Implicit flow of pointers is also handled by
+adding an edge from each allocation node of objects of the same class
+to the variable node representing the \icode{this} parameter of that
+class, if the class has a \icode{finalize} method. As a side note,
+the elements of an array are all represented with a single field
+reference node.
+
+\paragraph{Graph Simplification}
+
+In the original algorithm, after building the graph, there is also an
+optional phase of simplifying it. This simplification is built on the
+observation that certain groups of nodes in the graph are sure to end
+up with identical points-to sets. There are two such cases that are
+considered: strongly connected components and single entry
+subgraphs. In strongly connected components, we know that components
+of a points-to set of any node will flow to all other nodes, so in the
+end the points-to sets of all the nodes in the component will be
+equal. The same holds for a subgraph with a single entry because the
+information from that entry will flow to all other nodes in the
+subgraph, rendering all points-to sets equal. All nodes in any such
+structure (strongly connected component or single entry subgraph) will
+be collapsed into a single node, thus reducing the graph. We will only
+attempt an implementation of this simplification if time allows it.
+
+\paragraph{Propagation of Points-to Sets}
+
+Initially, all the points-to sets are empty. We start propagation by
+putting all allocation nodes in the points-to sets of their successor.
+From there on, we need to propagate the elements of points-to sets
+along the edges of our graph until a fix point is reached. Five
+different algorithms are presented in the original work: an iterative
+one, a worklist one (with an incremental version) and an alias edge
+one (with an incremental version). We choose to implement the worklist
+propagation algorithm (the second fastest, slower only than its
+incremental variant), so we only discuss this here.
+
+Before explaining the algorithm, we first need to show how the four
+types of edges are handled in any propagation algorithm. The easiest
+are allocation edges: we simply put the allocation node from the
+origin of the edge in the points-to set of the variable node, before
+running the fix point iteration of the algorithm.  Assignment edges
+are also easy to handle: we add all the elements in the points-to set
+of the node at the origin of the edge to the node at the destination.
+Store edges ($p \rightarrow q.f$) are a bit more tricky. A store edge
+indicates that all the elements in the points-to set of $p$ need to be
+in the points-to set of $q.f$. However, $q.f$ is a field reference
+node, so it represents the field $f$ of all objects that $q$ may point
+to. This means that what we actually have to do is propagate the
+elements in the points-to set of $p$ to the fields of all these
+objects. For this purpose, we need to introduce the fourth type of
+node: the concrete field node. And we need one for each allocation
+node from the points-to set of $q$. Afterwards, we can propagate the
+elements in the points-to set of $p$ in the points-to set of all these
+concrete field nodes. The reverse process happens during the handling
+of load edges ($p.f \rightarrow q$): elements from the points-to set
+of all the concrete field nodes associated with any allocation node
+from the points-to set of $p$ will flow to the points-to set of $q$.
+
+Now we return to explaining how the worklist propagation algorithm
+works. The initialization, as with all other algorithms, involves
+propagating allocation nodes along allocation edges to the points-to
+sets of variable nodes and adding all these variable nodes with
+non-empty points-to sets to the worklist. Thereafter, an iterative
+process starts, which constantly picks a node from the worklist and
+process it. The worklist is constantly updated with nodes whose
+points-to sets get updated during the processing of other nodes.
+Processing of a node involves handling the following edges: assignment
+edges and store edges originating from it (to propagate the new
+elements in the points-to set of the processed node), store edges
+ending in a field reference node that has this node as its base (to
+update the concrete field nodes associated with the allocation nodes
+that were added to the processed node's points-to set) and load edges
+originating from a concrete field node that has this node as its base
+(to propagate the points-to sets of the concrete field nodes
+associated with the allocation nodes that were added to the points-to
+set of the processed node). In addition to this, there are also some
+special cases that have to be handled separately. One such case is
+when $q$ is in the worklist, but $p$ is not, $p$ has allocation node
+$a$ in its points-to set, and $q$ just had the same $a$ added to its
+points-to set. This makes $p$ and $q$ possible aliases, so any updates
+done to the concrete field nodes based on $a$ as an effect of
+processing store edges ending in $q.f$ (during normal processing of
+$q$) should also propagate through the load edges originating in $p.f$
+(since $p$ points to $a$ as well). However, this does not happen,
+since $p$ is not in the worklist. Therefore, we need to additionally
+process the load edges outside the main loop. The same case can also
+happen in reverse, so we need to similarly process the store edges as
+well.
+
+The following is a verbatim copy of the worklist algorithm, as it is
+summarized in \cite{lhot02spark}:
+
+\begin{verbatim}
+process allocations
+repeat
+  repeat
+    remove first node p from worklist
+    process each assignment edge p -> q
+    process each store edge p -> q.f
+    process each store edge q -> p.f
+    process each load edge p.f -> q
+  until worklist is empty
+  process every store edge
+  process every load edge
+until worklist is empty
+\end{verbatim}
+
+\begin{comment}
+~\\
+Outline the chosen implementation of pointer analysis (data structures -- points-to
+graph, binary decision diagrams, etc.; algorithms) and explain how Stratego can be
+used to implement it. One potential issue: how to best represent graphs. Another one:
+how do we adapt a graph algorithm to Stratego (perhaps it's straightforward, perhaps
+not, I have no idea yet).
+
+~\\
+Discuss that it might be a good idea (in general as well as for this particular optimization
+to normalize code to a limited nr. of instruction types). 
+\end{comment}
+
+\begin{comment}
+\subsubsection{Escape Analysis}
+
+Outline the chosen implementation of escape analysis. This would be the one from
+\cite{choi99escape}. Again, discuss how this has to be adapted to Stratego.
+
+~\\
+If not already discussed in the ``related work'' section on escape analysis, discuss
+here what the applications of escape analysis are: synchronization removal for objects
+which are local to a thread (or which \emph{do not escape} a thread) and stack
+allocation of objects that \emph{do not escape} a method. These two seem to be the
+main applications mentioned throughout literature.
+\end{comment}

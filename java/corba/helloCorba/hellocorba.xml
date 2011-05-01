@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="hellocorba" default="all">
+  
+  
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="128m"/>
+  <patternset id="compiler.excluded"/>
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties"/>
+    <include name="**/?*.xml"/>
+    <include name="**/?*.gif"/>
+    <include name="**/?*.png"/>
+    <include name="**/?*.jpeg"/>
+    <include name="**/?*.jpg"/>
+    <include name="**/?*.html"/>
+    <include name="**/?*.dtd"/>
+    <include name="**/?*.tld"/>
+    <include name="**/?*.properties"/>
+    <include name="**/?*.xml"/>
+    <include name="**/?*.html"/>
+    <include name="**/?*.dtd"/>
+    <include name="**/?*.tld"/>
+    <include name="**/?*.gif"/>
+    <include name="**/?*.png"/>
+    <include name="**/?*.jpeg"/>
+    <include name="**/?*.jpg"/>
+  </patternset>
+  <!-- JDK definitions -->
+  
+  <property name="jdk.home.java_version_1.5.0" value="/opt/sun-jdk-1.5.0"/>
+  <path id="jdk.classpath.java_version_1.5.0">
+    <fileset dir="${jdk.home.java_version_1.5.0}">
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.java_version_1.5.0}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.java_version_1.5.0"/>
+  <!-- Project Libraries -->
+  <!-- Global Libraries -->
+  
+  
+  <dirname property="module.hellocorba.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.hellocorba" value="${project.jdk.home}"/>
+  <property name="module.jdk.classpath.hellocorba" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.hellocorba" value="${compiler.args}"/>
+  
+  <property name="hellocorba.output.dir" value="${module.hellocorba.basedir}/classes"/>
+  <property name="hellocorba.testoutput.dir" value="${module.hellocorba.basedir}/classes"/>
+  
+  <path id="hellocorba.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="hellocorba.module.classpath">
+    <path refid="${module.jdk.classpath.hellocorba}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.hellocorba"/>
+  
+  <patternset id="excluded.from.compilation.hellocorba">
+    <patternset refid="excluded.from.module.hellocorba"/>
+    <patternset refid="compiler.excluded"/>
+  </patternset>
+  
+  <path id="hellocorba.module.sourcepath">
+    <dirset dir="${module.hellocorba.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.hellocorba" depends="compile.module.hellocorba.production,compile.module.hellocorba.tests" description="compile module helloCorba"/>
+  
+  <target name="compile.module.hellocorba.production" description="compile module helloCorba production classes">
+    <mkdir dir="${hellocorba.output.dir}"/>
+    <javac destdir="${hellocorba.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryMaximumSize="${compiler.max.memory}" fork="true" executable="${module.jdk.home.hellocorba}/bin/javac">
+      <compilerarg line="${compiler.args.hellocorba}"/>
+      <bootclasspath refid="hellocorba.module.bootclasspath"/>
+      <classpath refid="hellocorba.module.classpath"/>
+      <src refid="hellocorba.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.hellocorba"/>
+    </javac>
+    <copy todir="${hellocorba.output.dir}">
+      <fileset dir="${module.hellocorba.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.hellocorba"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="runidlj" description="comile IDL interfaces">
+    <
+  </target>
+
+  <target name="compile.module.hellocorba.tests" depends="compile.module.hellocorba.production" description="compile module helloCorba test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.hellocorba" description="cleanup module">
+    <delete dir="${hellocorba.output.dir}"/>
+    <delete dir="${hellocorba.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.hellocorba" description="cleanup all"/>
+  
+  <target name="all" depends="init, clean, compile.module.hellocorba" description="build all"/>
+</project>

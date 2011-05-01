@@ -1,0 +1,14 @@
+* discuss the fact that dryad can't handle our construct when disambiguating
+  the code.
+
+* discuss exceptions
+
+* discuss return statements (maybe throw an exception)
+
+* discuss the break/continue issue
+
+* discuss scopes for variable names
+
+* discuss all covered/thought of cases...
+
+* constructors are not covered because of dryad

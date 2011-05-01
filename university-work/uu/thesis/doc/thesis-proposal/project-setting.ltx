@@ -1,0 +1,617 @@
+\section{Project Setting}
+\label{sec:project-setting}
+
+This section aims to establish the setup of this thesis project by
+presenting a number of tools that our thesis will be based on and by
+laying the foundation for some of the topics that will be addressed in
+more depth further on. All the technologies discussed in this section
+represent the ideas and work of other people; we are merely presenting
+them here under a common heading in order to provide the reader with
+an easily accessible reference.
+
+\subsection{Stratego/XT}
+
+Stratego/XT is a combination of a language for implementing program
+transformations using rewriting strategies (Stratego) and a set of
+readily-available transformation tools which can be used for building
+complex pipelines of transformations (XT). Stratego/XT has received
+substantial attention over the past few years and has undergone
+serious development, leading to an abundance of features and
+improvements. The research work on the Stratego/XT platform has been
+documented in close to one hundred papers up to this point, so it is
+in no way our intention to provide anything close to an exhaustive
+presentation.  Instead, we only try to offer a quick overview of some
+of the basic features which are important for the use we will give to
+the language. For a more extensive presentation we refer you to
+\cite{bravo05dynrules}, while for a hands-on tutorial we refer you to
+the Stratego manual \cite{stratego-manual}.
+
+The general transformation pipeline that is used in Stratego involves
+parsing a program to an internal representation (called annotated term
+format, or ATerm format), applying a random number of transformations
+to this representation to achieve a particular purpose and finally
+unparsing (or pretty-printing) the transformed representation back to
+program text (not necessarily using the same language as the
+original). Stratego/XT already supports parsing and pretty-printing a
+wide variety of languages ``out of the box'' (including Java 5.0,
+which we are particularly interested in), thereby saving the user a
+lot of effort. The user generally has to concern herself only with
+writing transformations that manipulate the ATerm representation.
+
+Such transformations are programmed in Stratego by employing a
+paradigm based on \emph{conditional rewrite rules}, the application of
+which is controlled by \emph{strategies}. Strategies and rewrite rules
+can be developed independently of one another, resulting in the
+possibility of creating new strategies which implement completely
+different transformations than the old ones by simply applying the
+same rewrite rules in a different manner. Stratego comes with a large
+library of useful strategies which can usually be parameterized with
+user-defined strategies in order to achieve various results. This
+system makes the writing of transformations simple and attractive.
+
+To illustrate the concepts of rewrite rules and strategies, consider
+this very simple example:
+
+\begin{strategocode}
+    Fold : Plus(Int(x),Int(y)) -> Int(<addS>(x,y))
+    Fold : Times(Int(x),Int(y)) -> Int(<mulS>(x,y))
+    Dist : Times(Plus(x,y),z) -> Plus(Times(x,z),Times(y,z))
+    Dist : Times(z,Plus(x,y)) -> Plus(Times(z,x),Times(z,y))
+
+    simplify = innermost(Dist <+ Fold)
+\end{strategocode}
+
+The first four lines in the code above show the definition of two
+rewrite rules and the last line shows the definition of a strategy
+that applies the rewrite rules. The \icode{Fold} rewrite rule has the
+purpose of evaluating additions and multiplications (we implicitly
+assume in the definition that the arguments to \icode{Plus} and
+\icode{Times} are integer values), while the \icode{Dist} rewrite rule
+applies distribution of multiplication over addition. None of them has
+an associated condition. Conditions guard the application of a rewrite
+rule and can be specified within an optional \icode{where} clause
+followings the rewrite rule. The \icode{simplify} strategy applies the
+two rewrite rules in fix point point manner by using the
+\icode{innermost} library strategy. \icode{innermost} repeatedly
+applies the strategy that is passed to it to all nodes of a tree in a
+bottom-up fashion, until it can no longer be applied.
+
+Explaining the full details of the Stratego syntax is beyond the scope
+of this presentation, but we will briefly mention here a few things as
+a guide to the Stratego code used in this proposal. If you are already
+familiar with Stratego, you can safely skip this paragraph. The binary
+\icode{<+} operator indicates that first it tries to apply its left
+argument and, if that fails, it tries to apply its right argument. It
+is very often that one sees something like this in Stratego: $s_1$
+\icode{<+} $s_2$ \icode{<+} $\dotsb$ \icode{<+} $s_n$. This simply
+means ``try to apply $s_1$, if that fails, try $s_2$, and so on.'' If
+none of $s_1, s_2, \dotsc, s_n$ succeeds, the entire construct fails.
+An operator related to \icode{<+} is the tertiary operator formed by
+\icode{<} and \icode{+}.  $s_1$ \icode{<} $s_2$ \icode{+} $s_3$ tries
+to apply $s_1$ and, if successful, applies $s_2$, if not, applies
+$s_3$.  Sequential application of strategies is achieved with the
+\icode{;} operator ($s_1$\icode{;} $s_2$ applies $s_1$ and $s_2$ in
+succession, only applying $s_2$ if the application of $s_1$ was
+successful). A strategy can take any number of strategies \emph{and}
+terms as parameters (the syntax for this is $s(s_1, s_2, \dotsc, s_n |
+t_1, t_2, \dotsc, t_m)$). A strategy is normally applied to the
+current term. If instead we need to apply it to a different term, we
+can use the following syntax: \icode{<}$s$\icode{>}$t$. Also related
+to the current term is the \icode{where} construct, which ensures that
+the current term valid before the code enclosed in a \icode{where}
+will be reinstated before continuing execution after the \icode{where}
+(\icode{where(}$s$\icode{)} is equivalent to \icode{?x; }$s$\icode{;
+  !x}). We end our presentation with the two basic constructs of
+Stratego: \emph{build} and \emph{match} term. A term is build by
+prefixing it with an exclamation mark (\icode{![1,2,3]} builds the
+list \icode{[1,2,3]}).  A term is matched by prefixing with the
+question mark either a variable (to match the entire term), or a
+pattern (to match parts of the term).  For example, \icode{?x} matches
+any term and binds variable \icode{x} to it, while \icode{MyTerm(x,y)}
+only matches a \icode{MyTerm} with two arguments, binding variable
+\icode{x} to the first argument and variable \icode{y} to the second.
+The \icode{=>} operator can be used to match a term as well after
+first applying the strategy which represents its left argument:
+\icode{s => x} is equivalent to \icode{s; ?x}.
+
+We have already seen an example of a library strategy defined by
+Stratego which can be customized by the user, \icode{innermost}. There
+are numerous other generic strategies defined in the Stratego library,
+such as \icode{outermost} (top-down fix point application),
+\icode{topdown} and \icode{bottomup} (traverse the abstract
+representation top-down/bottom-up and apply a strategy at each node)
+or \icode{alltd}, \icode{oncetd} and \icode{sometd} (apply a strategy
+to all topmost places where it can be applied, to exactly one such
+place or to some of the places). These and many others can be used and
+combined and different ways to achieve virtually any conceivable
+semantics of a transformation.
+
+The final feature of Stratego that is important to present in this
+short overview refers to traversal of terms. This is useful especially
+when we need to apply different strategies in different branches of an
+abstract syntax tree. To this end, Stratego introduces congruence
+combinators. For each $n$-ary term constructor $c$, the strategy
+$c(s_1, s_2, \dotsc, s_n)$ is called a congruence. Its effect is that
+strategy $s_1$ is applied to the first component of the term, $s_2$ to
+the second and so on. The entire strategy is successful if all
+$s_i$'s apply successfully. To illustrate, consider the if-then-else
+construct in a language, represented in ATerm format as
+\icode{If(condition,then-branch,else-branch)}. The \icode{then-branch}
+and the \icode{else-branch} will usually contain a statement or a
+lists of statements, while the \icode{condition} will be a boolean
+expression. Assume we have a transformation which needs to introduce
+curly braces (block braces) for if-then-else's that miss them. This
+would transform the Java code on the left into the one on the right:
+
+\begin{minipage}{0.5\linewidth}
+\begin{javacode}
+if (x < 5)
+  y++;
+else
+  y--;
+\end{javacode}
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+\begin{javacode}
+if (x < 5) {
+  y++;
+}
+else {
+  y--;
+}
+\end{javacode}
+\end{minipage}
+
+In order to achieve this, we need to apply the following
+\icode{AddBlock} \emph{conditional} rewrite rule to the
+\icode{then-branch} and the \icode{else-branch} of the \icode{If}
+term, but not to the \icode{condition}:
+
+\begin{strategocode}
+    AddBlock :
+      st -> Block([st])
+      where <not(?Block(_))>st
+\end{strategocode}
+
+In order to do this, we can use the congruence combinator as shown:
+
+\begin{strategocode}
+    add-blocks =
+      bottomup(try(If(id, AddBlock, AddBlock)))
+\end{strategocode}
+
+The \icode{id} strategy leaves its term unchanged, while the
+\icode{try(s)} is the same as the simple application of the strategy
+\icode{s}, except that it ensures success regardless of the success or
+failure of the application of \icode{s}. The \icode{bottomup} strategy
+ensures the traversal of the entire tree in a bottom-up fashion (we
+could have chosen a top-down traversal just as well, it would have
+worked just as well in this case). As a final note, $c(s, s,
+\dotsc, s)$ is equivalent to \icode{all(s)}.
+
+\subsection{Dynamic Rewrite Rules}
+\label{sec:dynam-rewr-rules}
+
+Dynamic rewrite rules are the feature of Stratego that we are most
+interested in, mainly because the first part of out thesis is heavily
+related to it. We have seen ``normal'' (or static) rewrite rules in
+the previous section. These are defined for the entire length of a
+Stratego program and cannot be modified during the execution of a
+transformation. However, many times when analyzing a program we need
+to take context into consideration, usually by restricting certain
+actions only to certain contexts. Dynamic rewrite rules have been
+primarily introduced in Stratego to allow easy handling of context
+sensitivity.  Context sensitivity can be handled with static rewrite
+rules as well, but only in a complex and awkward way. Dynamic rewrite
+rules are defined and discussed at length (both formally and
+intuitively) in \cite{bravo05dynrules}. An addition to dynamic rewrite
+rules called \emph{dependent rewrite rules} was introduced later and
+is discussed in another paper \cite{karina05dynrules}. We provide here
+a quick summary of what dynamic rewrite rules are and how they can be
+used, mostly based on \cite{bravo05dynrules}.
+
+\paragraph{Defining and undefining dynamic rules}
+
+Dynamic rewrite rules are identical in form with the static ones,
+except that they are not defined at the top level of a Stratego
+program, but within a special \icode{rules} construct, which can
+appear in any place a normal strategy can appear. \emph{Defining} a
+rule simply means writing it in a such a \icode{rules} construct. The
+use of dynamic rewrite rules usually implies using some context
+information which is available when the rule is being defined in order
+to achieve context sensitivity. For example, we could use such a rule
+in a constant propagation transformation to associate variables with
+their values when an assignment is encountered:
+
+\begin{strategocode}
+    const-prop-assign :
+      Assign(x, e1) -> Assign(x, e2)
+      where <const-prop>e1 => e2
+          ; try( <is-value>e2
+               ; rules(ConstProp : x -> e2)
+            )
+\end{strategocode}
+
+The line \icode{rules(ConstProp : x -> e2)} defines a new dynamic rule
+called \icode{ConstProp} which binds variable \icode{x} to constant
+expression \icode{e2}. In a top level strategy we can apply the
+dynamic rule \icode{ConstProp} just as if it had been defined
+statically. If we apply it before it is defined, its application will
+simply fail, otherwise it will behave like its static equivalent.
+
+\emph{Undefining} a rule is done by adding the \icode{-} suffix after
+the \icode{:}, while only mentioning the left hand side of the
+rule. We can now correct the code above so that whenever \icode{e2} is
+not a constant value, the rule \icode{ConstProp} is undefined so that
+we do not wrongfully propagate the old value variable \icode{x} had
+before the assignment:
+
+\begin{strategocode}
+    const-prop-assign :
+      Assign(x, e1) -> Assign(x, e2)
+      where <const-prop>e1 => e2
+          ; if <is-value>e2 then
+              rules(ConstProp : x -> e2)
+            else
+              rules(ConstProp :- x)
+            end
+\end{strategocode}
+
+\paragraph{Scoping dynamic rules}
+
+If we look at our \icode{ConstProp} rule, we realize that it should no
+longer be active when variable \icode{x} goes out of scope, to avoid
+incorrect replacement of occurrences of \icode{x} that refer to a
+different variable \icode{x}. One option would be to undefine the
+rules manually at the end of a scope, but this would require horrible
+administration in order to know which rules to undefine at the end of
+which scopes. Instead, Stratego offers a scoping construct for dynamic
+rules which has the semantics that any changes (definitions and
+undefinitions of dynamic rules) made within the scoped application are
+automatically dropped when the scope is exited. We want to scope our
+\icode{ConstProp} rule whenever we enter a block of statements in our
+traversal, so instead of this:
+
+\begin{strategocode}
+    const-prop =
+      ...
+      <+ Block(const-prop)
+      ...
+\end{strategocode}
+
+which simply applies the \icode{const-prop} strategy to the statements
+in the block, we can write something like this to achieve the same
+effect, but making sure that all effects are dropped after the block
+is traversed:
+
+\begin{strategocode}
+    const-prop =
+      ...
+      <+ Block({| ConstProp: const-prop |})
+      ...
+\end{strategocode}
+
+\paragraph{Labeling scopes}
+
+Scoping is a start, but it is actually not sufficient if we want to
+support nested blocks (which are allowed in virtually all programming
+languages).  This is because if a variable is defined in a scope, we
+need to make sure that all changes to the \icode{ConstProp} rule that
+refer to that variable are undefined not when the scope where they are
+performed in is exited (as it happens if we use the code above), but
+when the scope in which the variable is defined is exited. To
+accommodate this, Stratego allows the labeling of scopes with random
+terms. Then, once a scope is labeled, we can refer to it by using its
+label.  \icode{ConstProp+x} labels the current scope for the the
+dynamic rule \icode{ConstProp} with the term that \icode{x} is bound
+to.  \icode{ConstProp.x} indicates that the action that follows
+(definition or undefinition of the rule) is to be performed relative
+to the scope labeled with \icode{x} instead of relative to the current
+scope (which is the default). With this syntax, we can finally give
+the correct form of (a small part of) the constant propagation
+transformation:
+
+\begin{strategocode}
+    const-prop =
+      ...
+      <+ Block({| ConstProp: const-prop |})
+      <+ const-prop-var-dec
+      <+ const-prop-assign
+      ...
+
+    const-prop-var-dec :
+      VarDec(x, type) -> VarDec(x, type)
+      where rules(ConstProp+x :- x)
+
+    const-prop-assign :
+      Assign(x, e1) -> Assign(x, e2)
+      where <const-prop>e1 => e2
+          ; if <is-value>e2 then
+              rules(ConstProp.x : x -> e2)
+            else
+              rules(ConstProp.x :- x)
+            end
+\end{strategocode}
+
+The code \icode{rules(ConstProp+x :- x)} both labels the current scope
+with \icode{x} and undefines any definition of \icode{ConstProp} for
+\icode{x} that might have been valid before the variable declaration.
+Furthermore, \icode{const-prop-assign} was changed to define and
+undefine \icode{ConstProp} for \icode{x} relative to the scope where
+\icode{x} was defined, so that all changes are dropped only when that
+scope is exited.
+
+\paragraph{Extending dynamic rules}
+
+In addition to being defined, dynamic rules can also be extended in
+Stratego. This means that we can associate multiple right hand sides
+with the same left hand side. For this, we use \icode{:+} instead of
+simply \icode{:} when we define (well, extend) a rule. If a rule is
+extended, applying it will result in applying the right hand side
+defined by its last extension. However, there are several ways to
+access older extensions as well, but we will discuss those a bit
+later. First, let us show an example where extension of rules can be
+useful. Consider a language with a \icode{let}-like construct, where
+functions can be defined in the preamble and only be used in the
+expression of that let. Something like:
+
+\begin{code}
+    let
+      f x = ...
+      g x = ...
+    in
+      f 5 + g 6
+    end
+    // f & g no longer visible here
+\end{code}
+
+We can imagine a number of analyses which might need to maintain an
+environment with the functions that are defined in the current scope.
+If we wanted to use a dynamic rule \icode{Env} for this, one option
+would be the following (notice our use of scoping in the definition of
+\icode{analyze-let} to ensure dropping the newly added functions at
+the end of the let):
+
+\begin{strategocode}
+    analyze =
+      ...
+      <+ analyze-let
+      <+ analyze-fun-def
+      ...
+
+    analyze-let =
+      {| Env : analyze |}
+
+    analyze-fun-def =
+      FunDef(?f, id, analyze)
+      ; where(<Env>() => env)
+      ; rules(Env : () -> [f | env])
+\end{strategocode}
+
+What we do in \icode{analyze-fun-def} is that we retrieve the old list
+of function names, add the new function name to it and redefine the
+dynamic rule with the new environment. Since this pattern occurs quite
+often, Stratego offers a shortcut for it by allowing extending the
+dynamic rules. Behind the scenes the exact same process takes place,
+but as far as the user is concerned, she only has to write the
+following in order to achieve the same effect as before:
+
+\begin{strategocode}
+    analyze-fun-def =
+      FunDef(?f, id, analyze)
+      ; rules(Env :+ () -> f)
+\end{strategocode}
+
+However, there is a catch. Using extension of dynamic rules, when we
+apply the rule, we do not get back all the right hand sides, but just
+the last one added. This means that in our example above,
+\icode{<Env>()} will just return the last function name that was
+added. This might be what we want in certain circumstances, but it
+also can be (as in our example) that we need access to all
+definitions. One function that allows us to do that is called
+\icode{bagof-}$L$, where $L$ stands for the name of the dynamic rule.
+In our example, \icode{<bagof-Env>()} will return the list with all
+the function names. Another useful function is \icode{once-}$L$, which
+applies the lastly added right hand side and then drops it from the
+list.
+
+\paragraph{Intersection and union of dynamic rules}
+
+Going back to our constant propagation example, consider what happens
+when we need to analyze a if-then-else in our target code. We need to
+make sure that (1) the rules applied in the then branch and the ones
+applied in the else branch do not overlap and (2) the rules valid
+after the if-then-else are the result of merging those generated by
+the then branch and those generated by the else branch. In the case of
+constant propagation, the merging process is done by intersecting the
+two sets of rules, but in the case of other transformations, we might
+need to merge by taking the union of the two sets of rules. Stratego
+offers the \icode{/...\bs} binary operator for intersection and the
+\icode{\bs.../} binary operator for union. In both cases, instead of
+the \icode{...}, the user has to specify one or more dynamic rule
+names separated by commas. What Stratego does is clone the set of
+rules valid when the intersection/union operator is encountered, run
+each of the two argument strategies with one of the set of rules as
+the active one and in the end intersect or take the union of the two
+resulting sets, setting the new active set to the result. To
+illustrate, here is the code that performs constant propagation over
+an if-then-else construct:
+
+\begin{strategocode}
+    const-prop-ifthenelse =
+      If(const-prop, id, id)
+      ; (const-prop
+         <+ If(id, const-prop, id) /ConstProp\ If(id, id, const-prop))
+\end{strategocode}
+
+We run the strategy \icode{If(id, const-prop, id)} with one set of
+rules and the strategy \icode{If(id, id, const-prop)} with its clone,
+performing constant propagation over the then and the else branch,
+respectively. Afterward, the rules that are common to both branches
+are kept, while the rest are dropped.
+        
+\paragraph{Fix point iteration}
+
+We have a different problem if we need to analyze loops. In the case
+of loops, we need to make sure that the set of rules active after the
+loop is correct irrespective of how many times (including zero) the
+loop is run. For this, Stratego offers two fix point operators, both
+of which keep running a strategy over and over until the set of rules
+stabilizes. In order to do this, the set of rules that is active
+before the fix point operator is cloned and after each iteration the
+clone is updated by merging it with the set of rules obtained by
+running the strategy. This process continues until the cloned set of
+rules does not change from one iteration to the next. Merging can
+again be done by intersection or union, hence the two operators:
+\icode{/...\bs*} (intersection) and \icode{\bs.../*} (union). As
+before, \icode{...} is to be replaced with one or more dynamic rule
+names.
+
+Constant propagation over a while loop illustrates how the
+intersection fix point operator can be used:
+
+\begin{strategocode}
+    const-prop-while =
+      While(id, id)
+      ; /ConstProp\* While(const-prop, const-prop)
+\end{strategocode}
+  
+The \icode{While(const-prop, const-prop)} is the strategy that is run
+until the set of rules stabilizes.
+
+\paragraph{Dependent dynamic rules}
+
+Last on our list of features are the dependent dynamic rules. There
+are times when undefining a set of rules when a scope is exited is not
+sufficient for our purposes. It can be the case that we need to
+undefine rules based on some other ``event''. We do not want to get
+into the details of how dependent dynamic rules work, since they are
+less important for this thesis. Suffice to say that the mechanism
+allows us (1) to specify that a rule is \emph{dependent} on one or
+more variables and (2) to undefine all the rules that depend on a
+variable. You can read more about dependent dynamic rules in
+\cite{karina05dynrules}.
+
+\subsection{Java-front and Dryad}
+\label{sec:java-front-dryad}
+
+Java-front \cite{javafront} and Dryad \cite{dryad} are two packages
+that form the Stratego support for Java. They are valuable to us since
+we will be dealing with transformations that use the Java language as
+the target language.  Without such a framework for transforming Java
+code available, we would have to spend months on end to provide all
+the functionality that is offered by these packages. Fortunately, we
+do have them ready for use and all that's left is to focus on the
+transformations themselves, given that the rest of the infrastructure
+is properly in place.
+
+Java-front supports parsing and unparsing for the full Java 5.0
+language. We can parse any program from source code to ATerm, apply
+any transformations we like and pretty print the result to obtain Java
+source code (as long as the outcome of the transformation is still
+valid Java).
+
+Dryad comes with three features. First of all, it provides tools to
+transform bytecode to ATerms and back. This is similar to java-front,
+except that it supports bytecode, not source code. Secondly, it is
+able to perform semantic analysis of parsed Java code in order to
+qualify and reclassify names, as well as to annotate all expressions
+with their type. Reclassification of names refers to determining
+whether an identifier refers to, e.g., a class, a package, a field,
+etc., since this is usually ambiguous before such an analysis.
+Finally, Dryad offers a number of functions for browsing source code
+and byte code in a unified way. We can easily get access to all
+methods/fields of a class, the superclasses of a class and so on. All
+these features of Dryad are essential if we want to save time on
+writing our transformations for Java, mostly because the kind of
+support that is made available by Dryad is so generally needed that,
+if not already available, it would have to be implemented from scratch
+for probably more than 90\% of the transformations.
+
+\subsection{Object Oriented Languages. Java}
+
+As we discussed in the introduction to this proposal, the final goal
+of this and other theses will be the implementation of an open
+compiler for Java. In our view, Java is simply one very popular
+instance of an object oriented language, which we consider for our
+research, but our results should not in any way be restricted to Java
+only. Java is so well-known by everyone that describing it here would
+probably be a waste of space. We will instead use this section to
+discuss a number of aspects which we have to take into consideration
+in our work towards an open compiler for Java.
+
+The main aspect that differentiates an object oriented programming
+language like Java or C++ from an imperative one like C is the
+presence of virtual dispatching. Virtual dispatching (or run time
+dispatching) ensures that the run time type of an object is taken into
+consideration in order to decide which of potentially more than one
+methods with the same signature has to be executed. Virtual
+dispatching will be explained at more length in section
+\ref{sec:program-call-graph}, along with examples. The problem that
+virtual dispatching introduces in a compiler is that, unlike with
+imperative programming, we can no longer perform interprocedural (or
+perhaps the right term should be inter-method) analysis quite as
+easily. This is because we cannot always tell at compile time what
+method body we need to analyze based on the call site. This creates a
+problem that is usually handled by analyzing all potential methods
+that might be called at that particular call site and performing some
+sort of merging of the results that makes sense in the context of the
+particular analysis.
+
+Another difficult aspect that we have to deal with are exceptions.
+While exceptions are not strictly a feature of object oriented
+programming, their integration in main stream languages has taken
+place concurrently with the migration to object oriented languages, so
+the two are usually related. Exceptions are difficult to handle by the
+compiler because of the complicated control flow paths that they
+introduce. Because of this, a lot of compilers for object oriented
+languages actually refrain from performing any type of optimizations
+of program blocks that contain exceptions, which clearly reduces the
+efficiency of the overall optimization process. The problems
+introduced by exceptions in the compilation process are further
+debated in section \ref{sec:continue-exceptions}.
+
+When dealing with object oriented programs, we are also confronted
+with some new types of variables that we have to consider. Imperative
+programming used local and global variables along with function or
+procedure parameters. Object orientation maintained all these (albeit
+global variables were turned into static fields) and added two more:
+the object which is the target of a method call (referable with the
+\icode{this} variable) and instance fields, which are available in all
+non-static methods of a class without their being passed explicitly to
+the method. While this is intuitive enough for the user to not create
+any problems, it can pose a problem for compilers, since these
+variables have to be tracked in a data-flow analysis as well.
+
+Finally, there is another problem related to Java (and probably to
+other object oriented languages as well) that is introduced by the
+garbage collector. The garbage collector runs in a low priority thread
+in the Java Virtual Machine and concerns itself with cleanup of
+unreferenced objects. So far, so good, except that aside from
+releasing the memory occupied by those objects, the garbage collector
+also calls the\icode{finalize} methods on the objects it releases.
+This introduces an extra control flow path which has to be considered
+by all analyses the compiler performs.
+
+\subsection{TIL}
+\label{sec:til}
+
+Last on our list is the Tiny Imperative Language (or TIL) defined
+within the core Stratego compiler. TIL is a toy language that is used
+to write unit tests for some of the features of the compiler. Stratego
+features a complete pipeline for TIL, including a syntax definition
+from which a parser is derived as well as a pretty printer for it. TIL
+is particularly fit for use in unit tests for the basic Stratego
+compiler and library because this enables the independence of the unit
+tests from any external libraries (e.g., for parsing and/or
+manipulating real languages).
+
+We mention TIL as one of the tools related with this thesis project
+because one of the tasks on our list of things to do in the first
+phase of the project is to write a full unit test suite for the
+dynamic rules library. This library is one of the more complex ones
+implemented in Stratego and the lack of a proper unit test suite makes
+us reluctant from enhancing it, lest we should break already working
+things. Since the dynamic rules library is part of the basic Stratego
+library, we intend to use TIL as the (toy) language to use in our unit
+tests, for the reason discussed above.

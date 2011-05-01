@@ -1,0 +1,254 @@
+<project name="gw" default="compile" basedir=".">
+  <description>
+             Generalized Wiki Project
+  Software Engineering 2005/2006, Universiteit Utrecht
+  </description>
+
+  <property name="srcdir" location="."/>
+  <property name="coveragedir" location="${distdir}/docs/coverage"/>
+
+  <!-- TestViz properties -->
+  <property name="package" value="gw"/>
+  <property name="src" value="java"/>
+  <property name="build" value="${builddir}"/>
+  <property name="lib"  value="${libdir}"/>
+  <property name="docs" value="docs/testviz"/>
+  
+  <!-- Compile sources into this jar file -->
+  <property name="jarname" value="gw.jar"/>
+  
+  <!-- Source directory containing the unit tests -->
+  <property name="tests.src" value="tests"/>
+  <!-- Compile unit tests into this jar file -->
+  <property name="tests.jar" value="test.jar"/>
+  <!-- Package name of the unit tests. Used for javadoc -->
+  <property name="tests.package" value="gw"/>
+  <property name="src.compiler.version" value="1.5"/>
+  <property name="aspectj.version" value="5"/>
+
+  <property name="testresults.database.dir" value="${builddir}/database" />
+  <property name="testresults.database.path" value="${testresults.database.dir}/testviz" />
+
+  <!-- TestViz include -->
+  <import file="${testviz.home}/build.testviz.xml"/>
+
+  <path id="project.cp">
+    <pathelement path="${servletsjar}"/>
+    <fileset dir="${libdir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${testlibdir}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="projecttest.cp">
+    <pathelement path="${servletsjar}"/>
+    <pathelement location="${builddir}/classes"/>
+    <pathelement location="${builddir}/testclasses"/>
+    <fileset dir="${libdir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${testlibdir}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="compile" description="Compile the Java source of the web application">
+    <mkdir dir="${builddir}/classes"/>
+    <javac srcdir="${srcdir}/java" destdir="${builddir}/classes" debug="on" deprecation="on">
+      <classpath refid="project.cp"/>
+    </javac>
+  </target>
+
+  <target name="compiletests" depends="compile"
+      description="Compile the tests">
+
+    <mkdir dir="${builddir}/testclasses"/>
+    <javac srcdir="${srcdir}/tests"
+          destdir="${builddir}/testclasses"
+            debug="on"
+      deprecation="on">
+      <classpath refid="projecttest.cp"/>
+    </javac>
+  </target>
+
+  <target name="svnstart">
+    <exec executable="java/gw/storage/tests/svnstart.sh" spawn="true">
+      <arg value="${subversion}" />
+      <arg value="java/gw/storage/tests" />
+    </exec>
+    <sleep seconds="2" />
+  </target>
+
+  <target name="svnstop">
+    <exec executable="java/gw/storage/tests/svnstop.sh">
+      <arg value="${coreutils}" />
+    </exec>
+  </target>
+
+  <target name="unit-test" depends="compiletests">
+    <mkdir dir="${builddir}/reports"/>
+    <mkdir dir="${builddir}/tmp"/>
+    <mkdir dir="${coveragedir}"/>
+
+    <antcall target="svnstart"/>
+
+    <junit printsummary="yes"
+	   haltonfailure="no"
+	   showoutput="yes"
+	   failureproperty="test.failed"
+	   tempdir="${builddir}/tmp"
+	   fork="true">
+      <jvmarg value="-Demma.coverage.out.file=${coveragedir}/coverage.emma"/>
+      <jvmarg value="-Demma.coverage.out.merge=true" />
+      <classpath refid="projecttest.cp" />
+      <formatter type="xml"/>
+      <batchtest todir="${builddir}/reports">
+
+	<fileset dir="${builddir}/testclasses">
+	  <include name="**/*Test.class"/>
+	  <exclude name="**/*TestAll*"/>
+	  <exclude name="gw/render/StylesheetFactoryTest.class"/>
+          <exclude name="gw/storage/tests/ComparisonTest.class"/>
+	</fileset>
+
+      </batchtest>
+    </junit>
+
+    <antcall target="svnstop"/>
+  </target>
+
+  <target name="unit-test-reports" depends="unit-test" description="Generates reports from the (cheap) unit tests" >
+      <mkdir dir="${distdir}/docs/junitreport" />
+      <junitreport todir="${builddir}/reports" >
+      <report format="frames"
+              todir="${distdir}/docs/junitreport" />
+      <fileset dir="${builddir}/reports">
+        <include name="TEST-*.xml"/>
+      </fileset>
+    </junitreport>
+  </target>
+
+  <target name="all-test" depends="unit-test"/>
+
+  <target name="all-report" depends="all-test,unit-test-reports" />
+
+  <target name="apigeneration" description="Generates the API documentation" >
+    <mkdir dir="${distdir}/docs/api"/>
+    <javadoc sourcepath="${srcdir}/java"
+                destdir="${distdir}/docs/api"
+           packagenames="gw.*"
+	   windowtitle="Generalized Wiki Source Code Doc"
+	   breakiterator="yes"
+	   author="yes"
+	   classpathref="projecttest.cp"
+	   verbose="no">
+      <link href="http://java.sun.com/products/j2se/1.4.2/docs/api/"/>
+      <link href="http://www.junit.org/junit/javadoc/3.8.1/"/>
+      <link href="http://java.sun.com/products/servlet/2.2/javadoc/"/>
+    </javadoc>
+  </target>
+  
+  <target name="war" depends="compile" description="Create a deployable web archive">
+    <jar destfile="${builddir}/gw-stylesheets.jar" basedir="${srcdir}/xslt"/>  	
+  	
+    <war destfile="${builddir}/gw.war" webxml="${srcdir}/gw.xml">
+      <fileset dir="${srcdir}/web"/>
+      <lib file="${builddir}/gw-stylesheets.jar"/>
+    	<lib dir="${libdir}">
+          <include name="*.jar"/>
+      </lib>
+      <classes dir="${builddir}/classes"/>
+    </war>
+  </target>
+
+  <target name="install" depends="war" description="Install the web archive">
+    <mkdir dir="${distdir}"/>
+    <fail message="One or more test failed" if="test.failed" />
+    <copy file="${builddir}/gw.war" todir="${distdir}"/>
+  </target>
+
+  <target name="dist" depends="war" description="Create an (unpacked) distribution">
+    <mkdir dir="${distdir}"/>
+    <fail message="One or more test failed" if="test.failed" />
+    <copy file="${builddir}/gw.war" todir="${distdir}"/>
+  </target>
+
+  <target name="clean-build" description="Clean the build directory">
+    <delete>
+      <fileset dir="${build}" includes="**"/>
+    </delete>
+  </target>
+
+  <!-- testviz tasks -->
+  
+  <target name="clean">
+    <delete file="${jarname}" />
+    <delete dir="${builddir}" />
+  </target>
+  
+  <target name="testviz" depends="testviz.init, compile">
+    <copy todir="${testresults.database.dir}">
+      <fileset dir="${testviz.home}/database"/>
+    </copy>
+    <jar jarfile="${jarname}"
+	 basedir="${builddir}/classes"/>
+
+    <echo message="* * * Instrumenting '${jarname}' for code coverage * * *" />
+    <antcall target="testviz.coverage.instr" />
+    
+    <echo message="* * * Weaving aspects through unit tests '${tests.jar}' * * *" />
+    <testviz.weave classpathref="project.cp" />
+    
+    <echo message="* * * Running unit tests * * *" />
+    <antcall target="svnstart"/>
+    <testviz.runtests classpathref="projecttest.cp"/>
+    <antcall target="svnstop"/>
+    
+    <echo message="* * * Generating coverage report (xml) * * *" />
+    <antcall target="testviz.coverage.report" />
+    <antcall target="testviz.docs" />
+
+    <copy todir="${distdir}/docs/testviz">
+      <fileset dir="${docs}"/>
+    </copy>
+ </target>
+
+  <!-- obsolete functional tests tasks 
+
+  <target name="functional-test-reports"
+     depends="functional-test,unit-test-reports"
+    description="Generates reports from the (expensive) fucntional tests" >
+      <junitreport todir="${builddir}/reports">
+      <report format="frames"
+              todir="${distdir}/docs/junitreport" />
+      <fileset dir="${builddir}/reports">
+        <include name="TEST-*.xml"/>
+      </fileset>
+    </junitreport>
+  </target>  
+
+  <target name="functional-test" depends="compiletests">
+    <junit printsummary="yes" showoutput="yes" haltonerror="no" failureproperty="test.failed">
+      <classpath>
+        <path refid="project.cp"/>
+        <path refid="projecttest.cp"/>
+	    <pathelement location="${builddir}/testclasses"/>
+      </classpath>
+      <formatter type="xml"/>
+      <batchtest todir="${builddir}/reports">
+        <fileset dir="${builddir}/testclasses">
+          <include name="**/*Test.class" />
+          <exclude name="**/*TestAll*" />
+          <exclude name="gw/functional/BrokenLinksTest.class" />
+          <exclude name="gw/functional/FunctionalTest.class" />
+          <exclude name="gw/functional/SimpleTest.class" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  -->
+</project>
+

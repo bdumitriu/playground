@@ -1,0 +1,252 @@
+<HTML>
+<HEAD>
+<TITLE>class InodeMap</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>class InodeMap</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1">Represents an interface to the hard disk's block containg the inodes bitmap.
+ <small><A HREF="#longdesc">More...</A></small></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="so___include___driver___InodeMap_h.html">so/include/driver/InodeMap.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-InodeMap.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Methods</h4><ul><LI>&nbsp;<b><A HREF="#ref1">InodeMap</A></b> () 
+</LI>
+<LI>&nbsp;<b><A HREF="#ref2">~InodeMap</A></b> () 
+</LI>
+<LI>unsigned char* &nbsp;<b><A HREF="#ref3">getChecksum</A></b> () 
+</LI>
+<LI>unsigned long &nbsp;<b><A HREF="#ref4">getNrOfInodes</A></b> () 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref5">setChecksum</A></b> (unsigned char* checksum) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref6">setNrOfInodes</A></b> (unsigned long nrOfInodes) 
+</LI>
+<LI>bool &nbsp;<b><A HREF="#ref7">isFree</A></b> (unsigned long index) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref8">allocInode</A></b> (unsigned long index) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref9">freeInode</A></b> (unsigned long index) 
+</LI>
+<LI>unsigned long &nbsp;<b><A HREF="#ref10">getFreeBit</A></b> () 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref11">readFromHardDisk</A></b> (<A HREF="HDD.html">HDD</A>* hdd, unsigned long blockNo) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref12">writeToHardDisk</A></b> (<A HREF="HDD.html">HDD</A>* hdd, unsigned long blockNo) 
+</LI>
+<LI>unsigned char* &nbsp;<b><A HREF="#ref13">getAsBytes</A></b> () 
+</LI>
+</ul><h4>Private Methods</h4><ul><LI>unsigned char* &nbsp;<b><A HREF="#ref17">serialize</A></b> () 
+</LI>
+</ul><h4>Private Members</h4><ul><LI>unsigned char* <b><A HREF="#ref14">checksum</A></b></LI>
+<LI>unsigned long <b><A HREF="#ref15">nrInodes</A></b></LI>
+<LI>unsigned char* <b><A HREF="#ref16">bitmap</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><p>
+ This class represents an interface to the block on the hard
+ disk containing the inodes bitmap. Thus it allows read/write
+ access to all elements in this block.
+ Here's the configuration of the block which this class assumes:
+</p>
+<p> <table border="1" align="center">
+ <caption>Inode map configuration</caption>
+ <tr>
+ <td align="center" bgcolor="cyan">16 bytes</td>
+ <td align="center" bgcolor="cyan">4 bytes</td>
+ <td align="center" bgcolor="cyan">rest up to include/defs.h::BLOCK_DIM</td>
+ </tr>
+ <tr>
+ <td align="center" bgcolor="lightblue">checksum</td>
+ <td align="center" bgcolor="lightblue">total number of inodes</td>
+ <td align="center" bgcolor="lightblue">inodes bitmap</td>
+ </tr>
+ </table>
+</p>
+<p> The inodes bitmap contains, say, n bytes. Then the bitmap can hold
+ information regarding a maxiumum of 8*n inodes (one bit/inode). If the bit
+ is 1, then the inode is allocated (i.e. the inode's valid bit is 1);
+ if the bit is 0, then the inode is free (i.e. the inode's valid bit is 0).
+ The actual number of bits which represent inodes is given by the second
+ element in the block (the total number of inodes). If the total number
+ of inodes is, say, 200 then 200/8 = 25 bytes are actually used.
+</p>
+<p></p>
+<A NAME="InodeMap"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>InodeMap</strong> ()
+<br></td><td align="right"><h3><strong>InodeMap</strong></h3></td></tr></table><p></p><p>
+ Creates a new InodeMap and initializes all its members with 0 or
+ arrays of 0.
+	 </p>
+<A NAME="~InodeMap"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>~InodeMap</strong> ()
+<br></td><td align="right"><h3><strong>~InodeMap</strong></h3></td></tr></table><p></p><p>
+ The destructor of the class.
+	 </p>
+<A NAME="getChecksum"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char* &nbsp;<strong>getChecksum</strong> ()
+<br></td><td align="right"><h3><strong>getChecksum</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the checksum data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the checksum data member.
+	 </p>
+<A NAME="getNrOfInodes"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long &nbsp;<strong>getNrOfInodes</strong> ()
+<br></td><td align="right"><h3><strong>getNrOfInodes</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the nrOfInodes data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the nrOfInodes data member.
+	 </p>
+<A NAME="setChecksum"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setChecksum</strong> (unsigned char* checksum)
+<br></td><td align="right"><h3><strong>setChecksum</strong></h3></td></tr></table><p></p><p>
+ Sets the checksum data member to <code>checksum</code>.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>checksum</i></TD><TD align="left" valign="top">the new value of the checksum data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setNrOfInodes"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setNrOfInodes</strong> (unsigned long nrOfInodes)
+<br></td><td align="right"><h3><strong>setNrOfInodes</strong></h3></td></tr></table><p></p><p>
+ Sets the nrOfInodes data member to <code>nrOfInodes</code>.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>nrOfInodes</i></TD><TD align="left" valign="top">the new value of the nrOfInodes data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="isFree"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td>bool &nbsp;<strong>isFree</strong> (unsigned long index)
+<br>throw(<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>isFree</strong></h3></td></tr></table><p></p><p>
+ Returns true if the <code>index</code>th bit is 0 and false
+ if it is 1.
+</p>
+<p> The method throws:
+ <ul>
+ <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which
+ is rather hard since it's an unsigned long) or greater than or
+ equal to 8*include/defs.h::BLOCK_DIM-20.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Returns</b>: true if the <code>index</code>th bit is 0 and false
+ if it is 1.
+	 </p>
+<A NAME="allocInode"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>allocInode</strong> (unsigned long index)
+<br>throw(<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>allocInode</strong></h3></td></tr></table><p></p><p>
+ Sets the <code>index</code>th bit of the bitmap to 1.
+</p>
+<p> The method throws:
+ <ul>
+ <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which
+ is rather hard since it's an unsigned long) or greater than or
+ equal to 8*include/defs.h::BLOCK_DIM-20.</li>
+ </ul>
+	 </p>
+<A NAME="freeInode"></A><A NAME="ref9"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>freeInode</strong> (unsigned long index)
+<br></td><td align="right"><h3><strong>freeInode</strong></h3></td></tr></table><p></p><p>
+ Sets the <code>index</code>th bit of the bitmap to 0.
+</p>
+<p> The method throws:
+ <ul>
+ <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which
+ is rather hard since it's an unsigned long) or greater than or
+ equal to 8*include/defs.h::BLOCK_DIM-20.</li>
+ </ul>
+	 </p>
+<A NAME="getFreeBit"></A><A NAME="ref10"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long &nbsp;<strong>getFreeBit</strong> ()
+<br></td><td align="right"><h3><strong>getFreeBit</strong></h3></td></tr></table><p></p><p>
+ Returns the index of a free bitmap position (i.e. one whose value
+ is 0). This method takes the nrOfInodes data member into account,
+ meaning it only searches for a free bit up to the (nrOfInodes-1)th bit.
+ If no free positions exist, the method returns include/defs.h::BLOCK_DIM-20.
+</p>
+<p></p>
+<p><b>Returns</b>: the index of a free bitmap position (i.e. one whose value is 0).
+	 </p>
+<A NAME="readFromHardDisk"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>readFromHardDisk</strong> (<A HREF="HDD.html">HDD</A>* hdd, unsigned long blockNo)
+<br>throw(<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*, <A HREF="IOException.html">IOException</A>*, <A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*)</td><td align="right"><h3><strong>readFromHardDisk</strong></h3></td></tr></table><p></p><p>
+ This method reads the inode map from block number <code>blockNo</code>
+ of the <code>hdd</code> hard disk and initializes all of the class'
+ data members according to the inode map configuration scheme
+ presented above.
+</p>
+<p> The method throws:
+ <ul>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>hdd</i></TD><TD align="left" valign="top">the hard disk where to read the inode from.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>blockNo</i></TD><TD align="left" valign="top">the number of the hard disk block to read.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="writeToHardDisk"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>writeToHardDisk</strong> (<A HREF="HDD.html">HDD</A>* hdd, unsigned long blockNo)
+<br>throw(<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*, <A HREF="IOException.html">IOException</A>*, <A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*)</td><td align="right"><h3><strong>writeToHardDisk</strong></h3></td></tr></table><p></p><p>
+ This method writes the inode map as the <code>blockNo</code>th block
+ of the <code>hdd</code> hard disk with its data member values
+ according to the inode map configuration scheme presented
+ above.
+</p>
+<p> If any of the array data members is NULL, zero (0) characters will
+ be written for the entire length of the array.
+</p>
+<p> The method throws:
+ <ul>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>hdd</i></TD><TD align="left" valign="top">the hard disk to write the inode map to.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>blockNo</i></TD><TD align="left" valign="top">the number of the hard disk block to write.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="getAsBytes"></A><A NAME="ref13"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char* &nbsp;<strong>getAsBytes</strong> ()
+<br></td><td align="right"><h3><strong>getAsBytes</strong></h3></td></tr></table><p></p><p>
+ This method returns the inode map in the exact same manner as it is
+ stored on the hard disk (as an array of include/defs.h::BLOCK_DIM
+ unsigned chars).
+</p>
+<p> If any of the array data members is NULL, zero (0) characters will
+ be written for the entire length of the array.
+</p>
+<p></p>
+<p><b>Returns</b>: the inode map as it is stored on the hard disk.
+	 </p>
+<A NAME="checksum"></A><A NAME="ref14"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char*  <strong>checksum</strong>
+</td><td align="right"><h3><strong>checksum</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="nrInodes"></A><A NAME="ref15"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long  <strong>nrInodes</strong>
+</td><td align="right"><h3><strong>nrInodes</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="bitmap"></A><A NAME="ref16"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char*  <strong>bitmap</strong>
+</td><td align="right"><h3><strong>bitmap</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="serialize"></A><A NAME="ref17"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char* &nbsp;<strong>serialize</strong> ()
+<br></td><td align="right"><h3><strong>serialize</strong></h3></td></tr></table><p> <small>[private]</small></p><p>
+ This method returns a serialized representation of the inode map
+ (as it's supposed to appear on the hard disk).
+</p>
+<p> If any of the array data members is NULL, zero (0) characters will
+ be written for the entire length of the array.
+</p>
+<p></p>
+<p><b>Returns</b>: a include/defs.h::BLOCK_DIM byte representation of the inode map.
+	 </p>
+<HR><UL><LI><i>Version</i>: 0.1
+ </LI><LI><i>Author</i>: Bogdan DUMITRIU
+</LI><LI><i>Generated</i>: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</LI></UL></BODY></HTML>

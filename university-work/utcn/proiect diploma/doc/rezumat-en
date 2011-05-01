@@ -1,0 +1,87 @@
+<language>English</language>
+<title>Asynchronous Collaborative Text Editing</title>
+<author>Bogdan Dumitriu</author>
+<summary>
+The idea behind this project was to create a completely
+functional system which would allow users to concurrently
+edit in isolation the same text document(s) and synchronize
+their work in order to obtain a common view of the edited
+documents. The synchronization process is to be done in a
+reliable and consistent way, such that none of the
+modifications made by any of the users are lost and that
+all users end up with exactly the same version of the
+document after the synchronization has taken place.
+
+The most challenging aspect of the project consisted
+in developing the robust algorithm to be used during the
+synchronization phase. Based on thorough studies of
+similar projects in the field, we decided to go even
+further than others (in the interest of obtaining a
+performance increase) and design this algorithm so that
+it could be recursively applied on a tree representation
+of the document (instead of the "classical" linear
+representation). 
+
+Also, an entire "infrastructure" had then to be built
+around this algorithm in order to present the user with
+a complete product. This included the development of an
+appropriate repository where all versions of the
+document(s) could be stored and offered, on request,
+to any interested client and the implementation of a
+graphical user interface to allow the clients to retrieve,
+modify and send their modifications back to the repository
+(only to mention the basic functions).
+
+The entire project was implemented using exclusively
+Java technologies.
+</summary>
+<keywords>
+asynchronous collaborative editing, hierarchical document
+representation, direct user synchronization, repository,
+operation-based merging algorithm
+</keywords>
+
+<language>romana</language>
+<title>Editare colaborativa de text</title>
+<author>Bogdan Dumitriu</author>
+<summary>
+Ideea proiectului a fost de a crea un sistem complet
+functional care sa permita utilizatorilor editarea
+concurenta, in izolare unul fata de altul, a aceluiasi
+document de tip text si sincronizarea modificarilor
+in vederea obtinerii unei versiuni comune unice a
+documentului editat. Procesul de sincronizare trebuie
+sa se faca intr-un mod sigur si consistent, astfel incat
+nici o modificare sa nu se piarda si astfel incat toti
+utilizatorii sa ajunga sa aiba exact aceeasi versiune
+a documentului dupa ce sincronizarea s-a incheiat.
+
+Cea mai dificila partea a proiectului a constat in
+dezvoltarea unui algoritm robust care sa fie folosit
+in faza de sincronizare. Pe baza unor studii serioase
+a altor proiecte similare am decis sa incercam sa
+mergem mai departe decat altii (in ideea de a imbunatati
+performanetele sistemului) si sa proiectam acest
+algoritm astfel incat sa poata fi aplicat recursiv
+pe o reprezentare arborescenta a documentului (in
+loc de reprezentarea liniara "clasica").
+
+De asemenea, a fost necesara construirea unei intregi
+"infrastructuri" in jurul acestui algoritm pentru a
+furniza utilizatorului final un produs complet. Aceasta
+a presupus dezvoltarea unui repository corespunzator
+pentru pastrarea si oferirea, la cerere, a tuturor
+versiunilor documentului catre clientii interesati
+si implementarea unei interfete utilizator care sa
+permita clientilor sa obtina, modifice si trimita
+modificarile aduse unui document inapoi la repository
+(mentionand doar functiile de baza).
+
+Intregul proiect a fost implementat exclusiv folosind
+tehnologii Java.
+</summary>
+<keywords>
+editare colaborativa asincrona, reprezentare ierarhica
+a documentului, sincronizare directa intre utilizatori,
+repository, algoritm de combinare bazat pe operatii
+</keywords>

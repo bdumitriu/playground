@@ -1,0 +1,34 @@
+{-# LINE 12 "SLAttributes.lag" #-}
+imports
+{
+import Char
+import SLTypes
+import Prelude
+}
+
+DATA Root
+   | Root           Expr
+DATA Expr
+   | Unit
+   | Intexpr        Int
+   | Boolexpr       Bool
+   | Ident          var: String
+   | Op             op: String  le, re: Expr
+   | If             cond,thenExpr,elseExpr :Expr
+   | Let            decls: Decls expr:Expr
+   | Assign         var: String expr: Expr
+   | Apply          func, arg: Expr
+   | Lamcall        call: Expr
+   | Lam            vars: Vars expr: Expr
+   | Seq            exprs: Exprs
+   
+DATA Decl
+   | Decl           var:String type: Type expr:Expr
+
+TYPE Decls = [Decl]
+TYPE Exprs = [Expr]    
+TYPE Vars  = [String]
+
+INCLUDE "SLPrettyprint.ag"
+INCLUDE "SLTypeInference.ag"
+INCLUDE "SLProofTree.ag"

@@ -1,0 +1,28 @@
++----------------------------------------------------+
+¦ Parcurgerea nerecursiva a unui arbore in timp O(n) ¦
++----------------------------------------------------+
+
+PARCURGERE-ARBORE(T)
+	r <- nil
+	p <- rad[T]
+	while p != nil do
+		if r = parinte[p] then
+			PROCESEAZA(p)
+			r <- p
+			if stanga[p] != nil then
+				p <- stanga[p]
+			else
+				if dreapta[p] != nil then
+					p <- dreapta[p]
+				else
+					p <- parinte[p]
+		else
+			if r = stanga[p] then
+				r <- p
+				if dreapta[p] != nil then
+					p <- dreapta[p]
+				else
+					p <- parinte[p]
+			else
+				r <- p
+				p <- parinte[p]

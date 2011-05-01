@@ -1,0 +1,241 @@
+/*
+ * Project:		File System Simulator
+ * Author:		Bogdan DUMITRIU
+ * E-mail:		bdumitriu@bdumitriu.ro
+ * Date:		Sun Nov 10 2002
+ * Description:		This is the interface of the FileOutputStream class.
+ */
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#ifndef _FILE_OUTPUT_STREAM_H
+#define _FILE_OUTPUT_STREAM_H
+
+#include <limits.h>
+#include <iostream.h>
+#include <string.h>
+#include <stdlib.h>
+#include "../defs.h"
+#include "../utils/Utils.h"
+#include "HDD.h"
+#include "Inode.h"
+#include "FileBlocks.h"
+#include "../exceptions/NotEnoughSpaceException.h"
+#include "../exceptions/FileSizeTooLargeException.h"
+#include "../exceptions/HardDiskNotInitializedException.h"
+#include "../exceptions/InvalidBlockNumberException.h"
+#include "../exceptions/IOException.h"
+
+class BlockMap;
+
+/**
+ * This class provides a simple means of writing bytes from a file.
+ * It offers high level methods of write access to the bytes of a file.
+ *
+ * @short Provides a simple means of writing bytes to a file.
+ * @author Bogdan DUMITRIU
+ * @version 0.1
+ */
+class FileOutputStream
+{
+public:
+	/**
+	 * Creates a new FileOutputStream. <code>hdd</code> will be used to
+	 * perform write operations when the class' methods are called.
+	 * <code>inode</code> represents the inode associated to the file
+	 * which this FileOutputStream writes. Beware that none of the methods
+	 * check whether the inode is valid or not. They all simply assume that
+	 * it is. This inode will be modified during write operations in order
+	 * to be consistent with the new file contents (i.e. fileSize - in bytes
+	 * and blocks - will be modified, direct & indirect addresses will be
+	 * modified. You should, however, make sure that the inode structure
+	 * contains correct date before passing it to this constructor.
+	 *
+	 * Also be warned that this class does not make a copy of the inode,
+	 * it simply stores a reference to it, therefore any changes made on
+	 * the outside will also be visible on the inside.
+	 *
+	 * <code>map</code> should be a reference to a valid BlockMap object.
+	 * This object will be used to find empty blocks when necessary. It
+	 * will also be updated by calling its alloc/free block methods.
+	 *
+	 * The file pointer is initially positioned at the beginning of the
+	 * file.
+	 *
+	 * @param hdd the hard disk which will be used for read operations.
+	 * @param inode the inode holding information about the file to be read.
+	 * @param inodeBlock the number of the block in which the inode is found.
+	 * @param map the block map of the <code>hdd</code> hard disk.
+	 */
+	FileOutputStream(HDD* hdd, Inode* inode, unsigned long inodeBlock, BlockMap* map);
+
+	/**
+	 * The destructor of the class. This destructor does not free either
+	 * the <code>hdd</code> or the <code>inode</code> or the <code>map</code>
+	 * received as parameters in the constructor.
+	 */
+	~FileOutputStream();
+
+	/**
+	 * Writes <code>length</code> bytes of data from buffer to the file,
+	 * starting from the current position of the file pointer. Therefore
+	 * buffer should have at least <code>length</code> bytes of valid data.
+	 *
+	 * This is how the writing goes:
+	 * <ul>
+	 * <li> if the file pointer initially points before the end of file and you
+	 *	want to write a number of bytes which would bring the file pointer
+	 *	(at the end of the operation) somewhere before the end of file or
+	 *	exactly on the end of file, no extra space is allocated, the file
+	 *	remains exactly the same size and <code>length</code> bytes are
+	 *	overwritten starting with the file pointer position.</li>
+	 * <li> if the file pointer initially points before the end of file and you
+	 *	want to write a number of bytes which would bring the file pointer
+	 *	(at the end of the operation) somewhere after the end of file, the
+	 *	size of the file will change, extra block(s) will be allocated if
+	 *	necessary (if there isn't enough space left in the current last block),
+	 *	the end of file will be changed to reflect the changes and the the bytes
+	 *	will be written partially over the old ones and partially in the
+	 *	new space. No assumptions should be made regarding the bytes left
+	 *	in the new last block of the file after the end of file position.</li>
+	 * <li> if the file pointer points exactly at the end of file, writing will
+	 *	begin after the last byte in the old file, the file size will be
+	 *	changed, extra block(s) will be allocated if necessary and the end
+	 *	of file will be changed to reflect the changes.</li>
+	 * <li> if the file pointer points somewhere after the end of file, the
+	 *	bytes will be written starting from there and garbage will be left
+	 *	between the old end of file and the file pointer (garbage = whatever
+	 *	there is in the allocated blocks). The file size will change, extra
+	 *	block(s) will be allocated both for the 'garbage' space and for the
+	 *	bytes you want to write and the end of file will be changed to reflect
+	 *	the changes.</li>
+	 * </ul>
+	 *
+	 * In all of the cases above, the inode's data will be modified to keep it
+	 * consistent.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> NotEnoughSpaceException* if there are not enough free blocks left
+	 *	to accomodate the data to be written. If the exception is thrown,
+	 *	nothing will be modified (i.e., no bytes will be written).</li>
+	 * <li> FileSizeTooLargeException* if the inode does not have enough addressing
+	 *	space for the new file size or if the new size of the file would be
+	 *	larger than MAX_LONG_INT. If the exception is thrown, nothing
+	 *	will be modified (i.e., no bytes will be written).</li>
+	 * <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+	 * <li> IOException* forwarded from <code>hdd</code>.</li>
+	 * <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+	 * <li> ArrayIndexOutOfBoundsException* forwarded form <code>inode</code>.</li>
+	 * </ul>
+	 *
+	 * The method updates the file pointer in order to point to the next byte
+	 * after the last written one. If writing goes past the old end of file,
+	 * the file pointer will be positioned on the new end of file after the
+	 * operation.
+	 *
+	 * @param buffer the buffer from which the data will be written.
+	 * @param length the number of bytes to write.
+	 */
+	void write(unsigned char* buffer, unsigned long length) throw(
+		NotEnoughSpaceException*,
+		FileSizeTooLargeException*,
+		IOException*,
+		InvalidBlockNumberException*,
+		HardDiskNotInitializedException*,
+		ArrayIndexOutOfBoundsException*);
+
+	/**
+	 * Increases the file pointer with <code>n</code>. The method allows
+	 * the pointer to go past the end of file (see description of the
+	 * write method to see why this is allowed). If file pointer + n
+	 * would be more than MAX_LONG_INT, file pointer is set to MAX_LONG_INT.
+	 *
+	 * @param n the number of bytes to skip.
+	 */
+	void skip(unsigned long n);
+
+	/**
+	 * Sets the file pointer to value <code>n</code>. The method allows
+	 * the pointer to be set past the end of file (see description of the
+	 * write method to see why this is allowed).
+	 *
+	 * @param n the value the file pointer should be set to.
+	 */
+	void setPointer(unsigned long n);
+
+	/**
+	 * Returns the value of the filePointer data member.
+	 *
+	 * @return the value of the filePointer data member.
+	 */
+	unsigned long getPointer();
+
+private:
+	HDD* hdd;			/* the hard disk used for writing */
+	Inode* inode;			/* the inode of the file */
+	unsigned long inodeBlock;	/* the address of the block where the inode is found */
+	BlockMap* map;			/* the free blocks map */
+	unsigned long fp;		/* the file pointer */
+	unsigned char* buffer;		/* a BLOCK_DIM bytes buffer for data */
+
+	/**
+	 * This method allocates all the blocks in the <code>blocks</code> array (which
+	 * is supposed to conatin addresses of free blocks) by calling map->allocBlock(...)
+	 * for each of them and updates the inode information so that it contains all
+	 * these blocks.
+	 *
+	 * @param blocks a list of <code>dataBlocks</code>+<code>extraBlocks</code>
+	 *	free block addresses.
+	 * @param dataBlocks the number of data blocks to allocate.
+	 * @param extraBlocks the number of indirection blocks to allocate.
+	 */
+	void createExtraSpace(unsigned long* blocks, unsigned long dataBlocks, unsigned long extraBlocks);
+
+	/**
+	 * Writes bytes to a single block of the hard disk. The functionality is as follows:
+	 *
+	 * <ul>
+	 * <li> if length bytes are written before the end of the physical block
+	 *	is reached, then writing stops and the method returns.</li>
+	 * <li> if the end of the physical block is reached before writing
+	 *	length bytes, the writing stops and the method returns.</li>
+	 * <li> if the end of the file is reached in either case, writing
+	 *	stops and the method returns.</li>
+	 * </ul>
+	 *
+	 * The buffer should have at least (fp is file pointer)
+	 * min(length, BLOCK_DIM*(fp/BLOCK_DIM+1)-fp) valid bytes.
+	 *
+	 * In either of the three cases, the method returns the actual number of
+	 * bytes written (at most, BLOCK_DIM bytes).
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+	 * <li> IOException* forwarded from <code>hdd</code>.</li>
+	 * <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+	 * <li> ArrayIndexOutOfBoundsException* forwarded form <code>inode</code>.</li>
+	 * </ul>
+	 *
+	 * @param buffer the buffer from which the data will be written.
+	 * @param length the maximum number of bytes to write.
+	 * @return the actual number of bytes written.
+	 */
+	unsigned long writeToSingleBlock(unsigned char* buf, unsigned long length) throw(
+		IOException*,
+		InvalidBlockNumberException*,
+		HardDiskNotInitializedException*,
+		ArrayIndexOutOfBoundsException*);
+};
+
+#include "BlockMap.h"
+
+#endif

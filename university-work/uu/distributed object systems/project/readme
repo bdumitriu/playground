@@ -1,0 +1,58 @@
+Notes about running the project:
+
+* As a remark, all the commands are for running the project on a *nix
+  system. For running it on Windows, replace all the : with ;
+
+* Make sure you have a PostgreSQL 8 server running. The project should
+  work with older versions of PostgreSQL, but then you will probably
+  need another JDBC driver than the one already supplied. With
+  PostgreSQL running, execute the first script from the sql directory.
+  Finally, copy the config directory to a new directory called classes
+  and edit the classes/config/db-properties.xml file to match your
+  system.
+
+* The Java server & client can be compiled with this command (run it
+  in the src directory):
+
+    javac -classpath .:../lib/postgresql-8.0-310.jdbc3.jar -d ../classes core/*.java core/exceptions/*.java core/interop/*.java client/*.java client/interop/*.java
+
+  and then don't forget to compile the RMI stubs (run it in the classes
+  directory):
+
+    rmic core.GroupwareManagementImpl core.UserImpl core.CalendarImpl core.GroupImpl client.ClientObserverImpl
+
+* The Java server can be started with this command (run it in the classes
+  directory):
+
+    java -classpath .:../lib/postgresql-8.0-310.jdbc3.jar core.GroupwareManagementImpl
+
+  or, if you want to run the interoperability module as well, then first
+  start orbd with this command:
+
+    orbd -ORBInitialPort 1050 -ORBInitialHost localhost
+
+  and then the Java server with this command (run it in the classes directory):
+
+    java -classpath .:../lib/postgresql-8.0-310.jdbc3.jar core.GroupwareManagementImpl --enable-interop -ORBInitialPort 1050 -ORBInitialHost localhost
+
+* The Java client can be started with this command (run it in the classes
+  directory):
+
+    java client.ClientController
+
+* The Java interoperability client can be run with this command (run it in the
+  classes directory):
+
+    java client.interop.CalendarClient -ORBInitialPort 1050 -ORBInitialHost localhost
+
+* The C interoperability client is based on the ORBit2 CORBA implementation,
+  so you should have that installed (as well as glib). To compile it, just
+  run make in the src/c-client directory. To run it, start the Java server
+  first, and then run:
+
+    ./calendar-client -ORBInitRef NameService=IOR:00000000000000...
+
+  where you should paste the IOR which is printed by the Java server when it
+  is started instead of the IOR prefix used above.
+
+* ...

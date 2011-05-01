@@ -1,0 +1,16 @@
+ - Functia DOS 0ch -
+
+Functie:
+    Stergere tampon intrare standard si citire caracter.
+
+Asteapta:
+    ah: 0ch
+    al: una din valorile 01h, 06h, 07h, 08h si 0ah.
+
+Intoarce:
+    nimic.
+
+Descriere:
+    La apelul functiei se goleste  tamponul intrarii standard si apoi se a-
+    peleaza functia DOS cu numarul  specificat in al. Aceasta forteaza sis-
+    temul sa astepte introducerea unui caracter.

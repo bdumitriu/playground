@@ -1,0 +1,41 @@
+
+			 - DOCUMENTATIA PENTRU FUNCTIILE DE FOLOSITRE A DATEI -
+															 de Bogdan Dumitriu
+
+	Pentru a putea folosi cele doua fisiere (date.h - headerul si date.cpp -
+implementarea) intr-un program propriu trebuie in primul rand sa creati un
+proiect nou in care sa introduceti fisierul date.cpp si programul dvs. care
+foloseste headerul date.h si in program, la inceput, sa dati comanda :
+
+								 #include "date.h"
+
+	Acestea fiind spuse voi face acum o scurta prezentare a functiilor si a
+codurilor de eroare returnate de fiecare functie in parte.
+
+  ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³ Boolean YMD(char *s) ³
+  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+	  Functia returneaza 1 daca data stocata in s este o data valida - ve-
+  rifica daca data contine doar cifre, daca anul este in intervalul (d_Min,
+  d_Max), daca luna este in intervalul (1, 12) si daca ziua este in interva-
+  lul (1, 28-29-30-31) in functie de luna si de faptul ca anul e bisect sau
+  nu. In caz contrar functia va returna valoarea 0 si va creste variabila
+  d_err (cu valoarea initiala 0) cu urmatoarele valori :
+
+		  1 - anul nu poate fi convertit deoarece contine si alte caractere in
+				afara de cifre;
+		  2 - anul e mai mic ca d_Min (d_Min = 1921);
+		  4 - luna nu poate fi convertita deoarece contine si alte caractere in
+				afara de cifre;
+		  8 - luna e mai mica sau egala cu 0;
+		 16 - luna e mai mare decat 12;
+		 32 - ziua nu poate fi convertita deoarece contine si alte caractere in
+				afara de cifre;
+		 64 - ziua e mai mica sau egala cu 0;
+		128 - ziua e mai mare decat valoarea maxima pe care o poate lua in luna
+				respectiva.
+
+	  Din valoarea variabilei d_err va veti putea da seama de erorile intalni-
+  te (ex: cod de eroare = 1+4+32=37 => nici anul, nici luna si nici ziua nu
+  au putut fi convertite).

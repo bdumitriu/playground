@@ -1,0 +1,20 @@
+
+When an ant finds food it sets markers 4, 5 and 6 on the current hex.
+It then walks home following the home markers, setting the food markers
+the way it came.
+
+When an ant on a food trail finds food it picks it up and follows the home
+markers home.
+
+If an ant finds itself on a hex with all of markers 4, 5 and 6 but no food it
+looks in all directions except that in which we came and if there is some we
+add a food marker to it and move there.
+
+If there is no food around us either then we go into trail deletion mode.
+We unset this hex's markers 4,5,6 go 1 step towards home and repeat. If we
+ever fail to move we give up on the trail deletion and go into food
+hunting mode.
+
+If an ant following a trail ever fails to move forwards it checks for all
+zeroes ahead and if that is the case goes into trail deletion mode.
+

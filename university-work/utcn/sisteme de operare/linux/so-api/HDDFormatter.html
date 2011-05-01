@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<TITLE>class HDDFormatter</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>class HDDFormatter</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1">Represents an interface to any of the hard disk's inodes.
+ <small><A HREF="#longdesc">More...</A></small></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="so___include___driver___HDDFormatter_h.html">so/include/driver/HDDFormatter.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-HDDFormatter.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Static Methods</h4><ul><LI>static  void &nbsp;<b><A HREF="#ref1">formatHDD</A></b> (<A HREF="HDD.html">HDD</A>* hdd) 
+</LI>
+</ul><h4>Private Static Methods</h4><ul><LI>static  unsigned long &nbsp;<b><A HREF="#ref2">writeBlocksMap</A></b> (<A HREF="HDD.html">HDD</A>* hdd, <A HREF="Inode.html">Inode</A>* freeBlocksInode) 
+</LI>
+<LI>static  unsigned long &nbsp;<b><A HREF="#ref3">nrOfRequiredBytesForFreeBlocksFile</A></b> () 
+</LI>
+<LI>static  unsigned long &nbsp;<b><A HREF="#ref4">nrOfRequiredBlocksForFreeBlocksFile</A></b> (unsigned long nrBytes) 
+</LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><p>
+ This class offers a simple, yet very useful, functionality, namely
+ if formats an already existing hard disk, writing the superblock, the
+ free inodes bitmap, the inodes (allocates 1 root dir inode & 1 inode
+ for the file containing the free blocks bitmap) and the free inodes
+ file.
+</p>
+<p></p>
+<A NAME="formatHDD"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td> void &nbsp;<strong>formatHDD</strong> (<A HREF="HDD.html">HDD</A>* hdd)
+<br>throw(
+		<A HREF="FileSizeTooLargeException.html">FileSizeTooLargeException</A>*,
+		<A HREF="NotEnoughSpaceException.html">NotEnoughSpaceException</A>*,
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>formatHDD</strong></h3></td></tr></table><p> <small>[static]</small></p><p>
+ Formats the <code>hdd</code> hard disk. It writes the superblock,
+ the free inodes bitmap, the inode containing the free blocks bitmap
+ file and the actual free blocks bitmap file.
+</p>
+<p> The method throws:
+ <ul>
+ <li> FileSizeTooLargeException* if inode structure does not contain enough
+	addressing space to accomodate the dimension of the free blocks bitmap
+	file.</li>
+ <li> NotEnoughSpaceException* if the hard disk does not have enough space
+	to accomodate the free blocks bitmap file. This situation is possible
+	only when the hard disk has no non system block (i.e. it is formed
+	only of system blocks) and still we would need 1 block to write the
+	free blocks bitmap file (the file always requires at least 20 bytes
+	= 16 bytes for checksum + 4 bytes for the number of blocks).</li>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ </ul>
+</p>
+<p>	 </p>
+<A NAME="writeBlocksMap"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td> unsigned long &nbsp;<strong>writeBlocksMap</strong> (<A HREF="HDD.html">HDD</A>* hdd, <A HREF="Inode.html">Inode</A>* freeBlocksInode)
+<br>throw(<A HREF="FileSizeTooLargeException.html">FileSizeTooLargeException</A>*, <A HREF="NotEnoughSpaceException.html">NotEnoughSpaceException</A>*)</td><td align="right"><h3><strong>writeBlocksMap</strong></h3></td></tr></table><p> <small>[private static]</small></p><p>
+ This methods computes the number of blocks necesarry in order to
+ accomodate the free blocks bitmap and initializes the appropriate hard
+ disk blocks. It also completes the <code>freeBlocksInode</code>'s
+ direct block addresses & indirect block addresses accordingly. It does
+ not, however, write the inode to disk. This operation should be performed
+ externally.
+</p>
+<p> The method throws:
+ <ul>
+ <li> FileSizeTooLargeException* if inode structure does not contain enough
+	addressing space to accomodate the dimension of the free blocks bitmap
+	file.</li>
+ <li> NotEnoughSpaceException* if the hard disk does not have enough space
+	to accomodate the free blocks bitmap file. This situation is possible
+	only when the hard disk has no non system block (i.e. it is formed
+	only of system blocks) and still we would need 1 block to write the
+	free blocks bitmap file (the file always requires at least 20 bytes
+	= 16 bytes for checksum + 4 bytes for the number of blocks).</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Returns</b>: the total number of written blocks (including those used for
+	indirect addressing).
+	 </p>
+<A NAME="nrOfRequiredBytesForFreeBlocksFile"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td> unsigned long &nbsp;<strong>nrOfRequiredBytesForFreeBlocksFile</strong> ()
+<br></td><td align="right"><h3><strong>nrOfRequiredBytesForFreeBlocksFile</strong></h3></td></tr></table><p> <small>[private static]</small></p><p>
+ Returns the number of bytes required to hold the free blocks
+ file (1 bit / non system block + 16 bytes (checksum) + 4 bytes
+ (nr. of non system blocks)).
+</p>
+<p></p>
+<p><b>Returns</b>: the number of bytes required to hold the free blocks
+	file.
+	 </p>
+<A NAME="nrOfRequiredBlocksForFreeBlocksFile"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td> unsigned long &nbsp;<strong>nrOfRequiredBlocksForFreeBlocksFile</strong> (unsigned long nrBytes)
+<br></td><td align="right"><h3><strong>nrOfRequiredBlocksForFreeBlocksFile</strong></h3></td></tr></table><p> <small>[private static]</small></p><p>
+ Returns the actual number of blocks required to hold <code>nrBytes</code>
+ bytes (not including the extra blocks required for indirect addressing).
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>nrBytes</i></TD><TD align="left" valign="top">the number of bytes which need to be stored in blocks.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: the actual number of blocks required to hold <code>nrBytes</code>
+	bytes.
+	 </p>
+<HR><UL><LI><i>Version</i>: 0.1
+ </LI><LI><i>Author</i>: Bogdan DUMITRIU
+</LI><LI><i>Generated</i>: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</LI></UL></BODY></HTML>

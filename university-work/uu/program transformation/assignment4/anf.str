@@ -1,0 +1,89 @@
+module anf
+imports
+  fixpoint-traversal
+  options
+  Tiger
+
+strategies
+
+main-anf = 
+	io-wrap(anf)
+
+anf =
+	innermost(Dist <+ Fold <+ ChangePlus <+ ChangeTimes)
+
+rules
+
+/* the following 2 rules fold a basic addition & a multiplication */
+Fold :
+	Plus(Int(x),Int(y)) -> Int(<addS>(x,y))
+
+Fold :
+	Times(Int(x),Int(y)) -> Int(<mulS>(x,y))
+
+/* the following 2 rules fold nested additions */
+Fold :
+	Plus(Plus(Int(x),y),Int(z)) -> Plus(Int(<addS>(x,z)),y)
+
+Fold :
+	Plus(Plus(x,Int(y)),Int(z)) -> Plus(Int(<addS>(y,z)),x)
+
+Fold :
+	Plus(Int(x),Plus(Int(y),z)) -> Plus(Int(<addS>(x,y)),z)
+
+Fold :
+	Plus(Int(x),Plus(y,Int(z))) -> Plus(Int(<addS>(x,z)),y)
+
+/* the following 2 rules fold nested multiplications */
+Fold :
+	Times(Times(Int(x),y),Int(z)) -> Times(y,Int(<mulS>(x,z)))
+
+Fold :
+	Times(Times(x,Int(y)),Int(z)) -> Times(x,Int(<mulS>(y,z)))
+
+Fold :
+	Times(Int(x),Times(Int(y),z)) -> Times(z,Int(<mulS>(x,y)))
+
+Fold :
+	Times(Int(x),Times(y,Int(z))) -> Times(y,Int(<mulS>(x,z)))
+
+/* the following 2 rules apply distribution of multiplication over addition */
+Dist :
+	Times(Plus(x,y),z) -> Plus(Times(x,z),Times(y,z))
+
+Dist :
+	Times(z,Plus(x,y)) -> Plus(Times(z,x),Times(z,y))
+
+/* this rule puts an Int(_) to the right in a Plus */
+ChangePlus :
+	Plus(Int(x),y) -> Plus(y,Int(x))
+
+/* the following 4 rules bring an Int(_) up one level so that it may get folded, if necessary */
+ChangePlus :
+	Plus(Plus(Int(x),y),z) -> Plus(Plus(y,z),Int(x))
+
+ChangePlus :
+	Plus(Plus(x,Int(y)),z) -> Plus(Plus(x,z),Int(y))
+
+ChangePlus :
+	Plus(x,Plus(Int(y),z)) -> Plus(Plus(x,z),Int(y))
+
+ChangePlus :
+	Plus(x,Plus(y,Int(z))) -> Plus(Plus(x,y),Int(z))
+
+/* this rule puts an Int(_) to the left in a Times */
+ChangeTimes :
+	Times(x,Int(y)) -> Times(Int(y),x)
+
+/* the following 4 rules bring an Int(_) up one level so that it may get folded, if necessary */
+ChangeTimes :
+	Times(Times(Int(x),y),z) -> Times(Int(x),Times(y,z))
+
+ChangeTimes :
+	Times(Times(x,Int(y)),z) -> Times(Int(y),Times(x,z))
+
+ChangeTimes :
+	Times(x,Times(Int(y),z)) -> Times(Int(y),Times(x,z))
+
+ChangeTimes :
+	Times(x,Times(y,Int(z))) -> Times(Int(z),Times(x,y))

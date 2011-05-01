@@ -1,0 +1,7 @@
+let var z := 0
+    function mul(a : int, b : int): int = a * b
+
+ in z := mul(3, z+5)
+  ; printint(z)
+  ; z
+end

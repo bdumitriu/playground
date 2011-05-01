@@ -1,0 +1,40 @@
+luna           - mese                           
+personajul     - il personagio
+veselia        - l'allegria
+iata-le        - eccoli
+picatura       - il dipinto
+parfumul       - il profumo
+trist          - triste
+obosit         - stanco
+pajistea       - il prato
+ghiocel        - la bucaneve
+nestemata      - la gemma
+mugurul        - la gemma
+randuneaua     - la rondine
+aerul          - l'aria
+ploaia         - la pioggia
+cateodata      - a volte
+capsuna        - la fragola
+cireasa        - la ciliegia
+caisa          - l'albicocca
+daunator       - dannoso
+seceta         - la siccit…
+toamna         - l'autunno
+strugurele     - la uva
+ceata          - la nebbia
+noroi          - il fango
+bruma          - la brina
+frunza         - la foglia
+melancolia     - il malinconico
+gerul          - il gelo
+gheata         - il ghiaccio
+pista          - la pista
+mai bun        - migliore
+coloana        - la colonnina
+furia          - la rabbia
+sania          - la slitta
+gustos         - saporito
+norul          - la nuvola
+a face fericit - rendere felice
+nota           - il voto
+placut         - piacevole

@@ -1,0 +1,10 @@
+EMA SYSTEM stuff
+- install ema package
+
+POSTGRES stuff
+- install postgres 7.3.4 or later
+- install pgadmin3 or risk to run scripts by hand
+- do all installation stuff
+- console: "createlang plpgsql ema"
+- run scripts 1- in db-sql directory
+

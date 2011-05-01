@@ -1,0 +1,7 @@
+Structura fisierelor:
+dimensiunea_sirului numar_atribuiri numar_comparatii
+
+efic1 - folosind algoritmul de sortare prin insertie directa.
+efic2 - folosind algoritmul de sortare prin insertie binara.
+efic3 - folosind algoritmul de sortare prin selectie.
+efic4 - folosind algoritmul de sortare cu bule.

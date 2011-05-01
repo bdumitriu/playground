@@ -1,0 +1,27 @@
+ - Functia DOS 39h -
+
+Functie:
+    Crearea unui director nou.
+
+Asteapta:
+    ah: 39h
+    ds:dx: adresa unui  sir de caractere care se  termina cu nul (cod ascii
+        00h) si care reprezinta directorul de creat.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag e setat.
+
+Descriere:
+    In urma apelului functiei se va crea un director nou, gol. ds:dx trebu-
+    ie sa contina adresa unui sir de forma:
+        [d:][\cale\]nume_director
+    care identifica directorul ce trebuie creat.
+    
+Note:
+    1. Un director nou poate fi creat doar intr-unul deja existent. Aceasta
+    functie nu va crea directoare pe mai multe nivele la un singur apel.
+    
+    2. Daca litera ce identifica  drive-ul urmata de : si/sau calea pana la
+    director sunt omise, se folosesc cele implicite.
+    
+    3. Lungimea maxima a sirului aflat la adresa ds:dx poate fi 64 octeti.

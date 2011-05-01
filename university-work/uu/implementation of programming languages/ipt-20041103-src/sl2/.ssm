@@ -1,0 +1,116 @@
+  LDR  MP
+  annote SP 0 0 green "Static Link"
+  LDC  L0
+  annote SP 0 0 green "Start PC"
+  BRA L1
+L0: 
+  LDR  MP
+  annote SP 0 0 blue "Prev MP"
+  LDRR MP SP
+  LDC  2
+  LDL  -3
+  annote SP 0 0 green "copy of x"
+  SUB
+  STL  -3
+  LDRR SP MP
+  STR  MP
+  STS  -1
+  RET
+L1: 
+  annote SP -1 0 green "def of sub2"
+  LDR  MP
+  annote SP 0 0 green "Static Link"
+  LDC  L2
+  annote SP 0 0 green "Start PC"
+  BRA L3
+L2: 
+  LDR  MP
+  annote SP 0 0 blue "Prev MP"
+  LDRR MP SP
+  LDL  -3
+  annote SP 0 0 green "copy of x"
+  LDML -5 2
+  annote SP -1 0 green "copy of f"
+  JSR
+  STL  -5
+  LDRR SP MP
+  STR  MP
+  STS  -3
+  AJS  -2
+  RET
+L3: 
+  annote SP -1 0 green "def of revapp"
+  LDR  MP
+  annote SP 0 0 green "Static Link"
+  LDC  L4
+  annote SP 0 0 green "Start PC"
+  BRA L5
+L4: 
+  LDR  MP
+  annote SP 0 0 blue "Prev MP"
+  LDRR MP SP
+  LDR  MP
+  annote SP 0 0 green "Static Link"
+  LDC  L6
+  annote SP 0 0 green "Start PC"
+  BRA L7
+L6: 
+  LDR  MP
+  annote SP 0 0 blue "Prev MP"
+  LDRR MP SP
+  LDC  0
+  LDL  -2
+  LDA  -2
+  annote SP 0 0 green "SL lev 1"
+  LDMA 1 2
+  annote SP -1 0 green "copy of sub2"
+  JSR
+  LDL  -3
+  annote SP 0 0 green "copy of x"
+  LDL  -2
+  LDA  -2
+  annote SP 0 0 green "SL lev 1"
+  LDMA 1 2
+  annote SP -1 0 green "copy of sub2"
+  JSR
+  STML -3 2
+  LDRR SP MP
+  STR  MP
+  RET
+L7: 
+  annote SP -1 0 green "def of id"
+  LDML 1 2
+  annote SP -1 0 green "copy of id"
+  LDL  -3
+  annote SP 0 0 green "copy of x"
+  LDL  -2
+  LDMA 3 2
+  annote SP -1 0 green "copy of revapp"
+  JSR
+  LDL  -2
+  LDMA 1 2
+  annote SP -1 0 green "copy of sub2"
+  LDL  -3
+  annote SP 0 0 green "copy of x"
+  LDL  -2
+  LDMA 3 2
+  annote SP -1 0 green "copy of revapp"
+  JSR
+  MUL
+  STS  -2
+  AJS  -1
+  STL  -3
+  LDRR SP MP
+  STR  MP
+  STS  -1
+  RET
+L5: 
+  annote SP -1 0 green "def of doIt"
+  LDC  1
+  LDML 5 2
+  annote SP -1 0 green "copy of doIt"
+  JSR
+  STS  -6
+  AJS  -5
+  TRAP 0
+  HALT

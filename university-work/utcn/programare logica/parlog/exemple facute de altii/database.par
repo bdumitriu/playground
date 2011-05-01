@@ -1,0 +1,44 @@
+/*
+  PARLOG example: Database.
+
+  This example is based on Chapter 7 of Programming in PARLOG.
+
+  Compile and try the queries:
+
+    salestotal(all,jan,T).
+    salestotal(fuses,jan,T).
+
+  A convenient query to test subset/3 is to use the in_stream/1 primitive:
+
+    Demands ::: in_stream(Demands), subset(Demands,Item,sales(Item,_,_)).
+
+  This query lazily generates the names of items which have recorded sales.
+  Enter variables into the term input dialogue.  The back communications
+  from subset/3 will be visible automatically in the film output window
+  for Demands.
+*/
+
+database sales/3.
+sales(bulbs,10,date(10,jan)).
+sales(fuses,3,date(10,jan)).
+sales(batteries,14,date(14,jan)).
+sales(fuses,2,date(15,jan)).
+sales(elements,1,date(28,jan)).
+sales(bulbs,2,date(28,jan)).
+sales(fuses,5,date(3,feb)).
+sales(solder,1,date(6,feb)).
+
+mode salestotal(item?,period?,sales^).
+salestotal(all,Month,Total) <-
+  set(Quantities,Q,sales(AnyItem,Q,date(Day,Month))),
+  total(Quantities,Total).
+salestotal(Item,Month,Total) <-
+  not Item == all :
+  set(Quantities,Q,sales(Item,Q,date(Day,Month))),
+  total(Quantities,Total).
+
+mode total(nlist?,tot^).
+total([],0).
+total([N|Rest],Tot) <-
+  total(Rest,PartTot),
+  Tot is PartTot + N.

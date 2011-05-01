@@ -1,0 +1,26 @@
+/*
+  PARLOG example: Incremental Output.
+
+  iwrite(Channel,Term): writes Term to Channel incrementally.
+
+  an optimized version of iwrite/2 is available as a PARLOG primitive
+  incwrite/2.
+*/
+
+mode iwrite(channel?,term?).
+iwrite(Ch,Tm) <- atomic(Tm) :
+  writeq(Ch,Tm).
+iwrite(Ch,[H|T]) <-
+  iwritelist(Ch,'[',[H|T],']');
+iwrite(Ch,Tm) <-
+  Tm =.. [Fn|Args] &
+  writeq(Ch,Fn) &
+  iwritelist(Ch,'(',Args,')').
+
+mode iwritelist(channel?,open_bracket?,args?,close_bracket?).
+iwritelist(Ch,Open,[Arg|Args],Close) <-
+  write(Ch,Open) &
+  iwrite(Ch,Arg) &
+  iwritelist(Ch,',',Args,Close).
+iwritelist(Ch,_,[],Close) <-
+  write(Ch,Close).

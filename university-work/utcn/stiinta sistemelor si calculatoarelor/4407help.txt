@@ -1,0 +1,25 @@
+ - Functia DOS 4407h -
+
+Functie:
+    Interogare dispozitiv pentru a verifica daca poate primi date.
+
+Asteapta:
+    ax: 4407h
+    bx: un descriptor de dispozitiv.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag este setat.
+    al: starea dispozitivului
+        00h: nu e gata pentru a primi date.
+        ffh: e gata pentru a primi date.
+
+Descriere:
+    Aceasta functie verifica daca un dispozitiv este gata de a primi date.
+
+Nota:
+    Descriptoarele de dispozitivele standard sunt:
+     - 0000h: Intrarea standard (de obicei tastatura)
+     - 0001h: Iesirea standard (de obicei monitorul)
+     - 0002h: Iesirea de eroare
+     - 0003h: Dispozitivul auxiliar (de obicei COM1)
+     - 0004h: Imprimanta standard

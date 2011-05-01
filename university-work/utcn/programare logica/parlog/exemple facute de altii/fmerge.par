@@ -1,0 +1,18 @@
+/*
+  PARLOG example: Fair Merge.
+
+  From Chapter 6 of Programming in PARLOG.
+
+  fair_merge(List1,List2,List): List is a "fair" interleaving of List1
+                                and List2.
+*/
+
+mode fair_merge(?,?,^).
+fair_merge([T1|L1],[T2|L2],[T1,T2|L12]) <-
+  fair_merge(L1,L2,L12).
+fair_merge([T|L1],L2,[T|L12]) <- var(L2) :
+  fair_merge(L1,L2,L12).
+fair_merge(L1,[T|L2],[T|L12]) <- var(L1) :
+  fair_merge(L1,L2,L12).
+fair_merge([],L,L).
+fair_merge(L,[],L).

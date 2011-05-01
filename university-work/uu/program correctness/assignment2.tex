@@ -1,0 +1,533 @@
+\documentclass[fleqn,oneside]{article}
+
+\usepackage{a4}
+\usepackage{latexsym}
+\usepackage{pncproofmacros}
+
+\title{Solution For Assignment 2}
+\author{Bogdan Dumitriu}
+
+\begin{document}
+
+\maketitle
+
+\bf{Exercise 1} \\
+
+\begin{PROOF}{asgn2\_1}
+
+\DEF{D1}{sumsum1\ ss = SUM\ (map\ SUM\ ss)}
+
+\DEF{D2}{sumsum2\ ss = foldr\ (s\ r \rightarrow SUM\ s + r)\ 0\ ss}
+
+\GOAL{G1}{(\forall ss :: sumsum1\ ss = sumsum2\ ss)}
+
+\begin{BODY}
+
+\item[1] \HINT{See proof Pbase}
+
+\EXPR{sumsum1\ [] = sumsum2\ []}
+
+\begin{EQPROOF}{Pbase}
+
+\item[] \EXPR{sumsum1\ []}
+
+\item[] $=$ \HINT{By definition of sumsum1 (D1)}
+
+\item[] \EXPR{SUM\ (map\ SUM\ [])}
+
+\item[] $=$ \HINT{By definition of map}
+
+\item[] \EXPR{SUM\ []}
+
+\item[] $=$ \HINT{By definition of SUM}
+
+\item[] \EXPR{0}
+
+\item[] $=$ \HINT{By definition of foldr}
+
+\item[] \EXPR{foldr\ (s\ r \rightarrow SUM\ s + r)\ 0\ []}
+
+\item[] $=$ \HINT{By definition of sumsum2 (D2)}
+
+\item[] \EXPR{sumsum2\ []}
+
+\end{EQPROOF}
+
+\item[2] \HINT{See proof Pinduct}
+
+\EXPR{(\forall x,s:: (sumsum1\ s = sumsum2\ s) \Rightarrow (sumsum1\ (x:s) = sumsum2\ (x:s)))}
+
+\begin{PROOF}{Pinduct}
+
+\ASSUME{A1}{[ANY\ x,s]\ sumsum1\ s = sumsum2\ s}
+
+\GOAL{G1}{sumsum1\ (x:s) = sumsum2\ (x:s)}
+
+\begin{BODY}
+
+\item[1] \HINT{See proof eqq}
+
+\EXPR{sumsum1\ (x:s) = sumsum2\ (x:s)}
+
+\begin{EQPROOF}{eqq}
+
+\item[] \EXPR{sumsum2\ (x:s)}
+
+\item[] $=$ \HINT{By definition of sumsum2 (D2)}
+
+\item[] \EXPR{foldr\ (s\ r \rightarrow SUM\ s + r)\ 0\ (x:s)}
+
+\item[] $=$ \HINT{By definition of foldr}
+
+\item[] \EXPR{SUM\ x + (foldr\ (s\ r \rightarrow SUM\ s + r)\ 0\ s)}
+
+\item[] $=$ \HINT{By definition of sumsum2 (D2)}
+
+\item[] \EXPR{SUM\ x + (sumsum2\ s)}
+
+\item[] $=$ \HINT{A1}
+
+\item[] \EXPR{SUM\ x + (sumsum1\ s)}
+
+\item[] $=$ \HINT{By definition of sumsum1 (D1)}
+
+\item[] \EXPR{SUM\ x + (SUM\ (map\ SUM\ s))}
+
+\item[] $=$ \HINT{By definition of SUM}
+
+\item[] \EXPR{SUM\ ((SUM\ x):(map\ SUM\ s))}
+
+\item[] $=$ \HINT{By definition of map}
+
+\item[] \EXPR{SUM\ (map\ SUM\ (x:s))}
+
+\item[] $=$ \HINT{By definition of sumsum1 (D1)}
+
+\item[] \EXPR{sumsum1\ (x:s)}
+
+\end{EQPROOF}
+
+\end{BODY}
+
+\end{PROOF}
+
+\item[3] \HINT{List induction on 1 and 2}
+
+\EXPR{(\forall s:: sumsum1\ s = sumsum2\ s)}
+
+\item[4] \HINT{Rename bound variable of 3}
+
+\EXPR{(\forall ss:: sumsum1\ ss = sumsum2\ ss)}
+
+\end{BODY}
+
+\end{PROOF}
+
+\ \\
+
+\textbf{Exercise 2}\\
+
+\textnormal{\emph{Note 1}: The problem, as described in the text of the assignment, is somewhat
+ambiguous in saying whether or not additional blue candies (i.e. blue candies which are not
+initially in the box) can be used when taking out a white candy. The program specification,
+however, implies that additional candies can (and will, if needed) be used when wanting to take
+out a white candy without having at least two \_original\_ blue candies available out of the
+box in order to put them back in. This is justified by the fact that $w>0$ is the only condition
+for taking out a white candy (i.e. there is no additional condition specifying that at least two
+of the \_original\_ blue candies have to be outside of the box in order for a white candy to be
+taken out). The following proof is thus based on the program specification itself, which allows
+the use of additional blue candies.}
+
+\textnormal{\emph{Note 2}: I have added a new instruction to the program, just before $n:=0$,
+in order to store the value of the expression $3*w+b$ computed using the initial values of $w$
+and $b$ into the local variable WB. As this is just an assignment to a local variable, it
+does not interfere with the program in any way. I have introduced this extra variable because
+there was no other way in which I could specify the termination metric and then be still able
+to prove everything that needs to be proven.}\\
+
+\ \\
+
+\noindent\bf The proof plan:\\
+
+\EXPR{CANDY(OUT\ b,w,n:int)} \\
+
+\EXPR{int\ WB;\ \tt \{See\ note\ 2\}}\\
+
+\COND{b \geq 1 \wedge w \geq 1,\ see\ PROOF\ Init}\\
+
+\EXPR{WB := 3*w+b;} \tt \{See note 2\}
+
+\EXPR{n := 0;}
+
+\begin{tabbing}
+\indent $\tt \{*\ I,\ $\= $\tt see\ PROOFs\ PTC1a,\ PTC1b,\ PTC2,\ PEC,\ PICa,\ PICb.$\\
+\> $\tt Termination\ metric:\ WB-n\ *\}$
+\end{tabbing}
+
+\EXPR{\texttt{while}}
+
+\EXPR{\ \ \ \ b > 0\ do\ \{\ b := b-1;\ n := n+1\ \}}
+
+\EXPR{\ \ \ \ w > 0\ do\ \{\ w := w-1;\ b := b+2;\ n := n+1\ \}} \\
+
+\COND{(b=0)\wedge(w=0)\wedge n\geq 3} \\
+
+\EXPR{ASSUMING} \\
+
+\EXPR{I = (WB-n=3*w+b) \wedge (b \geq 0) \wedge (w \geq 0) \wedge (WB \geq 4)}\\
+
+\noindent\bf The proof(s):\\
+
+\begin{PROOF}{Init}
+
+\ASSUME{A1}{b\geq 1\wedge w\geq 1}
+
+\DEF{D1}{Q = wp\ (WB:=3*w+b;\ n:=0)\ I}
+
+\GOAL{G1}{Q}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite D1 with definition of I and definition of wp}
+
+\EXPR{Q = (3*w+b-0=3*w+b) \wedge (b \geq 0) \wedge (w \geq 0) \wedge (3*w+b \geq 4)}
+
+\item[2] \HINT{Trivial}
+
+\EXPR{3*w+b-0=3*w+b}
+
+\item[3] \HINT{$\wedge$-Elimination on A1}
+
+\EXPR{b\geq 1}
+
+\item[4] \HINT{$\wedge$-Elimination on A1}
+
+\EXPR{w\geq 1}
+
+\item[5] \HINT{Trivial, from 3}
+
+\EXPR{b\geq 0}
+
+\item[6] \HINT{Trivial, from 4}
+
+\EXPR{w\geq 0}
+
+\item[7] \HINT{Trivial, from 3 and 4}
+
+\EXPR{3*w+b\geq 4}
+
+\item[8] \HINT{Conjunction of 2, 5, 6 and 7}
+
+\EXPR{(3*w+b-0=3*w+b) \wedge (b \geq 0) \wedge (w \geq 0) \wedge (3*w+b \geq 4)}
+
+\item[9] \HINT{Rewrite 8 with 1}
+
+\EXPR{Q}
+
+\end{BODY}
+
+\end{PROOF}
+
+\ \\
+
+\begin{PROOF}{PTC1a}
+
+\ASSUME{A1}{I}
+
+\ASSUME{A2}{b>0}
+
+\DEF{D1}{Q=wp\ (C:=WB-n;\ b := b-1;\ n := n+1)\ (WB-n<C)}
+
+\GOAL{G1}{Q}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite D1 with definition of wp}
+
+\EXPR{Q = WB-(n+1)<WB-n}
+
+\item[2] \HINT{Trivial, from 1}
+
+\EXPR{Q = -1<0}
+
+\item[3] \HINT{Trivial}
+
+\EXPR{-1<0}
+
+\item[4] \HINT{Rewrite 3 with 2}
+
+\EXPR{Q}
+
+\end{BODY}
+
+\end{PROOF}
+
+\ \\
+
+\begin{PROOF}{PTC1b}
+
+\ASSUME{A1}{I}
+
+\ASSUME{A2}{w>0}
+
+\DEF{D1}{Q = wp\ (C:=WB-n;\ w := w-1;\ b := b+2;\ n := n+1)\ (WB-n<C)}
+
+\GOAL{G1}{Q}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite D1 with definition of wp}
+
+\EXPR{Q = WB-(n+1)<WB-n}
+
+\item[2] \HINT{Trivial, from 1}
+
+\EXPR{Q = -1<0}
+
+\item[3] \HINT{Trivial}
+
+\EXPR{-1<0}
+
+\item[4] \HINT{Rewrite 3 with 2}
+
+\EXPR{Q}
+
+\end{BODY}
+
+\end{PROOF}
+
+\ \\
+
+\begin{PROOF}{PTC2}
+
+\ASSUME{A1}{I}
+
+\ASSUME{A2}{b>0 \vee w>0}
+
+\GOAL{G1}{WB-n>0}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite A1 with definition of I}
+
+\EXPR{(WB-n=3*w+b) \wedge (b \geq 0) \wedge (w \geq 0) \wedge (WB \geq 4)}
+
+\item[2] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{WB-n=3*w+b}
+
+\item[3] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{b \geq 0}
+
+\item[4] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{w \geq 0}
+
+\item[5] \HINT{Trivial, justified by 4}
+
+\EXPR{b>0 \Rightarrow 3*w+b > 0}
+
+\item[6] \HINT{Trivial, justified by 3}
+
+\EXPR{w>0 \Rightarrow 3*w+b > 0}
+
+\item[7] \HINT{Case split on A2, 5 and 6}
+
+\EXPR{3*w+b>0}
+
+\item[8] \HINT{Rewrite 7 with 2}
+
+\EXPR{WB-n>0}
+
+\end{BODY}
+
+\end{PROOF}
+
+\ \\
+
+\begin{PROOF}{PEC}
+
+\ASSUME{A1}{I}
+
+\ASSUME{A2}{\neg(b>0)}
+
+\ASSUME{A3}{\neg(w>0)}
+
+\GOAL{G1}{(b=0)\wedge(w=0)\wedge n\geq 3}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite A1 with definition of I}
+
+\EXPR{(WB-n=3*w+b) \wedge (b \geq 0) \wedge (w \geq 0) \wedge (WB \geq 4)}
+
+\item[2] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{WB-n=3*w+b}
+
+\item[3] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{b \geq 0}
+
+\item[4] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{w \geq 0}
+
+\item[5] \HINT{Trivial, from A2 and 3}
+
+\EXPR{b=0}
+
+\item[6] \HINT{Trivial, from A3 and 4}
+
+\EXPR{w=0}
+
+\item[7] \HINT{Rewrite 2 with 5 and 6}
+
+\EXPR{WB-n=3*0+0}
+
+\item[8] \HINT{Trivial, from 7}
+
+\EXPR{n=WB}
+
+\item[9] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{WB\geq 4}
+
+\item[10] \HINT{Rewrite 9 with 8}
+
+\EXPR{n\geq 4}
+
+\item[11] \HINT{Trivial, from 10}
+
+\EXPR{n\geq 3}
+
+\item[12] \HINT{Conjunction of 5, 6 and 11}
+
+\EXPR{(b=0)\wedge(w=0)\wedge n\geq 3}
+
+\end{BODY}
+
+\end{PROOF}
+
+\ \\
+
+\begin{PROOF}{PICa}
+
+\ASSUME{A1}{I}
+
+\ASSUME{A2}{b>0}
+
+\DEF{D1}{Q = wp\ (b:=b-1;\ n:=n+1)\ I}
+
+\GOAL{G1}{Q}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite D1 with definition of I}
+
+\EXPR{Q = wp\ (b:=b-1;\ n:=n+1)\ ((WB-n=3*w+b) \wedge (b \geq 0) \wedge\nolinebreak(w \geq\nolinebreak 0) \wedge\nolinebreak (WB\nolinebreak\geq\nolinebreak 4))}
+
+\item[2] \HINT{Rewrite 1 with definition of wp}
+
+\EXPR{Q = (WB-n-1=3*w+b-1) \wedge (b-1 \geq 0) \wedge (w \geq 0) \wedge (WB \geq 4)}
+
+\item[3] \HINT{Rewrite A1 with definition of I}
+
+\EXPR{(WB-n=3*w+b) \wedge (b \geq 0) \wedge (w \geq 0) \wedge (WB \geq 4)}
+
+\item[4] \HINT{$\wedge$-Elimination on 3}
+
+\EXPR{WB-n=3*w+b}
+
+\item[5] \HINT{Trivial, from 4}
+
+\EXPR{WB-n-1=3*w+b-1}
+
+\item[6] \HINT{$\wedge$-Elimination on 3}
+
+\EXPR{w\geq 0}
+
+\item[7] \HINT{Trivial, from A2}
+
+\EXPR{b-1\geq 0}
+
+\item[8] \HINT{$\wedge$-Elimination on 3}
+
+\EXPR{WB \geq 4}
+
+\item[9] \HINT{Conjunction on 5, 7, 6 and 8}
+
+\EXPR{(WB-n-1=3*w+b-1) \wedge (b-1 \geq 0) \wedge (w \geq 0) \wedge (WB \geq 4)}
+
+\item[10] \HINT{Rewrite 9 with 2}
+
+\EXPR{Q}
+
+\end{BODY}
+
+\end{PROOF}
+
+\ \\
+
+\begin{PROOF}{PICb}
+
+\ASSUME{A1}{I}
+
+\ASSUME{A2}{w>0}
+
+\DEF{D1}{Q = wp\ (w:=w-1;\ b:=b+2;\ n:=n+1)\ I}
+
+\GOAL{G1}{Q}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite D1 with definition of I}
+
+\EXPR{Q = wp\ (w:=w-1;\ b:=b+2;\ n:=n+1)\ (( WB - n = 3 * w + b)\wedge\nolinebreak(b\geq\nolinebreak 0)\wedge\nolinebreak(w\geq\nolinebreak 0)\wedge\nolinebreak(WB\geq\nolinebreak 4)))}
+
+\item[2] \HINT{Rewrite 1 with definition of wp}
+
+\EXPR{Q = (WB-n-1=3*w-3+b+2) \wedge (b+2 \geq 0) \wedge (w-1 \geq 0) \wedge (WB \geq 4)}
+
+\item[3] \HINT{Rewrite A1 with definition of I}
+
+\EXPR{(WB-n=3*w+b) \wedge (b \geq 0) \wedge (w \geq 0) \wedge (WB \geq 4)}
+
+\item[4] \HINT{$\wedge$-Elimination on 3}
+
+\EXPR{WB-n=3*w+b}
+
+\item[5] \HINT{Trivial, from 4}
+
+\EXPR{WB-n-1=3*w-3+b+2}
+
+\item[6] \HINT{$\wedge$-Elimination on 3}
+
+\EXPR{b\geq 0}
+
+\item[7] \HINT{Trivial, from 6}
+
+\EXPR{b+2\geq 0}
+
+\item[8] \HINT{Trivial, from A2}
+
+\EXPR{w-1\geq 0}
+
+\item[9] \HINT{$\wedge$-Elimination on 3}
+
+\EXPR{WB \geq 4}
+
+\item[10] \HINT{Conjunction on 5, 7, 8 and 9}
+
+\EXPR{(WB-n-1=3*w-3+b+2) \wedge (b+2 \geq 0) \wedge (w-1 \geq 0) \wedge (WB \geq 4)}
+
+\item[11] \HINT{Rewrite 10 with 2}
+
+\EXPR{Q}
+
+\end{BODY}
+
+\end{PROOF}
+
+\end{document}

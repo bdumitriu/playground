@@ -1,0 +1,97 @@
+  LDC  5
+  annote SP 0 0 green "def of a"
+  LDR  MP
+  annote SP 0 0 green "Static Link"
+  LDC  L0
+  annote SP 0 0 green "Start PC"
+  BRA L1
+L0: 
+  LDR  MP
+  annote SP 0 0 blue "Prev MP"
+  LDRR MP SP
+  LDC  6
+  annote SP 0 0 green "def of b"
+  LDR  MP
+  annote SP 0 0 green "Static Link"
+  LDC  L2
+  annote SP 0 0 green "Start PC"
+  BRA L3
+L2: 
+  LDR  MP
+  annote SP 0 0 blue "Prev MP"
+  LDRR MP SP
+  LDL  -2
+  LDA  -2
+  LDR  MP
+  annote SP 0 0 green "Static Link"
+  LDC  L4
+  annote SP 0 0 green "Start PC"
+  BRA L5
+L4: 
+  LDR  MP
+  annote SP 0 0 blue "Prev MP"
+  LDRR MP SP
+  LDL  -2
+  LDA  -2
+  LDL  -2
+  LDA  -2
+  LDA  -2
+  LDL  2
+  LDA  1
+  annote SP 0 0 green "copy of a"
+  STL  -3
+  LDRR SP MP
+  STR  MP
+  STS  -1
+  RET
+L5: 
+  annote SP -1 0 green "def of h"
+  LDL  1
+  LDA  1
+  annote SP 0 0 green "copy of a"
+  LDL  -2
+  LDA  1
+  annote SP 0 0 green "copy of b"
+  EQ
+  BRF L6
+  LDL  1
+  LDA  1
+  annote SP 0 0 green "copy of a"
+  annote SP 0 0 green "then value"
+  BRA L7
+L6: 
+  LDL  -2
+  LDA  1
+  annote SP 0 0 green "copy of b"
+  annote SP 0 0 green "else value"
+L7: 
+  STS  -2
+  AJS  -1
+  STL  -3
+  LDRR SP MP
+  STR  MP
+  STS  -1
+  RET
+L3: 
+  annote SP -1 0 green "def of g"
+  LDC  3
+  LDML 2 2
+  annote SP -1 0 green "copy of g"
+  JSR
+  STS  -3
+  AJS  -2
+  STL  -3
+  LDRR SP MP
+  STR  MP
+  STS  -1
+  RET
+L1: 
+  annote SP -1 0 green "def of f"
+  LDC  5
+  LDML 2 2
+  annote SP -1 0 green "copy of f"
+  JSR
+  STS  -3
+  AJS  -2
+  TRAP 0
+  HALT

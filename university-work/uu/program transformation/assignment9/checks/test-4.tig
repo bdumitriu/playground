@@ -1,0 +1,6 @@
+let function f() = nil
+ in let function f() = nil
+     in f()
+    end
+  ; f()
+end

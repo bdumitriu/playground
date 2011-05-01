@@ -1,0 +1,60 @@
++----------+
+¦ Selectie ¦
++----------+
+
+VALOARE-MEDIE(A,li,ls)
+	for i <- li+1,ls do
+		j <- i
+		aux <- A[i]
+		while A[j-1] > aux and j > li do
+			A[j] < A[j-1]
+			j <- j-1
+		A[j] <- aux
+
+	return li+[(ls-li+1)/2]
+
+PARTITIONARE(A,cheie,li,ls)
+	idx1 <- 1
+	idx2 <- ls-li+1
+	for i <- li,ls do
+		if A[i] < cheie then
+			TEMP[idx1] <- A[i]
+			idx1 <- idx1+1
+		if A[i] > cheie then
+			TEMP[idx2] <- A[i]
+			idx2 <- idx2-1
+
+	for i <- idx1,idx2 do
+		TEMP[i] <- cheie
+
+	for i <- li,ls do
+		A[i] <- TEMP[i-li+1]
+
+	return li+idx1-1
+
+SELECTIE_(A,poz,li,ls)
+	dim <- [(ls-li+1)/5]
+	if (ls-li+1) mod 5 != 0 then
+		dim <- dim+1
+
+	for i <- 1,dim-1 do
+		B[i] <- VALOARE-MEDIE(A,li+(i-1)*5,li+(i-1)*5+4)
+	B[dim] <- VALOARE-MEDIE(A,li+(dim-1)*5,ls)
+
+	if dim <= 5 then
+		med = VALOARE-MEDIE(B,1,dim)
+	else
+		med = SELECTIE_(B,[dim/2]+1,1,dim)
+
+	poz_med = PARTITIONARE(A,med,li,ls)
+
+	if li+poz-1 < poz_med then
+		return SELECTIE_(A,poz,li,poz_med-1)
+	else
+		if li+poz-1 > poz_med then
+			return SELECTIE_(A,poz-(poz_med-li+1),poz_med+1,ls)
+		else
+			return med
+
+SELECTIE(A, poz)
+	return SELECTIE_(A,poz,1,lungime[A])

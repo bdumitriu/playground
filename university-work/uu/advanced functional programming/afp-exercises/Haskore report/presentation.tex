@@ -1,0 +1,401 @@
+\documentclass{beamer}
+
+\usepackage{listings}
+
+\lstset{% general command to set parameter(s)
+        frame=single, % frame code fragments
+        breaklines=true, % break long lines
+        basicstyle=\tt\tiny % print whole listing small
+        %keywordstyle=\color{black}\bfseries\underbar, % underlined bold black keywords
+        %identifierstyle=, % nothing happens
+        %commentstyle=\color{white}, % white comments
+        %stringstyle=\ttfamily % typewriter type for strings
+        %showstringspaces=false % no special string spaces
+       }
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+
+  %\setbeamercovered{transparent}
+}
+
+\usepackage[english]{babel}
+
+\usepackage[latin1]{inputenc}
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+\title{The Haskore Computer Music System}
+\subtitle{An example of an Embedded Domain Specific Language in Haskell}
+
+\author{Bogdan Dumitriu \and Jos\'e Pedro Magalh\~aes}
+
+\institute
+{
+  Department of Computer Science\\
+  Utrecht University
+}
+
+\date{\today}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command:
+%\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents%[pausesections]
+\end{frame}
+
+\section{Introduction}
+
+\subsection{Definition}
+
+\begin{frame}
+  \frametitle{The basics of Haskore}
+  \framesubtitle{What is Haskore?}
+  \begin{itemize}
+    \item Collection of Haskell modules designed for expressing musical structures in Haskell
+    \vspace{0.6cm}
+    \item Musical objects consist of:
+    \begin{itemize}
+        \item Primitive notions (notes and rests)
+        \item Operations to transform musical objects (transposition and tempo)
+        \item Operations to combine musical objects (sequential/parallel compositions)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The basics of Haskore}
+  \framesubtitle{Overall System Diagram}
+  \begin{center}
+      \pgfdeclareimage[interpolate=true,height=6cm]{diagram}{diagram}
+      \pgfuseimage{diagram}
+  \end{center}
+\end{frame}
+
+\subsection{Usage of Haskell features}
+\frame[all:1] {
+  \frametitle{The basics of Haskore}
+  \framesubtitle{Usage of Haskell features}
+
+  The {\tt Music} data type:
+  \begin{lstlisting}
+data Music = Note Pitch Dur [NoteAttribute] -- a note   \ atomic
+           | Rest Dur                       -- a rest   / objects
+           | Music :+: Music                -- sequential composition
+           | Music :=: Music                -- parallel composition
+           | Tempo (Ratio Int) Music        -- scale the tempo
+           | Trans Int Music                -- transposition
+           | Instr IName Music              -- instrument label
+           | Player PName Music             -- player label
+           | Phrase [PhraseAttribute] Music -- phrase attributes
+             deriving (Show, Eq)
+  \end{lstlisting}
+}
+
+  \frame[all:1] {
+  \frametitle{The basics of Haskore}
+  \framesubtitle{Usage of Haskell features}
+
+  The {\tt Music} data type:
+  \begin{lstlisting}
+data Music = Note Pitch Dur [NoteAttribute] -- a note   \ atomic
+           | Rest Dur                       -- a rest   / objects
+           | Music :+: Music                -- sequential composition
+           | Music :=: Music                -- parallel composition
+           | Tempo (Ratio Int) Music        -- scale the tempo
+           | Trans Int Music                -- transposition
+           | Instr IName Music              -- instrument label
+           | Player PName Music             -- player label
+           | Phrase [PhraseAttribute] Music -- phrase attributes
+             deriving (Show, Eq)
+  \end{lstlisting}
+  \begin{itemize}
+
+  \item Higher-order functions:
+  \begin{lstlisting}
+line, chord :: [Music] -> Music
+line = foldr1 (:+:)
+chord = foldr1 (:=:)
+  \end{lstlisting}
+
+  \end{itemize}}
+
+  \frame[all:1] {
+  \frametitle{The basics of Haskore}
+  \framesubtitle{Usage of Haskell features}
+
+  The {\tt Music} data type:
+  \begin{lstlisting}
+data Music = Note Pitch Dur [NoteAttribute] -- a note   \ atomic
+           | Rest Dur                       -- a rest   / objects
+           | Music :+: Music                -- sequential composition
+           | Music :=: Music                -- parallel composition
+           | Tempo (Ratio Int) Music        -- scale the tempo
+           | Trans Int Music                -- transposition
+           | Instr IName Music              -- instrument label
+           | Player PName Music             -- player label
+           | Phrase [PhraseAttribute] Music -- phrase attributes
+             deriving (Show, Eq)
+  \end{lstlisting}
+  \begin{itemize}
+
+  \item Higher-order functions:
+  \begin{lstlisting}
+line, chord :: [Music] -> Music
+line = foldr1 (:+:)
+chord = foldr1 (:=:)
+  \end{lstlisting}
+
+  \item Infinite objects:
+  \begin{lstlisting}
+repeatM :: Music -> Music
+repeatM m = m :+: repeatM m
+  \end{lstlisting}
+
+  \end{itemize}}
+
+\subsection{Players and Performance}
+
+\frame[all:1]
+{
+  \frametitle{Players and Performance}
+  \framesubtitle{Players - abstraction}
+  \begin{itemize}
+    \item {\tt Music} abstraction independent from musical interpretation
+    \item Haskore models real life!
+  \end{itemize}
+
+\begin{lstlisting}
+data Player = MkPlayer { pName :: PName
+                       , playNote :: NoteFun
+                       , interpPhrase :: PhraseFun
+                       , notatePlayer :: NotateFun
+                       } deriving Show
+
+type PMap = PName -> Player
+type NoteFun = Context -> Pitch -> Dur -> [NoteAttribute] -> Performance
+type PhraseFun =
+  PMap -> Context -> [PhraseAttribute] -> Music -> (Performance,DurT)
+type NotateFun = () -- not implemented
+\end{lstlisting}
+}
+
+\frame[all:1] {
+  \frametitle{Players and Performance}
+  \framesubtitle{Performance}
+  \begin{itemize}
+    \item {\tt Performance} $=$ Haskore's internal representation of a music's interpretation
+    \item {\tt Music} $\rightarrow$ {\tt Performance} allows for different interpretations
+for the same music
+  \end{itemize}
+
+\begin{lstlisting}
+type Performance = [Event]
+data Event = Event {eTime   :: Time
+                   ,eInst   :: IName
+                   ,ePitch  :: AbsPitch
+                   ,eDur    :: DurT
+                   ,eVol    :: Volume
+                   ,pFields :: [Float]
+                   } deriving (Eq,Ord,Show)
+
+perform :: PMap -> Context -> Music -> Performance
+\end{lstlisting}
+}
+
+\section{Input / Output}
+\subsection{MIDI and CSound files}
+\begin{frame}
+  \frametitle{Input / Output}
+  \framesubtitle{MIDI and CSound files}
+
+    \begin{block}{MIDI}
+    \small Haskore has also built-in support for writing and reading MIDI
+files. MIDI ("Musical Instrument Digital Interface") is a standard
+protocol adopted by most, if not all, manufacturers of electronic
+instruments. In this way Haskore ensures it will be able to
+communicate with virtually any other decent music system.
+    \end{block}
+    \pause
+    \begin{block}{CSound}
+    \small Furthermore, Haskore can also output to CSound files. CSound
+is a software synthesizer that allows its user to create a virtually
+unlimited number of sounds and instruments. By supporting CSound
+output, Haskore gives its users access to all the powerful features
+of a software sound synthesizer.
+    \end{block}
+\end{frame}
+
+\section{Mathematic reasoning}
+\subsection{Music theory expressed in Haskell}
+
+\frame[all:1] {
+  \frametitle{Mathematic reasoning for music}
+  %\framesubtitle{}
+  \begin{itemize}
+    \item Haskore also allows for mathematical reasoning, due to
+    \begin{itemize}
+        \item Notion of literal interpretation
+        \item Haskell being a pure language
+    \end{itemize}
+    \item Example:
+  \end{itemize}
+
+  \begin{block}{Axiom 1}
+$\forall r_1, r_2, r_3, r_4 \textnormal{ and } m$:
+
+$\quad\textnormal{Tempo }r_1\ r_2\ (\textnormal{Tempo }r_3\ r_4\ m) = \textnormal{Tempo }(r_1*r_3)\ (r_2*r_4)\ m$
+  \end{block}
+
+  \begin{block}{Proof:}
+\begin{lstlisting}
+  perform dt (Tempo r1 r2 (Tempo r3 r4 m))
+= perform (r2*dt/r1) (Tempo r3 r4 m)   -- unfolding perform
+= perform (r4*(r2*dt/r1)/r3) m         -- unfolding perform
+= perform ((r2*r4)*dt/(r1*r3)) m       -- simple arithmetic
+= perform dt (Tempo (r1*r3) (r2*r4) m) -- folding perform
+\end{lstlisting}
+    \end{block}
+}
+
+\section{Examples}
+%\subsection{Beethoven's Für Elise - Original theme}
+
+\begin{frame}
+  \frametitle{Haskore examples}
+  \framesubtitle{Beethoven's Für Elise - Original theme}
+  \begin{center}
+      \pgfdeclareimage[interpolate=true,width=11cm]{furEliseOrig}{furEliseOrig}
+      \pgfuseimage{furEliseOrig}
+  \end{center}
+      \begin{block}{}
+  \begin{center}
+  {\tt furElise}
+    \end{center}
+  \end{block}
+\end{frame}
+
+\frame[all:1] {
+  \frametitle{Haskore examples}
+  \framesubtitle{Beethoven's Für Elise - {\tt Music}}
+\begin{lstlisting}
+furElise :: Music
+furElise =
+  let up1 = (Note (E,5) sn []) :+: (Note (Ef,5) sn []) :+: (Note (E,5) sn [])
+         :+: (Note (Ef,5) sn []) :+: (Note (E,5) sn []) :+: (Note (B,4) sn [])
+         :+: (Note (D,5) sn []) :+: (Note (C,5) sn []) :+: (Note (A,4) en [])
+         :+: (Rest sn) :+: (Note (C,4) sn []) :+: (Note (E,4) sn [])
+         :+: (Note (A,4) sn []) :+: (Note (B,4) en []) :+: (Rest sn)
+      up2 = (Note (E,4) sn []) :+: (Note (Gs,4) sn []) :+: (Note (B,4) sn [])
+         :+: (Note (C,5) en []) :+: (Rest sn) :+: (Note (E,4) sn [])
+      up3 = (Note (D,4) sn []) :+: (Note (C,5) sn []) :+: (Note (B,4) sn [])
+         :+: (Note (A,4) qn [])
+      up  = up1 :+: up2 :+: up1 :+: up3
+
+      dw1 = (Rest hn) :+: (Note (A,2) sn []) :+: (Note (E,3) sn [])
+         :+: (Note (A,3) sn []) :+: (Rest sn) :+: (Rest en)
+         :+: (Note (E,2) sn []) :+: (Note (E,3) sn []) :+: (Note (Gs,3) sn [])
+         :+: (Rest sn) :+: (Rest en) :+: (Note (A,2) sn [])
+         :+: (Note (E,3) sn []) :+: (Note (A,3) sn []) :+: (Rest sn)
+      dw  = dw1 :+: dw1
+
+  in (Instr "Acoustic Grand Piano" (dw :=: up))
+\end{lstlisting}
+}
+
+%\subsection{Beethoven's Für Elise - Different performances}
+\begin{frame}
+  \frametitle{Haskore examples}
+  \framesubtitle{Beethoven's Für Elise - Different performances}
+
+  \begin{block}{Basic performance}
+    {\tt\tiny myPerform = perform (const defPlayer) c}\\
+    {\tt\tiny \ \ where c = Context 0 defPlayer "" (metro 300 en) (absPitch (C, 1)) 50}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Variation 1 - 2 octaves higher, double time}
+    {\tt\tiny myPerform = perform (const defPlayer) c}\\
+    {\tt\tiny \ \ where c = Context 0 defPlayer "" (metro 150 en) (absPitch (C, 3)) 50}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Variation 2 - 1 octave lower, 2 semitones lower, double volume}
+    {\tt\tiny myPerform = perform (const defPlayer) c}\\
+    {\tt\tiny \ \ where c = Context 0 defPlayer "" (metro 150 en) (absPitch (A, 0)) 100}
+  \end{block}
+
+\end{frame}
+
+%\subsection{Beethoven's Für Elise - Parallel transposition}
+\begin{frame}
+  \frametitle{Haskore examples}
+  \framesubtitle{Beethoven's Für Elise - Parallel transposition}
+
+  \begin{block}{Transpose piece, delay it \& play in parallel with original}
+    {\tt (delay 1 (Trans 5 m)) :=: m}
+  \end{block}
+
+\end{frame}
+
+%\subsection{Beethoven's Für Elise - Inverse}
+\begin{frame}
+  \frametitle{Haskore examples}
+  \framesubtitle{Beethoven's Für Elise - Inverse}
+  \begin{center}
+      \pgfdeclareimage[interpolate=true,width=11cm]{furEliseInv}{furEliseInv}
+      \pgfuseimage{furEliseInv}
+  \end{center}
+  \begin{block}{}
+  \begin{center}
+    {\tt invert furElise}
+  \end{center}
+  \end{block}
+\end{frame}
+
+%\subsection{Beethoven's Für Elise - Retrograde}
+\begin{frame}
+  \frametitle{Haskore examples}
+  \framesubtitle{Beethoven's Für Elise - Retrograde}
+  \begin{center}
+      \pgfdeclareimage[interpolate=true,width=11cm]{furEliseRetr}{furEliseRetr}
+      \pgfuseimage{furEliseRetr}
+  \end{center}
+    \begin{block}{}
+  \begin{center}
+  {\tt retrograde furElise}
+    \end{center}
+  \end{block}
+\end{frame}
+
+%\subsection{Beethoven's Für Elise - Inverse retrograde}
+\begin{frame}
+  \frametitle{Haskore examples}
+  \framesubtitle{Beethoven's Für Elise - Inverse retrograde}
+  \begin{center}
+      \pgfdeclareimage[interpolate=true,width=11cm]{furEliseInvRetr}{furEliseInvRetr}
+      \pgfuseimage{furEliseInvRetr}
+  \end{center}
+    \begin{block}{}
+  \begin{center}
+  {\tt (invert . retrograde) furElise}
+    \end{center}
+  \end{block}
+\end{frame}
+
+\end{document}

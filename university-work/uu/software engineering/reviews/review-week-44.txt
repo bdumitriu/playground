@@ -1,0 +1,75 @@
+[[http://www.swen.uwaterloo.ca/~kczarnec/][Overview of Generative Software Development]] is a paper
+about the current developments in the area of generating software automatically, based on specifications
+in a high level, domain-specific, language, as opposed to writing software manually, as most development
+is currently being done. Generative software development targets especially families of systems which
+share related concepts. The idea behind generative development is to factor out these shared concepts
+into libraries of components, provide a domain-specific language in which relationships between these
+components can be easily expressed by domain experts, and transform such specifications into running
+programs by means of mapping.
+
+Creation and use of =domain-specific languages= is of great aid to development due to a number of reasons,
+including the ability to concisely and clearly express domain-specific functionality by using a high level
+syntax, the possibility of checking for errors (and giving error messages) at a higher level than available
+with general purpose languages and the opportunity of implementing optimizations and development tools
+tailored to the specific domain.
+
+=Application engineering= is strongly intertwined with =domain engineering= at the core of generative
+software development. Domain engineering is a parallel process to the "normal" application engineering,
+targeted at providing domain-level reuse of analysis, design and implementation artifacts. As such,
+domain engineering tries to extract as much domain knowledge as possible into common frameworks and
+components, while application engineering uses them by providing only the "variability code", i.e.
+only that part of the software which is peculiar to the application itself. Of course, this relationship
+goes both ways, since domain engineering can benefit from application engineering as well, by continuous
+integration of new common concepts and components deemed as needed by the latter.
+
+Generative software development eventually comes down to mapping applications expressed in a domain-familiar
+=problem space= into a more generic =solution space=. This mapping can happen in a number of ways, ranging
+from simple transformation of domain syntax into general programming language syntax to mapping of potentially
+complex configurations to code which makes use of already available domain-specific (and, optionally,
+general-purpose) components. The idea behind this is that expressing programs in the problem space is
+a lot more natural and a lot less error-prone than expressing them directly in the solution space. Then,
+ideally this translation should be made automatically, basically leading to generation of software. Naturally,
+mappings can be randomly complex, which means different combinations of inputs and outputs can be imagined
+(e.g., mapping two specifications written into two different domain-specific languages to a single program
+in the solution space).
+
+As a precursor to domain-specific languages, the article also mentions feature modeling, which also allows
+high level specifications of solutions which can then be translated into programs by means of a mapping.
+Expressed features can go from =concrete= (where there is mostly a one-to-one mapping to a component), to
+=aspectual= (where the specified aspect can be translated into changes to any number of components), to
+=abstract= (which are used to make decisions about which components or configurations of components to use
+over others) and finally to =grouping features= (used to couple features together, with various potential
+translation of this into solution space).
+
+It is difficult to position generative software development into software engineering, since it pretty much
+covers every aspect of it. Moreover, it covers it twice, actually, once through domain engineering and once
+through application engineering. To be more accurate, domain engineering is somewhat more restricted to only
+a few of the phases of software engineering (notably analysis, design and implementation, but one could imagine
+that serious testing - perhaps even more serious than for "normal" applications - has to be performed as well).
+Application engineering mainly covers the same aspects as well, and also goes beyond - up to deployment and
+post deployment phases (but admittedly, most of these aspects are not really of concern to generative
+software development). On the other hand, it could also be argued that generative software development opens
+up and entirely new branch of software engineering by doing this automatic generation of code, which doesn't
+really have a well established place in traditional software engineering.
+
+Clearly, generative software development partially has its roots into Curtis' law (=good designs require deep application domain knowledge=).
+What better way to ensure good designs than by extracting this domain knowledge into common artifacts and
+allowing application developers to reuse them as often as needed? Also, not only can applications benefit
+from good designs imposed by the library (assumed to be designed by experts), but they can actually express
+their use of the library in a way which further ensures a good design. This is because writing a specification
+in a high level, domain-specific language allows the mapping to come up with a design as good as possible
+for the given specification.
+
+Generative software development is also somewhat related to Mcllroy's law
+(=software reuse reduces cycle time and increases productivity and quality=), since, in a sense, generative
+software development is also about software reuse. The way in which this reuse happens is perhaps slightly
+different from the kind this law refers to, but it is software reuse, nevertheless. If cycle time, perhaps,
+is not so relevant with generative software development, a productivity and quality gain by employing these
+techniques are indisputable.
+
+I believe this overview was quite illuminating, in a sense, by opening up new ways to think about software.
+After hearing about object-oriented programming virtually all my life, it is nice to see focus changing onto
+language-oriented programming in the context of generative software development. In my opinion, the main
+advantages of generative software development are related to the possibility to use domain-specific languages
+to express solutions to problems and, naturally, the possibility to have the low(er) level source code be
+generated automatically, without your worrying about it.

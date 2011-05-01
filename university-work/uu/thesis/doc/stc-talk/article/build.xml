@@ -1,0 +1,54 @@
+<?xml version="1.0"?> 
+<project name="stc-talk" default="pdf" basedir=".">
+
+	<property name="article" value="article" />
+
+	<!-- Creates the pdf version of the article -->
+	<target name="pdf">
+		<antcall target="pdflatex" />
+		<antcall target="bibtex" />
+		<antcall target="pdflatex" />
+		<antcall target="pdflatex" />
+	</target>
+
+	<!-- Runs pdflatex on the article -->
+	<target name="pdflatex" depends="dot">
+		<exec executable="pdflatex">
+			<arg value="${article}.ltx" />
+		</exec>
+	</target>
+
+	<!-- Runs bibtex on the article -->
+	<target name="bibtex">
+		<exec executable="bibtex">
+			<arg value="${article}" />
+		</exec>
+	</target>
+
+	<!-- Deletes every by- and final product of running the latex tools -->
+	<!-- (and everything else that needs cleaning, for that matter...) -->
+	<target name="clean">
+		<delete>
+			<fileset dir="." includes="*.aux, *.bbl, *.blg, *.log, *.pdf, *.toc, *.dvi, *.brf, *.out" />
+		</delete>
+		<delete file="build.xml~" />
+		<delete file="article.ltx~" />
+	</target>
+
+	<!-- Applies dot to all .dot files in the fig directory to create .ps -->
+	<!-- files and then applies ps2pdf to all .ps files to create .pdf files. -->
+	<target name="dot">
+		<apply executable="dot" dest="fig" dir="fig">
+			<arg value="-Tps" />
+			<arg value="-o" />
+			<targetfile />
+			<fileset dir="fig" includes="*.dot" />
+			<mapper type="glob" from="*.dot" to="*.ps" />
+		</apply>
+		<apply executable="epstopdf" dest="fig" dir="fig">
+			<fileset dir="fig" includes="*.ps" />
+			<mapper type="glob" from="*.ps" to="*.pdf" />
+		</apply>
+	</target>
+
+</project>

@@ -1,0 +1,52 @@
+ - Functia DOS 3ch -
+
+Functie:
+    Crearea unui fisier nou.
+
+Asteapta:
+    ah: 3ch
+    ds:dx: adresa unui  sir de caractere care se  termina cu nul (cod ascii
+        00h) si care reprezinta fisierul de creat.
+    cx: atributele fisierului.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag e setat.
+        descriptorul de fisier daca nu apar erori.
+
+Descriere:
+    In urma apelului functiei se va crea un fisier nou, gol sau se va ster-
+    ge continutul unui fisier existent. Fisierul ramane apoi deschis pentru
+    operatii de citire/scriere. ds:dx trebuie sa contina adresa unui sir de
+    forma:
+        [d:][\cale\]nume_fisier.ext
+    care identifica locatia si numele  fisierului ce trebuie creat. Daca se
+    omit litera ce identifica drive-ul urmata de : si/sau calea, se iau va-
+    lorile implicite.
+    
+    Daca Carry Flag e  setat la iesirea din functie  atunci a avut loc o e-
+    roare si codul acestei se afla  in ax. In acest caz, fisierul nu a fost
+    creat.
+
+Note:
+    1. Octetul ce descrie atributele fisierului are urmatoarea compozitie:
+
+        +---+---+---+---+---+---+---+---+
+        | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+        +---+---+---+---+---+---+---+---+
+
+    cu semnificatia:
+
+     bitul 1 si 2: nesemnificativi.
+     bitul 3: bit de arhiva
+     bitul 4: bit setat pentru directoare
+     bitul 5: bit setat pentru fisiere/directoare din radacina
+     bitul 6: bit de fisier sistem
+     bitul 7: bit de fisier ascuns
+     bitul 8: bit de fisier read-only
+
+    2. Daca fisierul exista deja, atunci:
+     - daca e setat ca read-only, nu se intampla nimic.
+     - daca nu e setat ca read-only, se trunchiaza lungimea sa la 0.
+
+    3. Functia 5bh este similara celei  curente, dar esueaza cand un fisier
+    cu acelasi nume exista deja.

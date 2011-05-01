@@ -1,0 +1,4 @@
+let function f2() = print("foo")
+ in f2()
+  ; f2()
+end

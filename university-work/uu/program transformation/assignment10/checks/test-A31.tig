@@ -1,0 +1,17 @@
+let type intarray = array of int
+    var x : intarray := intarray [10] of 0
+    var z : int
+ in z := 4
+  ; x[3] := z
+  ; printint(x[3])
+
+  ; x := intarray [10] of 1
+  ; printint(x[3])
+
+  ; x[3] := z
+  ; printint(x[3])
+
+  ; x[i] := 5
+
+  ; printint(x[3])
+end

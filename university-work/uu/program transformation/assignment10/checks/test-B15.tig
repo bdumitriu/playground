@@ -1,0 +1,5 @@
+let var x
+    var y := x
+
+ in y := 5
+end

@@ -1,0 +1,637 @@
+<!--
+	The elements in this file are the following:
+
+	- main container
+		<mappings>...</mappings>
+
+	- action mappings which define the action bean, the jsp page
+	which displays the result to the user, the statement processor
+	and the data container classes which are called to handle the
+	processing of action identified by actionID (requestor will
+	ask in his/her browser for page actionID.do). A single sql-data
+	can be used (if desired) for multiple actions, this being the
+	reason for which we need to different container tags. The
+	sql-data-id tag from <action-mapping> identifies a <sql-data>.
+
+		<sql-data>
+			<id>uniqueDataId</id>
+			<data-cont>name_class_that_extends_ro.utcluj.vu.main.DataContainer</data-cont>
+			<st-proc>name_class_that_extends_ro.utcluj.vu.main.StatementProcessor</st-proc>
+		</sql-data>
+
+		<action-mapping>
+			<id>actionID</id>
+			<action-bean>name_class_that_extends_ro.utcluj.vu.main.Action</action-bean>
+			<view-jsp>displayJsp.jsp</view-jsp>
+			<sql-data-id>uniqueDataId</sql-data-id>
+		</action-mapping>
+-->
+
+<mappings>
+	<sql-data>
+		<id>login</id>
+		<data-cont>ro.utcluj.vu.login.LoginData</data-cont>
+		<st-proc>ro.utcluj.vu.login.LoginProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>login</id>
+		<action-bean>ro.utcluj.vu.login.LoginAction</action-bean>
+		<view-jsp>/jsp/login/Login.jsp</view-jsp>
+		<sql-data-id>login</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>logout</id>
+		<action-bean>ro.utcluj.vu.login.LogoutAction</action-bean>
+		<view-jsp>/jsp/login/Logout.jsp</view-jsp>
+		<sql-data-id>login</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>classChoice</id>
+		<data-cont>ro.utcluj.vu.login.ClassChoiceData</data-cont>
+		<st-proc>ro.utcluj.vu.login.ClassChoiceProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>classChoice</id>
+		<action-bean>ro.utcluj.vu.login.ClassChoiceAction</action-bean>
+		<view-jsp>/jsp/login/ClassChoice.jsp</view-jsp>
+		<sql-data-id>classChoice</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>displayMenu</id>
+		<action-bean>ro.utcluj.vu.login.DisplayMenuAction</action-bean>
+		<view-jsp>/jsp/login/DisplayMenu.jsp</view-jsp>
+	</action-mapping>
+
+	<sql-data>
+		<id>attFiles</id>
+		<data-cont>ro.utcluj.vu.utils.AttachFilesData</data-cont>
+	</sql-data>
+
+	<action-mapping>
+		<id>attFiles</id>
+		<action-bean>ro.utcluj.vu.utils.AttachFilesAction</action-bean>
+		<view-jsp>/jsp/utils/AttachFiles.jsp</view-jsp>
+		<sql-data-id>attFiles</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>ann</id>
+		<data-cont>ro.utcluj.vu.announcements.AnnouncementData</data-cont>
+		<st-proc>ro.utcluj.vu.announcements.AnnouncementProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>addAnn</id>
+		<action-bean>ro.utcluj.vu.announcements.AddAnnouncementAction</action-bean>
+		<view-jsp>/jsp/announcements/AddAnnouncement.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>listAnn1</id>
+		<action-bean>ro.utcluj.vu.announcements.ListAnnouncementAction</action-bean>
+		<view-jsp>/jsp/announcements/ListAnnouncement.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>listAnn2</id>
+		<action-bean>ro.utcluj.vu.announcements.ListAllAnnouncementsAction</action-bean>
+		<view-jsp>/jsp/announcements/ListAllAnnouncements.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editAnn1</id>
+		<action-bean>ro.utcluj.vu.announcements.DisplayAnnouncementAction</action-bean>
+		<view-jsp>/jsp/announcements/DisplayAnnouncement.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editAnn2</id>
+		<action-bean>ro.utcluj.vu.announcements.EditAnnouncementAction</action-bean>
+		<view-jsp>/jsp/announcements/EditAnnouncement.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>delAnn</id>
+		<action-bean>ro.utcluj.vu.announcements.DeleteAnnouncementAction</action-bean>
+		<view-jsp>/jsp/announcements/DeleteAnnouncement.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>conf</id>
+		<data-cont>ro.utcluj.vu.conferences.ConferenceData</data-cont>
+		<st-proc>ro.utcluj.vu.conferences.ConferenceProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>addConf</id>
+		<action-bean>ro.utcluj.vu.conferences.AddConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/AddConference.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>listConf</id>
+		<action-bean>ro.utcluj.vu.conferences.ListConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/ListConferences.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editConf1</id>
+		<action-bean>ro.utcluj.vu.conferences.DisplayConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/DisplayConference.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editConf2</id>
+		<action-bean>ro.utcluj.vu.conferences.EditConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/EditConference.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>delConf</id>
+		<action-bean>ro.utcluj.vu.conferences.DeleteConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/DeleteConference.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>reorderConf1</id>
+		<action-bean>ro.utcluj.vu.conferences.ListConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/Reorder.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>reorderConf2</id>
+		<action-bean>ro.utcluj.vu.conferences.ReorderConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/ReorderConferences.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>mess</id>
+		<data-cont>ro.utcluj.vu.conferences.MessageData</data-cont>
+		<st-proc>ro.utcluj.vu.conferences.MessageProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>listMess1</id>
+		<action-bean>ro.utcluj.vu.conferences.ListOfConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/ListOfConferences.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>listMess2</id>
+		<action-bean>ro.utcluj.vu.conferences.ListTopicsAction</action-bean>
+		<view-jsp>/jsp/conferences/ListMessages.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>displayConf</id>
+		<action-bean>ro.utcluj.vu.conferences.DisplayConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/ShowConference.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>displayMess</id>
+		<action-bean>ro.utcluj.vu.conferences.DisplayMessageAction</action-bean>
+		<view-jsp>/jsp/conferences/ShowMessage.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>showMainTopic</id>
+		<action-bean>ro.utcluj.vu.conferences.ListMessagesAction</action-bean>
+		<view-jsp>/jsp/conferences/ListMessages.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>showMess</id>
+		<action-bean>ro.utcluj.vu.conferences.ListMessagesAction</action-bean>
+		<view-jsp>/jsp/conferences/ListMessages.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>addMess</id>
+		<action-bean>ro.utcluj.vu.conferences.AddMessageAction</action-bean>
+		<view-jsp>/jsp/conferences/AddMessage.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editMess1</id>
+		<action-bean>ro.utcluj.vu.conferences.DisplayMessageAction</action-bean>
+		<view-jsp>/jsp/conferences/DisplayMessage.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editMess2</id>
+		<action-bean>ro.utcluj.vu.conferences.EditMessageAction</action-bean>
+		<view-jsp>/jsp/conferences/EditMessage.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>chat</id>
+		<data-cont>ro.utcluj.vu.chat.ChatData</data-cont>
+		<st-proc>ro.utcluj.vu.chat.ChatProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>chat</id>
+		<action-bean>ro.utcluj.vu.chat.ChatAction</action-bean>
+		<view-jsp>/jsp/chat/Chat.jsp</view-jsp>
+		<sql-data-id>chat</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>email</id>
+		<data-cont>ro.utcluj.vu.email.EmailData</data-cont>
+		<st-proc>ro.utcluj.vu.email.EmailProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>singleEmail</id>
+		<action-bean>ro.utcluj.vu.email.SingleEmailAction</action-bean>
+		<view-jsp>/jsp/email/SingleEmail.jsp</view-jsp>
+		<sql-data-id>email</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>multipleEmails</id>
+		<action-bean>ro.utcluj.vu.email.MultipleEmailsAction</action-bean>
+		<view-jsp>/jsp/email/MultipleEmails.jsp</view-jsp>
+		<sql-data-id>email</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>sendEmail</id>
+		<action-bean>ro.utcluj.vu.email.SendEmailAction</action-bean>
+		<view-jsp>/jsp/email/SendEmail.jsp</view-jsp>
+		<sql-data-id>email</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>multipleEmailsSelect</id>
+		<action-bean>ro.utcluj.vu.email.MultipleEmailsSelectAction</action-bean>
+		<view-jsp>/jsp/email/EditEmails.jsp</view-jsp>
+		<sql-data-id>email</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>sendMultipleEmails</id>
+		<action-bean>ro.utcluj.vu.email.SendMultipleEmailsAction</action-bean>
+		<view-jsp>/jsp/email/SendMultipleEmails.jsp</view-jsp>
+		<sql-data-id>email</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>task</id>
+		<data-cont>ro.utcluj.vu.tasks.TaskData</data-cont>
+		<st-proc>ro.utcluj.vu.tasks.TaskProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>addTask</id>
+		<action-bean>ro.utcluj.vu.tasks.AddTaskAction</action-bean>
+		<view-jsp>/jsp/tasks/AddTask.jsp</view-jsp>
+		<sql-data-id>task</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>listTask</id>
+		<action-bean>ro.utcluj.vu.tasks.ListTaskAction</action-bean>
+		<view-jsp>/jsp/tasks/ListTask.jsp</view-jsp>
+		<sql-data-id>task</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>viewTask</id>
+		<action-bean>ro.utcluj.vu.tasks.DisplayTaskAction</action-bean>
+		<view-jsp>/jsp/tasks/ViewTask.jsp</view-jsp>
+		<sql-data-id>task</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editTask1</id>
+		<action-bean>ro.utcluj.vu.tasks.DisplayTaskAction</action-bean>
+		<view-jsp>/jsp/tasks/DisplayTask.jsp</view-jsp>
+		<sql-data-id>task</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editTask2</id>
+		<action-bean>ro.utcluj.vu.tasks.EditTaskAction</action-bean>
+		<view-jsp>/jsp/tasks/EditTask.jsp</view-jsp>
+		<sql-data-id>task</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>delTask</id>
+		<action-bean>ro.utcluj.vu.tasks.DeleteTaskAction</action-bean>
+		<view-jsp>/jsp/tasks/DeleteTask.jsp</view-jsp>
+		<sql-data-id>task</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>ass</id>
+		<data-cont>ro.utcluj.vu.assignments.AssignmentData</data-cont>
+		<st-proc>ro.utcluj.vu.assignments.AssignmentProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>assTask1</id>
+		<action-bean>ro.utcluj.vu.assignments.ChooseTaskAction</action-bean>
+		<view-jsp>/jsp/assignments/ChooseTask.jsp</view-jsp>
+		<sql-data-id>task</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>assTask2</id>
+		<action-bean>ro.utcluj.vu.assignments.ChooseStudentsAction</action-bean>
+		<view-jsp>/jsp/assignments/ChooseStudents.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>assTask3</id>
+		<action-bean>ro.utcluj.vu.assignments.ChooseAssignmentDetailsAction</action-bean>
+		<view-jsp>/jsp/assignments/ChooseAssignmentDetails.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>assTask4</id>
+		<action-bean>ro.utcluj.vu.assignments.AssignTaskAction</action-bean>
+		<view-jsp>/jsp/assignments/AssignTask.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>delAss</id>
+		<action-bean>ro.utcluj.vu.assignments.DeleteAssignmentAction</action-bean>
+		<view-jsp>/jsp/assignments/DeleteAssignment.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>studListAss</id>
+		<action-bean>ro.utcluj.vu.assignments.ListStudentAssignmentsAction</action-bean>
+		<view-jsp>/jsp/assignments/ListStudentAssignments.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>tchListAss</id>
+		<action-bean>ro.utcluj.vu.assignments.ListClassAssignmentsAction</action-bean>
+		<view-jsp>/jsp/assignments/ListClassAssignments.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>studViewAss</id>
+		<action-bean>ro.utcluj.vu.assignments.ViewStudentAssignmentAction</action-bean>
+		<view-jsp>/jsp/assignments/ViewStudentAssignment.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>tchViewAss</id>
+		<action-bean>ro.utcluj.vu.assignments.ViewTeacherAssignmentAction</action-bean>
+		<view-jsp>/jsp/assignments/ViewTeacherAssignment.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>submitAnswer</id>
+		<action-bean>ro.utcluj.vu.assignments.SubmitAnswerAction</action-bean>
+		<view-jsp>/jsp/assignments/SubmitAnswer.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>readAnswer</id>
+		<action-bean>ro.utcluj.vu.assignments.ReadAnswerAction</action-bean>
+		<view-jsp>/jsp/assignments/ReadAnswer.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>markAsRead</id>
+		<action-bean>ro.utcluj.vu.assignments.MarkAsReadAction</action-bean>
+		<view-jsp>/jsp/assignments/MarkAsRead.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>gradeAss</id>
+		<action-bean>ro.utcluj.vu.assignments.GradeAssignmentAction</action-bean>
+		<view-jsp>/jsp/assignments/GradeAssignment.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>readCom</id>
+		<action-bean>ro.utcluj.vu.assignments.DisplayGradeAction</action-bean>
+		<view-jsp>/jsp/assignments/DisplayGrade.jsp</view-jsp>
+		<sql-data-id>ass</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>coursetm</id>
+		<data-cont>ro.utcluj.vu.coursetm.CourseTMData</data-cont>
+		<st-proc>ro.utcluj.vu.coursetm.CourseTMProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>viewCourse</id>
+		<action-bean>ro.utcluj.vu.coursetm.CourseTMAction</action-bean>
+		<view-jsp>/jsp/coursetm/SubmenuCourseTMPage.jsp</view-jsp>
+		<sql-data-id>coursetm</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>getCourseAbout</id>
+		<action-bean>ro.utcluj.vu.coursetm.CourseAboutAction</action-bean>
+		<view-jsp>/jsp/coursetm/CourseAbout.jsp</view-jsp>
+		<sql-data-id>coursetm</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>classtm</id>
+		<data-cont>ro.utcluj.vu.classtm.ClassTMData</data-cont>
+		<st-proc>ro.utcluj.vu.classtm.ClassTMProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>viewSchedule</id>
+		<action-bean>ro.utcluj.vu.classtm.ViewScheduleAction</action-bean>
+		<view-jsp>/jsp/classtm/ViewSchedule.jsp</view-jsp>
+		<sql-data-id>classtm</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>viewPolicies</id>
+		<action-bean>ro.utcluj.vu.classtm.ViewPoliciesAction</action-bean>
+		<view-jsp>/jsp/classtm/ViewPolicies.jsp</view-jsp>
+		<sql-data-id>classtm</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>viewReferences</id>
+		<action-bean>ro.utcluj.vu.classtm.ViewReferencesAction</action-bean>
+		<view-jsp>/jsp/classtm/ViewReferences.jsp</view-jsp>
+		<sql-data-id>classtm</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>viewAddInfo</id>
+		<action-bean>ro.utcluj.vu.classtm.ViewAdditionalInfoAction</action-bean>
+		<view-jsp>/jsp/classtm/ViewAddInfo.jsp</view-jsp>
+		<sql-data-id>classtm</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>viewGradingInfo</id>
+		<action-bean>ro.utcluj.vu.classtm.ViewGradingInfoAction</action-bean>
+		<view-jsp>/jsp/classtm/ViewGradingInfo.jsp</view-jsp>
+		<sql-data-id>classtm</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>getClassTM</id>
+		<action-bean>ro.utcluj.vu.classtm.ManageClassTMAction</action-bean>
+		<view-jsp>/jsp/classtm/ViewClassTM.jsp</view-jsp>
+		<sql-data-id>classtm</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>removeResource</id>
+		<action-bean>ro.utcluj.vu.classtm.RemoveClassTMResourceAction</action-bean>
+		<view-jsp>/jsp/classtm/RemoveClassTMResource.jsp</view-jsp>
+		<sql-data-id>classtm</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editResource</id>
+		<action-bean>ro.utcluj.vu.classtm.EditClassTMResourceAction</action-bean>
+		<view-jsp>/jsp/classtm/EditClassTMResource.jsp</view-jsp>
+		<sql-data-id>classtm</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>updateResource</id>
+		<action-bean>ro.utcluj.vu.classtm.UpdateClassTMResourceAction</action-bean>
+		<view-jsp>/jsp/classtm/UpdateClassTMResource.jsp</view-jsp>
+		<sql-data-id>classtm</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>createResource</id>
+		<action-bean>ro.utcluj.vu.classtm.CreateClassTMResourceAction</action-bean>
+		<view-jsp>/jsp/classtm/CreateClassTMResource.jsp</view-jsp>
+		<sql-data-id>classtm</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>attSingleFile</id>
+		<data-cont>ro.utcluj.vu.classtm.AttachSingleFileData</data-cont>
+	</sql-data>
+
+	<action-mapping>
+		<id>attSingleFile</id>
+		<action-bean>ro.utcluj.vu.classtm.AttachSingleFileAction</action-bean>
+		<view-jsp>/jsp/classtm/AttachSingleFile.jsp</view-jsp>
+		<sql-data-id>attSingleFile</sql-data-id>
+	</action-mapping>
+	
+	<sql-data>
+		<id>grades</id>
+		<data-cont>ro.utcluj.vu.grading.GradingData</data-cont>
+		<st-proc>ro.utcluj.vu.grading.GradingProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>listGrades</id>
+		<action-bean>ro.utcluj.vu.grading.ListGradesAction</action-bean>
+		<view-jsp>/jsp/grading/ListGrades.jsp</view-jsp>
+		<sql-data-id>grades</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>addGradeColumn</id>
+		<action-bean>ro.utcluj.vu.grading.AddGradeColumn</action-bean>
+		<view-jsp>/jsp/grading/AddGradeColumn.jsp</view-jsp>
+		<sql-data-id>grades</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>deleteGradeColumn</id>
+		<action-bean>ro.utcluj.vu.grading.DeleteGradeColumn</action-bean>
+		<view-jsp>/jsp/grading/DeleteGradeColumn.jsp</view-jsp>
+		<sql-data-id>grades</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>getGradeColumns</id>
+		<action-bean>ro.utcluj.vu.grading.GetGradeColumnsAction</action-bean>
+		<view-jsp>/jsp/grading/DisplayGradeColumns.jsp</view-jsp>
+		<sql-data-id>grades</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>displayGrades</id>
+		<action-bean>ro.utcluj.vu.grading.ListGradesAction</action-bean>
+		<view-jsp>/jsp/grading/ManageGrades.jsp</view-jsp>
+		<sql-data-id>grades</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>removeGrade</id>
+		<action-bean>ro.utcluj.vu.grading.RemoveGradeAction</action-bean>
+		<view-jsp>/jsp/grading/RemoveGrade.jsp</view-jsp>
+		<sql-data-id>grades</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editGrade</id>
+		<action-bean>ro.utcluj.vu.grading.EditGradeAction</action-bean>
+		<view-jsp>/jsp/grading/EditGrade.jsp</view-jsp>
+		<sql-data-id>grades</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>addGrade</id>
+		<action-bean>ro.utcluj.vu.grading.AddGradeAction</action-bean>
+		<view-jsp>/jsp/grading/AddGrade.jsp</view-jsp>
+		<sql-data-id>grades</sql-data-id>
+	</action-mapping>
+	
+	<action-mapping>
+		<id>listStudentGrades</id>
+		<action-bean>ro.utcluj.vu.grading.ListStudentGradesAction</action-bean>
+		<view-jsp>/jsp/grading/ListStudentGrades.jsp</view-jsp>
+		<sql-data-id>grades</sql-data-id>
+	</action-mapping>
+	
+</mappings>

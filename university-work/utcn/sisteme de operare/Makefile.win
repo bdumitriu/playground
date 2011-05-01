@@ -1,0 +1,31 @@
+# Project: file system
+# Makefile created by Dev-C++ 4.9.6.0
+
+CC   = g++.exe
+WINDRES = windres.exe
+RES  = 
+OBJ  = ../so/testMain.o ../so/ArrayIndexOutOfBoundsException.o ../so/DirectoryEntry.o $(RES)
+LIBS =  -L"C:/Utils/Programming/Dev-Cpp/lib" 
+INCS =  -I"C:/Utils/Programming/Dev-Cpp/include"  -I"C:/Utils/Programming/Dev-Cpp/include/g++-3"  -I"C:/Utils/Programming/Dev-Cpp/include" 
+BIN  = fs.exe
+CFLAGS = $(INCS)  -fexceptions -s -O3 -fexpensive-optimizations
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before fs.exe all-after
+
+
+clean: clean-custom
+	rm -f $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(OBJ) -o "fs.exe" $(LIBS) $(CFLAGS)
+
+../so/testMain.o: testMain.cpp 
+	$(CC) -c testMain.cpp -o ../so/testMain.o $(CFLAGS)
+
+../so/ArrayIndexOutOfBoundsException.o: exceptions/ArrayIndexOutOfBoundsException.cpp 
+	$(CC) -c exceptions/ArrayIndexOutOfBoundsException.cpp -o ../so/ArrayIndexOutOfBoundsException.o $(CFLAGS)
+
+../so/DirectoryEntry.o: driver/DirectoryEntry.cpp 
+	$(CC) -c driver/DirectoryEntry.cpp -o ../so/DirectoryEntry.o $(CFLAGS)

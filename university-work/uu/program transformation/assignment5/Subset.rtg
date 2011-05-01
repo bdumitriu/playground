@@ -1,0 +1,9 @@
+regular tree grammar
+  start Exp
+  productions
+    Exp -> Int(<string>)
+    Exp -> Var(<string>)
+
+    Exp -> Plus(Exp,Exp)
+    Exp -> Times(Exp,Exp)
+    Exp -> Power(Exp,Exp)

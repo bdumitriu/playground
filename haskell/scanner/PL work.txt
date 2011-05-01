@@ -1,0 +1,56 @@
+You are required to code, in Haskell, a scanner or tokenizer of a very simple language of expressions. Examples of strings in the language are: 
+
+t1 = "a*(1*a)+a-1"
+t2 = "(((a"
+t3 = "123 + + 456"
+t4 = "x + y - (999)"
+
+Observe that samples t2 and t3 are syntactically incorrect, but the scanner should not be concerned with it. 
+The simple language of expressions has the following characteristics: 
+
+Expressions consist of identifiers, numbers, arithmetic operations and, of course, parentheses; 
+Identifiers are a single alphabetic character, a letter; 
+Numbers are unsigned integers; 
+Operations are '*', '+', '-', and '/'. 
+
+Problem 1
+Code a type Token suitable to represent a string of tokens of the simple language of expressions. 
+
+Problem 2
+Code a function, tokenize, that when input a string of characters, supposedly in the simple language of expressions, returns a string of the corresponding tokens. 
+State what your tokenize function is supposed to do if the input string is not in the simple language of expressions, e.g.: 
+
+t5 = "22-!!"
+
+Problem 3
+Turn in a trace of execution of your program on the sample strings t1,... t5 shown above. 
+
+Hints
+Hugs module Char defines some functions to compute the class of a character, e.g., alphabetic, isAlpha, and numeric, isDigit. Likewise, the prelude defines functions to take, takeWhile, and drop, dropWhile, the longest prefix of a string that satifies a condition, e.g., being a digit. 
+With the help of the above functions, the tokenizer is just a few lines long. 
+
+
+-----------------------------------
+Consider the following Java program: 
+
+    1	public class Scope {
+    2	    int x = 2;
+    3	    void f() {
+    4		int x = 7;
+    5	    }
+    6	    public static void main(String [] ignore) {
+    7		Scope scope = new Scope();
+    8		System.out.println(scope.x);
+    9		scope.f();
+   10		System.out.println(scope.x);
+   11	    }
+   12	}
+
+Problem 1
+What is the output of the above program? 
+
+Problem 2
+A poorly prepared student could think that the output should be different. 
+What would likely be the expected, though incorrect, output? 
+What is the likely error that this student is making? 
+If indeed the output should have been what this poorly prepared student expected, how should she have coded the program? 

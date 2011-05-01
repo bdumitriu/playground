@@ -1,0 +1,30 @@
+ - Functia DOS 3bh -
+
+Functie:
+    Setarea directorului curent pentru un drive.
+
+Asteapta:
+    ah: 3bh
+    ds:dx: adresa unui  sir de caractere care se  termina cu nul (cod ascii
+        00h) si care reprezinta numele directorului.
+
+Intoarce:
+    ax: cod de erorare daca Carry Flag e setat.
+
+Descriere:
+    In urma apelului functiei se seteaza directorul curent pentru un drive.
+    
+    ds:dx  trebuie sa contina adresa unui sir de forma:
+        [d:]\cale\nume_director
+    care identifica numele directorului care trebuie sa devina curent. Daca
+    partea d: lipseste atunci  \cale\nume_director se presupune a fi pentru
+    drive-ul implicit. Dupa nume_director nu trebuie sa apara caracterul \.
+    
+    Daca Carry Flag e setat la  iesire, ax contine un cod de eroare si nici
+    o actiune nu a fost efectuata.
+
+Note:
+    1. Aceasta functie seteaza  directorul curent pentru  un drive. Ea *nu*
+    modifica si drive-ul curent.
+    
+    2. Lungimea maxima a sirului ce specifica directorul este de 64 octeti.

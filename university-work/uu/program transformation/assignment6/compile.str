@@ -1,0 +1,341 @@
+module compile
+imports liblib Tiger Tiger-Sugar-Rules
+signature
+  constructors
+    Proc : Exp -> Exp
+
+/**
+ * Entry point stuff
+ */
+strategies
+
+  main = 
+    default-args
+    ; xtc-io-wrap(compiler-args,
+        xtc-transform(!"parse-tiger")
+        ; xtc-transform(!"Tiger-Desugar")
+        ; xtc-transform(!"Tiger-Rename")
+        ; read-from
+        ; compile
+        ; write-to
+        ; if <get-config> "--sugar" => "on" then
+            xtc-transform(!"Tiger-Ensugar")
+          end
+        ; if <get-config> "--pp" => "on" then
+            xtc-transform(!"pp-tiger")
+          else 
+            xtc-transform(!"pp-aterm")
+          end
+      )
+
+  /**
+   * Set default values for command-line arguments
+   */
+  default-args =
+    where(
+      <set-config>("--pp", "on")
+      ; <set-config>("--sugar", "on")
+      ; <set-config>("--gotos", "on")
+      ; <set-config>("--stack", "off")
+    )
+
+  /**
+   * Handle command-line arguments
+   */
+  compiler-args =
+      ArgOption("--pp"
+      , <set-config>("--pp", <id>)
+      , !"--pp on|off      Apply pretty-printer at end of pipeline [on]"
+      )
+    + ArgOption("--sugar"
+      , <set-config>("--sugar", <id>)
+      , !"--sugar on|off   Ensugar before pretty-printing [on]"
+      )
+    + ArgOption("--gotos"
+      , <set-config>("--gotos", <id>)
+      , !"--gotos on|off   Desugar structured control-flow [on]"
+      )
+    + ArgOption("--stack"
+      , <set-config>("--stack", <id>)
+      , !"--stack on|off   Replace function arguments with a stack [on]"
+      )
+    + ArgOption(fail, fail, !"")
+
+
+/**
+ * Composition of all the compilation phases
+ */
+strategies
+
+  compile =
+    for-with-while
+    ; return-value
+    ; mark-procedure-calls
+    ; simple-expressions
+
+    ; if <get-config> "--gotos" => "on" then 
+        control-flow-to-goto 
+      end
+
+    // ; if <get-config> "--stack" => "on" then 
+    //    function-args-on-stack 
+    //  end
+
+    ; collect-declarations
+    //; use-return-register
+    //; vars-on-stack
+    //; add-stack-machine
+    ; flatten-sequences
+
+    //; local-vars-on-stack
+    //; lambda-lift
+
+    ; unmark-procedure-calls
+
+/**
+ * Desugar for loop to while
+ */
+strategies
+
+  for-with-while = bottomup(try(ForToWhile))
+
+rules
+
+  ForToWhile :
+    For(Var(x), lb, ub, expr) ->
+    Let([VarDec(x, NoTp, lb), VarDec(newVar, NoTp, ub)], [While(RelOp(LE, Var(x), Var(newVar)), Seq([expr, Assign(Var(x), BinOp(PLUS, Var(x), Int("1")))]))])
+    where <newname>x => newVar
+
+/**
+ * Marking procedure calls
+ */
+strategies
+
+  mark-procedure-calls =
+    let stm-level =
+          While(exp-level, stm-level)
+          <+ Let(exp-level, map(stm-level))
+          <+ Seq(map(stm-level))
+          <+ If(exp-level, stm-level, stm-level)
+          <+ FunDec(id, id, NoTp(), stm-level)
+          <+ \ Call(f, args) -> Proc(Call(f, <exp-level>args)) \
+          <+ all(exp-level)
+
+        exp-level =
+          While(exp-level, stm-level)
+          <+ Let(exp-level, handle-init-last)
+          <+ Seq(handle-init-last)
+          <+ FunDec(id, id, NoTp(), stm-level)
+          <+ all(exp-level)
+
+        handle-init-last =
+          split-init-last => (init, last);
+          <conc>(<map(stm-level)>init, [<exp-level>last])
+
+     in stm-level
+    end
+
+  unmark-procedure-calls = bottomup(try(UnwrapCall))
+
+rules
+
+  UnwrapCall :
+    Proc(x) -> x
+
+/**
+ * Explict return argument
+ */
+strategies
+
+  return-value = bottomup(try(AddReturn))
+
+rules
+
+  AddReturn :
+    FunDec(f, args, t, expr) ->
+    FunDec(f, args, t, Let([VarDecNoInit("return", NoTp)], [Assign(Var("return"), expr), Var("return")]))
+    where <not(?NoTp())>t
+
+/**
+ * Simplify Expressions
+ */
+strategies
+
+  simple-expressions =
+    innermost(
+      SimpleAssign
+      <+ SimpleCall
+      <+ SimpleIf
+      <+ SimpleWhile
+      <+ SimpleLet
+    )
+  is-atomic = 
+    Var(id) + String(id) + Int(id) + NilExp
+
+  MkVarDec :
+    e -> ([VarDec(x, NoTp, e)], Var(x))
+    where <not(is-atomic)> e
+	; new => x
+
+  MkVarDec :
+    e -> ([], e)
+    where <is-atomic> e
+
+  make-vardecs =
+    fetch(not(is-atomic))
+    ; map(MkVarDec)
+    ; unzip
+    ; (concat, id)
+
+  get-decs =
+    map(\ VarDec(x, NoTp, e) -> VarDecNoInit(x, NoTp) \)
+
+  get-exps =
+    map(\ VarDec(x, NoTp, e) -> Assign(Var(x), e) \)
+
+rules
+
+  SimpleAssign :
+    Assign(x, BinOp(op, e1, e2)) -> Let(decs, <conc>(extra, [Assign(x, BinOp(op, newE1, newE2))]))
+    where <make-vardecs>[e1, e2] => (vardecs, [newE1, newE2])
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleAssign :
+    Assign(x, RelOp(op, e1, e2)) -> Let(decs, <conc>(extra, [Assign(x, RelOp(op, newE1, newE2))]))
+    where <make-vardecs>[e1, e2] => (vardecs, [newE1, newE2])
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleAssign :
+    Assign(x, Let(vardecs, exps)) -> Let(vardecs, <conc>(init, [Assign(x, last)]))
+    where <split-init-last>exps => (init, last)
+
+  SimpleAssign :
+    Assign(x, If(cond, exp1, exp2)) -> If(cond, Assign(x, exp1), Assign(x, exp2))
+
+  SimpleAssign :
+    Assign(x, Seq(exps)) -> Seq(<conc>(init, [Assign(x, last)]))
+    where <split-init-last>exps => (init, last)
+
+  SimpleAssign :
+    Assign(x, Assign(y, exp)) -> Seq([Assign(y, exp), Assign(x, y)])
+
+/*
+  SimpleCall :
+    Call(f, args) -> Let(decs, <conc>(extra, [Call(f, newArgs)]))
+    where <make-vardecs>args => (vardecs, newArgs)
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+*/
+
+  SimpleCall :
+    Assign(x, Call(f, args)) -> Let(decs, <conc>(extra, [Assign(x, Call(f, newArgs))]))
+    where <make-vardecs>args => (vardecs, newArgs)
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleCall :
+    Proc(Call(f, args)) -> Let(decs, <conc>(extra, [Proc(Call(f, newArgs))]))
+    where <make-vardecs>args => (vardecs, newArgs)
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleIf :
+    If(cond, exp1, exp2) -> Let(decs, <conc>(extra, [If(newCond, exp1, exp2)]))
+    where <make-vardecs>[cond] => (vardecs, [newCond])
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleWhile :
+    While(cond, exp) -> Let(decs, <conc>(extra, [While(newCond, Seq(<conc>([exp], extra)))]))
+    where <make-vardecs>[cond] => (vardecs, [newCond])
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleLet :
+    Let(decs, exps) -> Let(newDecs, <conc>(newExps, exps))
+    where <filter(?(VarDec(_, _, _)))>decs => [_|_]
+        ; <map(\ VarDec(x, t, _) -> VarDecNoInit(x, t) \ <+ id)>decs => newDecs
+        ; <collect-all(\ VarDec(x, _, e) -> Assign(x, e) \, conc)>decs => newExps
+
+/**
+ * Lifting variable declarations
+ */
+strategies 
+
+  collect-declarations =
+//    \ x -> <recurse-with-elim>x where <collect-vars>x => [] \
+//    <+
+    (x -> Let(decs, <recurse-with-elim>x) where <collect-vars>x => decs)
+
+  collect-vars =
+    collect-all(
+      ?Let(<filter(?VarDecNoInit(_, _))>, _), conc, \ FunDec(_, _, _, _) -> [] \
+    )
+
+  recurse-with-elim =
+    FunDec(id, id, id, collect-declarations)
+//    <+ \ Let(decs, exp) -> Seq(<recurse-with-elim>exp) where <filter(not(?VarDecNoInit(_, _)))>decs => [] \
+    <+ \ Let(decs, exp) -> Let(<recurse-with-elim>fundecs, <recurse-with-elim>exp) where <filter(not(?VarDecNoInit(_, _)))>decs => fundecs \
+    <+ all(recurse-with-elim)
+
+/**
+ * Flatten sequences of statements in Seq and Let
+ */
+strategies
+
+  flatten-sequences =
+    innermost(LetSplit + EmptyLet + LetSeq + SplitSeq + EmptySeq + SingletonSeq + AssocSeqR)
+    ; innermost(LetFlat + LetFlat1 + LetFlat2 + FlatSeq)
+
+/**
+ * Replace structured control-flow by gotos
+ */
+strategies
+
+  control-flow-to-goto = bottomup(try(IfToGoto <+ WhileToGoto))
+
+rules
+
+  IfToGoto :
+    If(cond, exp1, exp2) ->
+    Let([VarDecNoInit(x, NoTp)],
+        [Assign(Var(x), Call(Var("not"), cond)),
+         IfGoto(Var(x), elseLabel),
+         exp1,
+         Goto(endLabel),
+         Label(elseLabel),
+         exp2,
+         Label(endLabel)])
+    where <newname>"l" => elseLabel
+        ; <newname>"l" => endLabel
+        ; new => x
+
+  WhileToGoto :
+    While(cond, exp) ->
+    Let([VarDecNoInit(x, NoTp)],
+        [Label(startLabel),
+        Assign(Var(x), Call(Var("not"), cond)),
+        IfGoto(Var(x), endLabel),
+        exp,
+        Goto(startLabel),
+        Label(endLabel)])
+    where <newname>"l" => startLabel
+        ; <newname>"l" => endLabel
+        ; new => x
+
+/**
+ * Pass function arguments on a global stack.
+ *
+ * This is for the next assignment
+ */
+strategies
+
+  function-args-on-stack = id
+
+  local-vars-on-stack =
+    id
+
+  lambda-lift =
+    id

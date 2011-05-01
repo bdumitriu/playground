@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>AFP Project - Ant Visualizer Manual - University Utrecht, 2005</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body>
+<h1>AFP Project - Ant Visualizer Manual</h1>
+<h2>University Utrecht, 2005</h2>
+<h3 style="text-align: center; ">
+Bogdan DUMITRIU<br/>
+Jos&eacute; Pedro MAGALH&Atilde;ES<br />
+Huanwen QU</h3>
+<hr />
+<h3>General guidelines</h3>
+<h4>Compiling</h4>
+<p>The visualizer must be compiled before it can be used. 
+We recommend using GHC version 6.2.2 or higher, and the command to be invoked
+(at the top level directory) is: <br />
+<code>ghc -icommon -package wx -O1 --make -o visualizer.exe Visualizer</code>
+<br /> 
+You can replace <code>visualizer.exe</code> with whatever output filename you want. 
+The optimizations <code>-O1</code> are not required but are recommended.</p>
+
+<h4>Invoking</h4>
+<p>The usage for the visualizer is:<br />
+<code style="line-height: 1.4em; ">
+Usage: &lt;program-name&gt; -w worldFile -r redAntFile [-b blackAntFile] [-c numberOfRounds][-s randomSeed] [-o]<br />
+&nbsp;&nbsp;-w FILE  --world=FILE       the world file to use<br />
+&nbsp;&nbsp;-r FILE  --red-ant=FILE     the ant code file for red ants<br />
+&nbsp;&nbsp;-b FILE  --black-ant=FILE   the ant code file for black ants (optional)<br />
+&nbsp;&nbsp;-c INT   --nr-rounds=INT    the number of rounds to simulate (optional)<br />
+&nbsp;&nbsp;-s INT   --random-seed=INT  the initial seed for the RNG (optional)<br />
+&nbsp;&nbsp;-o       --output           use if you want to dump output (optional)<br />
+</code>
+If no code is supplied for the black ants, then they will do nothing all the time.
+</p>
+
+<h4>Using the visualizer</h4>
+<h5>Board description</h5>
+<p>
+The image below shows an initial screenshot from the visualizer:<br />
+<a href="../images/screenshot1.jpg"><img src="../images/screenshot1small.jpg" alt="ScreenShot 1" /></a><br />
+The basic layout consists of a menu panel on the left and the board drawn on the right
+with a small text line below it displaying information related to each cell. Placing the mouse over a cell
+will show its relevant information on this text line.<br />
+The board itself is quite explicit, and the symbols mean:
+<ul>
+<li>White hexagon -> Clear cell</li>
+<li>Brown hexagon -> Rocky cell</li>
+<li>Green hexagon -> Cell with food</li>
+<li>Black triangle -> Black ant</li>
+<li>Red triangle -> Red ant</li>
+<li>A small white dot over an ant -> The ant is carrying food</li>
+<li>Pink hexagon -> Red anthill</li>
+<li>Dark grey hexagon -> Black anthill</li>
+</ul>
+</p>
+<h5>Panel description</h5>
+<p>The markers set by the ants are not shown in the board, but in the panel:</p>
+<table>
+<tr>
+	<td>
+		<a href="../images/panel.jpg"><img src="../images/panel.jpg" alt="Panel" /></a>
+	</td>
+	<td>
+		<p>
+		  <ul>
+			<li>Step -> Steps one turn</li>
+			<li>Start -> Starts cycling turns until the user presses stop</li>
+			<li>Stop -> Stops turn cycling</li>
+			<li>Refresh -> Redraws the board. Useful if that is not automatically done while cycling turns</li>
+			<li>Jump to turn -> Jump to the turn number specified in the input below this button</li>
+			<li>+ -> Increase cycling speed</li>
+			<li>- -> Decrease cycling speed</li>
+		  </ul>
+		Below the "Jump to turn" button, an input shows the current turn number. If you change it and press 
+		the "Jump to turn" button, then all buttons will become inactive while the program shifts to that turn.<br />
+		While moving the mouse over a cell, the markers are also displayed here, in the checkboxes. A checked 
+		box means that a marker is set, namely by the red team (RM) or black team (BM).
+		</p>
+	</td>
+</tr>
+</table>
+
+<h5>End of game</h5>
+<p>When the game ends, the user is presented with a dialog annoucing the results:<br />
+<a href="../images/final.jpg"><img src="../images/final.jpg" alt="Final dialog" /></a><br />
+</p>
+<h5>A screenshot from a running game</h5>
+<a href="../images/screenshot2.jpg"><img src="../images/screenshot2small.jpg" alt="ScreenShot 2" /></a><br />
+</body>
+</html>

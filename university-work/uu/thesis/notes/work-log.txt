@@ -1,0 +1,283 @@
+
+Week 1:
+-------
+
+* built test suite framework (test utils, Makefiles, the lot)
+
+* wrote basic tests & intersection tests based on constant propagation
+
+* changed dr-set-in-rule-set & dr-set-in-rule-set-vis to fix bug
+
+  - replaced hashtable-get in rule scope table with dr-lookup-rule in
+    entire rule set
+
+* changed dr-lookup-rule & dr-lookup-rule-pointer to fix bug
+
+  - pass around the removed list/set to collect the removed keys
+  - virtually apply the removed list/set before checking for key
+
+* met with Doaitse Swierstra to discuss thesis proposal
+
+Week 2:
+-------
+
+* realized that dr-set-in-rule-set & dr-set-in-rule-set-vis are still
+  not correct (mark 1)
+
+  - lookup should be done on a per-label basis since otherwise it will
+    match the value set for the () label with the value that is to be
+    set for a potentially different label
+
+* found bug in dr-set-in-rule-set-vis (mark 2)
+
+  - if rule scope labeled "a" does not contain a rule for x, but a
+    subsequent change set does contain a rule for (x, "a"), this
+    definition in the change set will not be properly removed by
+    dr-set-in-rule-set-vis, because it only tests for the existence of
+    the rule in the rule scope table. This apparently needs to be
+    replaced with a per-label dr-lookup-rule
+
+* added the dr-lookup-rule-in-scope strategy which looks for the
+  definition of a key in a given scope
+
+* fixed the two bugs mentioned above
+
+* changed semantics of dr-set-in-rule-set & dr-set-in-rule-set-vis to
+  remove entries from the remove set of change sets when a key is
+  redefined after it had previously been removed (as an effect of a
+  previous call to dr-set-in-rule-set-vis)
+
+* wrote tests to validate all these changes
+
+* extended test suite with tests for setting and looking up rules
+
+* changed dr-lookup-all-rules to take the remove sets of change sets
+  into account
+
+* found bug in dr-commit-change-set (mark 3)
+
+  - when committing a definition from a change set to another one, we
+    need to make the same type of check as in dr-set-in-rule-set[-vis]
+    using dr-lookup-rule-in-scope
+
+* wrote tons of unit tests
+
+* discovered (unsolvable) bug in dead code elimination transformation
+
+* added support for break, continue and labels in TIL (parsing &
+  pretty-printing)
+
+* fixed bugs in dr-add-to-rule-set and dr-add-to-rule-set-vis
+
+  - same bugs as in dr-set-in-rule-set and dr-set-in-rule-set-vis
+
+* ported the prototype for break support in trunk and successfully ran
+  the first tests
+
+Week 3:
+-------
+
+* corrected bug in dr-fix-and-merge implementation
+
+* added support for ignored change sets in dr-commit-change-set
+
+* wrote unit tests for break
+
+* (re)figured out why we can't simply use dr-commit-change-set to
+  build the break change sets. It's because we cannot affect the
+  "real" change sets/rule scopes in any way (which is the case if we
+  use dr-commit-change-set)
+
+* while c() do
+    if c() then
+      x := 1;
+      break;
+      if c() then
+        x := 2;
+        break; --> here a break change set will be produced and later
+      end          considered in the final merge, although this is
+    end            wrong
+  end
+
+* create "active" label per rulename, not globally
+
+* extracted functionality from dr-fix-and-merge to dr-label
+
+* why do we consider the first and the last run of dr-fix-and-merge?
+
+  - first run: getting to the break without running the loop
+  - last run: getting to the break after a random number of runs of
+    the loop
+
+  Q: should we only consider the last run, since due to the final
+  merge, the effects of the first run will be leveled out anyway?
+
+* changed "ignore" flag with <DR_BREAK>Ignore(csid) -> label
+
+* "ignore" flag of a change set can only be "lost":
+
+  - as an effect of a merge with a non-ignored change set
+  - when the label up to which it has to be ignored is reached
+  - labeled (when the change set is destroyed)
+
+  Otherwise it has to be propagated
+
+Week 4:
+-------
+
+* added new constructors for supporting continue (ContinueCS &
+  IgnoreC) and refactored the use of the others (BreakCS & IgnoreB) to
+  allow for the distiction between break and continue change sets
+
+* discovered problem with using dynamic rules with generic constructor
+  (!someCons#([arg1, arg2, ...]))
+
+* figured out probable new bug related to (if c() then break l1; else
+  break l2; end)
+
+* adapted dr-merge-rule-sets2 to prioritize IgnoreC over IgnoreB when
+  propagating "ignore" marking since if we have:
+
+    while c() do
+      if c() then
+        x := 1;
+        break;
+      else
+        x := 2;
+        continue;
+      end
+    end
+
+  we shouldn't interrupt the fix point operator (which is the case if
+  we keep IgnoreB as the result of the intersection)
+
+* ran into trouble with overlapping left hand sides of dynamic rule
+  definition
+
+* noticed that every time the list of break change sets is empty, but
+  the main change set is marked as ignored, the code in
+  dr-commit-change-set is sufficient, so we probably don't need to
+  store the labels up to which to ignore a change set after all
+
+* wrote unit tests for continue and for combinations of continue/break
+
+Week 5:
+-------
+
+* changed DCE to use Var(x) -> Used/NotUsed, Needed/NotNeeded instead
+  of define/undefine for both
+
+* that didn't solve the case either:
+
+    var x; x := 0; while c() do x := 0; end f(x);
+
+* this seems to be due to a number of problems:
+  
+  - union used dr-hashtable-get instead of dr-lookup-rule[-in-scope]
+  - the parameters to dr-union-with-symm(|name) were reversed =>
+    dr-fix-and-union would always only run once, because the active CS
+    was replace with the reference CS by this inversion of parameters
+  - if we change the order of the parameters, there's an infinite loop,
+    but we can avoid it if we ignore during the merge (union) changes
+    made to the active CS
+
+* worked on dr-break for backward propagation transformations:
+
+  - implemented dr-transaction to allow RS + CS triggered by the user
+  - dr-break-bp first used to replace all CS with empty ones and keep
+    the RSs, but this idea breaks down when merging due to broken
+    references to RSs. This is quite hard to fix
+
+* some thought into dealing with exceptions
+
+
+Week 6:
+-------
+
+* implemented basic pointer analysis algorithm
+
+* added dr-all-keys to get all keys for a rule set
+
+Week 7:
+-------
+
+* rethought the dr-break-bp: now I create a CS which "reverses" all
+  changes in the change sets up to it that are part of the loop out of
+  which it is being broken. Changes in RSs are kept intact. Seems to
+  work
+
+* refactored the test suite to avoid weird errors
+
+* implemented support for exceptions:
+
+  - conservative inclusion of effect of ThrowCSs as well in CS used
+    after the body of a finally; we could run the user strategy twice
+    in order to create a different CS to propagate after the while (a
+    more accurate one), but we have no way of knowing this is safe,
+    since the user strategy is unconstrained, so it could have side
+    effects, etc.
+  - problem with loops (see email to Eelco)
+
+* handle loops by saving/loading rule set for DR_EXCEPTION; had to
+  ensure that restoring the rule set is enough (e.g., replaced symm
+  merge with non-symm so that change sets are not affected)
+
+Week last:
+----------
+
+!! for presentation: foo / foo-ext / bar with imports foo only or imports
+!! foo & foo-ext
+
+* general observations:
+  - if side effects exist, it all blows to pieces since extra (or original)
+    strategies may be called, they generate the side effects, and then if
+    they fail, the side effects are there to stay.
+  - if syntax changes, lots of things could only be accommodated by
+    intervening in the original
+  - make sure everything is imported
+
+* created bookmark example
+
+* modified parser:
+  - new file TOOL-arrays.sdf
+  - added extra syntax
+
+* added new "main" syntax file:  TOOL-ext.sdf
+  - additional import clause for TOOL-arrays
+
+* modified Makefile.am
+  - compile TOOL-ext.sdf in addition to TOOL.sdf
+
+* modified pretty printing table
+
+* modified utils.str:
+  - changed pp table & parsing table to use the new syntax definition
+  - added signature for 
+
+* modified type checker:
+  - new file tool-tc-ext.str
+  - added new tc-assign due to matching of TypeName and not also of
+    ArrayTypeName in orginal version
+  - need new version of is-superclass-or-self to check for ArrayTypeName's
+    as well
+  - added new tc-new-instance to solve ArrayTypeName
+  - piggybacked on tc-var for handling ArrayAccess (not nice, but in
+    absence of hook, there was no other way)
+  - new version of tc-new-instance (natural)
+  - tc-method-call: to signal error if method call on array var
+  - tc-field-access: to support array.size & give error for anything else
+
+* modified original tool-ch.str to accommodate for ArrayTypeName
+
+* added new file tool-ch-ext.str
+  - modified tool-ch to use the extended type checker by simply importing
+    everything together
+
+* modfied original tool-simplify.str to call an additional rewrite
+  rule, ExtRule, in order to allow for the integration of the
+  extensions
+
+* added tool-simplify-ext.str 
+  - added more definitions for NewInstance to support new AST
+  - piggybacked (again!) on Right/LeftFieldChain to accommodate ArrayAccess
+    simplification

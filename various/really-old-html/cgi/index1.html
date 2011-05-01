@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<TITLE>Sample Form</TITLE>
+</HEAD>
+<BODY>
+<H1>Sample Form</H1>
+<P>Please fill out this form and submit it. Thank you.</P>
+<FORM ACTION="/cgi-bin/mail_form" METHOD="POST">
+<TABLE>
+
+<TR>
+<TD ALIGN="right"><STRONG>My name:</STRONG></TD>
+<TD><INPUT NAME="01_name" SIZE=30></TD>
+</TR>
+
+<TR>
+<TD ALIGN="right"><STRONG>Address:</STRONG></TD>
+<TD><INPUT NAME="02_address" SIZE=30></TD>
+</TR>
+
+<TR>
+<TD ALIGN="right"><STRONG>City:</STRONG></TD>
+<TD><INPUT NAME="03_city" SIZE=30></TD>
+</TR>
+
+<TR>
+<TD ALIGN="right"><STRONG>State:</STRONG></TD>
+<TD><INPUT NAME="04_state" SIZE=2></TD>
+</TR>
+
+<TR>
+<TD ALIGN="right"><STRONG>Zip:</STRONG></TD>
+<TD><INPUT NAME="05_zip" SIZE=10></TD>
+</TR>
+
+<TR>
+<TD ALIGN="right"><STRONG>Country:</STRONG></TD>
+<TD><INPUT NAME="06_country" SIZE=10 VALUE="Romania"></TD>
+</TR>
+
+<TR>
+<TD ALIGN="right"><STRONG>My email:</STRONG></TD>
+<TD><INPUT NAME="07_email" SIZE=30></TD>
+</TR>
+
+<TR>
+<TD ALIGN="right"><STRONG>My favorite color:
+</STRONG></TD>
+<TD>
+<TABLE BGCOLOR="#CCCCFF" BORDER><TR><TD>
+<TABLE>
+<TR>
+<TD><INPUT NAME="08_color" TYPE="radio" VALUE="red">
+</TD>
+<TD>Red</TD>
+</TR>
+<TR>
+<TD><INPUT NAME="08_color" TYPE="radio" VALUE="green">
+</TD>
+<TD>Green</TD>
+</TR>
+<TR>
+<TD><INPUT NAME="08_color" TYPE="radio" VALUE="blue">
+</TD>
+<TD>Blue</TD>
+</TR>
+</TABLE>
+</TD></TR></TABLE>
+</TD>
+</TR>
+
+<TR>
+<TD ALIGN="right"><STRONG>Movies I liked:</STRONG>
+</TD>
+<TD>
+<TABLE BGCOLOR="#CCCCFF" BORDER><TR><TD>
+<TABLE>
+<TR>
+<TD><INPUT NAME="09_movies" TYPE="checkbox" 
+VALUE="Blade Runner"></TD>
+<TD><EM>Blade Runner</EM></TD>
+</TR>
+<TR>
+<TD><INPUT NAME="09_movies" TYPE="checkbox" 
+VALUE="Pulp Fiction"></TD>
+<TD><EM>Pulp Fiction</EM></TD>
+</TR>
+<TR>
+<TD><INPUT NAME="09_movies" TYPE="checkbox" 
+VALUE="Full Metal Jacket"></TD>
+<TD><EM>Full Metal Jacket</EM></TD>
+</TR>
+</TABLE>
+</TD></TR></TABLE>
+</TD>
+</TR>
+
+<TR>
+<TD ALIGN="right"><STRONG>When I grow up I want 
+to be a(n):</STRONG></TD>
+<TD>
+<SELECT NAME="10_grow_up">
+<OPTION>Astronaut
+<OPTION>Fireman
+<OPTION>CGI programmer
+</SELECT>
+</TD>
+</TR>
+
+<TR>
+<TD ALIGN="right"><STRONG>My opinion on cucumber
+sandwiches is:</STRONG></TD>
+<TD>
+<TEXTAREA NAME="11_sandwiches" ROWS=5 COLS=20 WRAP="virtual">
+</TEXTAREA>
+</TD>
+</TR>
+
+<TR><TD COLSPAN=2> </TD></TR>
+<TR>
+<TD> </TD>
+<TD><INPUT TYPE="submit"> <INPUT TYPE="reset">
+</TD>
+</TR>
+</TABLE>
+
+</FORM>
+
+<P>
+If you feel like it, please <A HREF="/cgi-bin/print-environment-variables.cgi">write your own 
+comment in my guestbook.</A><BR>
+</P>
+</BODY>
+</HTML>
+

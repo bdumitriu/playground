@@ -1,0 +1,155 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{verbatim}
+\usepackage[pdftex]{graphicx}
+
+\title{Diner with Ambiants: Simulator}
+\author{Bogdan \textsc{Dumitriu}, Jos\'e Pedro \textsc{Magalh\~aes}, Huanwen \textsc{Qu}, Jinfeng \textsc{Zhu}}
+
+\begin{document}
+
+\maketitle
+
+\section{Code Structure}
+
+Our simulator is designed to run inside a state monad\footnote[1]{Actually, a
+{\tt StateT} monad with an {\tt IO} monad inside. This is necessary due to the
+use of {\tt IOArray}s in as part of the state.}, whose state we use
+as the current state of the world. Well, this is actually a rather simplistic
+description of the state, since the components thereof are slightly more elaborate.
+Perhaps the best way of describing them is by first supplying the actual definition
+of the world state in our implementation:
+
+\begin{verbatim}
+        data WorldState = WorldState { board :: Board
+                                     , ants  :: Ants
+                                     , codes :: Codes
+                                     , rng   :: [Int]
+                                     , round :: Int
+                                     }
+\end{verbatim}
+
+The first component, the {\tt board}, represents the array of cells that form the
+world in which the ants perform their actions. The {\tt Board} type is defined
+as follows:
+
+\begin{verbatim}
+        type Board = IOArray Pos Cell
+\end{verbatim}
+
+We have chosen to use an {\tt IOArray} to represent our board because we:
+
+\begin{itemize}
+
+\item needed a {\bf mutable} data structure. This is due to the fact that cells
+are updated almost at each step, and having to copy an entire (potentially large)
+data structure as this one for every update is certainly unacceptable.
+
+\item needed a data structure which would allow us {\bf constant random access}
+to any of its elements based on a position. The need for this arises from the
+possibility of having ants randomly on the board at all times. Running a step for
+an ant thus implies finding the cell that ant is located in. Naturally, we want to be
+able to do this in $O(1)$ time.
+
+\end{itemize}
+
+The second component of the world state is the {\tt ants} component. It encodes
+the positions of all the ants on the board in the following way:
+
+\begin{verbatim}
+        type Ants = IOArray AntId (Maybe Pos)
+\end{verbatim}
+
+Just as before, we needed a mutable structure, since the positions of ants frequently
+change. In the same time, we also needed a structure which allows constant
+random access since we had to ensure support for finding the position of an ant
+based on the ant's id. The reason for having a {\tt Maybe Pos} instead of simply
+{\tt Pos} as the values of the array is that ants can also be killed. If such an event
+occurs, the position of the ant on the board is replaced with {\tt Nothing}, thus
+encoding the death of the ant.
+
+Using these to structures, the {\tt board} and the {\tt ants}, we achieved the goal
+of providing $O(1)$ efficiency for all the functions required by the simulator. The
+remainder elements in the world state serve different purposes, as follows:
+
+\begin{itemize}
+
+\item {\tt codes :: (Code, Maybe Code)} stores the sets of instructions for the red ants
+and the black ants, respectively. Since black ant code is optional, we use {\tt Maybe Code}
+as the second element of the tuple.
+
+\item {\tt rng} represents a list from which random numbers are drawn when
+necessary.
+
+\item{\tt round} simply denotes the number of the current round of the simulation.
+
+\end{itemize}
+
+The {\tt Cell}s and the {\tt Ant}s are stored as records with the following types:
+
+\begin{verbatim}
+        data Cell = Cell { isRocky   :: Bool
+                         , ant       :: Maybe Ant
+                         , anthill   :: Maybe Color
+                         , food      :: Int
+                         , raMarkers :: Int8
+                         , baMarkers :: Int8
+                         }
+\end{verbatim}
+
+and
+
+\begin{verbatim}
+        data Ant = Ant { antid     :: AntId
+                       , color     :: Color
+                       , state     :: AntState
+                       , resting   :: Int
+                       , direction :: Dir
+                       , hasFood   :: Bool
+                       }
+\end{verbatim}
+
+We have documented our code quite extensively, so further explanations can be found as
+comments. These can be also viewed in a nice(er) fashion by generating HTML output using the
+Haddock\footnote[2]{http://www.haskell.org/haddock/.} documentation tool. You can run
+it with the following command in the top directory of our project:
+
+\begin{verbatim}
+        haddock -o /path/to/output/dir -h ./*.hs
+\end{verbatim}
+
+\section{Profiling}
+
+We have also run some profiling checks on our implementation. We
+tested our implementation with a 100,000 rounds simulation, world
+file {\tt sample0.world}, and red and black ant code {\tt sample.ant} (400
+states), displaying no output (except for final food counts and the
+winner) and having compiled with GHC's {\tt O1} optimization level and
+{\tt auto-all} profiling information. The following results were obtained
+on a laptop with a Pentium 4 processor running at 3.06GHz, with
+512MB RAM memory, a 60GB disk and a Linux operating system:
+
+\verbatiminput{time-profile.prof}
+
+The heap profile (of the same run) is presented in figure \ref{heap}.
+
+\begin{figure}
+\label{heap}
+%\begin{flushleft}
+\includegraphics*[viewport=0 0 684 504,width=\textwidth]{heap-profile.pdf}
+%\end{flushleft}
+\caption{The heap profile}
+\end{figure}
+
+But since including profiling information adds a overhead to the
+running time, we have also profiled the same kind of run, but
+without having inserted any profiling information during
+compilation. The unix tool {\tt time} then gave the following
+information:
+\begin{verbatim}
+real    1m0.211s
+user    0m58.074s
+sys     0m0.422s
+\end{verbatim}
+
+\end{document}

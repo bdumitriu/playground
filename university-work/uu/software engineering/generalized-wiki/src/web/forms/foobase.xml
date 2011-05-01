@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE root SYSTEM "default.dtd"> -->
+<root>
+  <action>form</action>
+  <edit>
+    <displaysingle/>
+  </edit> 
+  <formbase>
+    <txt1 />
+    <txt2 size="3" text="Alternative text">Foo</txt2>
+    <pass type="password" />
+    <submit type="submit">Subm</submit>
+    <delete type="submit">Del</delete>
+    <res type="reset">Rese</res>
+    <hidd type="hidden" />
+    <fil type="file" />
+    <ch1 type="checkbox" />
+    <ch2 type="checkbox">checked</ch2>
+    <rad type="radio">
+      <opt1 text="Option 1, alt text" />
+      <opt2>checked</opt2>
+      <opt3 />
+    </rad>
+    <txtar type="textarea" />
+    <txtar2 type="textarea" cols="60" rows="10">Foobar</txtar2>
+    <sel type="select">
+      <op1 />
+      <op2>selected</op2>
+      <op3 text="Alt. text. op3" />
+    </sel>
+    <sel2 type="select" multiple="true" size="2">
+      <op1 />
+      <op2>selected</op2>
+      <op3 text="Alt. text. op3" />
+    </sel2>
+  </formbase>
+</root>
+

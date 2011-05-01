@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMI xmlns:UML="org.omg/standards/UML" verified="false" timestamp="" xmi.version="1.2" >
+ <XMI.header>
+  <XMI.documentation>
+   <XMI.exporter>umbrello uml modeller http://uml.sf.net</XMI.exporter>
+   <XMI.exporterVersion>1.1</XMI.exporterVersion>
+  </XMI.documentation>
+  <XMI.model xmi.name="ema uml" href="/home/bdumitriu/work/uml/ema/ema uml.xmi" />
+  <XMI.metamodel xmi.name="UML" href="UML.xml" xmi.version="1.3" />
+ </XMI.header>
+ <XMI.content>
+  <docsettings viewid="177" documentation="" uniqueid="197" />
+  <umlobjects>
+   <UML:Class stereotype="" package="" xmi.id="5" abstract="0" documentation="" name="Display" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="6" type="void" abstract="1" documentation="" name="onShow" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="JFrame" abstract="0" documentation="" name="parent" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="7" type="void" abstract="1" documentation="" name="onHide" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="JFrame" abstract="0" documentation="" name="parent" static="0" scope="200" />
+    </UML:Operation>
+   </UML:Class>
+   <UML:Class stereotype="" package="" xmi.id="8" abstract="0" documentation="" name="CererePFScreen" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="9" abstract="0" documentation="" name="CerereApometreScreen" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="10" abstract="0" documentation="" name="CerereApometreData" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="11" type="RecordFabricant[]" abstract="0" documentation="" name="getFabricanti" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="12" type="void" abstract="0" documentation="" name="insertFabricant" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="String" abstract="0" documentation="" name="nume" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="13" type="RecordDN[]" abstract="0" documentation="" name="getDNs" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="14" type="int" abstract="0" documentation="" name="getIdForDomeniuPublic" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="15" type="int" abstract="0" documentation="" name="getIdForDomeniuPrivat" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="16" type="void" abstract="0" documentation="" name="attemptConnection" static="0" scope="201" />
+   </UML:Class>
+   <UML:Class stereotype="" package="" xmi.id="17" abstract="0" documentation="" name="CererePFData" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="18" type="RecordPF[]" abstract="0" documentation="" name="getListFor" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="String" abstract="0" documentation="" name="text" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="19" type="boolean" abstract="0" documentation="" name="checkPF" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="String" abstract="0" documentation="" name="nume" static="0" scope="200" />
+     <UML:Parameter stereotype="" package="" xmi.id="2" value="" type="String" abstract="0" documentation="" name="adresa" static="0" scope="200" />
+     <UML:Parameter stereotype="" package="" xmi.id="3" value="" type="String" abstract="0" documentation="" name="telefon" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="20" type="RecordTipCerere[]" abstract="0" documentation="" name="getTipuriCerere" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="21" type="RecordCalitate[]" abstract="0" documentation="" name="getCalitati" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="22" type="RecordSolicitant[]" abstract="0" documentation="" name="getSolicitanti" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="23" type="boolean" abstract="0" documentation="" name="checkCodCerere" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="int" abstract="0" documentation="" name="cod" static="0" scope="200" />
+     <UML:Parameter stereotype="" package="" xmi.id="2" value="" type="int" abstract="0" documentation="" name="an" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="24" type="void" abstract="0" documentation="" name="attemptConnection" static="0" scope="201" />
+   </UML:Class>
+   <UML:Class stereotype="" package="" xmi.id="25" abstract="0" documentation="" name="EMACommunicator" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="26" type="EMACommunicator" abstract="0" documentation="" name="getInstance" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="27" type="EMAServer" abstract="0" documentation="" name="getServerReference" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="28" type="void" abstract="0" documentation="" name="EMACommunicator" static="0" scope="201" />
+   </UML:Class>
+   <UML:Class stereotype="" package="" xmi.id="29" abstract="0" documentation="" name="Cerere" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="30" type="int" abstract="1" documentation="" name="submitCerere" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="RecordApometru[]" abstract="0" documentation="" name="apometre" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="31" type="void" abstract="0" documentation="" name="setXXX" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="32" type="void" abstract="0" documentation="" name="getXXX" static="0" scope="200" />
+   </UML:Class>
+   <UML:Class stereotype="" package="" xmi.id="33" abstract="0" documentation="" name="CererePF" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="34" type="void" abstract="0" documentation="" name="setXXX" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="35" type="void" abstract="0" documentation="" name="getXXX" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="36" type="void" abstract="0" documentation="" name="attemptConnection" static="0" scope="201" />
+   </UML:Class>
+   <UML:Class stereotype="" package="data" xmi.id="37" abstract="0" documentation="" name="DBRecord" static="0" scope="200" >
+    <UML:Attribute stereotype="" package="" xmi.id="38" value="" type="int" abstract="0" documentation="" name="id" static="0" scope="201" />
+   </UML:Class>
+   <UML:Class stereotype="" package="data" xmi.id="39" abstract="0" documentation="" name="RecordPF" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="40" abstract="0" documentation="" name="RecordApometru" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="41" abstract="0" documentation="" name="RecordCalitate" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="42" abstract="0" documentation="" name="RecordCerere" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="43" abstract="0" documentation="" name="RecordCererePF" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="44" abstract="0" documentation="" name="RecordCererePJ" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="45" abstract="0" documentation="" name="RecordDN" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="46" abstract="0" documentation="" name="RecordDomeniu" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="47" abstract="0" documentation="" name="RecordFabricant" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="48" abstract="0" documentation="" name="RecordSolicitant" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="49" abstract="0" documentation="" name="RecordTipCerere" static="0" scope="200" />
+   <UML:Class stereotype="" package="server" xmi.id="50" abstract="1" documentation="" name="EMAServer" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="51" type="int" abstract="1" documentation="" name="getServerMajorVersion" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="52" type="int" abstract="1" documentation="" name="getServerMinorVersion" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="53" type="HandlerContractPJ" abstract="1" documentation="" name="getHandlerContractPJ" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="54" type="HandlerCerereVerificarePF" abstract="1" documentation="" name="getHandlerCerereVerificarePF" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="55" type="HandlerCerereVerificarePJ" abstract="1" documentation="" name="getHandlerCerereVerificarePJ" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="56" type="HandlerCerereApometre" abstract="1" documentation="" name="getHandlerCerereApometre" static="0" scope="200" />
+   </UML:Class>
+   <UML:Class stereotype="" package="" xmi.id="57" abstract="0" documentation="" name="UnicastRemoteObject" static="0" scope="200" />
+   <UML:Class stereotype="" package="server" xmi.id="58" abstract="0" documentation="" name="HandlerCerereVerificareImpl" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="59" type="int" abstract="0" documentation="" name="insertApometre" static="0" scope="202" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="RecordApometru[]" abstract="0" documentation="" name="apometre" static="0" scope="200" />
+     <UML:Parameter stereotype="" package="" xmi.id="2" value="" type="int" abstract="0" documentation="" name="idCerere" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="60" type="int" abstract="0" documentation="" name="insertApometru" static="0" scope="201" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="RecordApometru" abstract="0" documentation="" name="record" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="61" type="int" abstract="0" documentation="" name="insertCerereApometru" static="0" scope="201" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="int" abstract="0" documentation="" name="idCerere" static="0" scope="200" />
+     <UML:Parameter stereotype="" package="" xmi.id="2" value="" type="int" abstract="0" documentation="" name="idApometru" static="0" scope="200" />
+    </UML:Operation>
+   </UML:Class>
+   <UML:Class stereotype="" package="server" xmi.id="62" abstract="0" documentation="" name="HandlerCerereVerificarePJImpl" static="0" scope="200" />
+   <UML:Class stereotype="" package="server" xmi.id="63" abstract="0" documentation="" name="HandlerCerereVerificarePFImpl" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="64" type="int" abstract="0" documentation="" name="insertPF" static="0" scope="201" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="RecordPF" abstract="0" documentation="" name="record" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="65" type="Uint" abstract="0" documentation="" name="insertCererePF" static="0" scope="201" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="RecordCerere" abstract="0" documentation="" name="record" static="0" scope="200" />
+     <UML:Parameter stereotype="" package="" xmi.id="2" value="" type="int" abstract="0" documentation="" name="idPF" static="0" scope="200" />
+    </UML:Operation>
+   </UML:Class>
+   <UML:Class stereotype="" package="server" xmi.id="66" abstract="0" documentation="" name="HandlerContractPJImpl" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="67" abstract="1" documentation="" name="java.rmi.Remote" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="68" abstract="0" documentation="" name="EMAServerImpl" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="69" abstract="1" documentation="" name="HandlerCerereVerificare" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="70" type="boolean" abstract="1" documentation="" name="checkCodCerere" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="RecordCerere" abstract="0" documentation="" name="record" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="71" type="RecordTipCerere[]" abstract="1" documentation="" name="getTipuriCerere" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="72" type="RecordSolicitant[]" abstract="1" documentation="" name="getSolictianti" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="73" type="RecordCalitate[]" abstract="1" documentation="" name="getCalitati" static="0" scope="200" />
+   </UML:Class>
+   <UML:Class stereotype="" package="" xmi.id="74" abstract="1" documentation="" name="HandlerContractPJ" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="75" abstract="1" documentation="" name="HandlerCerereVerificarePF" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="76" type="int" abstract="1" documentation="" name="insertCerereVerificare" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="RecordCerere" abstract="0" documentation="" name="cerere" static="0" scope="200" />
+     <UML:Parameter stereotype="" package="" xmi.id="2" value="" type="RecordPF" abstract="0" documentation="" name="pf" static="0" scope="200" />
+     <UML:Parameter stereotype="" package="" xmi.id="3" value="" type="RecordApometru[]" abstract="0" documentation="" name="apometre" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="77" type="boolean" abstract="1" documentation="" name="checkPF" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="RecordPF" abstract="0" documentation="" name="record" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="78" type="RecordPF[]" abstract="1" documentation="" name="getNamesLike" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="String" abstract="0" documentation="" name="likePattern" static="0" scope="200" />
+    </UML:Operation>
+   </UML:Class>
+   <UML:Class stereotype="" package="" xmi.id="79" abstract="1" documentation="" name="HandlerCerereVerificarePJ" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="80" abstract="1" documentation="" name="HandlerCerereApometre" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="81" type="RecordFabricant[]" abstract="1" documentation="" name="getFabricanti" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="82" type="void" abstract="1" documentation="" name="insertFabricant" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="RecordFabricant" abstract="0" documentation="" name="fabricant" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="83" type="RecordDN[]" abstract="1" documentation="" name="getDNs" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="84" type="int" abstract="1" documentation="" name="getIdForDomeniuPublic" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="85" type="int" abstract="1" documentation="" name="getIdForDomeniuPrivat" static="0" scope="200" />
+   </UML:Class>
+   <UML:Class stereotype="" package="" xmi.id="86" abstract="0" documentation="" name="HandlerCerereApometreImpl" static="0" scope="200" />
+   <UML:Class stereotype="" package="server" xmi.id="87" abstract="0" documentation="" name="DBInterfaceManager" static="0" scope="200" >
+    <UML:Operation stereotype="" package="" xmi.id="88" type="DBInterfaceManager" abstract="0" documentation="" name="getInstance" static="1" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="89" type="Connection" abstract="0" documentation="" name="getConnection" static="0" scope="200" />
+    <UML:Operation stereotype="" package="" xmi.id="90" type="void" abstract="0" documentation="" name="close" static="0" scope="200" >
+     <UML:Parameter stereotype="" package="" xmi.id="1" value="" type="Connection" abstract="0" documentation="" name="conn" static="0" scope="200" />
+    </UML:Operation>
+    <UML:Operation stereotype="" package="" xmi.id="91" type="void" abstract="0" documentation="" name="DBInterfaceManager" static="0" scope="201" />
+   </UML:Class>
+   <UML:Actor stereotype="" package="" xmi.id="93" abstract="0" documentation="" name="EMA User" static="0" scope="200" />
+   <UML:UseCase stereotype="" package="" xmi.id="94" abstract="0" documentation="" name="Introducere date cerere de verificare PF" static="0" scope="200" />
+   <UML:UseCase stereotype="" package="" xmi.id="95" abstract="0" documentation="" name="Introducere date cerere de verificare PJ" static="0" scope="200" />
+   <UML:UseCase stereotype="" package="" xmi.id="96" abstract="0" documentation="" name="Introducere date cerere de reverificare" static="0" scope="200" />
+   <UML:UseCase stereotype="" package="" xmi.id="97" abstract="0" documentation="" name="Introducere date contract" static="0" scope="200" />
+   <UML:UseCase stereotype="" package="" xmi.id="98" abstract="0" documentation="" name="Generare fisa de lucru" static="0" scope="200" />
+   <UML:UseCase stereotype="" package="" xmi.id="99" abstract="0" documentation="" name="Introducere rezultate testare" static="0" scope="200" />
+   <UML:UseCase stereotype="" package="" xmi.id="100" abstract="0" documentation="" name="Generare buletin de verificare metrologica" static="0" scope="200" />
+   <UML:UseCase stereotype="" package="" xmi.id="101" abstract="0" documentation="" name="Generare proces verbal de predare/primire" static="0" scope="200" />
+   <UML:UseCase stereotype="" package="" xmi.id="102" abstract="0" documentation="" name="Generare registre de evidenta" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="104" abstract="0" documentation="" name="EMA User" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="113" abstract="0" documentation="" name="RMI Registry" static="0" scope="200" />
+   <UML:Class stereotype="" package="" xmi.id="128" abstract="0" documentation="" name="Database" static="0" scope="200" />
+  </umlobjects>
+  <diagrams>
+   <diagram snapgrid="0" showattsig="1" fillcolor="#ffffc0" showgrid="0" showopsig="1" usefillcolor="1" snapx="10" snapy="10" showatts="1" xmi.id="1" documentation="" type="402" showops="1" showpackage="0" name="ema client class diagram" localid="30000" showstereotype="0" showscope="1" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" linecolor="#ff0000" >
+    <widgets>
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="77" showattsigs="601" usesdiagramusefillcolour="1" x="34" linecolour="none" y="0" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="59" usefillcolor="1" showattributes="1" xmi.id="5" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="110" showattsigs="601" usesdiagramusefillcolour="1" x="0" linecolour="none" y="105" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="8" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="152" showattsigs="601" usesdiagramusefillcolour="1" x="162" linecolour="none" y="223" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="9" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="165" showattsigs="601" usesdiagramusefillcolour="1" x="401" linecolour="none" y="160" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="127" usefillcolor="1" showattributes="1" xmi.id="10" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="138" showattsigs="601" usesdiagramusefillcolour="1" x="242" linecolour="none" y="33" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="144" usefillcolor="1" showattributes="1" xmi.id="17" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="149" showattsigs="601" usesdiagramusefillcolour="1" x="496" linecolour="none" y="20" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="76" usefillcolor="1" showattributes="1" xmi.id="25" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="111" showattsigs="601" usesdiagramusefillcolour="1" x="18" linecolour="none" y="261" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="76" usefillcolor="1" showattributes="1" xmi.id="29" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="138" showattsigs="601" usesdiagramusefillcolour="1" x="4" linecolour="none" y="378" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="76" usefillcolor="1" showattributes="1" xmi.id="33" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+    </widgets>
+    <messages/>
+    <associations>
+     <UML:AssocWidget totalcounta="3" indexa="1" totalcountb="3" indexb="1" widgetbid="5" widgetaid="8" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="36" starty="105" />
+       <endpoint endx="59" endy="59" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="1" totalcountb="3" indexb="2" widgetbid="5" widgetaid="9" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="212" starty="223" />
+       <endpoint endx="85" endy="59" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="29" widgetaid="33" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="73" starty="378" />
+       <endpoint endx="73" endy="337" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="3" indexb="1" widgetbid="29" widgetaid="8" documentation="" type="512" >
+      <linepath>
+       <startpoint startx="55" starty="138" />
+       <endpoint endx="55" endy="261" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="3" indexb="2" widgetbid="29" widgetaid="9" documentation="" type="512" >
+      <linepath>
+       <startpoint startx="162" starty="239" />
+       <endpoint endx="92" endy="261" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="2" totalcountb="2" indexb="1" widgetbid="10" widgetaid="9" documentation="" type="512" >
+      <linepath>
+       <startpoint startx="263" starty="223" />
+       <endpoint endx="401" endy="223" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="2" totalcountb="2" indexb="1" widgetbid="17" widgetaid="8" documentation="" type="512" >
+      <linepath>
+       <startpoint startx="73" starty="105" />
+       <endpoint endx="242" endy="105" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="25" widgetaid="10" documentation="" type="512" >
+      <linepath>
+       <startpoint startx="483" starty="160" />
+       <endpoint endx="570" endy="96" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="25" widgetaid="17" documentation="" type="512" >
+      <linepath>
+       <startpoint startx="380" starty="105" />
+       <endpoint endx="496" endy="58" />
+      </linepath>
+     </UML:AssocWidget>
+    </associations>
+   </diagram>
+   <diagram snapgrid="0" showattsig="1" fillcolor="#ffffc0" showgrid="0" showopsig="1" usefillcolor="1" snapx="10" snapy="10" showatts="1" xmi.id="2" documentation="" type="402" showops="1" showpackage="0" name="ema server class diagram" localid="30000" showstereotype="0" showscope="1" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" linecolor="#ff0000" >
+    <widgets>
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="206" showattsigs="601" usesdiagramusefillcolour="1" x="589" linecolour="none" y="0" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="127" usefillcolor="1" showattributes="1" xmi.id="50" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="140" showattsigs="601" usesdiagramusefillcolour="1" x="170" linecolour="none" y="151" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="57" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="179" showattsigs="601" usesdiagramusefillcolour="1" x="95" linecolour="none" y="228" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="76" usefillcolor="1" showattributes="1" xmi.id="58" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="194" showattsigs="601" usesdiagramusefillcolour="1" x="188" linecolour="none" y="363" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="62" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="194" showattsigs="601" usesdiagramusefillcolour="1" x="0" linecolour="none" y="411" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="59" usefillcolor="1" showattributes="1" xmi.id="63" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="148" showattsigs="601" usesdiagramusefillcolour="1" x="296" linecolour="none" y="210" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="66" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="108" showattsigs="601" usesdiagramusefillcolour="1" x="638" linecolour="none" y="165" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="67" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="104" showattsigs="601" usesdiagramusefillcolour="1" x="188" linecolour="none" y="47" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="68" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="155" showattsigs="601" usesdiagramusefillcolour="1" x="534" linecolour="none" y="235" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="93" usefillcolor="1" showattributes="1" xmi.id="69" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="124" showattsigs="601" usesdiagramusefillcolour="1" x="861" linecolour="none" y="204" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="74" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="170" showattsigs="601" usesdiagramusefillcolour="1" x="403" linecolour="none" y="402" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="76" usefillcolor="1" showattributes="1" xmi.id="75" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="170" showattsigs="601" usesdiagramusefillcolour="1" x="598" linecolour="none" y="363" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="79" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="165" showattsigs="601" usesdiagramusefillcolour="1" x="747" linecolour="none" y="455" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="110" usefillcolor="1" showattributes="1" xmi.id="80" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="180" showattsigs="601" usesdiagramusefillcolour="1" x="190" linecolour="none" y="494" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="86" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="148" showattsigs="601" usesdiagramusefillcolour="1" x="5" linecolour="none" y="1" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="93" usefillcolor="1" showattributes="1" xmi.id="87" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+    </widgets>
+    <messages/>
+    <associations>
+     <UML:AssocWidget totalcounta="3" indexa="2" totalcountb="3" indexb="1" widgetbid="58" widgetaid="63" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="129" starty="411" />
+       <endpoint endx="154" endy="304" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="2" totalcountb="3" indexb="2" widgetbid="58" widgetaid="62" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="317" starty="363" />
+       <endpoint endx="214" endy="304" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="2" totalcountb="4" indexb="1" widgetbid="57" widgetaid="58" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="214" starty="228" />
+       <endpoint endx="205" endy="184" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="2" totalcountb="4" indexb="3" widgetbid="57" widgetaid="66" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="394" starty="210" />
+       <endpoint endx="275" endy="184" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="67" widgetaid="50" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="692" starty="127" />
+       <endpoint endx="692" endy="165" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="50" widgetaid="68" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="292" starty="63" />
+       <endpoint endx="589" endy="63" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="57" widgetaid="68" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="240" starty="80" />
+       <endpoint endx="240" endy="151" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="3" indexb="2" widgetbid="69" widgetaid="75" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="488" starty="402" />
+       <endpoint endx="534" endy="297" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="69" widgetaid="79" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="683" starty="363" />
+       <endpoint endx="611" endy="328" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="1" totalcountb="2" indexb="1" widgetbid="67" widgetaid="74" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="861" starty="215" />
+       <endpoint endx="746" endy="181" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="3" indexb="1" widgetbid="67" widgetaid="69" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="611" starty="235" />
+       <endpoint endx="674" endy="198" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="3" indexb="2" widgetbid="74" widgetaid="66" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="444" starty="226" />
+       <endpoint endx="861" endy="226" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="3" indexb="1" widgetbid="69" widgetaid="58" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="274" starty="266" />
+       <endpoint endx="534" endy="266" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="79" widgetaid="62" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="382" starty="379" />
+       <endpoint endx="598" endy="379" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="75" widgetaid="63" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="194" starty="440" />
+       <endpoint endx="403" endy="440" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="3" indexb="2" widgetbid="67" widgetaid="80" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="829" starty="455" />
+       <endpoint endx="710" endy="198" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="2" totalcountb="4" indexb="2" widgetbid="57" widgetaid="86" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="310" starty="494" />
+       <endpoint endx="240" endy="184" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="80" widgetaid="86" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="370" starty="510" />
+       <endpoint endx="747" endy="510" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="1" totalcountb="6" indexb="1" widgetbid="87" widgetaid="63" documentation="" type="512" >
+      <linepath>
+       <startpoint startx="64" starty="411" />
+       <endpoint endx="29" endy="94" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="1" totalcountb="6" indexb="2" widgetbid="87" widgetaid="58" documentation="" type="512" >
+      <linepath>
+       <startpoint startx="154" starty="228" />
+       <endpoint endx="54" endy="94" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="1" totalcountb="6" indexb="5" widgetbid="87" widgetaid="66" documentation="" type="512" >
+      <linepath>
+       <startpoint startx="345" starty="210" />
+       <endpoint endx="128" endy="94" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="1" totalcountb="6" indexb="3" widgetbid="87" widgetaid="62" documentation="" type="512" >
+      <linepath>
+       <startpoint startx="252" starty="363" />
+       <endpoint endx="79" endy="94" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="1" totalcountb="6" indexb="4" widgetbid="87" widgetaid="86" documentation="" type="512" >
+      <linepath>
+       <startpoint startx="250" starty="494" />
+       <endpoint endx="103" endy="94" />
+      </linepath>
+     </UML:AssocWidget>
+    </associations>
+   </diagram>
+   <diagram snapgrid="0" showattsig="1" fillcolor="#ffffc0" showgrid="0" showopsig="1" usefillcolor="1" snapx="10" snapy="10" showatts="1" xmi.id="4" documentation="" type="402" showops="1" showpackage="0" name="ema db class diagram" localid="30000" showstereotype="0" showscope="1" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" linecolor="#ff0000" >
+    <widgets>
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="74" showattsigs="601" usesdiagramusefillcolour="1" x="233" linecolour="none" y="0" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="42" usefillcolor="1" showattributes="1" xmi.id="37" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="71" showattsigs="601" usesdiagramusefillcolour="1" x="24" linecolour="none" y="166" showopsigs="600" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="39" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="113" showattsigs="601" usesdiagramusefillcolour="1" x="450" linecolour="none" y="143" showopsigs="601" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="40" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="100" showattsigs="601" usesdiagramusefillcolour="1" x="8" linecolour="none" y="302" showopsigs="601" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="41" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="96" showattsigs="601" usesdiagramusefillcolour="1" x="222" linecolour="none" y="171" showopsigs="601" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="42" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="111" showattsigs="601" usesdiagramusefillcolour="1" x="161" linecolour="none" y="278" showopsigs="601" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="43" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="111" showattsigs="601" usesdiagramusefillcolour="1" x="284" linecolour="none" y="278" showopsigs="601" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="44" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="74" showattsigs="601" usesdiagramusefillcolour="1" x="469" linecolour="none" y="284" showopsigs="601" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="45" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="107" showattsigs="601" usesdiagramusefillcolour="1" x="454" linecolour="none" y="237" showopsigs="601" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="46" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="110" showattsigs="601" usesdiagramusefillcolour="1" x="453" linecolour="none" y="192" showopsigs="601" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="47" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="109" showattsigs="601" usesdiagramusefillcolour="1" x="2" linecolour="none" y="255" showopsigs="601" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="48" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ConceptWidget usesdiagramfillcolour="1" width="113" showattsigs="601" usesdiagramusefillcolour="1" x="0" linecolour="none" y="209" showopsigs="601" usesdiagramlinecolour="1" fillcolour="none" height="33" usefillcolor="1" showattributes="1" xmi.id="49" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+    </widgets>
+    <messages/>
+    <associations>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="10" indexb="4" widgetbid="37" widgetaid="39" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="59" starty="166" />
+       <endpoint endx="262" endy="42" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="3" indexb="1" widgetbid="42" widgetaid="43" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="216" starty="278" />
+       <endpoint endx="254" endy="204" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="3" indexb="2" widgetbid="42" widgetaid="44" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="339" starty="278" />
+       <endpoint endx="286" endy="204" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="10" indexb="5" widgetbid="37" widgetaid="42" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="270" starty="171" />
+       <endpoint endx="270" endy="42" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="10" indexb="6" widgetbid="37" widgetaid="40" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="506" starty="143" />
+       <endpoint endx="277" endy="42" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="10" indexb="7" widgetbid="37" widgetaid="47" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="508" starty="192" />
+       <endpoint endx="284" endy="42" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="10" indexb="8" widgetbid="37" widgetaid="46" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="507" starty="237" />
+       <endpoint endx="292" endy="42" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="10" indexb="9" widgetbid="37" widgetaid="45" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="506" starty="284" />
+       <endpoint endx="299" endy="42" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="10" indexb="1" widgetbid="37" widgetaid="49" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="56" starty="209" />
+       <endpoint endx="240" endy="42" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="10" indexb="2" widgetbid="37" widgetaid="48" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="56" starty="255" />
+       <endpoint endx="247" endy="42" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="10" indexb="3" widgetbid="37" widgetaid="41" documentation="" type="500" >
+      <linepath>
+       <startpoint startx="58" starty="302" />
+       <endpoint endx="255" endy="42" />
+      </linepath>
+     </UML:AssocWidget>
+    </associations>
+   </diagram>
+   <diagram snapgrid="0" showattsig="1" fillcolor="#ffffc0" showgrid="0" showopsig="1" usefillcolor="1" snapx="10" snapy="10" showatts="1" xmi.id="92" documentation="" type="400" showops="1" showpackage="0" name="ema usecase diagram" localid="30000" showstereotype="0" showscope="1" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" linecolor="#ff0000" >
+    <widgets>
+     <UML:ActorWidget usesdiagramfillcolour="1" width="65" usesdiagramusefillcolour="1" x="53" linecolour="none" y="232" usesdiagramlinecolour="1" fillcolour="none" height="61" usefillcolor="1" xmi.id="93" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:UseCaseWidget usesdiagramfillcolour="1" width="225" usesdiagramusefillcolour="1" x="5" linecolour="none" y="0" usesdiagramlinecolour="1" fillcolour="none" height="51" usefillcolor="1" xmi.id="94" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:UseCaseWidget usesdiagramfillcolour="1" width="224" usesdiagramusefillcolour="1" x="242" linecolour="none" y="1" usesdiagramlinecolour="1" fillcolour="none" height="51" usefillcolor="1" xmi.id="95" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:UseCaseWidget usesdiagramfillcolour="1" width="218" usesdiagramusefillcolour="1" x="484" linecolour="none" y="2" usesdiagramlinecolour="1" fillcolour="none" height="51" usefillcolor="1" xmi.id="96" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:UseCaseWidget usesdiagramfillcolour="1" width="145" usesdiagramusefillcolour="1" x="559" linecolour="none" y="95" usesdiagramlinecolour="1" fillcolour="none" height="51" usefillcolor="1" xmi.id="97" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:UseCaseWidget usesdiagramfillcolour="1" width="131" usesdiagramusefillcolour="1" x="572" linecolour="none" y="171" usesdiagramlinecolour="1" fillcolour="none" height="51" usefillcolor="1" xmi.id="98" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:UseCaseWidget usesdiagramfillcolour="1" width="162" usesdiagramusefillcolour="1" x="560" linecolour="none" y="249" usesdiagramlinecolour="1" fillcolour="none" height="51" usefillcolor="1" xmi.id="99" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:UseCaseWidget usesdiagramfillcolour="1" width="239" usesdiagramusefillcolour="1" x="276" linecolour="none" y="410" usesdiagramlinecolour="1" fillcolour="none" height="51" usefillcolor="1" xmi.id="100" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:UseCaseWidget usesdiagramfillcolour="1" width="243" usesdiagramusefillcolour="1" x="0" linecolour="none" y="405" usesdiagramlinecolour="1" fillcolour="none" height="51" usefillcolor="1" xmi.id="101" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:UseCaseWidget usesdiagramfillcolour="1" width="173" usesdiagramusefillcolour="1" x="512" linecolour="none" y="343" usesdiagramlinecolour="1" fillcolour="none" height="51" usefillcolor="1" xmi.id="102" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+    </widgets>
+    <messages/>
+    <associations>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="3" indexb="1" widgetbid="93" widgetaid="94" documentation="" type="503" >
+      <linepath>
+       <startpoint startx="117" starty="51" />
+       <endpoint endx="74" endy="232" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="3" indexa="2" totalcountb="2" indexb="1" widgetbid="95" widgetaid="93" documentation="" type="503" >
+      <linepath>
+       <startpoint startx="96" starty="232" />
+       <endpoint endx="354" endy="52" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="7" indexa="3" totalcountb="2" indexb="1" widgetbid="96" widgetaid="93" documentation="" type="503" >
+      <linepath>
+       <startpoint startx="118" starty="258" />
+       <endpoint endx="593" endy="53" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="7" indexb="1" widgetbid="93" widgetaid="97" documentation="" type="503" >
+      <linepath>
+       <startpoint startx="559" starty="120" />
+       <endpoint endx="118" endy="240" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="7" indexb="2" widgetbid="93" widgetaid="98" documentation="" type="503" >
+      <linepath>
+       <startpoint startx="572" starty="196" />
+       <endpoint endx="118" endy="249" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="7" indexb="4" widgetbid="93" widgetaid="99" documentation="" type="503" >
+      <linepath>
+       <startpoint startx="560" starty="274" />
+       <endpoint endx="118" endy="266" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="7" indexa="5" totalcountb="2" indexb="1" widgetbid="100" widgetaid="93" documentation="" type="503" >
+      <linepath>
+       <startpoint startx="118" starty="275" />
+       <endpoint endx="395" endy="410" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="93" widgetaid="101" documentation="" type="503" >
+      <linepath>
+       <startpoint startx="121" starty="405" />
+       <endpoint endx="85" endy="293" />
+      </linepath>
+     </UML:AssocWidget>
+     <UML:AssocWidget totalcounta="2" indexa="1" totalcountb="7" indexb="6" widgetbid="93" widgetaid="102" documentation="" type="503" >
+      <linepath>
+       <startpoint startx="512" starty="368" />
+       <endpoint endx="118" endy="284" />
+      </linepath>
+     </UML:AssocWidget>
+    </associations>
+   </diagram>
+   <diagram snapgrid="0" showattsig="1" fillcolor="#ffffc0" showgrid="0" showopsig="1" usefillcolor="1" snapx="10" snapy="10" showatts="1" xmi.id="103" documentation="" type="403" showops="1" showpackage="0" name="ema show CererePFScreen sequence diagram" localid="29991" showstereotype="0" showscope="1" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" linecolor="#ff0000" >
+    <widgets>
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="111" usesdiagramusefillcolour="1" x="73" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="8" decon="0" localid="29999" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="74" usesdiagramusefillcolour="1" x="1" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="104" decon="0" localid="29998" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="98" usesdiagramusefillcolour="1" x="183" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="17" decon="0" localid="29997" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="125" usesdiagramusefillcolour="1" x="280" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="25" decon="0" localid="29996" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="89" usesdiagramusefillcolour="1" x="404" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="113" decon="0" localid="29995" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="81" usesdiagramusefillcolour="1" x="492" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="50" decon="0" localid="29994" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="168" usesdiagramusefillcolour="1" x="572" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="75" decon="0" localid="29993" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="132" usesdiagramusefillcolour="1" x="738" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="87" decon="0" localid="29992" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="72" usesdiagramusefillcolour="1" x="869" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="128" decon="0" localid="29991" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+    </widgets>
+    <messages>
+     <UML:MessageWidget usesdiagramfillcolour="1" width="88" usesdiagramusefillcolour="1" x="39" linecolour="none" y="103" operation="showScreen()" widgetbid="29999" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="1" widgetaid="29998" textid="105" xmi.id="106" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="102" usesdiagramusefillcolour="1" x="129" linecolour="none" y="121" operation="getTipuriCerere() : RecordTipCerere[]" widgetbid="29997" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="2" widgetaid="29999" textid="109" xmi.id="110" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="108" usesdiagramusefillcolour="1" x="233" linecolour="none" y="141" operation="getServerReference() : EMAServer" widgetbid="29996" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="3" widgetaid="29997" textid="111" xmi.id="112" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="104" usesdiagramusefillcolour="1" x="343" linecolour="none" y="157" operation="lookup() : EMAServer" widgetbid="29995" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="4" widgetaid="29996" textid="114" xmi.id="115" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="298" usesdiagramusefillcolour="1" x="233" linecolour="none" y="226" operation="getHandlerCerereVerificarePF() : HandlerCerereVerificarePF" widgetbid="29994" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="6" widgetaid="29997" textid="116" xmi.id="117" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="48" usesdiagramusefillcolour="1" x="233" linecolour="none" y="179" operation="attemptConnection() : void" widgetbid="29997" usesdiagramlinecolour="1" fillcolour="none" height="32" usefillcolor="1" seqnum="5" widgetaid="29997" textid="118" xmi.id="119" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="422" usesdiagramusefillcolour="1" x="233" linecolour="none" y="249" operation="getTipuriCerere() : RecordTipCerere[]" widgetbid="29993" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="7" widgetaid="29997" textid="122" xmi.id="123" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="48" usesdiagramusefillcolour="1" x="129" linecolour="none" y="298" operation="initGUIComponents()" widgetbid="29999" usesdiagramlinecolour="1" fillcolour="none" height="32" usefillcolor="1" seqnum="10" widgetaid="29999" textid="124" xmi.id="125" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="146" usesdiagramusefillcolour="1" x="657" linecolour="none" y="256" operation="getConnection() : Connection" widgetbid="29992" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="8" widgetaid="29993" textid="126" xmi.id="127" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="247" usesdiagramusefillcolour="1" x="657" linecolour="none" y="279" operation="getTipuriCerere() : ResultSet" widgetbid="29991" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="9" widgetaid="29993" textid="129" xmi.id="130" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+    </messages>
+    <associations/>
+   </diagram>
+   <diagram snapgrid="0" showattsig="1" fillcolor="#ffffc0" showgrid="0" showopsig="1" usefillcolor="1" snapx="10" snapy="10" showatts="1" xmi.id="131" documentation="" type="403" showops="1" showpackage="0" name="ema show ApometreScreen sequence diagram" localid="29987" showstereotype="0" showscope="1" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" linecolor="#ff0000" >
+    <widgets>
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="74" usesdiagramusefillcolour="1" x="0" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="104" decon="0" localid="29999" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="125" usesdiagramusefillcolour="1" x="356" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="25" decon="0" localid="29998" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="89" usesdiagramusefillcolour="1" x="480" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="113" decon="0" localid="29997" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="81" usesdiagramusefillcolour="1" x="568" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="50" decon="0" localid="29996" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="132" usesdiagramusefillcolour="1" x="801" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="87" decon="0" localid="29993" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="72" usesdiagramusefillcolour="1" x="932" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="128" decon="0" localid="29991" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="149" usesdiagramusefillcolour="1" x="73" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="9" decon="0" localid="29989" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="136" usesdiagramusefillcolour="1" x="221" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="10" decon="0" localid="29988" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="154" usesdiagramusefillcolour="1" x="648" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="80" decon="0" localid="29987" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+    </widgets>
+    <messages>
+     <UML:MessageWidget usesdiagramfillcolour="1" width="104" usesdiagramusefillcolour="1" x="419" linecolour="none" y="134" operation="lookup() : EMAServer" widgetbid="29997" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="4" widgetaid="29998" textid="139" xmi.id="138" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="108" usesdiagramusefillcolour="1" x="38" linecolour="none" y="97" operation="showScreen" widgetbid="29989" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="1" widgetaid="29999" textid="153" xmi.id="154" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="140" usesdiagramusefillcolour="1" x="148" linecolour="none" y="105" operation="getFabricanti() : RecordFabricant[]" widgetbid="29988" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="2" widgetaid="29989" textid="155" xmi.id="156" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="127" usesdiagramusefillcolour="1" x="290" linecolour="none" y="120" operation="getServerReference() : EMAServer" widgetbid="29998" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="3" widgetaid="29988" textid="157" xmi.id="158" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="48" usesdiagramusefillcolour="1" x="290" linecolour="none" y="155" operation="attemptConnection() : void" widgetbid="29988" usesdiagramlinecolour="1" fillcolour="none" height="32" usefillcolor="1" seqnum="5" widgetaid="29988" textid="159" xmi.id="160" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="140" usesdiagramusefillcolour="1" x="726" linecolour="none" y="236" operation="getConnection() : Connection" widgetbid="29993" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="8" widgetaid="29987" textid="161" xmi.id="162" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="241" usesdiagramusefillcolour="1" x="726" linecolour="none" y="261" operation="getFabricanti() : ResultSet" widgetbid="29991" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="9" widgetaid="29987" textid="163" xmi.id="164" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="434" usesdiagramusefillcolour="1" x="290" linecolour="none" y="230" operation="getFabricanti() : RecordFabricant[]" widgetbid="29987" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="7" widgetaid="29988" textid="165" xmi.id="166" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="317" usesdiagramusefillcolour="1" x="290" linecolour="none" y="205" operation="getHandlerCerereApometre() : HandlerCerereApometre" widgetbid="29996" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="6" widgetaid="29988" textid="167" xmi.id="168" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="434" usesdiagramusefillcolour="1" x="290" linecolour="none" y="278" operation="getDNs() : RecordDN[]" widgetbid="29987" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="11" widgetaid="29988" textid="169" xmi.id="170" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="241" usesdiagramusefillcolour="1" x="726" linecolour="none" y="291" operation="getDNs() : ResultSet" widgetbid="29991" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="12" widgetaid="29987" textid="171" xmi.id="172" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="140" usesdiagramusefillcolour="1" x="148" linecolour="none" y="270" operation="getDNs() : RecordDN[]" widgetbid="29988" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="10" widgetaid="29989" textid="173" xmi.id="174" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="48" usesdiagramusefillcolour="1" x="148" linecolour="none" y="298" operation="initGUIComponents()" widgetbid="29989" usesdiagramlinecolour="1" fillcolour="none" height="32" usefillcolor="1" seqnum="13" widgetaid="29989" textid="175" xmi.id="176" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+    </messages>
+    <associations/>
+   </diagram>
+   <diagram snapgrid="0" showattsig="1" fillcolor="#ffffc0" showgrid="0" showopsig="1" usefillcolor="1" snapx="10" snapy="10" showatts="1" xmi.id="177" documentation="" type="403" showops="1" showpackage="0" name="ema submit CererePF sequence diagram" localid="29991" showstereotype="0" showscope="1" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" linecolor="#ff0000" >
+    <widgets>
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="74" usesdiagramusefillcolour="1" x="0" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="104" decon="0" localid="29999" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="72" usesdiagramusefillcolour="1" x="73" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="33" decon="0" localid="29997" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="125" usesdiagramusefillcolour="1" x="144" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="25" decon="0" localid="29996" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="89" usesdiagramusefillcolour="1" x="268" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="113" decon="0" localid="29995" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="81" usesdiagramusefillcolour="1" x="356" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="50" decon="0" localid="29994" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="168" usesdiagramusefillcolour="1" x="436" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="75" decon="0" localid="29993" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="132" usesdiagramusefillcolour="1" x="603" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="87" decon="0" localid="29992" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:ObjectWidget usesdiagramfillcolour="1" width="72" usesdiagramusefillcolour="1" x="734" linecolour="none" y="54" instancename="" usesdiagramlinecolour="1" fillcolour="none" height="26" usefillcolor="1" length="250" xmi.id="128" decon="0" localid="29991" multipleinstance="0" drawasactor="0" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+    </widgets>
+    <messages>
+     <UML:MessageWidget usesdiagramfillcolour="1" width="70" usesdiagramusefillcolour="1" x="38" linecolour="none" y="105" operation="submitCerere()" widgetbid="29997" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="" widgetaid="29999" textid="178" xmi.id="179" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="95" usesdiagramusefillcolour="1" x="110" linecolour="none" y="133" operation="getServerReference() : EMAServer" widgetbid="29996" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="" widgetaid="29997" textid="180" xmi.id="181" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="104" usesdiagramusefillcolour="1" x="207" linecolour="none" y="161" operation="lookup() : EMAServer" widgetbid="29995" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="" widgetaid="29996" textid="182" xmi.id="183" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="48" usesdiagramusefillcolour="1" x="110" linecolour="none" y="188" operation="attemptConnection() : void" widgetbid="29997" usesdiagramlinecolour="1" fillcolour="none" height="32" usefillcolor="1" seqnum="" widgetaid="29997" textid="186" xmi.id="187" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="285" usesdiagramusefillcolour="1" x="110" linecolour="none" y="244" operation="getHandlerCerereVerificarePF() : HandlerCerereVerificarePF" widgetbid="29994" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="" widgetaid="29997" textid="190" xmi.id="191" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="409" usesdiagramusefillcolour="1" x="110" linecolour="none" y="277" operation="insertCerereVerificare(cerere : RecordCerere, pf : RecordPF, apometre : RecordApometru[]) : int" widgetbid="29993" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="" widgetaid="29997" textid="192" xmi.id="193" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="147" usesdiagramusefillcolour="1" x="521" linecolour="none" y="300" operation="getConnection() : Connection" widgetbid="29992" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="" widgetaid="29993" textid="194" xmi.id="195" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+     <UML:MessageWidget usesdiagramfillcolour="1" width="248" usesdiagramusefillcolour="1" x="521" linecolour="none" y="322" operation="insertCerereVerificare() : int" widgetbid="29991" usesdiagramlinecolour="1" fillcolour="none" height="8" usefillcolor="1" seqnum="" widgetaid="29993" textid="196" xmi.id="197" font="Luxi Sans,12,-1,5,50,0,0,0,0,0" />
+    </messages>
+    <associations/>
+   </diagram>
+  </diagrams>
+  <listview>
+   <listitem open="1" type="800" id="-1" label="Views" >
+    <listitem open="1" type="801" id="-1" label="Logical View" >
+     <listitem open="0" type="813" id="29" label="Cerere" >
+      <listitem open="0" type="815" id="32" label="getXXX" />
+      <listitem open="0" type="815" id="31" label="setXXX" />
+      <listitem open="0" type="815" id="30" label="submitCerere" />
+     </listitem>
+     <listitem open="0" type="813" id="10" label="CerereApometreData" >
+      <listitem open="0" type="815" id="16" label="attemptConnection" />
+      <listitem open="0" type="815" id="13" label="getDNs" />
+      <listitem open="0" type="815" id="11" label="getFabricanti" />
+      <listitem open="0" type="815" id="15" label="getIdForDomeniuPrivat" />
+      <listitem open="0" type="815" id="14" label="getIdForDomeniuPublic" />
+      <listitem open="0" type="815" id="12" label="insertFabricant" />
+     </listitem>
+     <listitem open="0" type="813" id="9" label="CerereApometreScreen" />
+     <listitem open="0" type="813" id="33" label="CererePF" >
+      <listitem open="0" type="815" id="36" label="attemptConnection" />
+      <listitem open="0" type="815" id="35" label="getXXX" />
+      <listitem open="0" type="815" id="34" label="setXXX" />
+     </listitem>
+     <listitem open="0" type="813" id="17" label="CererePFData" >
+      <listitem open="0" type="815" id="24" label="attemptConnection" />
+      <listitem open="0" type="815" id="23" label="checkCodCerere" />
+      <listitem open="0" type="815" id="19" label="checkPF" />
+      <listitem open="0" type="815" id="21" label="getCalitati" />
+      <listitem open="0" type="815" id="18" label="getListFor" />
+      <listitem open="0" type="815" id="22" label="getSolicitanti" />
+      <listitem open="0" type="815" id="20" label="getTipuriCerere" />
+     </listitem>
+     <listitem open="0" type="813" id="8" label="CererePFScreen" />
+     <listitem open="0" type="813" id="87" label="DBInterfaceManager" >
+      <listitem open="0" type="815" id="91" label="DBInterfaceManager" />
+      <listitem open="0" type="815" id="90" label="close" />
+      <listitem open="0" type="815" id="89" label="getConnection" />
+      <listitem open="0" type="815" id="88" label="getInstance" />
+     </listitem>
+     <listitem open="0" type="813" id="37" label="DBRecord" >
+      <listitem open="0" type="814" id="38" label="id" />
+     </listitem>
+     <listitem open="1" type="813" id="128" label="Database" />
+     <listitem open="0" type="813" id="5" label="Display" >
+      <listitem open="0" type="815" id="7" label="onHide" />
+      <listitem open="0" type="815" id="6" label="onShow" />
+     </listitem>
+     <listitem open="1" type="813" id="104" label="EMA User" />
+     <listitem open="0" type="813" id="25" label="EMACommunicator" >
+      <listitem open="0" type="815" id="28" label="EMACommunicator" />
+      <listitem open="0" type="815" id="26" label="getInstance" />
+      <listitem open="0" type="815" id="27" label="getServerReference" />
+     </listitem>
+     <listitem open="0" type="813" id="50" label="EMAServer" >
+      <listitem open="0" type="815" id="56" label="getHandlerCerereApometre" />
+      <listitem open="0" type="815" id="54" label="getHandlerCerereVerificarePF" />
+      <listitem open="0" type="815" id="55" label="getHandlerCerereVerificarePJ" />
+      <listitem open="0" type="815" id="53" label="getHandlerContractPJ" />
+      <listitem open="0" type="815" id="51" label="getServerMajorVersion" />
+      <listitem open="0" type="815" id="52" label="getServerMinorVersion" />
+     </listitem>
+     <listitem open="0" type="813" id="68" label="EMAServerImpl" />
+     <listitem open="0" type="813" id="80" label="HandlerCerereApometre" >
+      <listitem open="0" type="815" id="83" label="getDNs" />
+      <listitem open="0" type="815" id="81" label="getFabricanti" />
+      <listitem open="0" type="815" id="85" label="getIdForDomeniuPrivat" />
+      <listitem open="0" type="815" id="84" label="getIdForDomeniuPublic" />
+      <listitem open="0" type="815" id="82" label="insertFabricant" />
+     </listitem>
+     <listitem open="0" type="813" id="86" label="HandlerCerereApometreImpl" />
+     <listitem open="0" type="813" id="69" label="HandlerCerereVerificare" >
+      <listitem open="0" type="815" id="70" label="checkCodCerere" />
+      <listitem open="0" type="815" id="73" label="getCalitati" />
+      <listitem open="0" type="815" id="72" label="getSolictianti" />
+      <listitem open="0" type="815" id="71" label="getTipuriCerere" />
+     </listitem>
+     <listitem open="0" type="813" id="58" label="HandlerCerereVerificareImpl" >
+      <listitem open="0" type="815" id="59" label="insertApometre" />
+      <listitem open="0" type="815" id="60" label="insertApometru" />
+      <listitem open="0" type="815" id="61" label="insertCerereApometru" />
+     </listitem>
+     <listitem open="0" type="813" id="75" label="HandlerCerereVerificarePF" >
+      <listitem open="0" type="815" id="77" label="checkPF" />
+      <listitem open="0" type="815" id="78" label="getNamesLike" />
+      <listitem open="0" type="815" id="76" label="insertCerereVerificare" />
+     </listitem>
+     <listitem open="0" type="813" id="63" label="HandlerCerereVerificarePFImpl" >
+      <listitem open="0" type="815" id="65" label="insertCererePF" />
+      <listitem open="0" type="815" id="64" label="insertPF" />
+     </listitem>
+     <listitem open="0" type="813" id="79" label="HandlerCerereVerificarePJ" />
+     <listitem open="0" type="813" id="62" label="HandlerCerereVerificarePJImpl" />
+     <listitem open="0" type="813" id="74" label="HandlerContractPJ" />
+     <listitem open="0" type="813" id="66" label="HandlerContractPJImpl" />
+     <listitem open="1" type="813" id="113" label="RMI Registry" />
+     <listitem open="0" type="813" id="40" label="RecordApometru" />
+     <listitem open="0" type="813" id="41" label="RecordCalitate" />
+     <listitem open="0" type="813" id="42" label="RecordCerere" />
+     <listitem open="0" type="813" id="43" label="RecordCererePF" />
+     <listitem open="0" type="813" id="44" label="RecordCererePJ" />
+     <listitem open="0" type="813" id="45" label="RecordDN" />
+     <listitem open="0" type="813" id="46" label="RecordDomeniu" />
+     <listitem open="0" type="813" id="47" label="RecordFabricant" />
+     <listitem open="0" type="813" id="39" label="RecordPF" />
+     <listitem open="0" type="813" id="48" label="RecordSolicitant" />
+     <listitem open="0" type="813" id="49" label="RecordTipCerere" />
+     <listitem open="0" type="813" id="57" label="UnicastRemoteObject" />
+     <listitem open="0" type="807" id="1" label="ema client class diagram" />
+     <listitem open="1" type="807" id="4" label="ema db class diagram" />
+     <listitem open="1" type="807" id="2" label="ema server class diagram" />
+     <listitem open="1" type="810" id="131" label="ema show ApometreScreen sequence diagram" />
+     <listitem open="1" type="810" id="103" label="ema show CererePFScreen sequence diagram" />
+     <listitem open="1" type="810" id="177" label="ema submit CererePF sequence diagram" />
+     <listitem open="0" type="813" id="67" label="java.rmi.Remote" />
+    </listitem>
+    <listitem open="0" type="802" id="-1" label="Use Case View" >
+     <listitem open="0" type="811" id="93" label="EMA User" />
+     <listitem open="0" type="812" id="100" label="Generare buletin de verificare metrologica" />
+     <listitem open="0" type="812" id="98" label="Generare fisa de lucru" />
+     <listitem open="0" type="812" id="101" label="Generare proces verbal de predare/primire" />
+     <listitem open="0" type="812" id="102" label="Generare registre de evidenta" />
+     <listitem open="0" type="812" id="96" label="Introducere date cerere de reverificare" />
+     <listitem open="0" type="812" id="94" label="Introducere date cerere de verificare PF" />
+     <listitem open="0" type="812" id="95" label="Introducere date cerere de verificare PJ" />
+     <listitem open="0" type="812" id="97" label="Introducere date contract" />
+     <listitem open="0" type="812" id="99" label="Introducere rezultate testare" />
+     <listitem open="1" type="805" id="92" label="ema usecase diagram" />
+    </listitem>
+   </listitem>
+  </listview>
+ </XMI.content>
+</XMI>

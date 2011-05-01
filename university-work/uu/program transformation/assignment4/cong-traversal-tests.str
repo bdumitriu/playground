@@ -1,0 +1,23 @@
+module cong-traversal-tests
+imports
+  cong-traversal
+  traversal-tests
+  Tiger
+  sunit
+
+strategies
+
+main =
+	test-suite(!"Congruence traversal tests",
+		cong1-test1(cong1)
+		; cong1-test2(cong1)
+		; cong2-test1(cong2(|6))
+		; cong2-test2(cong2(|5))
+		; cong3-test1(cong3)
+		; cong3-test2(cong3)
+		; cong4-test1(cong4)
+		; cong4-test2(cong4)
+		; cong4-test3(cong4)
+		; cong5-test1(cong5)
+		; cong5-test2(cong5)
+	)

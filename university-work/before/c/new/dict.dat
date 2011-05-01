@@ -1,0 +1,4 @@
+printf - stdio
+scanf - stdio
+clrscr - conio
+getch - conio

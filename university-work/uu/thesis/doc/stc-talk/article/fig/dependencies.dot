@@ -1,0 +1,14 @@
+digraph G
+{
+  account [label="Account"]
+  matchs  [label="MatchServer"]
+  asks    [label="AskServer"]
+  bids    [label="BidServer"]
+
+  matchs -> asks
+  matchs -> bids
+  asks   -> matchs
+  bids   -> matchs
+  asks   -> account
+  bids   -> account
+}

@@ -1,0 +1,232 @@
+\chapter{Stakeholders}
+
+In this part of the architecture document the different
+stakeholders will be described and their concerns listed.
+There will be a distinction between minor concerns and major
+concerns, denoted with - and + respectively. A minor concern
+is one that is important to some extent, but can be (partially
+or totally, depending on the concern) dropped. A major concern,
+by contrast, is one that is of great importance to its stakeholder
+and which (s)he would like to see in the final system. However,
+compromises can be (and have been) made even in terms of major
+concerns. A compromise does not imply a total disregard to a certain
+concern, but rather providing a solution which might only partially
+address it. The following stakeholders have been considered:
+\begin{itemize}
+\item Users: staff of the SureThing Company
+\item Acquirers: SureThing Company
+\item Developers and Project Manager
+\item Maintainers
+\item System Administrator
+\item Management (of the company doing the development)
+\end{itemize}
+
+\section{Users}
+
+\subsubsection{Description}
+The users are the people that will be working at the SureThing
+Company. This group will be interested mostly in things like how
+friendly the new system will be, if they have to learn new things
+and how big the changes will be that are being made to the user
+interface. The people visiting the web site of the SureThing Company
+are not viewed as part of this stakeholder because it would be difficult
+to sit with them around the table to discuss their concerns. We assume
+that their major concern would be whether the web site gives them the
+information they are looking for in an usable manner or not. To cope with
+this, we have transferred this concern to the acquirers, since
+they are stakeholder for which the customers' concerns are most
+important.
+
+\subsubsection{Concerns}
+The concerns of the users are:
+\begin{itemize}
+\item[-] Availability during work hours: the system needs to be
+fully operational especially in the period of time when they need it,
+namely during work hours. Little or no downtime of the system is thus
+desired in this period.
+\item[+] User friendliness: the users want to work with a easy to use,
+intuitive and clear system.
+\item[+] Response time: the users are interested that the system
+takes as little as possible for performing its actions and responds
+quickly.
+\item[-] Understandability, learnability and operability: this concern
+expresses the wish of the users for the new system to be as easy to
+understand, use and switch to as possible. The users hope not to have
+to learn too many new things in order to be able to work with the system.
+\end{itemize}
+
+\section{Acquirers}
+
+\subsubsection{Description}
+The acquirers are the managers of the SureThing Company. This
+group is mostly interested in making sure that all the goals put forward
+in the assignment description are achieved. The system which the present
+document describes needs to be beneficial to their business and in many
+ways better than what they have now. Although they have a wide range
+of concerns, they are primarily interested in making sure that the
+resulting system will address their (company's) needs in a proper manner.
+
+\subsubsection{Concerns}
+The concerns of the acquirers are the following:
+
+\begin{itemize}
+\item[-] Realization of the system is in conformance with their
+requirements.
+\item[+] Scalability: as the number of customers increases,
+the number of requests for proposal calculation will increase as well
+and so will the use of most of the other components of the system
+(such as the amount of output of the GOC, for example). Therefore it
+should be possible to scale the system as the need arises in order to
+cope with the increased load. Scalability is viewed mostly in two aspects:
+web site availability and responsiveness and how the company's hardware
+deals with the load.
+\item[-] Suitability: the system should address the company's needs
+and not the other way around.
+\item[+] Security: the new system needs to provide at least as much
+security as the current one does, but preferably even more. The stakeholder
+underlines that the insurance business deals with highly sensitive data
+which should stay in the company (as opposed to out in the open).
+\item[-] Cost: the system needs to be improved at a reasonable cost in
+terms of money and human resources, it needs to be finished by the
+end of 2005 (but preferably sooner) and it should be as adaptable as
+possible in order to prevent high costs in the future.
+\item[+] Progressive evolution of the system: the old system should be
+turned into the new one in several phases (also see our assumption on this).
+\item[+] Correctness and usability during transition: during the transition
+of the old system to the new one, the system has to be usable and behave
+as expected the whole time.
+\item[+] Interoperability: the system has to be based on and work as much
+as possible with the already existing components, in order to keep costs low
+and also in order to avoid the need for extensive retraining of people.
+\item[-] Compliance to standards: the software of the system needs to be able
+to connect to other software if necessary and, most importantly, the web site
+needs to be browser independent (in other words, it needs to run on any of the
+major browsers in use today).
+\item[+] Fault tolerance: the system needs to be available 24 hours a day, 7 days
+a week.
+\item[-] Clarity of web interface to customers: this is in fact a concern of the
+users of the web site, but since we have not identified them as stakeholder,
+we make this a concern of the acquirers. Thus, the acquirers want their product
+to be as appealing to and usable by their customers as possible.
+\end{itemize}
+
+\section{Developers and Project Manager}
+
+\subsubsection{Description}
+The developers and the project manager are the people that will
+coordinate and implement the whole transition of the old system into the new system.
+They are especially interested in understanding how the current system
+works, what kind of changes they have to do to it, how these changes are
+scheduled in time, how the new system is to be structured, what kind of
+constraints they have to take into account and many more.
+
+\subsubsection{Concerns}
+The concerns of the developers and the project manager are as follows:
+\begin{itemize}
+\item[+] Modularity: the system needs to be as well structured as possible, so
+that all components of the system can be developed, tested and replaced
+independently of each other.
+\item[-] Security: the developers are interested to know what kind of security
+the system has to provide and what this security implies on their part. They
+want to know which components of the system are most sensitive and what
+should be done in order to protect them.
+\item[-] Scalability: the stakeholder is concerned with what parts of the
+system have to be scalable and what has to be taken care of in order to
+ensure this scalability.
+\item[+] Technical constraints: what are the technologies that have to be used
+in order to develop/update the system? What knowledge does the use of this
+technologies imply on their part? Also, it is of interest to know what underlying
+systems are currently running the in the IT environment of the company, especially
+if these are to be maintained in the new system.
+\item[+] Understandability of the design: they would prefer the design to be
+as intuitive as possible so as to be able to focus more on development and less
+on deciphering the architectural description.
+\item[-] Testability: the system has to be tested, so the stakeholder is interested
+to know which parts have the highest correctness requirements so that they
+can test them extensively.
+\item[-] Development time: developers are worried about how strict the final
+and intermediate deadlines are. They would like to be told the consequences of
+exceeding development time.
+\end{itemize}
+
+\section{Maintainers}
+
+\subsubsection{Description}
+The maintainers are people that will have to solve any bugs or changing
+requests of the system once it is released. They, as persons, might overlap
+to some extent with the developers, depending on company policy, but
+their concerns are nevertheless distinct. This group is interested if the
+system is adjustable to the future needs of the company, if it is easy to
+change, if it is easy to track down errors that might appear in it and if it
+is appropriately documented.
+
+\subsubsection{Concerns}
+The following concerns are typical for the maintainers:
+\begin{itemize}
+\item[+] Changeability: if changes need to be made, this must
+be done to a limited number of components and there must be a
+documentation to know how. This goes partially hand in hand with the
+modularity concern of the developers as a modular system is also easier
+to change.
+\item[+] Testability: the system needs to be easily testable in order to
+find bugs and ensure its correctness now and in the future.
+\end{itemize}
+
+\section{System Administrator}
+
+\subsubsection{Description}
+The system administrator is the person (or group of people) that
+is initially responsible for deploying the software on the existing hardware
+configuration according to specifications and then for making sure that
+the system is operational at all times. Also, the system administrator
+is concerned with making backup copies of important information
+so that it can be restored in case of hardware malfunction. Finally,
+the system administrator also has to understand what hardware
+and software changes have to be done once the current configuration is
+no longer sufficient to deal with the load.
+
+\subsubsection{Concerns}
+The concerns of the system administrator will be mostly related to:
+\begin{itemize}
+\item[+] Security: what has to be done in terms of configuration
+so that the system is secure (firewalls, protocols, configuration files,
+etc.).
+\item[+] Recoverability: it should be easy to spot what the problem
+with the system is and it should be easy to solve the problem.
+\item[+] Fault tolerance: is the system supposed to provided 24/7
+access? If so, what has to be done from his/her part in order to ensure
+this?
+\item[-] Installability: the system and the new components should
+be easy to install.
+\item[-] Manageability: analysis of the running system should be
+possible and modifications to it should be straightforward.
+\end{itemize}
+
+\section{Management}
+
+\subsubsection{Description}
+Management represents the interests of the developing company and
+has to make sure that the proposed system can be done within
+budget, has to make sure that the customer (i.e., the acquirer stakeholder)
+is pleased with the result and also has to make sure that costs are
+kept as low as possible and, more importantly, not exceeded.
+
+\subsubsection{Concerns}
+The following are the concerns belonging to the management:
+\begin{itemize}
+\item[+] Feasibility of constructing the system: management needs to
+be convinced that the system, as described in the architecture, can be
+put into practice within the money and time budget.
+\item[-] Changeability: it is important to management that the
+system be easily changeable as they believe the SureThing company might
+have changing requirements in the future and that their company will
+again have to work on the software, so it would be best if that implied
+easy to do changes.
+\item[+] Profit: they would like the architecture to be created in such
+a way that implementation thereof can be done with as low costs as
+possible in terms of time, personnel, resources, training and money
+so that their profit can be higher.
+\item[-] Costs might be exceeded: management wants to diminish the
+risk that the costs allocated to the project are exceeded, as this would conflict
+with their concern for making profit.
+\end{itemize}

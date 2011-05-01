@@ -1,0 +1,171 @@
+let
+
+  // terms
+
+  type term = {op : string, kids : terms}
+  type terms = {hd : term, tl : terms}
+
+  function error_term() : term =
+    term{op = "error", kids = nil}
+
+  function error_terms() : terms =
+    terms{hd = nil, tl = nil}
+
+  function app(o : string, k : terms) : term =
+    term{op = o, kids = k}
+
+  function var(x : string) : term =
+    app("var", cons(app(x, nil),nil))
+
+  function isvar(t : term) : int =
+    t.op = "var"
+
+  function varname(t : term) : string =
+    t.kids.hd.op
+
+  function cons(h : term, t : terms) : terms =
+    terms{hd = h, tl = t}
+  
+  function hd(l : terms) : term =
+    if l = nil then error_term() else l.hd
+
+  function tl(l : terms) : terms =
+    if l = nil then error_terms() else l.tl
+
+  function print_term(t : term) =
+    (print(t.op); print("("); print_terms(t.kids); print(")"))
+
+  function print_terms(ts : terms) =
+    if ts <> nil then 
+      (print_term(ts.hd);
+       if ts.tl <> nil then
+         (print(", "); print_terms(ts.tl)))
+
+
+  // rules
+
+  type rule = {lhs : term, rhs : term}
+  type rules = {hd : rule, tl : rules}
+
+  function error_rule() : rule =
+    rule{lhs = nil, rhs = nil}
+
+  function error_rules() : rules =
+    rules{hd = nil, tl = nil}
+
+  function rcons(h : rule, t : rules) : rules =
+    rules{hd = h, tl = t}
+  
+  function rhd(l : rules) : rule =
+    if l = nil then error_rule() else l.hd
+
+  function rtl(l : rules) : rules =
+    if l = nil then error_rules() else l.tl
+
+
+  // substitution
+
+  type subst = {var : string, val : term, next : subst}
+
+  function error_subst() : subst =
+    subst{var = "error", val = nil, next = nil}
+
+  function is_error_subst(s : subst) : int =
+    s <> nil & s.var = "error"
+
+  function lookup(x : string, s : subst) : term =
+    if s = nil then
+      error_term()
+    else if x = s.var then
+      s.val
+    else 
+      lookup(x, s.next)
+
+  function inst_term(s : subst, t : term) : term =
+    if isvar(t) then
+      lookup(varname(t), s)
+    else
+      app(t.op, inst_terms(s, t.kids))
+
+  function inst_terms(s : subst, ts : terms) : terms =
+    if ts = nil then
+      nil
+    else 
+      cons(inst_term(s, ts.hd), inst_terms(s, ts.tl))
+
+  function match_term(pat : term, t : term, s : subst) : subst =
+    if isvar(pat) then
+       subst{var = varname(pat), val = t, next = s}
+    else if pat.op = t.op then
+       match_terms(pat.kids, t.kids, s)
+    else 
+       error_subst()
+
+  function match_terms(pats : terms, ts : terms, s : subst) : subst =
+    if pats = nil & ts = nil then
+      s
+    else 
+      let var s2 : subst := match_term(pats.hd, ts.hd, s)
+       in if is_error_subst(s2) then s2
+          else match_terms(pats.tl, ts.tl, s2)
+      end  
+
+  // rewrite
+
+  function reduce(t : term, rs : rules, rso : rules) : term =
+    if rs = nil then
+      t
+    else 
+      let var r : rule := rs.hd 
+          var s : subst := match_term(r.lhs, t, nil)
+       in if is_error_subst(s) then
+            reduce(t, rs.tl, rso)
+          else
+            rewrite_term(r.rhs, rso, s)
+      end
+
+  function rewrite_term(t : term, rs : rules, s : subst) : term =
+    if isvar(t) then
+      lookup(varname(t), s)
+    else 
+      reduce(app(t.op, rewrite_terms(t.kids, rs, s)), rs, rs)
+
+  function rewrite_terms(ts : terms, rs : rules, s : subst) : terms =
+    if ts = nil then
+      nil
+    else 
+      cons(rewrite_term(ts.hd, rs, s), rewrite_terms(ts.tl, rs, s))
+
+  // Natural number terms
+
+  function Zero() : term = 
+    app("Zero", nil)
+   
+  function Succ(n : term) : term = 
+    app("Succ", cons(n, nil))
+
+  function Plus(e1 : term, e2 : term) : term =
+    app("Plus", cons(e1, cons(e2, nil)))
+
+  // Natural numbers
+
+  var A : rule := 
+       rule{lhs = Plus(Zero(), var("x")),
+            rhs = var("x")}
+ 
+  var B : rule := 
+       rule{lhs = Plus(Succ(var("x")), var("y")),
+            rhs = Succ(Plus(var("x"), var("y")))}
+
+  var Nat : rules :=
+       rcons(A, rcons(B, nil))
+
+  function eval_nat(t : term) : term =
+    rewrite_term(t, Nat, nil)
+ 
+in 
+
+   print_term(eval_nat(Plus(Succ(Succ(Zero())),Succ(Succ(Zero())))))
+
+end
+

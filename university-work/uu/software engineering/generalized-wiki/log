@@ -1,0 +1,5 @@
+* changed the commit to support modifying of copied/moved files.
+
+* updated the CommmitTest to test this.
+
+* changed registerDeleteNode to take the force parameter into account.

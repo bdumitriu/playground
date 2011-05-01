@@ -1,0 +1,74 @@
+{-# LINE 8 "SLPrettyprint.lag" #-}
+imports
+{
+import UU.Pretty
+}
+ATTR Root  [  |  | ppExpr : PP_Doc]
+SEM Root
+  | Root lhs.ppExpr     =  @expr.pp
+
+SEM Expr   [  |  | pp : PP_Doc]
+  | Unit      lhs.pp    =  text "()"
+  | Intexpr   lhs.pp    =  text $ show @int
+  | Boolexpr  lhs.pp    =  text $ show @bool
+
+  -- Added the definition of the pp attribute for tuple expressions. I simply output
+  -- the tuple normally, enclosed in brackets and with the expressions forming it
+  -- separated by commas.
+
+  | Tupleexpr lhs.pp    =  text "(" >#< pp_block "" "" "," @elist.pps >#< text ")"
+
+  | Ident     lhs.pp    =  text  @var >|<  @errmsg
+  | Op        lhs.pp    =  @le.pp >#<  @lerr >#< text  @op >#<  @rerr >#<  @re.pp
+  | Apply     lhs.pp    =  pp_parens (@func.pp >|<  @funcErr)
+                             >#< pp_parens (@arg.pp >|<  @argErr)
+  | Let       lhs.pp    =  text  "let" >|< pp_block "" "" "; "  @decls.pps
+                             >-< " in" >#< @expr.pp
+                             >-< " ni"
+  | If        lhs.pp    =  pp_ite "if " " then " " else " " fi"
+                             (@cond.pp >|<  @condErr)  @thenExpr.pp (@elseExpr.pp >|<  @ifErr)     
+  | Assign    lhs.pp    =  @var.pp >|< @varErr >#< text ":=" >#< @expr.pp >|< @exprErr
+  | Seq       lhs.pp    =  pp_block "" "" "; " (@exprs.pps)
+  | Lam       lhs.pp    =  text "\\" >#< @patt.pp >|< @argErr >#< text "->" 
+                             >#<  @expr.pp >|<  @bodyErr
+
+SEM Decls  [  |  | pps : {[PP_Doc]} ]
+  | Nil       lhs.pps   =  []
+  | Cons      lhs.pps   =  @hd.pp :  @tl.pps
+  
+SEM Decl   [  |  | pp : PP_Doc ]
+  | Decl      loc.ppTp  =  if isAnnotated @type 
+                           then text "::" >#< show @type
+                           else text "::" >#< show @inferredType
+              lhs.pp    =  text @var >#< @ppTp >|< @declErr >#< text "=" >#< @expr.pp
+
+SEM Exprs  [  |  | pps : {[PP_Doc]} ]
+  | Nil       lhs.pps   =  []
+  | Cons      lhs.pps   =  @hd.pp :  @tl.pps
+
+SEM Vars   [   |  | pp : PP_Doc ]
+  | Nil       lhs.pp    =  empty
+  | Cons      lhs.pp    =  @hd.pp >#<  @tl.pp
+
+--
+-- Pretty printing of patterns simply implies putting a pair of paranteses
+-- around the comma separated list of patterns which form this pattern.
+--
+SEM Pattern  [ |  | pp : PP_Doc ]
+  | Single    lhs.pp    =  text @str
+  | Tuple     lhs.pp    =  text "(" >#< pp_block "" "" "," @tup.pps >#< text ")"
+
+--
+-- Just returns a list of the PP_Doc values associated with the patterns.
+--
+SEM Patterns [ |  | pps : {[PP_Doc]} ]
+  | Nil       lhs.pps   =  []
+  | Cons      lhs.pps   =  @hd.pp :  @tl.pps
+
+--
+-- Definition of the pps attribute of the TupleExprs type. Simply returns a list
+-- which contains the PP_Doc values associated with the expressions.
+--
+SEM TupleExprs  [  |  | pps : {[PP_Doc]} ]
+  | Nil       lhs.pps   =  []
+  | Cons      lhs.pps   =  @hd.pp :  @tl.pps

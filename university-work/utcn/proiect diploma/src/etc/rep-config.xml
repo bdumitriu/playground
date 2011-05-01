@@ -1,0 +1,13 @@
+<repository>
+
+	<rmiserver>
+		<port>1099</port>
+	</rmiserver>
+
+	<directory>
+ 		<path>repository</path>
+ 	</directory>
+	
+	<defaultrmiserver>192.168.0.1</defaultrmiserver>
+
+</repository>

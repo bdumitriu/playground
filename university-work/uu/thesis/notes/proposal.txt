@@ -1,0 +1,47 @@
+* probably useful to mention this in your thesis in a discussion
+  of issues with dynamic rules
+
+	<bdumitriu>	main =
+			     rules(DR : "some-string" -> "some-other-string")
+			     ; !"some-string" => x
+			     ; !"some-other-string" => y
+			     ; rules(DR : x -> y)
+			     ; all-keys-DR
+	<bdumitriu>	this results in ["some-string"{DR_DUMMY},"some-string"]
+	<visser>	bdumitriu: yes, of course, I was thinking you referred to the closure tag
+	<visser>	indeed, x does not have the annotation and a constant left-hand side gets an implicit annotation
+	<visser>	if you use rules(DR : x{_} -> y) the entries become the same (I think)
+	<bdumitriu>	yes, and I think this can be the source of a lot of bugs
+	<bdumitriu>	well, I have solutions, that's not the real issue
+	<bdumitriu>	it's just that sometimes I got bugs because of this and that was annoying
+	<bdumitriu>	that's all
+	<visser>	bdumitriu: I agree, I've run into this issue myself a couple of times
+	<visser>	it is an unfortunate feature interaction that is not solvable
+	<bdumitriu>	I see
+	<visser>	without changing the semantics of annotations
+	<visser>	what solutions do you have?
+	<bdumitriu>	I used {DR_DUMMY} with the constant :)
+	<visser>	does that solve the problem?
+	<bdumitriu>	or was that with variable (one of the two)?
+	<visser>	"a" == "a"{_} in match position, so you get the DR_DUMMY there anyway
+	<bdumitriu>	oh, no, sorry
+	<visser>	you should use x{_} to force the DR_DUMMY in the case of the variable
+	<bdumitriu>	that wasn't it
+	<visser>	alternatively you can use "a"{}
+	<visser>	in the case of the constant
+	<bdumitriu>	wherever I had constants as keys, I used the scheme !constant => var; rules(Foo : var -> ...)
+
+* when discussing typestate propagation, discuss the issue with trying
+  to not undefine rules for parameters to method calls.
+  - whenever the formal argument is assigned a new value in a method,
+    the previous value (before the assignment) should somehow be locked/
+    remembered.
+  - this is nasty because you'd need to both lock and leave it unlocked,
+    so that its typestate could still propagate.
+  - the formal argument may not have been reassigned in all branches, so
+    the unassigned ones should keep on changing the typestate of the
+    actual arugment.
+  - overall, it's a big mess, so I just stuck with propagating the typestate
+    of the returned value.
+
+* no semantics found for rules defined for matching methods (virtual dispatch)

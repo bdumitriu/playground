@@ -1,0 +1,98 @@
+/*
+  PARLOG example: Concurrent Sentence Parser.
+
+  From Chapter 8 of Programming in PARLOG.
+*/
+
+mode test1(^).
+test1(P) <-
+  parse([the,girl,smiles],P).
+
+mode test2(^).
+test2(P) <-
+  parse([the,girl,likes,the,lazy,boy],P).
+
+mode test3(^).
+test3(P) <-
+  parse([a,boy,quickly,kicks,the,ball],P).
+
+mode parse(sentence?,parse^).
+parse(S,P) <-
+  parse_form(S,sentence,P).
+
+mode parse_form(words?,form?,parsetree^).
+parse_form([Word],Form,Parse) <-
+  dictionary(Form,Dict) :
+  member(Word,Dict),
+  Parse =.. [Form,Word].
+parse_form(Words,Form,Parse) <-
+  grammar(Form,Expansions) :
+  expansions_parse(Words,Expansions,ParseList),
+  Parse =.. [Form|ParseList].
+
+mode expansions_parse(words?,expansions?,parselist^).
+expansions_parse(Words,[Expansion1,Expansion2],Parse) <-
+  one_expansion_parse(Words,Expansion1,Parse) :
+  true.
+expansions_parse(Words,[Expansion1,Expansion2],Parse) <-
+  one_expansion_parse(Words,Expansion2,Parse) :
+  true.
+expansions_parse(Words,[Expansion],Parse) <-
+  one_expansion_parse(Words,Expansion,Parse).
+
+mode one_expansion_parse(words?,expansion?,parselist^).
+one_expansion_parse(Words,[Form1,Form2],[Parse1, Parse2]) <-
+  splittings(Words,Splits),
+  splits_parse(Splits,Form1,Form2,Parse1,Parse2).
+one_expansion_parse(Words,[Form],[Parse]) <-
+  parse_form(Words,Form,Parse).
+
+mode splits_parse(listofsplits?,form1?,form2?,parse1^,parse2^).
+splits_parse([pair(Front,Back)|Splits],Form1,Form2,Parse1,Parse2) <-
+  parse_form(Front,Form1,Parse1),
+  parse_form(Back,Form2,Parse2) :
+  true;                               % This ';' was '.' in the original.
+splits_parse([Split|Splits],Form1,Form2,Parse1,Parse2) <-
+  splits_parse(Splits,Form1,Form2,Parse1,Parse2) :
+  true .
+
+mode splittings(list?,listofsplits^).
+splittings([],[pair([],[])]).
+splittings([H|T],[pair([],[H|T])|Insertions]) <-
+  splittings(T,Tsplits),
+  front_insert(H,Tsplits,Insertions).
+
+mode front_insert(term?,listofpairs?,insertedpairs^).
+front_insert(T,[],[]).
+front_insert(T,[pair(F,B)|Pairs],[pair([T|F],B)|InsertedPairs]) <-
+  front_insert(T,Pairs,InsertedPairs).
+
+mode member(?,?).
+member(X,[X|Y]);
+member(X,[Z|Y]) <-
+  member(X,Y).
+
+mode grammar(form?,expansions^).
+grammar(sentence,[[noun_phrase,verb],[noun_phrase,verb_phrase]]).
+grammar(noun_phrase,[[determiner,noun_expression]]).
+grammar(noun_expression,[[noun],[adjective,noun_expression]]).
+grammar(verb_phrase,[[verb_expression,noun_phrase]]).
+grammar(verb_expression,[[verb],[adverb,verb]]).
+
+mode dictionary(form?,words^).
+dictionary(verb,[likes,kicks,smiles,admires,eats]).
+dictionary(determiner,[the,a,an]).
+dictionary(noun,[boy,girl,table,tree,apple,ball]).
+dictionary(adverb,[quickly,easily]).
+dictionary(adjective,[big,small,lazy,eager,bad,good]).
+
+
+/* the suggested alternative expansions_parse procedure  ....
+
+mode expansions_parse(words?,expansions?,parselist^).
+expansions_parse(Words,[Expansion|OtherExpnsns],Parse) <-
+  one_expansion_parse(Words,Expansion,Parse) :
+  true.
+expansions_parse(Words,[Expansion|OtherExpnsns],Parse) <-
+  expansions_parse(Words,OtherExpnsns,Parse) :
+  true.                                                        */

@@ -1,0 +1,22 @@
+ - Functia DOS 30h -
+
+Functie:
+    Aflarea versiunii de DOS folosite.
+
+Asteapta:
+    ah: 30h
+
+Intoarce:
+    al: numarul major de versiune.
+    ah: numarul minor de versiune.
+    bx, cx: informatii OEM
+
+Descriere:
+    Intoarce in ax valoarea versiunii  curente de DOS. De exemplu, daca DOS
+    3.20 e activ, in al se intoarce 3 si in ah 14h (20 in zecimal).
+
+Nota:
+    Valorile intoarse in bx si cx pot varia de la OEM la OEM. bh s-ar putea
+    sa contina un  numar de identificare OEM  si bl:cx ar putea fi setat la
+    o valoare de 24  de biti utilizata de OEM pentru  a identifica subversi-
+    uni.

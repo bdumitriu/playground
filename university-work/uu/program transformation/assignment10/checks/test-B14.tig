@@ -1,0 +1,35 @@
+let type intlist = {hd: int, tl: intlist}
+
+    var x
+    var y
+    var tail : intlist := nil
+    var list : intlist := intlist{ hd = x, tl = tail }
+
+ in list.hd := y
+  ; printint(list.hd)
+  ; list := intlist{ hd = x + x, tl = tail }
+  ; printint(list.hd)
+  ; list := intlist{ hd = x, tl = tail }
+  ; printint(list.hd)
+  ; list.tl := y
+  ; printint(list.hd)
+  ; let var list : intlist
+     in printint(list.hd)
+      ; list.hd := y
+      ; tail := intlist{ hd = y, tl = nil}
+    end
+  ; printint(list.hd)
+  ; printint(tail.hd)
+
+  ; list := intlist{ hd = x, tl = tail }
+  ; printint(list.hd)
+  ; printint(list.tl)
+  ; x := 5
+  ; printint(list.hd)
+  ; printint(list.tl)
+
+  ; list := intlist{ hd = y, tl = tail }
+  ; printint(list.hd)
+  ; list := intlist{ hd = 2*y, tl = tail }
+  ; printint(list.hd)
+end

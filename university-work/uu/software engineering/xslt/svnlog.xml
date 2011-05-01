@@ -1,0 +1,3765 @@
+<?xml version="1.0" encoding="utf-8"?>
+<log>
+<logentry
+   revision="330">
+<author>gwstorage</author>
+<date>2005-01-03T15:24:51.417928Z</date>
+<paths>
+<path
+   action="M">/trunk/EelcoVisser/WebHome</path>
+</paths>
+<msg>remove embedded html</msg>
+</logentry>
+<logentry
+   revision="329">
+<author>gwstorage</author>
+<date>2005-01-03T15:22:26.150350Z</date>
+<paths>
+<path
+   action="D">/QueryPagesTest</path>
+<path
+   copyfrom-path="/QueryPagesTest"
+   copyfrom-rev="327"
+   action="A">/trunk/QueryPagesTest</path>
+</paths>
+<msg>move test</msg>
+</logentry>
+<logentry
+   revision="328">
+<author>gwstorage</author>
+<date>2005-01-03T15:20:47.907258Z</date>
+<paths>
+<path
+   action="M">/RaStorageTest</path>
+</paths>
+<msg>just testing</msg>
+</logentry>
+<logentry
+   revision="327">
+<author>gwstorage</author>
+<date>2004-12-22T11:43:02.254829Z</date>
+<paths>
+<path
+   action="M">/TestPage</path>
+</paths>
+<msg>45</msg>
+</logentry>
+<logentry
+   revision="326">
+<author>gwstorage</author>
+<date>2004-12-22T11:40:16.457716Z</date>
+<paths>
+<path
+   action="M">/TestPage</path>
+</paths>
+<msg>123</msg>
+</logentry>
+<logentry
+   revision="325">
+<author>gwstorage</author>
+<date>2004-12-22T11:33:31.955315Z</date>
+<paths>
+<path
+   action="M">/NewPage</path>
+</paths>
+<msg>123</msg>
+</logentry>
+<logentry
+   revision="324">
+<author>gwstorage</author>
+<date>2004-12-22T11:25:20.093463Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>12345</msg>
+</logentry>
+<logentry
+   revision="323">
+<author>gwstorage</author>
+<date>2004-12-22T10:55:36.639082Z</date>
+<paths>
+<path
+   action="M">/NewPage</path>
+</paths>
+<msg>123</msg>
+</logentry>
+<logentry
+   revision="322">
+<author>gwstorage</author>
+<date>2004-12-16T12:56:24.063659Z</date>
+<paths>
+<path
+   action="A">/SweSlides/bla</path>
+<path
+   action="A">/SweSlides/bla/test</path>
+</paths>
+<msg>231</msg>
+</logentry>
+<logentry
+   revision="321">
+<author>gwstorage</author>
+<date>2004-12-16T12:49:43.458622Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/view-form.xsl</path>
+</paths>
+<msg></msg>
+</logentry>
+<logentry
+   revision="320">
+<author>gwstorage</author>
+<date>2004-12-16T12:44:35.918115Z</date>
+<paths>
+<path
+   action="M">/NewPage</path>
+</paths>
+<msg>nieuw</msg>
+</logentry>
+<logentry
+   revision="319">
+<author>gwstorage</author>
+<date>2004-11-17T13:17:39.434233Z</date>
+<paths>
+<path
+   action="A">/RaStorageTest</path>
+</paths>
+<msg>tgh</msg>
+</logentry>
+<logentry
+   revision="318">
+<author>gwstorage</author>
+<date>2004-11-17T12:56:42.986392Z</date>
+<paths>
+<path
+   action="M">/NewPage</path>
+</paths>
+<msg>fggh</msg>
+</logentry>
+<logentry
+   revision="317">
+<author>gwstorage</author>
+<date>2004-11-17T12:46:39.938993Z</date>
+<paths>
+<path
+   action="M">/NewPage</path>
+</paths>
+<msg>a</msg>
+</logentry>
+<logentry
+   revision="316">
+<author>gwstorage</author>
+<date>2004-11-17T11:51:22.897908Z</date>
+<paths>
+<path
+   action="M">/NewPage</path>
+</paths>
+<msg>message</msg>
+</logentry>
+<logentry
+   revision="315">
+<author>cddouma</author>
+<date>2004-11-12T12:53:06.301508Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/view-default.xsl</path>
+<path
+   action="M">/stylesheets/view-file.xsl</path>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+<path
+   action="D">/stylesheets/lib/preview-default.xsl</path>
+<path
+   action="M">/stylesheets/preview-file.xsl</path>
+</paths>
+<msg>made library more a library
+preview now looks the way it should
+</msg>
+</logentry>
+<logentry
+   revision="314">
+<author>cddouma</author>
+<date>2004-11-12T12:30:42.766521Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+<path
+   action="M">/stylesheets/lib/preview-default.xsl</path>
+</paths>
+<msg>bug in preview-default fixed (preview shoud be shown now) 
+calling variable handlers in preview-form and edit-file just once (speed improvement) 
+</msg>
+</logentry>
+<logentry
+   revision="313">
+<author>gwstorage</author>
+<date>2004-11-11T14:41:40.031748Z</date>
+<paths>
+<path
+   copyfrom-path="/stylesheets/lib/statusbar.xsl"
+   copyfrom-rev="311"
+   action="A">/stylesheets/lib/view-form.xsl</path>
+<path
+   action="M">/stylesheets/view-dir.xsl</path>
+<path
+   action="M">/stylesheets/view-file.xsl</path>
+<path
+   action="D">/stylesheets/lib/statusbar.xsl</path>
+</paths>
+<msg>fdg</msg>
+</logentry>
+<logentry
+   revision="312">
+<author>gwstorage</author>
+<date>2004-11-11T14:39:19.316725Z</date>
+<paths>
+<path
+   action="M">/stylesheets/view-dir.xsl</path>
+</paths>
+<msg>r</msg>
+</logentry>
+<logentry
+   revision="311">
+<author>gwstorage</author>
+<date>2004-11-11T14:34:36.812256Z</date>
+<paths>
+<path
+   copyfrom-path="/stylesheets/lib/default.xsl"
+   copyfrom-rev="309"
+   action="A">/stylesheets/lib/view-default.xsl</path>
+<path
+   action="M">/stylesheets/view-file.xsl</path>
+<path
+   action="D">/stylesheets/lib/default.xsl</path>
+</paths>
+<msg>sdfd</msg>
+</logentry>
+<logentry
+   revision="310">
+<author>gwstorage</author>
+<date>2004-11-11T14:02:46.309865Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>asd</msg>
+</logentry>
+<logentry
+   revision="309">
+<author>gwstorage</author>
+<date>2004-11-11T14:01:09.856940Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>nu moet het werken...</msg>
+</logentry>
+<logentry
+   revision="308">
+<author>gwstorage</author>
+<date>2004-11-11T13:58:35.625903Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>fdgf</msg>
+</logentry>
+<logentry
+   revision="307">
+<author>gwstorage</author>
+<date>2004-11-11T13:57:30.659664Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>g</msg>
+</logentry>
+<logentry
+   revision="306">
+<author>gwstorage</author>
+<date>2004-11-11T13:56:01.626030Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>dsfasd</msg>
+</logentry>
+<logentry
+   revision="305">
+<author>gwstorage</author>
+<date>2004-11-11T13:54:32.773366Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>bijnairie debugging
+</msg>
+</logentry>
+<logentry
+   revision="304">
+<author>gwstorage</author>
+<date>2004-11-11T13:50:44.972518Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>sdf</msg>
+</logentry>
+<logentry
+   revision="303">
+<author>gwstorage</author>
+<date>2004-11-11T13:47:55.438149Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>hj</msg>
+</logentry>
+<logentry
+   revision="302">
+<author>gwstorage</author>
+<date>2004-11-11T13:46:33.881184Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>fghjdghrtjrjg</msg>
+</logentry>
+<logentry
+   revision="301">
+<author>gwstorage</author>
+<date>2004-11-11T13:43:57.426692Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-default.xsl</path>
+</paths>
+<msg>300000000</msg>
+</logentry>
+<logentry
+   revision="300">
+<author>gwstorage</author>
+<date>2004-11-11T13:42:28.998389Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-default.xsl</path>
+</paths>
+<msg>sdfsdf</msg>
+</logentry>
+<logentry
+   revision="299">
+<author>gwstorage</author>
+<date>2004-11-11T13:41:01.748770Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>df</msg>
+</logentry>
+<logentry
+   revision="298">
+<author>gwstorage</author>
+<date>2004-11-11T13:38:22.922062Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>sa</msg>
+</logentry>
+<logentry
+   revision="297">
+<author>gwstorage</author>
+<date>2004-11-11T13:33:09.729381Z</date>
+<paths>
+<path
+   action="M">/stylesheets/preview-dir.xsl</path>
+</paths>
+<msg>bla</msg>
+</logentry>
+<logentry
+   revision="296">
+<author>gwstorage</author>
+<date>2004-11-11T13:30:32.675783Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+</paths>
+<msg>...</msg>
+</logentry>
+<logentry
+   revision="295">
+<author>gwstorage</author>
+<date>2004-11-11T13:26:13.078125Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/preview-form.xsl</path>
+<path
+   action="M">/stylesheets/lib/preview-default.xsl</path>
+<path
+   action="M">/stylesheets/preview-file.xsl</path>
+</paths>
+<msg>vanalles en nog wat...en een klein beetje extra</msg>
+</logentry>
+<logentry
+   revision="294">
+<author>gwstorage</author>
+<date>2004-11-11T12:56:48.972397Z</date>
+<paths>
+<path
+   copyfrom-path="/stylesheets/lib/statusbar.xsl"
+   copyfrom-rev="293"
+   action="A">/stylesheets/lib/preview-form.xsl</path>
+<path
+   copyfrom-path="/stylesheets/lib/default.xsl"
+   copyfrom-rev="293"
+   action="A">/stylesheets/lib/preview-default.xsl</path>
+<path
+   copyfrom-path="/stylesheets/view-dir.xsl"
+   copyfrom-rev="293"
+   action="A">/stylesheets/preview-dir.xsl</path>
+<path
+   copyfrom-path="/stylesheets/view-file.xsl"
+   copyfrom-rev="293"
+   action="A">/stylesheets/preview-file.xsl</path>
+</paths>
+<msg>added stylesheets for preview</msg>
+</logentry>
+<logentry
+   revision="293">
+<author>gwstorage</author>
+<date>2004-11-11T11:57:55.371644Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-dir.xsl</path>
+</paths>
+<msg>Editted edit-dir stylesheet.</msg>
+</logentry>
+<logentry
+   revision="292">
+<author>gwstorage</author>
+<date>2004-11-11T11:55:47.669739Z</date>
+<paths>
+<path
+   copyfrom-path="/stylesheets/edit-file.xsl"
+   copyfrom-rev="291"
+   action="A">/stylesheets/edit-dir.xsl</path>
+</paths>
+<msg>created edit-dir template</msg>
+</logentry>
+<logentry
+   revision="291">
+<author>gwstorage</author>
+<date>2004-11-11T11:50:28.854276Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>changed cancel link</msg>
+</logentry>
+<logentry
+   revision="290">
+<author>gwstorage</author>
+<date>2004-11-11T11:48:55.894631Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>added end-slashes for the meta tags</msg>
+</logentry>
+<logentry
+   revision="289">
+<author>gwstorage</author>
+<date>2004-11-11T11:39:02.907781Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Editted the stylesheet to it's final form</msg>
+</logentry>
+<logentry
+   revision="288">
+<author>gwstorage</author>
+<date>2004-11-11T11:01:45.599234Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>dededededededed</msg>
+</logentry>
+<logentry
+   revision="287">
+<author>gwstorage</author>
+<date>2004-11-11T11:00:59.125265Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>als dit waar is heeft EricBouwers dit bedacht</msg>
+</logentry>
+<logentry
+   revision="286">
+<author>gwstorage</author>
+<date>2004-11-11T11:00:14.329542Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>hyyyhyhyyhyyhyyhy</msg>
+</logentry>
+<logentry
+   revision="285">
+<author>gwstorage</author>
+<date>2004-11-11T10:59:00.569296Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>lililililililililili</msg>
+</logentry>
+<logentry
+   revision="284">
+<author>gwstorage</author>
+<date>2004-11-11T10:57:53.620390Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>lolololololol
+o</msg>
+</logentry>
+<logentry
+   revision="283">
+<author>gwstorage</author>
+<date>2004-11-11T10:56:09.928778Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Removed 'smart'  variable things</msg>
+</logentry>
+<logentry
+   revision="282">
+<author>gwstorage</author>
+<date>2004-11-11T10:53:24.654521Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>removed ' kringeltjes'  triued somethin
+g 
+e
+lse
+
+
+-</msg>
+</logentry>
+<logentry
+   revision="281">
+<author>gwstorage</author>
+<date>2004-11-11T10:51:31.849873Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>added 'kringeltjes'</msg>
+</logentry>
+<logentry
+   revision="280">
+<author>gwstorage</author>
+<date>2004-11-11T10:50:42.902191Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>lalalalalallalal,alala</msg>
+</logentry>
+<logentry
+   revision="279">
+<author>gwstorage</author>
+<date>2004-11-11T10:47:42.979188Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>bla</msg>
+</logentry>
+<logentry
+   revision="278">
+<author>gwstorage</author>
+<date>2004-11-11T10:45:58.757395Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Created HTML form in the stylesheet</msg>
+</logentry>
+<logentry
+   revision="277">
+<author>gwstorage</author>
+<date>2004-11-11T10:42:37.851365Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>.</msg>
+</logentry>
+<logentry
+   revision="276">
+<author>gwstorage</author>
+<date>2004-11-11T10:41:55.726089Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>bla</msg>
+</logentry>
+<logentry
+   revision="275">
+<author>gwstorage</author>
+<date>2004-11-11T10:40:18.755664Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>made variable from actionPath</msg>
+</logentry>
+<logentry
+   revision="274">
+<author>gwstorage</author>
+<date>2004-11-11T10:38:32.218752Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Changed apply-templates into call-template</msg>
+</logentry>
+<logentry
+   revision="273">
+<author>gwstorage</author>
+<date>2004-11-11T10:35:15.205355Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Changed Stylesheet again</msg>
+</logentry>
+<logentry
+   revision="272">
+<author>gwstorage</author>
+<date>2004-11-11T10:34:04.800147Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Changed stylesheet again</msg>
+</logentry>
+<logentry
+   revision="271">
+<author>gwstorage</author>
+<date>2004-11-11T10:30:31.277995Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Change stylesheets again</msg>
+</logentry>
+<logentry
+   revision="270">
+<author>gwstorage</author>
+<date>2004-11-11T10:28:46.815202Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Changes stylesheets again</msg>
+</logentry>
+<logentry
+   revision="269">
+<author>gwstorage</author>
+<date>2004-11-11T10:25:13.298878Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Changes stylesheet again</msg>
+</logentry>
+<logentry
+   revision="268">
+<author>gwstorage</author>
+<date>2004-11-11T10:21:28.144979Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Changed stylesheet again</msg>
+</logentry>
+<logentry
+   revision="267">
+<author>gwstorage</author>
+<date>2004-11-11T10:19:10.524916Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Changed stylesheet again</msg>
+</logentry>
+<logentry
+   revision="266">
+<author>gwstorage</author>
+<date>2004-11-11T10:17:34.709482Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Changed stylesheet again</msg>
+</logentry>
+<logentry
+   revision="265">
+<author>gwstorage</author>
+<date>2004-11-11T10:14:35.210860Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Changed variable thingies</msg>
+</logentry>
+<logentry
+   revision="264">
+<author>gwstorage</author>
+<date>2004-11-11T10:13:31.894218Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Added variables</msg>
+</logentry>
+<logentry
+   revision="263">
+<author>gwstorage</author>
+<date>2004-11-11T10:09:35.706307Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>Removed things from stylesheet</msg>
+</logentry>
+<logentry
+   revision="262">
+<author>gwstorage</author>
+<date>2004-11-11T10:07:22.304939Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>removed non-whitespace from stylesheet</msg>
+</logentry>
+<logentry
+   revision="261">
+<author>gwstorage</author>
+<date>2004-11-10T15:40:03.823219Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>fgh</msg>
+</logentry>
+<logentry
+   revision="260">
+<author>gwstorage</author>
+<date>2004-11-10T15:38:52.239187Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>dfh</msg>
+</logentry>
+<logentry
+   revision="259">
+<author>gwstorage</author>
+<date>2004-11-10T15:36:55.562316Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>sdfg</msg>
+</logentry>
+<logentry
+   revision="258">
+<author>gwstorage</author>
+<date>2004-11-10T15:35:57.463265Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>dfh</msg>
+</logentry>
+<logentry
+   revision="257">
+<author>gwstorage</author>
+<date>2004-11-10T15:34:54.120801Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>erh</msg>
+</logentry>
+<logentry
+   revision="256">
+<author>gwstorage</author>
+<date>2004-11-10T15:32:58.042012Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>sdfg</msg>
+</logentry>
+<logentry
+   revision="255">
+<author>gwstorage</author>
+<date>2004-11-10T15:28:13.235587Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>try #alef0 + 1</msg>
+</logentry>
+<logentry
+   revision="254">
+<author>gwstorage</author>
+<date>2004-11-10T15:26:21.233451Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>try #alef0</msg>
+</logentry>
+<logentry
+   revision="253">
+<author>gwstorage</author>
+<date>2004-11-10T15:24:24.767996Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>fdvfd</msg>
+</logentry>
+<logentry
+   revision="252">
+<author>gwstorage</author>
+<date>2004-11-10T15:23:20.373867Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>sdfg</msg>
+</logentry>
+<logentry
+   revision="251">
+<author>gwstorage</author>
+<date>2004-11-10T15:21:58.060065Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>fgsdag</msg>
+</logentry>
+<logentry
+   revision="250">
+<author>gwstorage</author>
+<date>2004-11-10T15:21:08.139841Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>asdfasdf</msg>
+</logentry>
+<logentry
+   revision="249">
+<author>gwstorage</author>
+<date>2004-11-10T15:19:23.725193Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>dfh</msg>
+</logentry>
+<logentry
+   revision="248">
+<author>gwstorage</author>
+<date>2004-11-10T15:18:30.039777Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>sdfg</msg>
+</logentry>
+<logentry
+   revision="247">
+<author>gwstorage</author>
+<date>2004-11-10T15:16:37.343756Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>sdfgsdfg</msg>
+</logentry>
+<logentry
+   revision="246">
+<author>gwstorage</author>
+<date>2004-11-10T15:13:32.596298Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>added form</msg>
+</logentry>
+<logentry
+   revision="245">
+<author>gwstorage</author>
+<date>2004-11-10T15:02:11.447558Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>dfh</msg>
+</logentry>
+<logentry
+   revision="244">
+<author>gwstorage</author>
+<date>2004-11-10T15:00:31.089146Z</date>
+<paths>
+<path
+   action="M">/stylesheets/edit-file.xsl</path>
+</paths>
+<msg>sdfgsdfg</msg>
+</logentry>
+<logentry
+   revision="243">
+<author>gwstorage</author>
+<date>2004-11-10T14:45:00.519856Z</date>
+<paths>
+<path
+   copyfrom-path="/stylesheets/view-file.xsl"
+   copyfrom-rev="242"
+   action="A">/stylesheets/edit-file.xsl</path>
+<path
+   action="M">/stylesheets/view-dir.xsl</path>
+</paths>
+<msg>Removed random junk from view-dir.
+
+Created edit-file for rendering an edit html page.</msg>
+</logentry>
+<logentry
+   revision="242">
+<author>gwstorage</author>
+<date>2004-11-10T13:18:54.587895Z</date>
+<paths>
+<path
+   action="D">/stylesheet</path>
+</paths>
+<msg>stomme directories verwijderd.</msg>
+</logentry>
+<logentry
+   revision="241">
+<author>gwstorage</author>
+<date>2004-11-10T13:18:03.544021Z</date>
+<paths>
+<path
+   action="A">/stylesheet</path>
+<path
+   action="M">/stylesheets/lib/default.xsl</path>
+<path
+   action="A">/stylesheet/lib</path>
+</paths>
+<msg>no-cache headers terug gedraaid</msg>
+</logentry>
+<logentry
+   revision="240">
+<author>gwstorage</author>
+<date>2004-11-10T13:12:58.783629Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/default.xsl</path>
+</paths>
+<msg>added no-cache header to the stylesheet</msg>
+</logentry>
+<logentry
+   revision="239">
+<author>gwstorage</author>
+<date>2004-11-10T13:02:40.292016Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/statusbar.xsl</path>
+</paths>
+<msg>added the statusbar</msg>
+</logentry>
+<logentry
+   revision="238">
+<author>gwstorage</author>
+<date>2004-11-10T12:57:18.717418Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/statusbar.xsl</path>
+</paths>
+<msg>ddf</msg>
+</logentry>
+<logentry
+   revision="237">
+<author>gwstorage</author>
+<date>2004-11-08T13:36:28.543364Z</date>
+<paths>
+<path
+   action="M">/trunk/Thamas</path>
+</paths>
+<msg>zooi
+</msg>
+</logentry>
+<logentry
+   revision="236">
+<author>gwstorage</author>
+<date>2004-11-08T12:14:55.166486Z</date>
+<paths>
+<path
+   action="M">/trunk/LukeTheMule</path>
+</paths>
+<msg>ey
+</msg>
+</logentry>
+<logentry
+   revision="235">
+<author>gwstorage</author>
+<date>2004-11-08T11:35:40.633121Z</date>
+<paths>
+<path
+   action="M">/trunk/WikiNames</path>
+</paths>
+<msg>Content type null really annoying....</msg>
+</logentry>
+<logentry
+   revision="234">
+<author>gwstorage</author>
+<date>2004-11-02T13:53:53.922966Z</date>
+<paths>
+<path
+   action="M">/trunk/SearchHome</path>
+</paths>
+<msg>Another searchHome modification</msg>
+</logentry>
+<logentry
+   revision="233">
+<author>gwstorage</author>
+<date>2004-11-02T13:43:30.524551Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>Blaat.</msg>
+</logentry>
+<logentry
+   revision="232">
+<author>gwstorage</author>
+<date>2004-11-02T13:42:02.280023Z</date>
+<paths>
+<path
+   action="M">/trunk/foo</path>
+</paths>
+<msg>Foo</msg>
+</logentry>
+<logentry
+   revision="231">
+<author>gwstorage</author>
+<date>2004-11-02T13:28:13.787995Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+<path
+   action="A">/TestPage</path>
+</paths>
+<msg>hehe</msg>
+</logentry>
+<logentry
+   revision="230">
+<author>gwstorage</author>
+<date>2004-11-02T13:23:01.712324Z</date>
+<paths>
+<path
+   action="A">/renderTest/WebHome</path>
+<path
+   action="A">/renderTest/stylesheets/view-file.xsl</path>
+<path
+   action="A">/renderTest/stylesheets</path>
+<path
+   action="A">/renderTest</path>
+</paths>
+<msg>added render tests with alternative stylesheet</msg>
+</logentry>
+<logentry
+   revision="229">
+<author>gwstorage</author>
+<date>2004-11-02T13:20:00.049182Z</date>
+<paths>
+<path
+   action="A">/NewPage</path>
+</paths>
+<msg>rerwqerqewr</msg>
+</logentry>
+<logentry
+   revision="228">
+<author>gwstorage</author>
+<date>2004-11-02T13:11:40.488823Z</date>
+<paths>
+<path
+   action="M">/trunk/SearchHome</path>
+</paths>
+<msg>Oops</msg>
+</logentry>
+<logentry
+   revision="227">
+<author>gwstorage</author>
+<date>2004-11-02T13:10:50.587016Z</date>
+<paths>
+<path
+   action="M">/trunk/SearchHome</path>
+</paths>
+<msg>Modified the search home</msg>
+</logentry>
+<logentry
+   revision="226">
+<author>gwstorage</author>
+<date>2004-11-02T12:57:38.160121Z</date>
+<paths>
+<path
+   action="D">/NewPage</path>
+<path
+   copyfrom-path="/NewPage"
+   copyfrom-rev="225"
+   action="A">/trunk/NewPage2</path>
+</paths>
+<msg>hehe</msg>
+</logentry>
+<logentry
+   revision="225">
+<author>gwstorage</author>
+<date>2004-11-02T12:51:54.031391Z</date>
+<paths>
+<path
+   action="A">/Users/Alice/Email</path>
+<path
+   action="A">/Users/Alice/Wonderland</path>
+<path
+   action="A">/Users/Alice</path>
+</paths>
+<msg>Alice in Wonderland</msg>
+</logentry>
+<logentry
+   revision="224">
+<author>gwstorage</author>
+<date>2004-11-02T12:42:33.940897Z</date>
+<paths>
+<path
+   action="A">/trunk/search</path>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>Added search</msg>
+</logentry>
+<logentry
+   revision="223">
+<author>gwstorage</author>
+<date>2004-11-02T12:35:38.667698Z</date>
+<paths>
+<path
+   action="A">/NewPage</path>
+</paths>
+<msg>hehe</msg>
+</logentry>
+<logentry
+   revision="222">
+<author>gwstorage</author>
+<date>2004-11-02T12:35:12.112140Z</date>
+<paths>
+<path
+   action="M">/trunk/SearchHome</path>
+</paths>
+<msg>Added SearchHome?</msg>
+</logentry>
+<logentry
+   revision="221">
+<author>gwstorage</author>
+<date>2004-11-02T12:33:45.182196Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>new page</msg>
+</logentry>
+<logentry
+   revision="220">
+<author>gwstorage</author>
+<date>2004-11-02T12:28:52.124568Z</date>
+<paths>
+<path
+   action="A">/trunk/SearchHome</path>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>SearchHome added</msg>
+</logentry>
+<logentry
+   revision="219">
+<author>gwstorage</author>
+<date>2004-11-02T12:10:00.941504Z</date>
+<paths>
+<path
+   action="M">/stylesheets/view-dir.xsl</path>
+<path
+   action="M">/stylesheets/lib/statusbar.xsl</path>
+</paths>
+<msg>fixed statusbar to make a call to
+statusbar
+pretty dir listing</msg>
+</logentry>
+<logentry
+   revision="218">
+<author>gwstorage</author>
+<date>2004-11-02T11:34:27.937263Z</date>
+<paths>
+<path
+   action="M">/WonderLand</path>
+</paths>
+<msg>1234 I want beer</msg>
+</logentry>
+<logentry
+   revision="217">
+<author>gwstorage</author>
+<date>2004-11-02T11:32:02.906060Z</date>
+<paths>
+<path
+   action="M">/Users/EvilBob</path>
+<path
+   copyfrom-path="/Users/Alice/WonderLand"
+   copyfrom-rev="216"
+   action="A">/WonderLand</path>
+<path
+   action="D">/Groups/AliceFanBoys</path>
+<path
+   action="D">/Users/Alice</path>
+</paths>
+<msg>sdfasd</msg>
+</logentry>
+<logentry
+   revision="216">
+<author>gwstorage</author>
+<date>2004-11-02T11:03:44.114072Z</date>
+<paths>
+<path
+   action="M">/Users/EvilBob</path>
+<path
+   action="A">/Users/Alice/WonderLand</path>
+<path
+   action="M">/Users/Alice</path>
+<path
+   action="A">/Groups/AliceFanBoys</path>
+</paths>
+<msg>Added wonderland to repos</msg>
+</logentry>
+<logentry
+   revision="215">
+<author>gwstorage</author>
+<date>2004-11-02T10:49:59.624522Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+<path
+   action="A">/Users/EvilBob</path>
+<path
+   action="A">/Users/Alice/Email</path>
+<path
+   action="M">/ExitingStory</path>
+<path
+   action="A">/Users/EvilBob/Email</path>
+<path
+   action="A">/Users/Alice</path>
+</paths>
+<msg>Changed password for user Alice</msg>
+</logentry>
+<logentry
+   revision="214">
+<author>gwstorage</author>
+<date>2004-11-02T10:40:18.715204Z</date>
+<paths>
+<path
+   action="M">/stylesheets/view-dir.xsl</path>
+<path
+   action="M">/stylesheets/lib/statusbar.xsl</path>
+</paths>
+<msg>modified statusbar to include logout/acl + view-dir also uses the statusbar.</msg>
+</logentry>
+<logentry
+   revision="213">
+<author>gwstorage</author>
+<date>2004-11-02T09:35:48.468397Z</date>
+<paths>
+<path
+   action="A">/trunk/Publications/WebHome</path>
+<path
+   action="A">/expiremental</path>
+<path
+   action="A">/BladieBla</path>
+<path
+   action="A">/trunk/Publications</path>
+</paths>
+<msg>created some new directories</msg>
+</logentry>
+<logentry
+   revision="212">
+<author>gwstorage</author>
+<date>2004-11-01T20:24:17.361717Z</date>
+<paths>
+<path
+   action="M">/Users/Spef</path>
+</paths>
+<msg>Alice test</msg>
+</logentry>
+<logentry
+   revision="211">
+<author>gwstorage</author>
+<date>2004-11-01T20:22:42.782267Z</date>
+<paths>
+<path
+   action="M">/Users/Spef/WonderLand</path>
+</paths>
+<msg>Some Spef Content (Alice test)</msg>
+</logentry>
+<logentry
+   revision="210">
+<author>gwstorage</author>
+<date>2004-11-01T20:14:42.275083Z</date>
+<paths>
+<path
+   action="A">/Users/Spef/WonderLand</path>
+</paths>
+<msg>Added some content (just a story for Alice)</msg>
+</logentry>
+<logentry
+   revision="209">
+<author>gwstorage</author>
+<date>2004-11-01T19:28:36.267393Z</date>
+<paths>
+<path
+   action="A">/ExitingStory</path>
+</paths>
+<msg>Adding some interesting content</msg>
+</logentry>
+<logentry
+   revision="208">
+<author>gwstorage</author>
+<date>2004-11-01T15:49:19.247816Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+<path
+   action="M">/Groups/NoBody</path>
+</paths>
+<msg>jhfg</msg>
+</logentry>
+<logentry
+   revision="207">
+<author>gwstorage</author>
+<date>2004-11-01T15:46:28.966123Z</date>
+<paths>
+<path
+   action="D">/Users/Arie</path>
+<path
+   action="D">/Users/Glimi</path>
+<path
+   action="D">/Users/Alice</path>
+</paths>
+<msg>Removed some users</msg>
+</logentry>
+<logentry
+   revision="206">
+<author>gwstorage</author>
+<date>2004-11-01T14:26:57.015988Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+<path
+   action="A">/Users/Alice/Email</path>
+<path
+   action="A">/Users/Alice</path>
+</paths>
+<msg>Changed password for user Alice</msg>
+</logentry>
+<logentry
+   revision="205">
+<author>gwstorage</author>
+<date>2004-11-01T14:06:23.417086Z</date>
+<paths>
+<path
+   action="M">/</path>
+</paths>
+<msg>Why would any1 want to change passw0rds?</msg>
+</logentry>
+<logentry
+   revision="204">
+<author>gwstorage</author>
+<date>2004-11-01T14:05:13.878191Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+<path
+   action="A">/Users/Arie</path>
+<path
+   action="A">/Users/Arie/Email</path>
+</paths>
+<msg>Hhahahahahha, I AM BGBBAAADCCKCK</msg>
+</logentry>
+<logentry
+   revision="203">
+<author>gwstorage</author>
+<date>2004-11-01T14:03:20.536273Z</date>
+<paths>
+<path
+   action="M">/Users/SebastienRaveau</path>
+</paths>
+<msg>Changed password for user SebastienRaveau</msg>
+</logentry>
+<logentry
+   revision="202">
+<author>gwstorage</author>
+<date>2004-11-01T13:45:19.817458Z</date>
+<paths>
+<path
+   action="D">/Eelco</path>
+</paths>
+<msg>o</msg>
+</logentry>
+<logentry
+   revision="201">
+<author>gwstorage</author>
+<date>2004-11-01T13:44:06.241588Z</date>
+<paths>
+<path
+   action="D">/gdfgd</path>
+</paths>
+<msg>jgm</msg>
+</logentry>
+<logentry
+   revision="200">
+<author>gwstorage</author>
+<date>2004-11-01T13:41:46.085770Z</date>
+<paths>
+<path
+   action="D">/tempfile</path>
+</paths>
+<msg>xf</msg>
+</logentry>
+<logentry
+   revision="199">
+<author>gwstorage</author>
+<date>2004-11-01T13:41:07.427354Z</date>
+<paths>
+<path
+   action="D">/trunk/tempfile</path>
+</paths>
+<msg>dd</msg>
+</logentry>
+<logentry
+   revision="198">
+<author>gwstorage</author>
+<date>2004-11-01T13:31:09.356052Z</date>
+<paths>
+<path
+   action="M">/trunk/LukeTheMule</path>
+</paths>
+<msg>Updated my webpage.
+  -- Luke</msg>
+</logentry>
+<logentry
+   revision="197">
+<author>cddouma</author>
+<date>2004-11-01T13:23:03.989050Z</date>
+<paths>
+<path
+   action="A">/sheepb.jpg</path>
+</paths>
+<msg>added an image
+</msg>
+</logentry>
+<logentry
+   revision="196">
+<author>gwstorage</author>
+<date>2004-11-01T13:22:34.791361Z</date>
+<paths>
+<path
+   copyfrom-path="/tempfile"
+   copyfrom-rev="194"
+   action="A">/trunk/tempfile</path>
+</paths>
+<msg>bla</msg>
+</logentry>
+<logentry
+   revision="195">
+<author>gwstorage</author>
+<date>2004-11-01T13:21:27.770497Z</date>
+<paths>
+<path
+   action="M">/view-template.xsl</path>
+</paths>
+<msg>il7yrtljg,g</msg>
+</logentry>
+<logentry
+   revision="194">
+<author>gwstorage</author>
+<date>2004-11-01T13:10:13.484258Z</date>
+<paths>
+<path
+   action="M">/IncrementalUpdate</path>
+</paths>
+<msg>There were no conflicts.</msg>
+</logentry>
+<logentry
+   revision="193">
+<author>gwstorage</author>
+<date>2004-11-01T13:09:10.766953Z</date>
+<paths>
+<path
+   action="A">/IncrementalUpdate</path>
+</paths>
+<msg>Error: You will have to fill in a commit message!</msg>
+</logentry>
+<logentry
+   revision="192">
+<author>gwstorage</author>
+<date>2004-11-01T13:00:35.538439Z</date>
+<paths>
+<path
+   action="M">/tempfile</path>
+</paths>
+<msg>sdf</msg>
+</logentry>
+<logentry
+   revision="191">
+<author>gwstorage</author>
+<date>2004-11-01T12:48:44.221112Z</date>
+<paths>
+<path
+   action="M">/tempfile</path>
+<path
+   action="M">/gdfgd</path>
+</paths>
+<msg>test</msg>
+</logentry>
+<logentry
+   revision="190">
+<author>gwstorage</author>
+<date>2004-11-01T12:33:13.863652Z</date>
+<paths>
+<path
+   action="M">/QueryPagesTest</path>
+</paths>
+<msg>death must be brought to the query group.. :D</msg>
+</logentry>
+<logentry
+   revision="189">
+<author>gwstorage</author>
+<date>2004-11-01T12:24:41.907495Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/statusbar.xsl</path>
+</paths>
+<msg>changed layout of svn status message</msg>
+</logentry>
+<logentry
+   revision="188">
+<author>GerardVanOostrum</author>
+<date>2004-11-01T12:21:26.199569Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/statusbar.xsl</path>
+</paths>
+<msg>fixed svn status retrieval errror</msg>
+</logentry>
+<logentry
+   revision="187">
+<author>gwstorage</author>
+<date>2004-11-01T12:13:36.700479Z</date>
+<paths>
+<path
+   action="M">/Eelco</path>
+</paths>
+<msg>q	a</msg>
+</logentry>
+<logentry
+   revision="186">
+<author>gwstorage</author>
+<date>2004-11-01T12:12:01.747752Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>Rendering zuigt!</msg>
+</logentry>
+<logentry
+   revision="185">
+<author>gwstorage</author>
+<date>2004-11-01T12:10:58.485672Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>sdsdsdf</msg>
+</logentry>
+<logentry
+   revision="184">
+<author>gwstorage</author>
+<date>2004-11-01T12:10:45.718455Z</date>
+<paths>
+<path
+   action="M">/tempfile</path>
+</paths>
+<msg>khgl</msg>
+</logentry>
+<logentry
+   revision="183">
+<author>gwstorage</author>
+<date>2004-11-01T12:08:08.358938Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>sddfsdfs</msg>
+</logentry>
+<logentry
+   revision="182">
+<author>gwstorage</author>
+<date>2004-11-01T12:05:09.524201Z</date>
+<paths>
+<path
+   action="M">/Eelco</path>
+</paths>
+<msg>asaf</msg>
+</logentry>
+<logentry
+   revision="181">
+<author>gwstorage</author>
+<date>2004-11-01T12:04:04.019062Z</date>
+<paths>
+<path
+   action="M">/Eelco</path>
+</paths>
+<msg>dxgsg</msg>
+</logentry>
+<logentry
+   revision="180">
+<author>gwstorage</author>
+<date>2004-11-01T12:03:50.423853Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>ssasad</msg>
+</logentry>
+<logentry
+   revision="179">
+<author>gwstorage</author>
+<date>2004-11-01T12:03:19.031832Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>sdsdf</msg>
+</logentry>
+<logentry
+   revision="178">
+<author>GerardVanOostrum</author>
+<date>2004-11-01T11:56:26.314870Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/statusbar.xsl</path>
+</paths>
+<msg>fixed xsl bug in statusbar</msg>
+</logentry>
+<logentry
+   revision="177">
+<author>gwstorage</author>
+<date>2004-11-01T11:54:23.915289Z</date>
+<paths>
+<path
+   action="A">/gdfgd</path>
+</paths>
+<msg>nothing to see here</msg>
+</logentry>
+<logentry
+   revision="176">
+<author>gwstorage</author>
+<date>2004-11-01T11:53:51.864749Z</date>
+<paths>
+<path
+   action="M">/Eelco</path>
+</paths>
+<msg>bn</msg>
+</logentry>
+<logentry
+   revision="175">
+<author>gwstorage</author>
+<date>2004-11-01T11:53:18.352506Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>fhdkfg</msg>
+</logentry>
+<logentry
+   revision="174">
+<author>GerardVanOostrum</author>
+<date>2004-11-01T11:51:09.070544Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/statusbar.xsl</path>
+</paths>
+<msg>changed statusbar to use variable handlers</msg>
+</logentry>
+<logentry
+   revision="173">
+<author>gwstorage</author>
+<date>2004-11-01T11:47:34.730375Z</date>
+<paths>
+<path
+   action="M">/Users/SebastienRaveau</path>
+</paths>
+<msg>Changed password for user SebastienRaveau</msg>
+</logentry>
+<logentry
+   revision="172">
+<author>gwstorage</author>
+<date>2004-11-01T11:46:04.148737Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+<path
+   action="A">/Users/SebastienRaveau</path>
+<path
+   action="A">/Users/SebastienRaveau/Email</path>
+</paths>
+<msg>Added user SebastienRaveau to the Wiki.</msg>
+</logentry>
+<logentry
+   revision="171">
+<author>gwstorage</author>
+<date>2004-11-01T11:40:51.058029Z</date>
+<paths>
+<path
+   action="M">/Eelco</path>
+</paths>
+<msg>conflict </msg>
+</logentry>
+<logentry
+   revision="170">
+<author>klaas</author>
+<date>2004-11-01T11:33:55.563980Z</date>
+<paths>
+<path
+   action="M">/stylesheets/view-file.xsl</path>
+</paths>
+<msg>statusbar should now be displayed</msg>
+</logentry>
+<logentry
+   revision="169">
+<author>klaas</author>
+<date>2004-11-01T11:32:44.583468Z</date>
+<paths>
+<path
+   action="M">/stylesheets/view-file.xsl</path>
+</paths>
+<msg>statusbar should now be displayed</msg>
+</logentry>
+<logentry
+   revision="168">
+<author>gwstorage</author>
+<date>2004-11-01T11:30:22.661914Z</date>
+<paths>
+<path
+   action="A">/trunk/LukeTheMule</path>
+</paths>
+<msg>Luke the Mule added his homepage.</msg>
+</logentry>
+<logentry
+   revision="167">
+<author>klaas</author>
+<date>2004-11-01T11:28:01.308070Z</date>
+<paths>
+<path
+   action="M">/stylesheets/view-file.xsl</path>
+</paths>
+<msg>statusbar should now be displayed</msg>
+</logentry>
+<logentry
+   revision="166">
+<author>gwstorage</author>
+<date>2004-11-01T11:22:22.069871Z</date>
+<paths>
+<path
+   action="M">/Eelco</path>
+</paths>
+<msg>...</msg>
+</logentry>
+<logentry
+   revision="165">
+<author>gwstorage</author>
+<date>2004-11-01T11:18:24.126375Z</date>
+<paths>
+<path
+   action="M">/Eelco</path>
+</paths>
+<msg>Creating a merge conflict.</msg>
+</logentry>
+<logentry
+   revision="164">
+<author>SanderMak</author>
+<date>2004-11-01T11:01:15.000245Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+</paths>
+<msg>  </msg>
+</logentry>
+<logentry
+   revision="163">
+<author>SanderMak</author>
+<date>2004-11-01T10:59:32.497893Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+</paths>
+<msg></msg>
+</logentry>
+<logentry
+   revision="162">
+<author>klaas</author>
+<date>2004-11-01T10:57:24.242430Z</date>
+<paths>
+<path
+   action="M">/stylesheets/lib/default.xsl</path>
+<path
+   action="M">/stylesheets/lib/statusbar.xsl</path>
+</paths>
+<msg>properties set</msg>
+</logentry>
+<logentry
+   revision="161">
+<author>gwstorage</author>
+<date>2004-11-01T10:55:03.090333Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+</paths>
+<msg>asdf</msg>
+</logentry>
+<logentry
+   revision="160">
+<author>klaas</author>
+<date>2004-11-01T10:28:23.889382Z</date>
+<paths>
+<path
+   action="M">/stylesheets/view-file.xsl</path>
+</paths>
+<msg>working on view-file</msg>
+</logentry>
+<logentry
+   revision="159">
+<author>klaas</author>
+<date>2004-11-01T10:15:23.376171Z</date>
+<paths>
+<path
+   action="A">/stylesheets/lib</path>
+<path
+   action="M">/stylesheets/view-file.xsl</path>
+<path
+   action="A">/stylesheets/lib/default.xsl</path>
+<path
+   action="A">/stylesheets/lib/statusbar.xsl</path>
+</paths>
+<msg>stylesheets are made modular</msg>
+</logentry>
+<logentry
+   revision="158">
+<author>gwstorage</author>
+<date>2004-11-01T10:14:49.715189Z</date>
+<paths>
+<path
+   action="A">/QueryPagesTest</path>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>Test for dead/live pages</msg>
+</logentry>
+<logentry
+   revision="157">
+<author>gwstorage</author>
+<date>2004-11-01T09:56:01.867735Z</date>
+<paths>
+<path
+   action="A">/tempfile</path>
+</paths>
+<msg>TestCase commit</msg>
+</logentry>
+<logentry
+   revision="156">
+<author>gwstorage</author>
+<date>2004-11-01T09:26:12.397493Z</date>
+<paths>
+<path
+   action="D">/diff</path>
+<path
+   copyfrom-path="/diff"
+   copyfrom-rev="155"
+   action="A">/trunk/diff</path>
+</paths>
+<msg>rfgrtfgrtrt</msg>
+</logentry>
+<logentry
+   revision="155">
+<author>gwstorage</author>
+<date>2004-11-01T09:22:42.320166Z</date>
+<paths>
+<path
+   action="D">/Glimi</path>
+<path
+   copyfrom-path="/Glimi"
+   copyfrom-rev="154"
+   action="A">/Users/Glimi</path>
+</paths>
+<msg>ssadsda</msg>
+</logentry>
+<logentry
+   revision="154">
+<author>gwstorage</author>
+<date>2004-11-01T09:21:23.936078Z</date>
+<paths>
+<path
+   copyfrom-path="/Users/Glimi"
+   copyfrom-rev="152"
+   action="A">/Glimi</path>
+<path
+   action="D">/Users/Glimi</path>
+<path
+   copyfrom-path="/Users/Glimi/Email"
+   copyfrom-rev="153"
+   action="R">/Glimi/Email</path>
+</paths>
+<msg>67rtrtrtrr</msg>
+</logentry>
+<logentry
+   revision="153">
+<author>gwstorage</author>
+<date>2004-11-01T09:20:18.940977Z</date>
+<paths>
+<path
+   action="D">/tempdir</path>
+</paths>
+<msg>wqwewe</msg>
+</logentry>
+<logentry
+   revision="152">
+<author>gwstorage</author>
+<date>2004-11-01T09:20:00.603576Z</date>
+<paths>
+<path
+   copyfrom-path="/branches/BladieBla/Eelco"
+   copyfrom-rev="150"
+   action="A">/Eelco</path>
+<path
+   action="D">/branches/BladieBla/Eelco</path>
+</paths>
+<msg>sasdsda</msg>
+</logentry>
+<logentry
+   revision="151">
+<author>gwstorage</author>
+<date>2004-11-01T09:19:14.393817Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>qwewew</msg>
+</logentry>
+<logentry
+   revision="150">
+<author>gwstorage</author>
+<date>2004-11-01T09:18:46.062865Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>sdasdsda</msg>
+</logentry>
+<logentry
+   revision="149">
+<author>gwstorage</author>
+<date>2004-11-01T09:17:51.060023Z</date>
+<paths>
+<path
+   action="A">/branches/BladieBla</path>
+<path
+   action="D">/Eelco</path>
+<path
+   copyfrom-path="/Eelco"
+   copyfrom-rev="147"
+   action="A">/branches/BladieBla/Eelco</path>
+</paths>
+<msg>asdasasdasdasddffsdsdfsdfyjhtytrwe4e4wrwe</msg>
+</logentry>
+<logentry
+   revision="148">
+<author>gwstorage</author>
+<date>2004-11-01T09:16:25.563716Z</date>
+<paths>
+<path
+   action="A">/diff/lpopo</path>
+</paths>
+<msg>ygygyi</msg>
+</logentry>
+<logentry
+   revision="147">
+<author>gwstorage</author>
+<date>2004-11-01T09:15:48.309922Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>5454</msg>
+</logentry>
+<logentry
+   revision="146">
+<author>gwstorage</author>
+<date>2004-11-01T08:57:28.425609Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>ffgdffd</msg>
+</logentry>
+<logentry
+   revision="145">
+<author>gwstorage</author>
+<date>2004-11-01T08:54:36.771946Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>dsdfsdf</msg>
+</logentry>
+<logentry
+   revision="144">
+<author>gwstorage</author>
+<date>2004-11-01T08:51:52.694648Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>opokijuyuy</msg>
+</logentry>
+<logentry
+   revision="143">
+<author>gwstorage</author>
+<date>2004-11-01T08:49:53.815062Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>sasad</msg>
+</logentry>
+<logentry
+   revision="142">
+<author>gwstorage</author>
+<date>2004-11-01T08:48:42.125551Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>ddfdf</msg>
+</logentry>
+<logentry
+   revision="141">
+<author>gwstorage</author>
+<date>2004-11-01T08:48:16.323237Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>changed content type to text/twiki</msg>
+</logentry>
+<logentry
+   revision="140">
+<author>gwstorage</author>
+<date>2004-11-01T08:42:49.141041Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>asassad</msg>
+</logentry>
+<logentry
+   revision="139">
+<author>gwstorage</author>
+<date>2004-11-01T08:38:24.575098Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>dddf</msg>
+</logentry>
+<logentry
+   revision="138">
+<author>gwstorage</author>
+<date>2004-11-01T08:34:30.146613Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>sdsdfsdf</msg>
+</logentry>
+<logentry
+   revision="137">
+<author>gwstorage</author>
+<date>2004-11-01T08:19:42.719924Z</date>
+<paths>
+<path
+   action="M">/view-template.xsl</path>
+</paths>
+<msg>ffgdffg</msg>
+</logentry>
+<logentry
+   revision="136">
+<author>gwstorage</author>
+<date>2004-11-01T08:04:43.887899Z</date>
+<paths>
+<path
+   action="A">/Name.Punt</path>
+</paths>
+<msg>fgfdfg</msg>
+</logentry>
+<logentry
+   revision="135">
+<author>gwstorage</author>
+<date>2004-11-01T08:03:23.069466Z</date>
+<paths>
+<path
+   action="D">/Name.Punt</path>
+</paths>
+<msg>dsfds</msg>
+</logentry>
+<logentry
+   revision="134">
+<author>gwstorage</author>
+<date>2004-10-31T20:25:26.527617Z</date>
+<paths>
+<path
+   action="D">/CopyDirTestTarget/Name.Punt</path>
+<path
+   copyfrom-path="/CopyDirTestTarget/Name.Punt"
+   copyfrom-rev="133"
+   action="A">/Name.Punt</path>
+</paths>
+<msg>s3e4</msg>
+</logentry>
+<logentry
+   revision="133">
+<author>gwstorage</author>
+<date>2004-10-31T20:23:32.937693Z</date>
+<paths>
+<path
+   copyfrom-path="/Name.Punt"
+   copyfrom-rev="132"
+   action="A">/CopyDirTestTarget/Name.Punt</path>
+<path
+   action="D">/Name.Punt</path>
+</paths>
+<msg>testjre</msg>
+</logentry>
+<logentry
+   revision="132">
+<author>gwstorage</author>
+<date>2004-10-28T21:02:53.363809Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>1</msg>
+</logentry>
+<logentry
+   revision="131">
+<author>gwstorage</author>
+<date>2004-10-28T21:00:04.584601Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>conflict 1</msg>
+</logentry>
+<logentry
+   revision="130">
+<author>gwstorage</author>
+<date>2004-10-28T20:49:41.159367Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>er</msg>
+</logentry>
+<logentry
+   revision="129">
+<author>gwstorage</author>
+<date>2004-10-28T20:22:29.816407Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>adssa</msg>
+</logentry>
+<logentry
+   revision="128">
+<author>gwstorage</author>
+<date>2004-10-28T20:11:54.607567Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+</paths>
+<msg>AnonymouS -&gt; AnonyMous</msg>
+</logentry>
+<logentry
+   revision="127">
+<author>gwstorage</author>
+<date>2004-10-28T20:11:33.424514Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>sdsd</msg>
+</logentry>
+<logentry
+   revision="126">
+<author>gwstorage</author>
+<date>2004-10-28T20:07:01.347798Z</date>
+<paths>
+<path
+   copyfrom-path="/SweSlides"
+   copyfrom-rev="125"
+   action="A">/SweSlidesCopy</path>
+</paths>
+<msg>Made a back-up copy</msg>
+</logentry>
+<logentry
+   revision="125">
+<author>gwstorage</author>
+<date>2004-10-28T20:06:17.742191Z</date>
+<paths>
+<path
+   copyfrom-path="/trunk/slides"
+   copyfrom-rev="123"
+   action="A">/SweSlides</path>
+<path
+   copyfrom-path="/trunk/slides/BuildingSoftware.pdf"
+   copyfrom-rev="124"
+   action="R">/SweSlides/BuildingSoftware.pdf</path>
+<path
+   action="D">/trunk/slides</path>
+<path
+   copyfrom-path="/trunk/slides/TestingTools.pdf"
+   copyfrom-rev="124"
+   action="R">/SweSlides/TestingTools.pdf</path>
+<path
+   copyfrom-path="/trunk/slides/ValidationAndVerification.pdf"
+   copyfrom-rev="124"
+   action="R">/SweSlides/ValidationAndVerification.pdf</path>
+<path
+   copyfrom-path="/trunk/slides/Introduction.pdf"
+   copyfrom-rev="124"
+   action="R">/SweSlides/Introduction.pdf</path>
+</paths>
+<msg>Moved slides around</msg>
+</logentry>
+<logentry
+   revision="124">
+<author>gwstorage</author>
+<date>2004-10-28T20:04:14.893474Z</date>
+<paths>
+<path
+   action="M">/Eelco</path>
+</paths>
+<msg>Held!</msg>
+</logentry>
+<logentry
+   revision="123">
+<author>gwstorage</author>
+<date>2004-10-28T20:03:36.932033Z</date>
+<paths>
+<path
+   action="A">/trunk/slides</path>
+<path
+   action="A">/trunk/slides/BuildingSoftware.pdf</path>
+<path
+   action="A">/trunk/slides/TestingTools.pdf</path>
+<path
+   action="A">/trunk/slides/ValidationAndVerification.pdf</path>
+<path
+   action="A">/trunk/slides/Introduction.pdf</path>
+</paths>
+<msg>pdfs added</msg>
+</logentry>
+<logentry
+   revision="122">
+<author>gwstorage</author>
+<date>2004-10-28T20:01:04.960709Z</date>
+<paths>
+<path
+   action="D">/trunk/slides</path>
+</paths>
+<msg>Deleted pfds</msg>
+</logentry>
+<logentry
+   revision="121">
+<author>gwstorage</author>
+<date>2004-10-28T19:53:27.718808Z</date>
+<paths>
+<path
+   action="A">/trunk/slides</path>
+<path
+   action="A">/trunk/slides/BuildingSoftware.pdf</path>
+<path
+   action="A">/trunk/slides/ValidationAndVerification.pdf</path>
+<path
+   action="A">/trunk/slides/Introduction.pdf</path>
+</paths>
+<msg>Slides added for uploading testing
+
+-- Michiel</msg>
+</logentry>
+<logentry
+   revision="120">
+<author>gwstorage</author>
+<date>2004-10-28T19:32:20.381350Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Wel als ik stiekem inlog als FooBar :o</msg>
+</logentry>
+<logentry
+   revision="119">
+<author>gwstorage</author>
+<date>2004-10-28T19:06:02.178499Z</date>
+<paths>
+<path
+   action="M">/Users/Administrator</path>
+<path
+   action="M">/Users</path>
+<path
+   action="M">/Users/FooBar</path>
+<path
+   action="A">/Groups/NoBody</path>
+<path
+   action="M">/Users/Spef</path>
+<path
+   action="M">/Groups</path>
+</paths>
+<msg>Set some usefull rights on the Groups and Users directory</msg>
+</logentry>
+<logentry
+   revision="118">
+<author>gwstorage</author>
+<date>2004-10-28T17:04:41.751357Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+<path
+   action="A">/Users/Glimi</path>
+<path
+   action="A">/Users/Glimi/Email</path>
+</paths>
+<msg>Glimi is the best new user. He has a cool password!</msg>
+</logentry>
+<logentry
+   revision="117">
+<author>gwstorage</author>
+<date>2004-10-28T15:49:22.340876Z</date>
+<paths>
+<path
+   action="D">/Users/Glimi</path>
+</paths>
+<msg>asdf</msg>
+</logentry>
+<logentry
+   revision="116">
+<author>gwstorage</author>
+<date>2004-10-28T14:52:29.556815Z</date>
+<paths>
+<path
+   action="A">/Users/Glimi/Email</path>
+</paths>
+<msg>Updated user Glimi</msg>
+</logentry>
+<logentry
+   revision="115">
+<author>gwstorage</author>
+<date>2004-10-28T14:51:35.013181Z</date>
+<paths>
+<path
+   action="A">/Users/Glimi</path>
+</paths>
+<msg>Created the directory for user Glimi</msg>
+</logentry>
+<logentry
+   revision="114">
+<author>gwstorage</author>
+<date>2004-10-28T14:19:43.405569Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Ik ben nu admin! I rock</msg>
+</logentry>
+<logentry
+   revision="113">
+<author>gwstorage</author>
+<date>2004-10-28T14:14:00.948983Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+</paths>
+<msg>bla</msg>
+</logentry>
+<logentry
+   revision="112">
+<author>gwstorage</author>
+<date>2004-10-28T13:35:15.406127Z</date>
+<paths>
+<path
+   action="M">/</path>
+</paths>
+<msg>weg</msg>
+</logentry>
+<logentry
+   revision="111">
+<author>gwstorage</author>
+<date>2004-10-28T13:33:56.960796Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Kinderp</msg>
+</logentry>
+<logentry
+   revision="110">
+<author>gwstorage</author>
+<date>2004-10-28T13:32:36.336190Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Flupsie</msg>
+</logentry>
+<logentry
+   revision="109">
+<author>gwstorage</author>
+<date>2004-10-28T13:30:52.135516Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>lalalalalala</msg>
+</logentry>
+<logentry
+   revision="108">
+<author>gwstorage</author>
+<date>2004-10-28T13:29:22.542315Z</date>
+<paths>
+<path
+   action="M">/Users/Administrator</path>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>hjrtq</msg>
+</logentry>
+<logentry
+   revision="107">
+<author>gwstorage</author>
+<date>2004-10-28T13:26:53.041834Z</date>
+<paths>
+<path
+   action="A">/Users/Administrator/Email</path>
+</paths>
+<msg>Updated user Administrator</msg>
+</logentry>
+<logentry
+   revision="106">
+<author>gwstorage</author>
+<date>2004-10-28T13:26:49.333180Z</date>
+<paths>
+<path
+   action="A">/Users/Administrator</path>
+</paths>
+<msg>Created the directory for user Administrator</msg>
+</logentry>
+<logentry
+   revision="105">
+<author>gwstorage</author>
+<date>2004-10-28T13:19:32.910474Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>aeg</msg>
+</logentry>
+<logentry
+   revision="104">
+<author>gwstorage</author>
+<date>2004-10-28T12:47:51.359638Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>we shou8ld be testing</msg>
+</logentry>
+<logentry
+   revision="103">
+<author>gwstorage</author>
+<date>2004-10-28T11:44:46.548130Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>bla
+</msg>
+</logentry>
+<logentry
+   revision="102">
+<author>gwstorage</author>
+<date>2004-10-28T11:43:33.085623Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+</paths>
+<msg>FooBar rocks ass!</msg>
+</logentry>
+<logentry
+   revision="101">
+<author>gwstorage</author>
+<date>2004-10-28T11:42:36.574355Z</date>
+<paths>
+<path
+   action="M">/Users/FooBar</path>
+</paths>
+<msg>Granted access to FooBar</msg>
+</logentry>
+<logentry
+   revision="100">
+<author>gwstorage</author>
+<date>2004-10-28T11:41:15.621433Z</date>
+<paths>
+<path
+   action="A">/trunk/JohnnyBoy</path>
+</paths>
+<msg>added a file</msg>
+</logentry>
+<logentry
+   revision="99">
+<author>gwstorage</author>
+<date>2004-10-28T11:40:58.310182Z</date>
+<paths>
+<path
+   action="A">/Users/FooBar/Email</path>
+</paths>
+<msg>Updated user FooBar</msg>
+</logentry>
+<logentry
+   revision="98">
+<author>gwstorage</author>
+<date>2004-10-28T11:40:42.328260Z</date>
+<paths>
+<path
+   action="A">/Users/FooBar</path>
+</paths>
+<msg>Created the directory for user FooBar</msg>
+</logentry>
+<logentry
+   revision="97">
+<author>gwstorage</author>
+<date>2004-10-28T11:40:12.704319Z</date>
+<paths>
+<path
+   action="D">/Users/FooBar</path>
+</paths>
+<msg>Stay Away FooBar!</msg>
+</logentry>
+<logentry
+   revision="96">
+<author>gwstorage</author>
+<date>2004-10-28T11:30:01.712914Z</date>
+<paths>
+<path
+   action="A">/Users/FooBar</path>
+</paths>
+<msg>Created the directory for user FooBar</msg>
+</logentry>
+<logentry
+   revision="95">
+<author>gwstorage</author>
+<date>2004-10-28T11:29:40.444929Z</date>
+<paths>
+<path
+   action="D">/Users/FooBar</path>
+</paths>
+<msg>Removed FooBar</msg>
+</logentry>
+<logentry
+   revision="94">
+<author>gwstorage</author>
+<date>2004-10-28T11:23:20.801890Z</date>
+<paths>
+<path
+   action="A">/Users/FooBar</path>
+</paths>
+<msg>Created the directory for user FooBar</msg>
+</logentry>
+<logentry
+   revision="93">
+<author>gwstorage</author>
+<date>2004-10-28T11:16:54.383084Z</date>
+<paths>
+<path
+   action="M">/Users</path>
+</paths>
+<msg>bllallalallaaa</msg>
+</logentry>
+<logentry
+   revision="92">
+<author>gwstorage</author>
+<date>2004-10-28T10:53:41.429950Z</date>
+<paths>
+<path
+   action="M">/WebHome</path>
+</paths>
+<msg>modified a page</msg>
+</logentry>
+<logentry
+   revision="91">
+<author>gwstorage</author>
+<date>2004-10-28T09:56:07.300701Z</date>
+<paths>
+<path
+   action="M">/</path>
+</paths>
+<msg>Added ACL</msg>
+</logentry>
+<logentry
+   revision="90">
+<author>gwstorage</author>
+<date>2004-10-28T09:54:53.544021Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>fsh</msg>
+</logentry>
+<logentry
+   revision="89">
+<author>gwstorage</author>
+<date>2004-10-28T09:50:41.441161Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>added acl</msg>
+</logentry>
+<logentry
+   revision="88">
+<author>gwstorage</author>
+<date>2004-10-28T09:48:10.432511Z</date>
+<paths>
+<path
+   action="M">/view-template.xsl</path>
+</paths>
+<msg>dsfds</msg>
+</logentry>
+<logentry
+   revision="87">
+<author>gwstorage</author>
+<date>2004-10-28T09:46:00.088363Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>hjlk</msg>
+</logentry>
+<logentry
+   revision="86">
+<author>gwstorage</author>
+<date>2004-10-28T09:44:21.945113Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Changed permision line for permission acl:write to: .</msg>
+</logentry>
+<logentry
+   revision="85">
+<author>gwstorage</author>
+<date>2004-10-28T09:43:53.503821Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Changed permision line for permission acl:read to: DefaultGroup.</msg>
+</logentry>
+<logentry
+   revision="84">
+<author>gwstorage</author>
+<date>2004-10-28T09:38:32.573791Z</date>
+<paths>
+<path
+   action="M">/Users/Spef/Email</path>
+</paths>
+<msg>ear</msg>
+</logentry>
+<logentry
+   revision="83">
+<author>gwstorage</author>
+<date>2004-10-28T09:15:39.718303Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Changed permision line for permission acl:aclWrite to: DefaultGroup.</msg>
+</logentry>
+<logentry
+   revision="82">
+<author>gwstorage</author>
+<date>2004-10-28T09:15:35.847675Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Changed permision line for permission acl:propertyWrite to: DefaultGroup.</msg>
+</logentry>
+<logentry
+   revision="81">
+<author>gwstorage</author>
+<date>2004-10-28T09:15:31.805963Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Changed permision line for permission acl:propertyRead to: DefaultGroup.</msg>
+</logentry>
+<logentry
+   revision="80">
+<author>gwstorage</author>
+<date>2004-10-28T09:15:27.793325Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Changed permision line for permission acl:password to: DefaultGroup.</msg>
+</logentry>
+<logentry
+   revision="79">
+<author>gwstorage</author>
+<date>2004-10-28T09:15:22.835606Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Changed permision line for permission acl:browse to: DefaultGroup.</msg>
+</logentry>
+<logentry
+   revision="78">
+<author>gwstorage</author>
+<date>2004-10-28T09:15:18.185312Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Changed permision line for permission acl:rename to: DefaultGroup.</msg>
+</logentry>
+<logentry
+   revision="77">
+<author>gwstorage</author>
+<date>2004-10-28T09:15:12.720359Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Changed permision line for permission acl:write to: DefaultGroup.</msg>
+</logentry>
+<logentry
+   revision="76">
+<author>gwstorage</author>
+<date>2004-10-28T09:15:08.538487Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Changed permision line for permission acl:read to: DefaultGroup.</msg>
+</logentry>
+<logentry
+   revision="75">
+<author>gwstorage</author>
+<date>2004-10-28T09:14:21.096927Z</date>
+<paths>
+<path
+   action="M">/Groups/DefaultGroup</path>
+</paths>
+<msg>Added user</msg>
+</logentry>
+<logentry
+   revision="74">
+<author>gwstorage</author>
+<date>2004-10-28T08:35:14.447254Z</date>
+<paths>
+<path
+   action="D">/Users/Eelco</path>
+<path
+   action="D">/Users/Eelco2</path>
+</paths>
+<msg>Deleted multiple eelco's</msg>
+</logentry>
+<logentry
+   revision="73">
+<author>gwstorage</author>
+<date>2004-10-27T18:50:41.400677Z</date>
+<paths>
+<path
+   action="A">/Groups/DefaultGroup</path>
+<path
+   action="A">/Groups</path>
+</paths>
+<msg>Spef in the DefaultGroup</msg>
+</logentry>
+<logentry
+   revision="72">
+<author>gwstorage</author>
+<date>2004-10-27T14:48:35.169588Z</date>
+<paths>
+<path
+   action="M">/Name.Punt</path>
+</paths>
+<msg>Update</msg>
+</logentry>
+<logentry
+   revision="71">
+<author>gwstorage</author>
+<date>2004-10-26T20:25:38.441644Z</date>
+<paths>
+<path
+   action="A">/WebHome</path>
+</paths>
+<msg>sdsd</msg>
+</logentry>
+<logentry
+   revision="70">
+<author>gwstorage</author>
+<date>2004-10-26T20:21:44.654902Z</date>
+<paths>
+<path
+   action="D">/WebHome</path>
+<path
+   action="D">/Webhome</path>
+</paths>
+<msg>xcvcxv</msg>
+</logentry>
+<logentry
+   revision="69">
+<author>gwstorage</author>
+<date>2004-10-26T11:43:52.725796Z</date>
+<paths>
+<path
+   action="D">/tempdir/tempfile</path>
+</paths>
+<msg>TestCase commit</msg>
+</logentry>
+<logentry
+   revision="68">
+<author>gwstorage</author>
+<date>2004-10-26T11:43:47.621923Z</date>
+<paths>
+<path
+   action="A">/tempdir</path>
+<path
+   action="D">/tempfile</path>
+<path
+   copyfrom-path="/tempfile"
+   copyfrom-rev="67"
+   action="A">/tempdir/tempfile</path>
+</paths>
+<msg>TestCase commit</msg>
+</logentry>
+<logentry
+   revision="67">
+<author>gwstorage</author>
+<date>2004-10-26T11:43:38.328782Z</date>
+<paths>
+<path
+   action="A">/tempfile</path>
+</paths>
+<msg>TestCase commit</msg>
+</logentry>
+<logentry
+   revision="66">
+<author>gwstorage</author>
+<date>2004-10-26T11:42:48.872745Z</date>
+<paths>
+<path
+   action="D">/tempdir</path>
+</paths>
+<msg>sdfsd</msg>
+</logentry>
+<logentry
+   revision="65">
+<author>gwstorage</author>
+<date>2004-10-26T11:41:18.930994Z</date>
+<paths>
+<path
+   action="A">/tempdir</path>
+<path
+   action="D">/tempfile</path>
+<path
+   copyfrom-path="/tempfile"
+   copyfrom-rev="64"
+   action="A">/tempdir/tempfile</path>
+</paths>
+<msg>uhguygo</msg>
+</logentry>
+<logentry
+   revision="64">
+<author>gwstorage</author>
+<date>2004-10-26T11:39:45.825312Z</date>
+<paths>
+<path
+   action="A">/tempfile</path>
+</paths>
+<msg>TestCase commit</msg>
+</logentry>
+<logentry
+   revision="63">
+<author>gwstorage</author>
+<date>2004-10-26T11:36:45.196779Z</date>
+<paths>
+<path
+   action="D">/tempfile</path>
+</paths>
+<msg>wr</msg>
+</logentry>
+<logentry
+   revision="62">
+<author>gwstorage</author>
+<date>2004-10-26T11:33:55.281501Z</date>
+<paths>
+<path
+   action="A">/tempfile</path>
+</paths>
+<msg>TestCase commit</msg>
+</logentry>
+<logentry
+   revision="61">
+<author>gwstorage</author>
+<date>2004-10-26T11:09:25.468426Z</date>
+<paths>
+<path
+   action="D">/testfile</path>
+</paths>
+<msg>adasd</msg>
+</logentry>
+<logentry
+   revision="60">
+<author>gwstorage</author>
+<date>2004-10-26T11:08:48.523939Z</date>
+<paths>
+<path
+   action="A">/testfile</path>
+</paths>
+<msg>bka</msg>
+</logentry>
+<logentry
+   revision="59">
+<author>gwstorage</author>
+<date>2004-10-26T11:06:42.533691Z</date>
+<paths>
+<path
+   copyfrom-path="/trunk/gwml-examples"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/gwml-examples</path>
+<path
+   copyfrom-path="/trunk/foo"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/foo</path>
+<path
+   copyfrom-path="/trunk/Foo"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/Foo</path>
+<path
+   copyfrom-path="/trunk/EelcoVisser"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/EelcoVisser</path>
+<path
+   copyfrom-path="/trunk/WebHome"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/WebHome</path>
+<path
+   copyfrom-path="/trunk/WikiNames"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/WikiNames</path>
+<path
+   copyfrom-path="/trunk/NewDir"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/NewDir</path>
+<path
+   copyfrom-path="/trunk/JavaServerPages"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/JavaServerPages</path>
+<path
+   copyfrom-path="/trunk/view-gwml-template.xsl"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/view-gwml-template.xsl</path>
+<path
+   copyfrom-path="/trunk/preview-template.xsl"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/preview-template.xsl</path>
+<path
+   copyfrom-path="/trunk"
+   copyfrom-rev="57"
+   action="A">/branches/expiremental</path>
+<path
+   action="A">/branches</path>
+<path
+   copyfrom-path="/trunk/Search"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/Search</path>
+<path
+   copyfrom-path="/trunk/visser.bib"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/visser.bib</path>
+<path
+   copyfrom-path="/trunk/Thamas"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/Thamas</path>
+<path
+   copyfrom-path="/trunk/OldDir"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/OldDir</path>
+<path
+   copyfrom-path="/trunk/GeneralizedWiki"
+   copyfrom-rev="58"
+   action="R">/branches/expiremental/GeneralizedWiki</path>
+</paths>
+<msg>made a trunk branch</msg>
+</logentry>
+<logentry
+   revision="58">
+<author>gwstorage</author>
+<date>2004-10-26T11:05:22.409456Z</date>
+<paths>
+<path
+   copyfrom-path="/CopyDirTestTarget/NewFile"
+   copyfrom-rev="57"
+   action="A">/CopyDirTestTarget/SubDir/NewFile</path>
+<path
+   action="A">/CopyDirTestTarget/SubDir</path>
+</paths>
+<msg>sdda</msg>
+</logentry>
+<logentry
+   revision="57">
+<author>gwstorage</author>
+<date>2004-10-26T11:04:05.620217Z</date>
+<paths>
+<path
+   copyfrom-path="/CopyDirTestSource/NewFile"
+   copyfrom-rev="56"
+   action="A">/CopyDirTestTarget/NewFile</path>
+</paths>
+<msg>sdfds</msg>
+</logentry>
+<logentry
+   revision="56">
+<author>gwstorage</author>
+<date>2004-10-26T11:02:04.274473Z</date>
+<paths>
+<path
+   action="A">/CopyDirTestTarget</path>
+<path
+   action="A">/CopyDirTestSource/NewFile</path>
+<path
+   action="A">/CopyDirTestSource</path>
+</paths>
+<msg>files aangemaakt voor copy testing</msg>
+</logentry>
+<logentry
+   revision="55">
+<author>gwstorage</author>
+<date>2004-10-25T17:15:29.041629Z</date>
+<paths>
+<path
+   action="M">/Users/Spef</path>
+</paths>
+<msg>Added spef de bever as a valid user with pass 1234</msg>
+</logentry>
+<logentry
+   revision="54">
+<author>gwstorage</author>
+<date>2004-10-25T17:15:01.842369Z</date>
+<paths>
+<path
+   action="A">/Users/Spef/Email</path>
+</paths>
+<msg>Updated user Spef</msg>
+</logentry>
+<logentry
+   revision="53">
+<author>gwstorage</author>
+<date>2004-10-25T17:14:58.425965Z</date>
+<paths>
+<path
+   action="A">/Users/Spef</path>
+</paths>
+<msg>Created the directory for user Spef</msg>
+</logentry>
+<logentry
+   revision="52">
+<author>gwstorage</author>
+<date>2004-10-25T16:22:31.394284Z</date>
+<paths>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>changed conten/type</msg>
+</logentry>
+<logentry
+   revision="51">
+<author>gwstorage</author>
+<date>2004-10-25T16:21:37.132264Z</date>
+<paths>
+<path
+   action="A">/trunk/Foo</path>
+<path
+   action="A">/diff</path>
+<path
+   action="M">/trunk/WebHome</path>
+<path
+   action="D">/trunk/FooBar</path>
+<path
+   copyfrom-path="/trunk/FooBar"
+   copyfrom-rev="49"
+   action="A">/trunk/Foo/FooBar</path>
+</paths>
+<msg>played around</msg>
+</logentry>
+<logentry
+   revision="50">
+<author>gwstorage</author>
+<date>2004-10-25T16:15:31.974112Z</date>
+<paths>
+<path
+   action="D">/trunk/Foo</path>
+</paths>
+<msg>deleted new directory</msg>
+</logentry>
+<logentry
+   revision="49">
+<author>gwstorage</author>
+<date>2004-10-25T16:14:21.641904Z</date>
+<paths>
+<path
+   action="A">/trunk/Foo</path>
+<path
+   action="M">/trunk/WebHome</path>
+<path
+   action="A">/trunk/FooBar</path>
+</paths>
+<msg>Modified stuff</msg>
+</logentry>
+<logentry
+   revision="48">
+<author>gwstorage</author>
+<date>2004-10-25T16:10:56.385717Z</date>
+<paths>
+<path
+   action="D">/trunk/FooBar</path>
+</paths>
+<msg>weggegooid</msg>
+</logentry>
+<logentry
+   revision="47">
+<author>gwstorage</author>
+<date>2004-10-25T16:09:07.391725Z</date>
+<paths>
+<path
+   action="M">/trunk/FooBar</path>
+</paths>
+<msg>yufo</msg>
+</logentry>
+<logentry
+   revision="46">
+<author>cddouma</author>
+<date>2004-10-25T14:51:31.204027Z</date>
+<paths>
+<path
+   copyfrom-path="/view-dir.xsl"
+   copyfrom-rev="42"
+   action="A">/stylesheets/view-dir.xsl</path>
+<path
+   copyfrom-path="/view-file.xsl"
+   copyfrom-rev="42"
+   action="A">/stylesheets/view-file.xsl</path>
+<path
+   action="D">/view-dir.xsl</path>
+<path
+   action="A">/stylesheets</path>
+<path
+   action="D">/view-file.xsl</path>
+</paths>
+<msg>moved stylesheets to stylehseets directory
+which will be checked for stylesheets in the locator
+</msg>
+</logentry>
+<logentry
+   revision="45">
+<author>gwstorage</author>
+<date>2004-10-25T14:01:02.005052Z</date>
+<paths>
+<path
+   action="A">/Users/Eelco2/Email</path>
+</paths>
+<msg>Updated user Eelco2</msg>
+</logentry>
+<logentry
+   revision="44">
+<author>gwstorage</author>
+<date>2004-10-25T14:00:56.704932Z</date>
+<paths>
+<path
+   action="A">/Users</path>
+<path
+   action="A">/Users/Eelco</path>
+<path
+   action="A">/Users/Eelco2</path>
+<path
+   action="A">/Users/Eelco/Email</path>
+</paths>
+<msg>Created the directory for user Eelco2</msg>
+</logentry>
+<logentry
+   revision="43">
+<author>gwstorage</author>
+<date>2004-10-25T13:28:18.157425Z</date>
+<paths>
+<path
+   action="A">/Eelco</path>
+</paths>
+<msg>Test by Glimi</msg>
+</logentry>
+<logentry
+   revision="42">
+<author>cddouma</author>
+<date>2004-10-25T12:25:29.250216Z</date>
+<paths>
+<path
+   action="M">/view-dir.xsl</path>
+<path
+   action="M">/view-file.xsl</path>
+</paths>
+<msg>pathinfo is an absolute path
+</msg>
+</logentry>
+<logentry
+   revision="41">
+<author>cddouma</author>
+<date>2004-10-25T11:50:14.541598Z</date>
+<paths>
+<path
+   action="M">/view-dir.xsl</path>
+<path
+   action="M">/view-file.xsl</path>
+</paths>
+<msg>added heading level (fix) soon new templates will be added
+</msg>
+</logentry>
+<logentry
+   revision="40">
+<author>gwstorage</author>
+<date>2004-10-25T11:40:31.127510Z</date>
+<paths>
+<path
+   action="A">/Name.Punt</path>
+</paths>
+<msg>xccxv</msg>
+</logentry>
+<logentry
+   revision="39">
+<author>cddouma</author>
+<date>2004-10-25T11:26:02.616026Z</date>
+<paths>
+<path
+   copyfrom-path="/view-gwml-template.xsl"
+   copyfrom-rev="38"
+   action="A">/view-dir.xsl</path>
+<path
+   copyfrom-path="/view-gwml-template.xsl"
+   copyfrom-rev="38"
+   action="A">/view-file.xsl</path>
+<path
+   action="D">/view-gwml-template.xsl</path>
+</paths>
+<msg>new names for templates
+</msg>
+</logentry>
+<logentry
+   revision="38">
+<author>gwstorage</author>
+<date>2004-10-25T10:50:22.441776Z</date>
+<paths>
+<path
+   action="M">/view-template.xsl</path>
+</paths>
+<msg>Added search link to the bottom of pages.</msg>
+</logentry>
+<logentry
+   revision="37">
+<author>gwstorage</author>
+<date>2004-10-25T10:48:18.570809Z</date>
+<paths>
+<path
+   action="M">/trunk/Thamas</path>
+</paths>
+<msg>Added Bar.</msg>
+</logentry>
+<logentry
+   revision="36">
+<author>gwstorage</author>
+<date>2004-10-25T09:46:02.036942Z</date>
+<paths>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>test</msg>
+</logentry>
+<logentry
+   revision="35">
+<author>gwstorage</author>
+<date>2004-10-22T07:30:16.333274Z</date>
+<paths>
+<path
+   action="A">/trunk/NewDir/NewFile</path>
+</paths>
+<msg>df</msg>
+</logentry>
+<logentry
+   revision="34">
+<author>gwstorage</author>
+<date>2004-10-22T07:29:21.977428Z</date>
+<paths>
+<path
+   action="A">/trunk/OldDir</path>
+<path
+   action="A">/trunk/OldDir/NewFile</path>
+<path
+   action="A">/trunk/NewDir</path>
+</paths>
+<msg>dfdf</msg>
+</logentry>
+<logentry
+   revision="33">
+<author>gwstorage</author>
+<date>2004-10-21T13:45:27.218001Z</date>
+<paths>
+<path
+   action="A">/trunk/Thamas</path>
+<path
+   action="A">/trunk/Search</path>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>Added links to the search pages to /trunk/WebHome.</msg>
+</logentry>
+<logentry
+   revision="32">
+<author>gwstorage</author>
+<date>2004-10-21T10:49:31.285000Z</date>
+<paths>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>dsdf</msg>
+</logentry>
+<logentry
+   revision="31">
+<author>gwstorage</author>
+<date>2004-10-21T10:48:20.184949Z</date>
+<paths>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>Merge conflict tester</msg>
+</logentry>
+<logentry
+   revision="30">
+<author>gwstorage</author>
+<date>2004-10-21T10:38:27.441781Z</date>
+<paths>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>fixed Webhome </msg>
+</logentry>
+<logentry
+   revision="29">
+<author>gwstorage</author>
+<date>2004-10-21T10:16:10.823233Z</date>
+<paths>
+<path
+   action="A">/history-template.xsl</path>
+</paths>
+<msg>cxv</msg>
+</logentry>
+<logentry
+   revision="28">
+<author>gwstorage</author>
+<date>2004-10-21T10:13:29.897822Z</date>
+<paths>
+<path
+   action="D">/history-template.xsl</path>
+</paths>
+<msg>dsf</msg>
+</logentry>
+<logentry
+   revision="27">
+<author>gwstorage</author>
+<date>2004-10-21T09:58:28.479037Z</date>
+<paths>
+<path
+   action="A">/history-template.xsl</path>
+</paths>
+<msg>sadssda</msg>
+</logentry>
+<logentry
+   revision="26">
+<author>gwstorage</author>
+<date>2004-10-21T09:42:55.265539Z</date>
+<paths>
+<path
+   action="A">/WebHome</path>
+<path
+   action="A">/Webhome</path>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>blabal</msg>
+</logentry>
+<logentry
+   revision="25">
+<author>gwstorage</author>
+<date>2004-10-21T09:34:39.033399Z</date>
+<paths>
+<path
+   action="M">/trunk/EelcoVisser/WebHome</path>
+</paths>
+<msg>Contenttype change.</msg>
+</logentry>
+<logentry
+   revision="24">
+<author>gwstorage</author>
+<date>2004-10-21T09:27:42.544947Z</date>
+<paths>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>bla</msg>
+</logentry>
+<logentry
+   revision="23">
+<author>gwstorage</author>
+<date>2004-10-21T09:20:46.322269Z</date>
+<paths>
+<path
+   action="D">/trunk/view-template.xsl</path>
+</paths>
+<msg>removed view-template.xsl from trunk
+</msg>
+</logentry>
+<logentry
+   revision="22">
+<author>gwstorage</author>
+<date>2004-10-21T09:19:28.549088Z</date>
+<paths>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>removed link "PookyPoes"</msg>
+</logentry>
+<logentry
+   revision="21">
+<author>gwstorage</author>
+<date>2004-10-21T09:16:08.028148Z</date>
+<paths>
+<path
+   action="A">/view-template.xsl</path>
+</paths>
+<msg>added view-template</msg>
+</logentry>
+<logentry
+   revision="20">
+<author>gwstorage</author>
+<date>2004-10-19T14:21:09.668708Z</date>
+<paths>
+<path
+   copyfrom-path="/trunk/view-gwml-template.xsl"
+   copyfrom-rev="17"
+   action="A">/view-gwml-template.xsl</path>
+</paths>
+<msg>added new gwml view template</msg>
+</logentry>
+<logentry
+   revision="19">
+<author>gwstorage</author>
+<date>2004-10-19T14:20:53.648082Z</date>
+<paths>
+<path
+   action="D">/view-gwml-template.xsl</path>
+</paths>
+<msg>removed old gwml view template</msg>
+</logentry>
+<logentry
+   revision="18">
+<author>gwstorage</author>
+<date>2004-10-19T14:19:54.924925Z</date>
+<paths>
+<path
+   action="D">/view-template.xsl</path>
+</paths>
+<msg>removed old gwml view template</msg>
+</logentry>
+<logentry
+   revision="17">
+<author>gwstorage</author>
+<date>2004-10-19T14:14:58.294946Z</date>
+<paths>
+<path
+   action="M">/trunk/WebHome</path>
+<path
+   action="M">/trunk/view-gwml-template.xsl</path>
+</paths>
+<msg>adding webhome and gwml template from prev repository
+</msg>
+</logentry>
+<logentry
+   revision="16">
+<author>MichielOvereem</author>
+<date>2004-10-19T11:46:31.830242Z</date>
+<paths>
+<path
+   copyfrom-path="/trunk/view-template.xsl"
+   copyfrom-rev="15"
+   action="A">/view-template.xsl</path>
+<path
+   copyfrom-path="/trunk/view-gwml-template.xsl"
+   copyfrom-rev="15"
+   action="A">/view-gwml-template.xsl</path>
+<path
+   copyfrom-path="/trunk/preview-template.xsl"
+   copyfrom-rev="15"
+   action="A">/preview-template.xsl</path>
+</paths>
+<msg>copied xlst to root dir</msg>
+</logentry>
+<logentry
+   revision="15">
+<author>klaas</author>
+<date>2004-10-11T08:34:02.344739Z</date>
+<paths>
+<path
+   action="M">/trunk/view-gwml-template.xsl</path>
+</paths>
+<msg>trying to adapt view-gwml-template.xsl to display xhtml instead of xml (try 2)</msg>
+</logentry>
+<logentry
+   revision="14">
+<author>klaas</author>
+<date>2004-10-11T08:31:50.529274Z</date>
+<paths>
+<path
+   action="M">/trunk/view-gwml-template.xsl</path>
+</paths>
+<msg>trying to adapt view-gwml-template.xsl to display xhtml instead of xml</msg>
+</logentry>
+<logentry
+   revision="13">
+<author>cddouma</author>
+<date>2004-10-08T16:06:03.561307Z</date>
+<paths>
+<path
+   action="M">/trunk/view-gwml-template.xsl</path>
+</paths>
+<msg>now it should! be working...
+better lear how to do this without commiting
+</msg>
+</logentry>
+<logentry
+   revision="12">
+<author>cddouma</author>
+<date>2004-10-08T16:01:05.760224Z</date>
+<paths>
+<path
+   action="M">/trunk/view-gwml-template.xsl</path>
+</paths>
+<msg>working now?
+</msg>
+</logentry>
+<logentry
+   revision="11">
+<author>cddouma</author>
+<date>2004-10-08T15:58:40.131195Z</date>
+<paths>
+<path
+   action="M">/trunk/view-gwml-template.xsl</path>
+</paths>
+<msg>stylesheet works with pathinfo
+</msg>
+</logentry>
+<logentry
+   revision="10">
+<author>trnoort</author>
+<date>2004-10-05T12:38:07.489611Z</date>
+<paths>
+<path
+   action="M">/trunk/view-gwml-template.xsl</path>
+</paths>
+<msg>content-type added for stylesheetlocator support</msg>
+</logentry>
+<logentry
+   revision="9">
+<author>MichielOvereem</author>
+<date>2004-10-01T09:57:21.717453Z</date>
+<paths>
+<path
+   action="M">/trunk/FooBar</path>
+</paths>
+<msg>test</msg>
+</logentry>
+<logentry
+   revision="8">
+<author>ThomasVanNoort</author>
+<date>2004-09-27T14:16:30.999177Z</date>
+<paths>
+<path
+   action="A">/trunk/gwml-examples</path>
+<path
+   action="A">/trunk/gwml-examples/test01.gwml</path>
+<path
+   action="A">/trunk/view-gwml-template.xsl</path>
+</paths>
+<msg>added gwml examples and transform template
+</msg>
+</logentry>
+<logentry
+   revision="7">
+<author>visser</author>
+<date>2004-09-12T21:00:18.598961Z</date>
+<paths>
+<path
+   action="M">/trunk/GeneralizedWiki</path>
+<path
+   action="M">/trunk/WebHome</path>
+</paths>
+<msg>remove link to visser.bib</msg>
+</logentry>
+<logentry
+   revision="6">
+<author>visser</author>
+<date>2004-09-12T20:25:07.714078Z</date>
+<paths>
+<path
+   action="A">/trunk/preview-template.xsl</path>
+<path
+   action="M">/trunk/WebHome</path>
+<path
+   action="M">/trunk/view-template.xsl</path>
+</paths>
+<msg>draft for preview template</msg>
+</logentry>
+<logentry
+   revision="5">
+<author>visser</author>
+<date>2004-09-12T20:02:44.115508Z</date>
+<paths>
+<path
+   action="M">/trunk/WebHome</path>
+<path
+   action="M">/trunk/view-template.xsl</path>
+</paths>
+<msg>- enclose variables in { and }
+- pass radom number via xml wrapper
+</msg>
+</logentry>
+<logentry
+   revision="4">
+<author>visser</author>
+<date>2004-09-12T18:03:46.364077Z</date>
+<paths>
+<path
+   action="M">/trunk/view-template.xsl</path>
+</paths>
+<msg>in xml you always close tags</msg>
+</logentry>
+<logentry
+   revision="3">
+<author>visser</author>
+<date>2004-09-12T16:31:00.374602Z</date>
+<paths>
+<path
+   action="A">/trunk/view-template.xsl</path>
+</paths>
+<msg>draft stylesheet for viewing pages</msg>
+</logentry>
+<logentry
+   revision="2">
+<author>visser</author>
+<date>2004-08-23T22:27:58.721898Z</date>
+<paths>
+<path
+   action="A">/trunk/GeneralizedWiki</path>
+<path
+   action="A">/trunk/EelcoVisser/Publications</path>
+<path
+   action="A">/trunk/EelcoVisser</path>
+<path
+   action="A">/trunk/foo</path>
+<path
+   action="A">/trunk/WebHome</path>
+<path
+   action="A">/trunk/visser.bib</path>
+<path
+   action="A">/trunk/WikiNames</path>
+<path
+   action="A">/trunk/FooBar</path>
+<path
+   action="A">/trunk/JavaServerPages</path>
+<path
+   action="A">/trunk/EelcoVisser/WebHome</path>
+</paths>
+<msg>test pages</msg>
+</logentry>
+<logentry
+   revision="1">
+<author>visser</author>
+<date>2004-08-20T21:02:56.097937Z</date>
+<paths>
+<path
+   action="A">/trunk</path>
+</paths>
+<msg>trunk for test-wiki
+</msg>
+</logentry>
+</log>

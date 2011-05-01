@@ -1,0 +1,7 @@
+let function twice(x : int) : int =
+      let var return
+       in return := x + x
+        ; return
+      end
+ in printint(twice(10))
+end

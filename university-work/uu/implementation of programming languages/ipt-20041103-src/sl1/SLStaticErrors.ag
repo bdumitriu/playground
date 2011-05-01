@@ -1,0 +1,17 @@
+{-# LINE 8 "SLStaticErrors.lag" #-}
+SEM Expr
+  | Ident     loc.errmsg        = empty
+  | Op        loc.lerr          = empty
+              loc.rerr          = empty
+  | Apply     loc.funcErr       = empty
+              loc.argErr        = empty
+  | If        loc.condErr       = empty
+              loc.ifErr         = empty
+  | Assign    loc.varErr        = empty
+              loc.exprErr       = empty
+  | Lam       loc.argErr        = empty
+              loc.bodyErr       = empty
+
+SEM Decl
+  | Decl      loc.declErr       = empty
+              loc.inferredType  = text "<ERROR: Missing type annotation>"

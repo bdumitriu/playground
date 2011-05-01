@@ -1,0 +1,2045 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+
+  \setbeamercovered{transparent}
+}
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{hyperref}
+\usepackage{pgf,pgfarrows}
+
+\title{The Internals of the Monet Database}
+
+\author{
+  Bogdan Dumitriu \and
+  Lee Provoost
+}
+
+\institute
+{
+  Department of Computer Science\\
+  University of Utrecht
+}
+
+\date{\today}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+%\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Databases}
+
+\subsection{Classical databases}
+
+\begin{frame}
+  \frametitle{Databases}
+  \framesubtitle{Classical databases}
+
+Most existing databases:
+  \begin{itemize}
+  \item OLTP oriented
+  \pause
+  \item high performance on large \# of small updates
+  \pause
+  \item table data clustered by row on disk
+  \pause
+  \item \alert{unsuited for query-intensive due to}
+  \begin{itemize}
+  \item \alert{a lot of unnecessary I/O}
+  \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+\subsection{Monet database}
+
+\begin{frame}
+  \frametitle{Databases}
+  \framesubtitle{Vertical fragmentation}
+
+  Keyword: \alert{vertical fragmentation}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    Id & Name & Postal Code & Date of Birth \\
+    \hline
+    1 & John & 2345 BP & 17-09-1976 \\
+    2 & Jane & 6146 TY & 21-04-1959 \\
+    3 & Bob & 8127 PR & 04-04-1990 \\
+    \hline
+  \end{tabular}
+\end{center}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Name \\
+    \hline
+    1 & John \\
+    2 & Jane \\
+    3 & Bob \\
+    \hline
+  \end{tabular}
+
+  \column{2cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Postal Code \\
+    \hline
+    1 & 2345 BP \\
+    2 & 6146 TY \\
+    3 & 8127 PR \\
+    \hline
+  \end{tabular}
+
+  \column{2cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Date of Birth \\
+    \hline
+    1 & 17-09-1976 \\
+    2 & 21-04-1959 \\
+    3 & 04-04-1990 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Databases}
+  \framesubtitle{Monet goals}
+
+The goals of the Monet database:
+\begin{enumerate}
+\item \alert{primary: achieve high performance on query-intensive applications}
+\pause
+\item support multiple logical data models
+\item providing parallelism
+\item extensibility to specific application domains
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Databases}
+  \framesubtitle{Monet model}
+
+The model employed by Monet:
+\begin{itemize}
+\item Decomposed Storage Model
+\item kernel of primitives on binary tables
+\pause
+\item vertical fragmentation is explicit
+\pause
+\item a simple, elegant and very flexible model
+\pause
+\item downside: a lot of joining (partially solved)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Databases}
+  \framesubtitle{Monet and main memory}
+
+Monet is above all a main memory DBMS:
+\begin{itemize}
+\item shifts cost of processing from I/O to CPU cycles
+\item both its algorithms \& its data structures are optimized for main memory access
+\item not a main memory-only DBMS, though:
+\begin{itemize}
+\item uses OS-controlled virtual memory during operation
+\item uses disk for long-term storage (naturally)
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\section{The MIL Language}
+
+\subsection{The language}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{Monet architecture}
+
+  \begin{center}
+  \pgfdeclareimage[interpolate=true,height=7cm]{architecture}{img/architecture}
+  \pgfuseimage{architecture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{The language in a nutshell}
+
+  \begin{center}
+  \begin{pgfpicture}{0cm}{0cm}{7cm}{7cm}
+    \pgfdeclareimage[interpolate=true,height=7cm]{mil}{img/mil}
+    \begin{pgfrotateby}{\pgfdegree{-1}}
+    \pgfuseimage{mil}
+    \end{pgfrotateby}
+  \end{pgfpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{MIL types}
+
+  \begin{block}{1. $t \in \mathcal{A}_f  \cup \mathcal{A}_v \Rightarrow t \in \mathcal{T}$}
+    \begin{itemize}
+    \item atomic data types
+    \item fixed: $\mathcal{A}_f  = \lbrace{\tt bit,chr,sht,int,lng,flt,dbl,oid}\rbrace$
+    \item variable $\mathcal{A}_v  = \lbrace{\tt str}\rbrace$
+    \end{itemize}
+  \end{block}
+
+  \pause
+
+  \begin{block}{2. $T_1,T_2 \in \mathcal{T} \Rightarrow {\tt bat}[T_1,T_2] \in \mathcal{T}$}
+    \begin{itemize}
+    \item the BAT (Binary Table) type
+    \item each tuple in a BAT called a Binary Unit (BUN)
+    \item left column - \textit{head}
+    \item right column - \textit{tail}
+    \item can be nested
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{Ingmar's question}
+
+  \begin{block}{Ingmar:}
+  On page 6 it is mentioned that MIL supports nested BATs. That
+  sounds really interesting, but what are they (BATs within BATs,
+  because that doesn't sound like a BAT anymore)?
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{MIL features}
+
+Main features of the language:
+  \begin{itemize}
+  \item basic unit of execution: the \alert{operator}
+  \pause
+  \item operators can be \alert{overloaded}, most are also \alert{polymorphic}
+  \pause
+  \item MIL is a \alert{dynamically typed} language
+  \pause
+  \item a \alert{procedural} block-structured language (if-then-else, while-do, @)
+  \pause
+  \item allows \alert{extension modules}
+  \pause
+  \item provides the usual operators ($=$, $\neq$, $<$, $>$, $\leq$, $\geq$, etc.)
+  \end{itemize}
+
+\end{frame}
+
+\subsection{The BAT algebra}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{The BAT algebra}
+
+  Core functionality of MIL offered by a \alert{BAT algebra} of operators which:
+\begin{itemize}
+\item have an algebraic definition
+\item are free of side-effects
+\item take BATs and return BATs $\Rightarrow$ closed algebra on BATs
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{The mirror operator}
+
+  \begin{block}{Ingmar:}
+  What's the use of the mirror operator? Why would you want a table with identical columns?
+  \end{block}
+
+  Possible uses:
+
+  \begin{itemize}
+  \item perform an set operation on a BAT (or on 2 BATs)
+  \item perform a join operation\ldots
+  \item certainly many others
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{The mirror operator}
+
+  \begin{columns}
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Name \\
+    \hline
+    4 & Jack \\
+    2 & Bill \\
+    1 & Bob \\
+    6 & Clare \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Name \\
+    \hline
+    1 & Daniels \\
+    2 & Gates \\
+    3 & Hope \\
+    4 & Jones \\
+    5 & Heart \\
+    6 & James \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+  \pause
+
+  \begin{center}$\downarrow{\tt mirror}$\end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{The mirror operator}
+
+  \begin{columns}
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Id \\
+    \hline
+    4 & 4 \\
+    2 & 2 \\
+    1 & 1 \\
+    6 & 6 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Name \\
+    \hline
+    1 & Daniels \\
+    2 & Gates \\
+    3 & Hope \\
+    4 & Jones \\
+    5 & Heart \\
+    6 & James \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow{join}$
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Id \\
+    \hline
+    4 & Jones \\
+    2 & Gates \\
+    1 & Daniels \\
+    6 & James \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{Grouping operators}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  \onslide<1-2>{
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Name \\
+    \hline
+    1 & Bob \\
+    2 & Amy \\
+    3 & Bob \\
+    4 & Clare \\
+    5 & Clare \\
+    6 & Bob \\
+    \hline
+  \end{tabular}
+  }
+
+  \column{1cm}
+
+  \onslide<2>{$\longrightarrow{\tt unary\ group}$}
+
+  \column{2cm}
+
+  \onslide<2->{
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & GID \\
+    \hline
+    1 & 1 \\
+    2 & 2 \\
+    3 & 1 \\
+    4 & 4 \\
+    5 & 4 \\
+    6 & 1 \\
+    \hline
+  \end{tabular}
+  }
+
+  \end{columns}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  \onslide<1->{
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Year-of-birth \\
+    \hline
+    1 & 1949 \\
+    2 & 1948 \\
+    3 & 1950 \\
+    4 & 1948 \\
+    5 & 1948 \\
+    6 & 1950 \\
+    \hline
+  \end{tabular}
+  }
+
+  \column{1cm}
+
+  \onslide<3>{$\longrightarrow{\tt binary\ group}$}
+
+  \column{2cm}
+
+  \onslide<3>{
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & GID \\
+    \hline
+    1 & 1 \\
+    2 & 2 \\
+    3 & 3 \\
+    4 & 4 \\
+    5 & 4 \\
+    6 & 3 \\
+    \hline
+  \end{tabular}
+  }
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{Split operator}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Name \\
+    \hline
+    1 & Bob \\
+    2 & Amy \\
+    3 & Joe \\
+    4 & Clare \\
+    5 & Susan \\
+    6 & Jeff \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow{\tt split\ (n=2)}$
+
+  \column{2cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Id \\
+    \hline
+    1 & 3 \\
+    4 & 6 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{Fragment operator}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Name \\
+    \hline
+    1 & Bob \\
+    2 & Amy \\
+    3 & Joe \\
+    4 & Clare \\
+    5 & Susan \\
+    6 & Jeff \\
+    \hline
+  \end{tabular}
+
+  \column{2cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Id \\
+    \hline
+    1 & 3 \\
+    4 & 6 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow{\tt fragment}$
+
+  \column{2cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & BAT \\
+    \hline
+    3 & \begin{tabular}{|c|c|}\hline 1 & nil \\ 2 & nil \\ 3 & nil \\ \hline \end{tabular} \\
+    \hline
+    6 & \begin{tabular}{|c|c|}\hline 4 & nil \\ 5 & nil \\ 6 & nil \\ \hline \end{tabular} \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{Multi-join map}
+
+\begin{center}
+Let \alert{$vol(x,y,z)=x*y*z$} be the function for computing the volume of a parallelepiped.
+\end{center}
+
+  \begin{columns}
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & W \\
+    \hline
+    1 & 5 \\
+    2 & 7 \\
+    3 & 9 \\
+    4 & 1 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & H \\
+    \hline
+    1 & 2 \\
+    2 & 6 \\
+    3 & 1 \\
+    4 & 7 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & L \\
+    \hline
+    1 & 4 \\
+    2 & 2 \\
+    3 & 2 \\
+    4 & 8 \\
+    \hline
+  \end{tabular}
+
+%\end{columns}
+
+%\begin{columns}
+
+  \column{1cm}
+
+  $\longrightarrow{\tt [vol]}$
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    Id & Vol \\
+    \hline
+    1 & 40 \\
+    2 & 98 \\
+    3 & 18 \\
+    4 & 56 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{Pump}
+
+  \begin{columns}
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    GID & Name \\
+    \hline
+    2 & July \\
+    1 & Ethan \\
+    2 & Jill \\
+    1 & Clare \\
+    3 & Bob \\
+    4 & Tim \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow{\tt count}$
+
+  \column{1cm}
+
+  6
+
+  \end{columns}
+
+  \pause
+
+  \begin{columns}
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    GID & Name \\
+    \hline
+    2 & July \\
+    1 & Ethan \\
+    2 & Jill \\
+    1 & Clare \\
+    3 & Bob \\
+    4 & Tim \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    GID & \\
+    \hline
+    1 & \\
+    2 & \\
+    4 & \\
+    5 & \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow{\tt \lbrace{}count\rbrace}$
+
+  \column{1cm}
+
+  \begin{tabular}{|c|c|}
+    \hline
+    GID & Count \\
+    \hline
+    1 & 2 \\
+    2 & 2 \\
+    4 & 1 \\
+    5 & 0 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{Peter's question}
+
+  \ldots which I hope answers Peter's request:
+
+  \begin{block}{Peter:}
+  Can you show an example of how the pump operator is used, and the
+  results it creates?
+  \end{block}
+
+  \pause
+
+  \begin{block}{Peter:}
+  What is the \textit{str} $s$ in the {\tt save}, {\tt load} and {\tt remove}
+  operators?
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{Peter's question}
+
+  \begin{itemize}
+  \item A BAT Buffer Pool manages all known BATs
+  \item It administers logical \& physical names
+  \item {\tt bbpname (BAT[any,any], str s) : bit} can be used to name a BAT
+  \item This name is global
+  \item The \textit{str} $s$ refers to this logical name
+  \end{itemize}
+
+
+\end{frame}
+
+\subsection{OQL to MIL translation}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{Laurence's question}
+
+  \begin{block}{Laurence:}
+  Can you show, in a step-by-step fashion how the OQL query on page 109
+  is translated to MIL?
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{Order class}
+{\tt
+class Order $\lbrace$ \\
+\ \ attribute date day; \\
+\ \ attribute float discount; \\
+\ \ relation Set$<$Item$>$ items; \\
+$\rbrace$
+}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Item class}
+{\tt
+class Item $\lbrace$ \\
+\ \ attribute float price; \\
+\ \ attribute float tax; \\
+\ \ relation Order order inverse Order.items; \\
+$\rbrace$
+}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{The OQL query}
+{\tt
+SELECT year, sum(total) \\
+FROM ( SELECT price * tax AS total, \\
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ year(item.order.day) AS year \\
+\ \ \ \ \ \ \ FROM\ \ \ item \\
+\ \ \ \ \ \ \ WHERE\ \ order.discount BETWEEN 0.00 AND 0.06) \\
+GROUP BY year \\
+ORDER BY year
+}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  The Order class:
+
+  \begin{columns}
+
+  \column{1cm}
+
+  order\_day
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & date \\
+    \hline
+    100 & 4/4/98 \\
+    101 & 9/4/98 \\
+    102 & 1/2/98 \\
+    103 & 9/4/98 \\
+    104 & 7/2/98 \\
+    105 & 1/2/98 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  order\_discount
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    100 & 0.175 \\
+    101 & 0.065 \\
+    102 & 0.175 \\
+    103 & 0.000 \\
+    104 & 0.000 \\
+    105 & 0.065 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  order\_item
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    100 & 1000 \\
+    100 & 1001 \\
+    101 & 1002 \\
+    101 & 1003 \\
+    101 & 1004 \\
+    102 & 1005 \\
+    103 & 1006 \\
+    103 & 1007 \\
+    103 & 1008 \\
+    104 & 1009 \\
+    104 & 1010 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  The Item class:
+
+  \begin{columns}
+
+  \column{1cm}
+
+  item\_price
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    1000 & 04.75 \\
+    1001 & 11.50 \\
+    1002 & 10.20 \\
+    1003 & 75.00 \\
+    1004 & 02.50 \\
+    1005 & 92.80 \\
+    1006 & 37.50 \\
+    1007 & 14.25 \\
+    1008 & 17.99 \\
+    1009 & 22.33 \\
+    1010 & 42.67 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  item\_tax
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    1000 & 0.10 \\
+    1001 & 0.00 \\
+    1002 & 0.00 \\
+    1003 & 0.00 \\
+    1004 & 0.00 \\
+    1005 & 0.10 \\
+    1006 & 0.10 \\
+    1007 & 0.00 \\
+    1008 & 0.00 \\
+    1009 & 0.00 \\
+    1010 & 0.10 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  item\_order
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    1000 & 100 \\
+    1001 & 100 \\
+    1002 & 101 \\
+    1003 & 101 \\
+    1004 & 101 \\
+    1005 & 102 \\
+    1006 & 103 \\
+    1007 & 103 \\
+    1008 & 103 \\
+    1009 & 104 \\
+    1010 & 104 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt ORD\_NIL $:=$ select(order\_discount, "between", 0.0, 0.6)}
+  \end{block}
+
+  \begin{columns}
+
+  \column{1cm}
+
+  order\_discount
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    100 & 0.175 \\
+    101 & 0.065 \\
+    102 & 0.175 \\
+    103 & 0.000 \\
+    104 & 0.000 \\
+    105 & 0.065 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  ORD\_NIL
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    100 & nil \\
+    102 & nil \\
+    103 & nil \\
+    104 & nil \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt ORD\_SEL $:=$ ORD\_NIL.mark(oid(0))}
+  \end{block}
+
+  \begin{columns}
+
+  \column{1cm}
+
+  ORD\_NIL
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    100 & nil \\
+    102 & nil \\
+    103 & nil \\
+    104 & nil \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  ORD\_SEL
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    100 & 0 \\
+    102 & 1 \\
+    103 & 2 \\
+    104 & 3 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt SEL\_DAY $:=$ join(ORD\_SEL.reverse, order\_day, "$=$")}
+  \end{block}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  ORD\_SEL.reverse
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 100 \\
+    1 & 102 \\
+    2 & 103 \\
+    3 & 104 \\
+    \hline
+  \end{tabular}
+
+  \column{1.5cm}
+
+  order\_day
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & date \\
+    \hline
+    100 & 4/4/98 \\
+    101 & 9/4/98 \\
+    102 & 1/2/98 \\
+    103 & 9/4/98 \\
+    104 & 7/2/98 \\
+    105 & 1/2/98 \\
+    \hline
+  \end{tabular}
+
+  \column{0.5cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  SEL\_DAY
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & date \\
+    \hline
+    0 & 4/4/98 \\
+    1 & 1/2/98 \\
+    2 & 9/4/98 \\
+    3 & 7/2/98 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt SEL\_YEA $:=$ [year](SEL\_DAY)}
+  \end{block}
+
+  \begin{columns}
+
+  \column{1cm}
+
+  SEL\_DAY
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & date \\
+    \hline
+    0 & 4/4/98 \\
+    1 & 1/2/98 \\
+    2 & 9/4/98 \\
+    3 & 7/2/98 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  SEL\_YEA
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & int \\
+    \hline
+    0 & 98 \\
+    1 & 98 \\
+    2 & 98 \\
+    3 & 98 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt GRP\_SEL $:=$ group(SEL\_YEA).reverse}
+  \end{block}
+
+  \begin{columns}
+
+  \column{1cm}
+
+  SEL\_YEA
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & int \\
+    \hline
+    0 & 98 \\
+    1 & 98 \\
+    2 & 98 \\
+    3 & 98 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  GRP\_SEL
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 0 \\
+    0 & 1 \\
+    0 & 2 \\
+    0 & 3 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt GRP\_GRP $:=$ unique(GRP\_SEL.mirror)}
+  \end{block}
+
+  \begin{columns}
+
+  \column{1cm}
+
+  GRP\_SEL.mirror
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & int \\
+    \hline
+    0 & 0 \\
+    0 & 0 \\
+    0 & 0 \\
+    0 & 0 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  GRP\_GRP
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 0 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt GRP\_YEA $:=$ join(GRP\_GRP, SEL\_YEA, "$=$")}
+  \end{block}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  GRP\_GRP
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 0 \\
+    \hline
+  \end{tabular}
+
+  \column{1.5cm}
+
+  SEL\_YEA
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & int \\
+    \hline
+    0 & 98 \\
+    1 & 98 \\
+    2 & 98 \\
+    3 & 98 \\
+    \hline
+  \end{tabular}
+
+  \column{0.5cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  GRP\_YEA
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & int \\
+    \hline
+    0 & 98 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt ITM\_SEL $:=$ join(item\_order, ORD\_SEL, "$=$")}
+  \end{block}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  item\_order
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    1000 & 100 \\
+    1001 & 100 \\
+    1002 & 101 \\
+    1003 & 101 \\
+    1004 & 101 \\
+    1005 & 102 \\
+    1006 & 103 \\
+    1007 & 103 \\
+    1008 & 103 \\
+    1009 & 104 \\
+    1010 & 104 \\
+    \hline
+  \end{tabular}
+
+  \column{1.5cm}
+
+  ORD\_SEL
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    100 & 0 \\
+    102 & 1 \\
+    103 & 2 \\
+    104 & 3 \\
+    \hline
+  \end{tabular}
+
+  \column{0.5cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  ITM\_SEL
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    1000 & 0 \\
+    1001 & 0 \\
+    1005 & 1 \\
+    1006 & 2 \\
+    1007 & 2 \\
+    1008 & 2 \\
+    1009 & 3 \\
+    1010 & 3 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt UNQ\_ITM $:=$ ITM\_SEL.mark(oid(0)).reverse}
+  \end{block}
+
+  \begin{columns}
+
+  \column{1cm}
+
+  ITM\_SEL
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    1000 & 0 \\
+    1001 & 0 \\
+    1005 & 1 \\
+    1006 & 2 \\
+    1007 & 2 \\
+    1008 & 2 \\
+    1009 & 3 \\
+    1010 & 3 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  UNQ\_ITM
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 1000 \\
+    1 & 1001 \\
+    2 & 1005 \\
+    3 & 1006 \\
+    4 & 1007 \\
+    5 & 1008 \\
+    6 & 1009 \\
+    7 & 1010 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt SEL\_UNQ $:=$ ITM\_SEL.reverse.mark(oid(0))}
+  \end{block}
+
+  \begin{columns}
+
+  \column{1cm}
+
+  ITM\_SEL
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    1000 & 0 \\
+    1001 & 0 \\
+    1005 & 1 \\
+    1006 & 2 \\
+    1007 & 2 \\
+    1008 & 2 \\
+    1009 & 3 \\
+    1010 & 3 \\
+    \hline
+  \end{tabular}
+
+  \column{1cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  SEL\_UNQ
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 0 \\
+    0 & 1 \\
+    1 & 2 \\
+    2 & 3 \\
+    2 & 4 \\
+    2 & 5 \\
+    3 & 6 \\
+    3 & 7 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt UNQ\_PRI $:=$ join(UNQ\_ITM, item\_price, "$=$")}
+  \end{block}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  UNQ\_ITM
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 1000 \\
+    1 & 1001 \\
+    2 & 1005 \\
+    3 & 1006 \\
+    4 & 1007 \\
+    5 & 1008 \\
+    6 & 1009 \\
+    7 & 1010 \\
+    \hline
+  \end{tabular}
+
+  \column{1.5cm}
+
+  item\_price
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    1000 & 04.75 \\
+    1001 & 11.50 \\
+    1002 & 10.20 \\
+    1003 & 75.00 \\
+    1004 & 02.50 \\
+    1005 & 92.80 \\
+    1006 & 37.50 \\
+    1007 & 14.25 \\
+    1008 & 17.99 \\
+    1009 & 22.33 \\
+    1010 & 42.67 \\
+    \hline
+  \end{tabular}
+
+  \column{0.5cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  UNQ\_PRI
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    0 & 04.75 \\
+    1 & 11.50 \\
+    2 & 92.80 \\
+    3 & 37.50 \\
+    4 & 14.25 \\
+    5 & 17.99 \\
+    6 & 22.33 \\
+    7 & 42.67 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt UNQ\_TAX $:=$ join(UNQ\_ITM, item\_tax, "$=$")}
+  \end{block}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  UNQ\_ITM
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 1000 \\
+    1 & 1001 \\
+    2 & 1005 \\
+    3 & 1006 \\
+    4 & 1007 \\
+    5 & 1008 \\
+    6 & 1009 \\
+    7 & 1010 \\
+    \hline
+  \end{tabular}
+
+  \column{1.5cm}
+
+  item\_tax
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    1000 & 0.10 \\
+    1001 & 0.00 \\
+    1002 & 0.00 \\
+    1003 & 0.00 \\
+    1004 & 0.00 \\
+    1005 & 0.10 \\
+    1006 & 0.10 \\
+    1007 & 0.00 \\
+    1008 & 0.00 \\
+    1009 & 0.00 \\
+    1010 & 0.10 \\
+    \hline
+  \end{tabular}
+
+  \column{0.5cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  UNQ\_TAX
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    0 & 0.10 \\
+    1 & 0.00 \\
+    2 & 0.10 \\
+    3 & 0.10 \\
+    4 & 0.00 \\
+    5 & 0.00 \\
+    6 & 0.00 \\
+    7 & 0.10 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt UNQ\_TOT $:=$ [*](UNQ\_PRI, UNQ\_TAX)}
+  \end{block}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  UNQ\_PRI
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    0 & 04.75 \\
+    1 & 11.50 \\
+    2 & 92.80 \\
+    3 & 37.50 \\
+    4 & 14.25 \\
+    5 & 17.99 \\
+    6 & 22.33 \\
+    7 & 42.67 \\
+    \hline
+  \end{tabular}
+
+  \column{1.5cm}
+
+  UNQ\_TAX
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    0 & 0.10 \\
+    1 & 0.00 \\
+    2 & 0.10 \\
+    3 & 0.10 \\
+    4 & 0.00 \\
+    5 & 0.00 \\
+    6 & 0.00 \\
+    7 & 0.10 \\
+    \hline
+  \end{tabular}
+
+  \column{0.5cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  UNQ\_TOT
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    0 & 005.225 \\
+    1 & 011.500 \\
+    2 & 102.080 \\
+    3 & 041.250 \\
+    4 & 014.250 \\
+    5 & 017.990 \\
+    6 & 022.330 \\
+    7 & 046.937 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt GRP\_UNQ $:=$ join(GRP\_SEL, SEL\_UNQ, "$=$")}
+  \end{block}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  GRP\_SEL
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 0 \\
+    0 & 1 \\
+    0 & 2 \\
+    0 & 3 \\
+    \hline
+  \end{tabular}
+
+  \column{1.5cm}
+
+  SEL\_UNQ
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 0 \\
+    0 & 1 \\
+    1 & 2 \\
+    2 & 3 \\
+    2 & 4 \\
+    2 & 5 \\
+    3 & 6 \\
+    3 & 7 \\
+    \hline
+  \end{tabular}
+
+  \column{0.5cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  GRP\_UNQ
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 0 \\
+    0 & 1 \\
+    0 & 2 \\
+    0 & 3 \\
+    0 & 4 \\
+    0 & 5 \\
+    0 & 6 \\
+    0 & 7 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt GRP\_TOT $:=$ join(GRP\_UNQ, UNQ\_TOT, "$=$")}
+  \end{block}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  GRP\_UNQ
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 0 \\
+    0 & 1 \\
+    0 & 2 \\
+    0 & 3 \\
+    0 & 4 \\
+    0 & 5 \\
+    0 & 6 \\
+    0 & 7 \\
+    \hline
+  \end{tabular}
+
+  \column{1.5cm}
+
+  UNQ\_TOT
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    0 & 005.225 \\
+    1 & 011.500 \\
+    2 & 102.080 \\
+    3 & 041.250 \\
+    4 & 014.250 \\
+    5 & 017.990 \\
+    6 & 022.330 \\
+    7 & 046.937 \\
+    \hline
+  \end{tabular}
+
+  \column{0.5cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  GRP\_TOT
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    0 & 005.225 \\
+    0 & 011.500 \\
+    0 & 102.080 \\
+    0 & 041.250 \\
+    0 & 014.250 \\
+    0 & 017.990 \\
+    0 & 022.330 \\
+    0 & 046.937 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt GRP\_SUM $:=$ $\lbrace$sum$\rbrace$(GRP\_TOT, GRP\_GRP)}
+  \end{block}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  GRP\_TOT
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    0 & 005.225 \\
+    0 & 011.500 \\
+    0 & 102.080 \\
+    0 & 041.250 \\
+    0 & 014.250 \\
+    0 & 017.990 \\
+    0 & 022.330 \\
+    0 & 046.937 \\
+    \hline
+  \end{tabular}
+
+  \column{1.5cm}
+
+  GRP\_GRP
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & oid \\
+    \hline
+    0 & 0 \\
+    \hline
+  \end{tabular}
+
+  \column{0.5cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  GRP\_SUM
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    0 & 261.562 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The MIL Language}
+  \framesubtitle{OQL to MIL translation}
+
+  \begin{block}{}
+  {\tt table("1", GRP\_YEA, GRP\_SUM)}
+  \end{block}
+
+  \begin{columns}
+
+  \column{2cm}
+
+  GRP\_YEA
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & int \\
+    \hline
+    0 & 98 \\
+    \hline
+  \end{tabular}
+  \column{1.5cm}
+
+  GRP\_SUM
+  \begin{tabular}{|c|c|}
+    \hline
+    oid & float \\
+    \hline
+    0 & 261.562 \\
+    \hline
+  \end{tabular}
+
+  \column{0.5cm}
+
+  $\longrightarrow$
+
+  \column{1cm}
+
+  Result:
+  \begin{tabular}{|c|c|}
+    \hline
+    int & float \\
+    \hline
+    98 & 261.562 \\
+    \hline
+  \end{tabular}
+
+  \end{columns}
+
+\end{frame}
+
+\section{Running Monet}
+
+\begin{frame}
+  \frametitle{Running Monet}
+  \framesubtitle{Running the server}
+
+  \begin{block}{Start the Monet server}
+  \alert{\tt Mserver} \\
+  {\tt \# Monet Database Server V4.6.2} \\
+  {\tt \# Copyright (c) 1993-2005, CWI. All rights reserved.} \\
+  {\tt \# Compiled for $<$arch$>$; dynamically linked.} \\
+  {\tt \# Visit http://monetdb.cwi.nl/ for further info.} \\
+  {\tt MonetDB>}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Allowing MIL clients}
+  {\tt MonetDB>module(mapi);} \\
+  {\tt MonetDB>listen(50000).fork();}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Shutting down}
+  {\tt MonetDB>quit();}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Running Monet}
+  \framesubtitle{Running the clients}
+
+  \begin{block}{Start the Mapi client}
+  \alert{\tt MapiClient} \\
+  {\tt \# Monet Database Server V4.6.2} \\
+  {\tt \# Copyright (c) 1993-2005, CWI. All rights reserved.} \\
+  {\tt \# Compiled for $<$arch$>$; dynamically linked.} \\
+  {\tt \# Visit http://monetdb.cwi.nl/ for further info.} \\
+  {\tt mil>}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Start Mknife}
+  \alert{\tt java -jar Mknife-1.6.2-1.jar} \\
+  {\tt (choose MIL demo)}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Running Monet}
+  \framesubtitle{Using the SQL front-end}
+
+  \begin{block}{Start the SQL front end}
+  {\tt MonetDB>module(sql\_server);} \\
+  {\tt MonetDB>sql\_server\_start();}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Use Mapi client}
+  \alert{\tt MapiClient -l sql} \\
+  {\tt sql>}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Use JDBC client}
+  \alert{\tt java -jar share/MonetDB/lib/MonetDB\_JDBC.jar -umonetdb} \\
+  {\tt (use 'monetdb' as password)}
+  \end{block}
+
+\end{frame}
+
+\section{The Implementation of MIL}
+
+\end{document}

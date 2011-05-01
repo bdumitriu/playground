@@ -1,0 +1,51 @@
+package id2n4mzdcw0rpg9dcw0ugqw;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id2n4mzdcw0rpg9dcw0ugqw.node:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id2n4mzdcw0rpg9dcw0ugqw.node1:oiref><oihard>
+@__modelType reference 
+*/
+class reference2 {
+}}/**
+@__tags
+@shapeType UseCaseDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#id2n4mzdcw0rpg9dcw0ugqw.node1:oiref>=240,70,159,27,1:oigroup>
+<oigroup:<oiref:design#Class#id2n4mzdcw0rpg9dcw0ugqw.node.link:oiref>=93,83,240,83:oigroup>
+<oigroup:<oiref:design#Class#id2n4mzdcw0rpg9dcw0ugqw.node:oiref>=30,40,63,77,1:oigroup>
+*/
+class __positions {
+}/**
+@shapeType Actor
+@__modelType node
+@name PDK User 
+*/
+class node {
+/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id2n4mzdcw0rpg9dcw0ugqw.node1:oiref><oihard> 
+*/
+class link {
+}}/**
+@shapeType UseCase
+@__modelType node
+@name start envoironment 
+*/
+class node1 {
+}

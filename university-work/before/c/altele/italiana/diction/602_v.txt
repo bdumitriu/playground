@@ -1,0 +1,24 @@
+a scapa        - scampare
+a striga       - gridare
+a traversa     - attraversare
+a fi atent     - badare
+a opri         - fermare
+a frana        - frenare
+a lovi         - colpire
+a blestema     - imprecare
+a recunoaste   - riconoscere
+a asculta      - ascoltare
+a intra        - entrare
+a respecta     - rispettare
+a iesi         - uscire
+a astepta      - aspettare
+a (se) arunca  - buttare
+a (se) rusina  - vergognare
+a se intampla  - succedere
+a se impiedica - inciampare
+a cadea        - cadere
+a strange      - raccogliere
+a se misca     - muovere
+a grabi        - affrettare
+a inchide      - rinchiudere
+a arunca       - gettare

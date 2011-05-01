@@ -1,0 +1,31 @@
+module generic-traversal-tests
+imports
+  generic-traversal
+  traversal-tests
+  Tiger
+  sunit
+
+strategies
+
+main =
+	test-suite(!"General traversal tests",
+		cong1-test1(generic1)
+		; cong1-test2(generic1)
+		; generic1-test1(generic1)
+		; cong2-test1(generic2(|6))
+		; cong2-test2(generic2(|5))
+		; generic2-test1(generic2(|5))
+		; generic2-test2(generic2(|7))
+		; cong3-test1(generic3)
+		; cong3-test2(generic3)
+		; generic3-test1(generic3)
+		; cong4-test1(generic4)
+		; cong4-test2(generic4)
+		; cong4-test3(generic4)
+		; generic4-test1(generic4)
+		; cong5-test1(generic5)
+		; cong5-test2(generic5)
+		; generic5-test1(generic5)
+		; generic5-test2(generic5)
+	)
+

@@ -1,0 +1,19 @@
+<?xml version="1.0"?> 
+<project name="stc-talk" default="" basedir=".">
+
+	<!-- Run "ant pdf" in all subdirectories -->
+	<target name="pdf">
+		<subant target="pdf">
+			<fileset dir="." includes="*/build.xml" />
+		</subant>
+	</target>
+
+	<!-- Run "ant clean" in all subdirectories -->
+	<target name="clean">
+		<subant target="clean">
+			<fileset dir="." includes="*/build.xml" />
+		</subant>
+		<delete file="build.xml~" />
+	</target>
+
+</project>

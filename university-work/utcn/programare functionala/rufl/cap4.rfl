@@ -1,0 +1,101 @@
+import Library;
+
+--data Arbi = Vid | Frunza Int | Nod Arbi Int Arbi
+
+data Arb alpha = Vid | Nod (Arb alpha) alpha (Arb alpha)
+
+dec sumaarb::Arb Int->Int
+def sumaarb Vid = 0
+    sumaarb (Nod st v dr) = v + sumaarb st + sumaarb dr
+
+dec nrnod::Arb alpha->Int
+def nrnod Vid = 0
+    nrnod Nod st _ dr = 1 + nrnod st + nrnod dr
+
+dec inalt::Arb alpha->Int
+def inalt Vid = 0
+    inalt Nod st _ dr = 1 + max [(inalt st), (inalt dr)]
+
+dec preordine::Arb alpha->[alpha]
+def preordine Vid = []
+    preordine Nod st v dr = [v] ++ preordine st ++ preordine dr
+
+dec preord::Arb alpha->[alpha]->[alpha]
+def preord Vid vs = vs
+    preord (Nod st v dr) vs = v:preord st (preord dr vs)
+
+dec inordine::Arb alpha->[alpha]
+def inordine Vid = []
+    inordine Nod st v dr = inordine st ++ [v] ++ inordine dr
+
+dec inord::Arb alpha->[alpha]->[alpha]
+def inord Vid vs = vs
+    inord (Nod st v dr) vs = inord st (v:inord dr vs)
+
+dec postordine::Arb alpha->[alpha]
+def postordine Vid = []
+    postordine Nod st v dr = postordine st ++ postordine dr ++ [v]
+
+dec postord::Arb alpha->[alpha]->[alpha]
+def postord Vid vs = vs
+    postord (Nod st v dr) vs = postord st (postord dr (v:vs))
+
+dec cautbin::alpha->Arb alpha->Bool
+def cautbin _ Vid = False
+    cautbin x (Nod st v dr) = True,		if x == v
+			    = cautbin x st,	if x < v
+			    = cautbin x dr,	otherwise
+
+dec inserbin::alpha->Arb alpha->Arb alpha
+def inserbin x Vid = Nod Vid x Vid
+    inserbin x (Nod st v dr) = Nod (inserbin x st) v dr,	if x <= v
+			     = Nod st v (inserbin x dr),	otherwise
+
+-- functii ce lucreaza pe arbori ca multimi (elemente unice)
+
+dec adElem::alpha->Arb alpha->Arb alpha
+def adElem x Vid = Nod Vid x Vid
+    adElem x Nod st v dr = Nod (adElem x st) v dr,	if x < v
+			 = Nod st v (adElem x dr),	if x > v
+			 = Nod st v dr,			otherwise
+
+dec arbDinLista::[alpha]->Arb alpha
+def arbDinLista [] = Vid
+    arbDinLista (x:xs) = adElem x (arbDinLista xs)
+
+dec listaDinArb::Arb alpha->[alpha]
+def listaDinArb Vid = []
+    listaDinArb Nod st v dr = listaDinArb st ++ v:listaDinArb dr
+
+dec inArb::alpha->Arb alpha->Bool
+def inArb _ Vid = False
+    inArb x (Nod st v dr) = True,		if x == v
+			   = inArb x st,	if x < v
+			   = inArb x dr,	otherwise
+
+dec reun::Arb alpha->Arb alpha->Arb alpha
+def reun Vid y = y
+    reun (Nod st v dr) y = reun st (reun dr (adElem v y))
+
+dec dif::Arb alpha->Arb alpha->Arb alpha
+def dif Vid y = Vid
+    dif (Nod st v dr) y = reun (dif st y) (dif dr y),			if inArb v y
+			= adElem v (reun (dif st y) (dif dr y)),	otherwise
+
+dec maxArb::Arb alpha->alpha
+def maxArb Nod _ v Vid = v
+    maxArb Nod _ _ dr = maxArb dr
+
+dec intercl::[[alpha]]->[alpha]
+def intercl [] = []
+    intercl (x:xs) = intercl2 x (intercl xs)
+	where
+		intercl2 [] zs = zs
+		intercl2 ys [] = ys
+		intercl2 (y:ys) (z:zs) = y:intercl2 ys (z:zs),	if y < z
+				       = z:intercl2 (y:ys) zs,	if y > z
+				       = y:intercl2 ys zs,	if y == z
+
+def main = seq
+	writeInts(intercl [[1, 2, 3, 5, 7, 25], [3, 4, 5, 10, 13, 15, 20], [6, 7, 30]])
+--	writeInts(inordine (adElem 2 (Nod (Nod Vid 1 (Nod (Nod Vid 3 Vid) 4 Vid)) 5 (Nod (Nod Vid 6 Vid) 7 (Nod Vid 9 Vid)))))

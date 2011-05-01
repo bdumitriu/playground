@@ -1,0 +1,15 @@
+<predicates default="SICStus">
+
+	<Prolog version="Sicstus">
+		<predicate></predicate>
+	</Prolog>
+
+	<Prolog version="Amzi">
+		<predicate></predicate>
+	</Prolog>
+
+	<Prolog version="Visual Prolog">
+		<predicate></predicate>
+	</Prolog>
+
+</predicates>

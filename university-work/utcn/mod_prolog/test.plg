@@ -1,0 +1,8 @@
+write('<html>').
+write('<head>').
+write('<title>Greetings from Prolog.</title>').
+write('</head>').
+write('<body>').
+write('Hello world from Prolog!').
+write('</body>').
+write('</html>').

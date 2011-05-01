@@ -1,0 +1,15 @@
+{-# LINE 13 "SLLabel.lag" #-}
+{
+incrementLabel (Label i)    = Label (i+1)
+}
+
+ATTR Expr Exprs Decl Decls  [  | label : Label |  ]
+SEM Root
+  | Root expr.label = Label 0
+SEM Expr
+  | If    loc.afterThenLabel  = @lhs.label
+          loc.afterElseLabel  = incrementLabel  @lhs.label
+          cond.label          = incrementLabel  @afterElseLabel
+  | Lam   loc.lamLabel        = @lhs.label
+          loc.afterLamLabel   = incrementLabel  @lhs.label
+          expr.label          = incrementLabel  @afterLamLabel

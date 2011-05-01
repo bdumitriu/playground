@@ -1,0 +1,24 @@
+ - Functia DOS 0eh -
+
+Functie:
+    Setarea drive-ului DOS implicit.
+
+Asteapta:
+    ah: 0eh
+    dl: numarul drive-ului care sa devina implicit (0 = A, 1 = B, etc.).
+
+Intoarce:
+    al: numarul total de drive-uri sistem.
+
+    Pentru a va asigura de succes folositi functia 19h pentru verificare.
+
+Descriere:
+    Drive-ul identificat de  dl devine drive-ul DOS  implicit (daca este un
+    numar valid de drive.
+
+Note:
+    1. Valoarea intoarsa in al reprezinta numarul de drive-uri de orice tip
+    inclusiv hard disk-uri si drive-uri fantoma.
+    
+    2. Apelul acestei functii  declanseaza o eroare  critica (int 24h) daca
+    se incearca selectarea unui drive care nu contine o discheta.

@@ -1,0 +1,1099 @@
+\documentclass{article}
+\renewcommand{\appendixname}{Anexa}
+\title{Exemplu de utilizare a sistemului Knowbel}
+\author{Bogdan DUMITRIU, gr. 3231}
+\date{16.05.2002}
+\begin{document}
+\maketitle
+
+\section{Descrierea exemplului}
+Exemplul creat de mine folosind sistemul Knowbel (care este \^{\i}n esen\c{t}\u{a}
+un sistem de reprezentare \c{s}i interogare a bazelor de cuno\c{s}tin\c{t}e)
+const\u{a} \^{\i}ntr-o baz\u{a} de cuno\c{s}tin\c{t}e care \^{\i}ncearc\u{a}
+reprezentarea unui arbore genealogic. Totodat\u{a}, \^{\i}n baza de cuno\c{s}tin\c{t}e
+se dore\c{s}te \c{s}i reprezentarea rela\c{t}iilor de c\u{a}s\u{a}torie \^{\i}ntre
+persoane \c{s}i definirea anumitor reguli inferen\c{t}\u{a} care s\u{a} permit\u{a}
+aflarea diferitelor persoane ce sunt un anumit tip de rude ale unei persoane oarecare.
+
+\^{I}n vederea acestui lucru s-a \^{\i}nceput construirea bazei de cuno\c{s}tin\c{t}e
+cu definirea riguroas\u{a} a clasei Persoan\u{a}, dup\u{a} cum urmeaz\u{a}:
+
+{\scriptsize
+\begin{verbatim}
+(Persoana
+        instance ((M1-Class))
+        with (
+                ((necessary single)
+                        (nume string)
+                        (prenume string)
+                        (data-n string)
+                        (sex string)
+                )
+                (attribute
+                        (tata Persoana)
+                        (mama Persoana)
+                )
+                (integrity-constraint
+
+                        (gender-constraint
+                                (forall $person
+                                        (=>
+                                                (instance-of $person Persoana)
+                                                (member-of $sex $person sex) 
+                                                (or (= $sex M) (= $sex F))
+                                        )
+                                )
+                        )
+                        (father-constraint
+                                (forall $person
+                                        (=>
+                                                (instance-of $person Persoana)
+                                                (member-of $tata $person tata)
+                                                (member-of $sex $tata sex)
+                                                (= $sex M)
+                                        )
+                                )
+                        )
+                        (mother-constraint
+                                (forall $person
+                                        (=>
+                                                (instance-of $person Persoana)
+                                                (member-of $mama $person mama)
+                                                (member-of $sex $mama sex)
+                                                (= $sex F)
+                                        )
+                                )
+                        )
+                )
+        )
+)
+\end{verbatim}
+}
+
+Se poate observa definirea, pe l\^{a}ng\u{a} ni\c{s}te atribute specifice,
+a trei constr\^{a}ngeri care limiteaz\u{a} sexul unei persoane la una din
+valorile M sau F \c{s}i care verific\u{a} faptul c\u{a} tat\u{a}l unei
+persoane, dac\u{a} este definit, are sexul M, iar mama are sexul F. Sistemul
+de gestiune a bazei de cuno\c{s}tin\c{t}e va evalua \^{\i}n momentul introducerii
+unei noi persoane toate aceste constr\^{a}ngeri \c{s}i nu va perimte
+actualizarea bazei dec\^{a}t dac\u{a} constr\^{a}ngerile sunt respectate.
+
+Al doilea pas \^{\i}n definirea bazei de cuno\c{s}tin\c{t}e a fost crearea
+unei clase specifice c\u{a}s\u{a}toriilor, \c{s}i anume:
+
+{\scriptsize
+\begin{verbatim}
+(Casatorie
+        instance ((M1-Class))
+        with (
+                ((necessary single)
+                        (sot Persoana)
+                        (sotie Persoana)
+                )
+                (integrity-constraint
+                        (husband-constraint
+                                (forall $cas
+                                        (=>
+                                                (instance-of $cas Casatorie)
+                                                (member-of $sot $cas sot)
+                                                (member-of $sex $sot sex)
+                                                (= $sex M)
+                                        )
+                                )
+                        )
+                        (wife-constraint
+                                (forall $cas
+                                        (=>
+                                                (instance-of $cas Casatorie)
+                                                (member-of $sotie $cas sotie)
+                                                (member-of $sex $sotie sex)
+                                                (= $sex F)
+                                        )
+                                )
+                        )
+                        (one-marriage-per-person-constraint
+                                (forall $cas
+                                        (=>
+                                                (instance-of $cas Casatorie)
+                                                (or
+                                                        (member-of $person $cas sot)
+                                                        (member-of $person $cas sotie)
+                                                )
+                                                (not (exists $alta_cas (and
+                                                        (not (= $cas $alta_cas))
+                                                        (or
+                                                                (member-of $person $alta_cas sot)
+                                                                (member-of $person $alta_cas sotie)
+                                                        )
+                                                )))
+                                        )
+                                )
+                        )
+                )
+        )
+)
+\end{verbatim}
+}
+
+\^{I}n exact aceea\c{s}i manier\u{a} sunt definite \c{s}i aici constr\^{a}ngeri
+referitoare la rela\c{t}ia de c\u{a}s\u{a}torie. Astfel, oblig\u{a}m ca atributul
+so\c{t} din c\u{a}s\u{a}torie s\u{a} fie de sex M, iar atributul so\c{t}ie de sex
+F \c{s}i totodat\u{a} ca o persoan\u{a} s\u{a} nu poat\u{a} fi membru dec\^{a}t
+al unei singure rela\c{t}ii de c\u{a}s\u{a}torie.
+
+O dat\u{a} aceste rela\c{t}ii de baz\u{a} definite se pot introduce \^{\i}n baza
+de cuno\c{s}tin\c{t}e o serie de persoane \c{s}i c\u{a}s\u{a}torii care s\u{a}
+surprind\u{a} o anumit\u{a} realitate. Un exemplu de persoan\u{a} ar fi:
+
+{\scriptsize
+\begin{verbatim}
+(Bogdan
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Dumitriu))
+                (prenume
+                        (_ Bogdan))
+                (data-n
+                        (_ 1981_02_02))
+                (sex
+                        (_ M))
+                (tata
+                        (_ Radu))
+                (mama
+                        (_ Sanda))
+        )
+)
+\end{verbatim}
+}
+
+\c{s}i un exemplu de c\u{a}s\u{a}torie ar fi:
+
+{\scriptsize
+\begin{verbatim}
+(cas5
+        instance ((Casatorie))
+        with (
+                (sot
+                        (_ Titus2))
+                (sotie
+                        (_ Sanda))
+        )
+)
+\end{verbatim}
+}
+
+\^{I}n fine, o dat\u{a} baza de cuno\c{s}tin\c{t}e populat\u{a} cu suficiente
+persoane \c{s}i rela\c{t}ii de c\u{a}s\u{a}torie \^{\i}ntre ele se pot defini
+anumite reguli de inferen\c{t}\u{a} care pe baza unor date de intrare s\u{a}
+poat\u{a} furniza diverse informa\c{t}ii utile. Astfel, printr-o defini\c{t}ie
+precum:
+
+{\scriptsize
+\begin{verbatim}
+(Bunic
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (bunic Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/Bunic persoana)
+                                        (or (member-of $parinte $pers tata) (member-of $parinte $pers mama))
+                                        (member-of $bunic $parinte tata)
+                                        (goal (attr $x * "bunic" $v * $t) $state (sigma (val $v $bunic)))
+                        ))))
+                )
+        )
+)
+\end{verbatim}
+}
+
+putem afla simplu care sunt bunicii unei persoane anume printr-o interogare de forma:
+
+{\scriptsize
+\begin{verbatim}
+(ask `(exists
+        ($x/Persoana $t@-^+)
+        (and
+                (= $obj #@((Bunic) (("persoana" (_ bogdan)))))
+                (attr $obj * "bunic" $x * $t)
+                (attr $x * "prenume" $n1 * $t)
+                (attr $x * "nume" $n2 * $t)
+        )
+) :vars `($n1 $n2))
+\end{verbatim}
+}
+
+urmat\u{a} eventual de mai multe apeluri de tipul {\scriptsize (ask *)} pentru a afla r\^{a}nd
+pe r\^{a}nd to\c{t}i bunicii persoanei \^{\i}n cauz\u{a}.
+
+\^{I}n mod similar mai furniz\u{a}m ca exemplu \c{s}i defini\c{t}ia rela\c{t}iei de
+frate sau sor\u{a} vitreg(\u{a}) care, pentru o persoan\u{a} dat\u{a}, deduce to\c{t}i
+fra\c{t}ii \c{s}i toate surorile vitrege ale acesteia.
+
+{\scriptsize
+\begin{verbatim}
+(FrateSoraVitreg
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (frate-sora Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/FrateSoraVitreg persoana)
+                                        (member-of $tata $pers tata)
+                                        (member-of $mama $pers mama)
+                                        (instance-of $fs Persoana)
+                                        (not (is $fs $pers))
+                                        (or
+                                                (and                              
+                                                        (member-of $tata $fs tata)
+                                                        (member-of $mama2 $fs mama)
+                                                        (not (= $mama $mama2))
+                                                )
+                                                (and
+                                                        (member-of $mama $fs mama)
+                                                        (member-of $tata2 $fs tata)
+                                                        (not (= $tata $tata2))
+                                                )
+                                        )
+                                        (goal (attr $x * "frate-sora" $v * $t) $state (sigma (val $v $fs)))
+                        ))))
+                )
+        )
+)
+\end{verbatim}
+}
+
+cu interogarea aferent\u{a}:
+
+{\scriptsize
+\begin{verbatim}
+(ask `(exists
+        ($x/Persoana $t@-^+)
+        (and
+                (= $obj #@((FrateSoraVitreg) (("persoana" (_ bogdan)))))
+                (attr $obj * "frate-sora" $x * $t)
+                (attr $x * "prenume" $n1 * $t)
+                (attr $x * "nume" $n2 * $t)
+        )
+) :vars `($n1 $n2))
+\end{verbatim}
+}
+
+care poate fi urmat\u{a}, ca \c{s}i \^{\i}n cazul anterior de apeluri la
+{\scriptsize (ask *)} pentru determinarea r\^{a}nd pe r\^{a}nd a  tuturor
+fra\c{t}ilor \c{s}i surorilor vitregi ai persoanei.
+
+Con\c{t}inutul \^{\i}ntregii baze de cuno\c{s}tin\c{t}e se g\u{a}se\c{s}te
+\^{\i}n anex\u{a}. Pentru a se putea folosi aceast\u{a} baz\u{a} de
+cuno\c{s}tin\c{t}e trebuie \^{\i}n prealabil \^{\i}nc\u{a}rcat sistemul
+Knowbel prin:
+
+{\scriptsize
+\begin{verbatim}
+        (load ''knowbel'')
+\end{verbatim}
+}
+
+\c{s}i apoi trebuie \^{\i}nc\u{a}rcat\u{a} baza de cuno\c{s}tin\c{t}e
+din anex\u{a} astfel:
+
+{\scriptsize
+\begin{verbatim}
+        (loadkb ''nume_fisier.lisp'')
+\end{verbatim}
+}
+
+Din acest moment se pot formula interog\u{a}ri precum cele prezentate
+\^{\i}nainte.
+
+\appendix
+
+\section{Anexa: Listingul exemplului}
+{\scriptsize
+\begin{verbatim}
+;;;
+;;; o baza de cunostinte ce reprezinta un arbore genealogic
+;;;
+
+(Persoana
+        instance ((M1-Class))
+        with (
+                ((necessary single)
+                        (nume string)
+                        (prenume string)
+                        (data-n string)
+                        (sex string)
+                )
+                (attribute
+                        (tata Persoana)
+                        (mama Persoana)
+                )
+                (integrity-constraint
+
+                        (gender-constraint
+                                (forall $person
+                                        (=>
+                                                (instance-of $person Persoana)
+                                                (member-of $sex $person sex) 
+                                                (or (= $sex M) (= $sex F))
+                                        )
+                                )
+                        )
+                        (father-constraint
+                                (forall $person
+                                        (=>
+                                                (instance-of $person Persoana)
+                                                (member-of $tata $person tata)
+                                                (member-of $sex $tata sex)
+                                                (= $sex M)
+                                        )
+                                )
+                        )
+                        (mother-constraint
+                                (forall $person
+                                        (=>
+                                                (instance-of $person Persoana)
+                                                (member-of $mama $person mama)
+                                                (member-of $sex $mama sex)
+                                                (= $sex F)
+                                        )
+                                )
+                        )
+                )
+        )
+)
+
+(Casatorie
+        instance ((M1-Class))
+        with (
+                ((necessary single)
+                        (sot Persoana)
+                        (sotie Persoana)
+                )
+                (integrity-constraint
+                        (husband-constraint
+                                (forall $cas
+                                        (=>
+                                                (instance-of $cas Casatorie)
+                                                (member-of $sot $cas sot)
+                                                (member-of $sex $sot sex)
+                                                (= $sex M)
+                                        )
+                                )
+                        )
+                        (wife-constraint
+                                (forall $cas
+                                        (=>
+                                                (instance-of $cas Casatorie)
+                                                (member-of $sotie $cas sotie)
+                                                (member-of $sex $sotie sex)
+                                                (= $sex F)
+                                        )
+                                )
+                        )
+                        (one-marriage-per-person-constraint
+                                (forall $cas
+                                        (=>
+                                                (instance-of $cas Casatorie)
+                                                (or
+                                                        (member-of $person $cas sot)
+                                                        (member-of $person $cas sotie)
+                                                )
+                                                (not (exists $alta_cas (and
+                                                        (not (= $cas $alta_cas))
+                                                        (or
+                                                                (member-of $person $alta_cas sot)
+                                                                (member-of $person $alta_cas sotie)
+                                                        )
+                                                )))
+                                        )
+                                )
+                        )
+                )
+        )
+)
+
+(Victor
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Neamtu))
+                (prenume
+                        (_ Victor))
+                (data-n
+                        (_ 1928_01_30))
+                (sex
+                        (_ M))
+        )
+)
+
+(Maria
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Neamtu))
+                (prenume
+                        (_ Maria))
+                (data-n
+                        (_ 1958_04_14))
+                (sex
+                        (_ F))
+        )
+)
+
+(cas1
+        instance ((Casatorie))
+        with (
+                (sot
+                        (_ Victor))
+                (sotie
+                        (_ Maria))
+        )
+)
+
+(Petru
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Dumitriu))
+                (prenume
+                        (_ Petru))
+                (data-n
+                        (_ 1926_06_28))
+                (sex
+                        (_ M))
+        )
+)
+
+(Ana
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Dumitriu))
+                (prenume
+                        (_ Ana))
+                (data-n
+                        (_ 1926_09_27))
+                (sex
+                        (_ F))
+        )
+)
+
+(cas2
+        instance ((Casatorie))
+        with (
+                (sot
+                        (_ Petru))
+                (sotie
+                        (_ Ana))
+        )
+)
+
+(Titus1
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Nicoara))
+                (prenume
+                        (_ Titus))
+                (data-n
+                        (_ 1928_01_22))
+                (sex
+                        (_ M))
+        )
+)
+
+(Zoe
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Nicoara))
+                (prenume
+                        (_ Zoe))
+                (data-n
+                        (_ 1928_07_01))
+                (sex
+                        (_ F))
+        )
+)
+
+(cas3
+        instance ((Casatorie))
+        with (
+                (sot
+                        (_ Titus1))
+                (sotie
+                        (_ Zoe))
+        )
+)
+
+(Sanda
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Nicoara))
+                (prenume
+                        (_ Sanda))
+                (data-n
+                        (_ 1958_08_05))
+                (sex
+                        (_ F))
+                (tata
+                        (_ Victor))
+                (mama
+                        (_ Maria))
+        )
+)
+
+(Sandu
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Neamtu))
+                (prenume
+                        (_ Sandu))
+                (data-n
+                        (_ 1955_11_16))
+                (sex
+                        (_ M))
+                (tata
+                        (_ Victor))
+                (mama
+                        (_ Maria))
+        )
+)
+
+(Radu
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Dumitriu))
+                (prenume
+                        (_ Radu))
+                (data-n
+                        (_ 1956_07_24))
+                (sex
+                        (_ M))
+                (tata
+                        (_ Petru))
+                (mama
+                        (_ Ana))
+        )
+)
+
+(Sorina
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Chirtes))
+                (prenume
+                        (_ Sorina))
+                (data-n
+                        (_ yyyy_mm_dd))
+                (sex
+                        (_ F))
+        )
+)
+
+(Titus2
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Nicoara))
+                (prenume
+                        (_ Titus))
+                (data-n
+                        (_ 1958_11_19))
+                (sex
+                        (_ M))
+                (tata
+                        (_ Titus1))
+                (mama
+                        (_ Zoe))
+        )
+)
+
+(Silvia
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Neamtu))
+                (prenume
+                        (_ Silvia))
+                (data-n
+                        (_ 1955_12_26))
+                (sex
+                        (_ F))
+        )
+)
+
+(Marius
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Nicoara))
+                (prenume
+                        (_ Marius))
+                (data-n
+                        (_ 1958_11_19))
+                (sex
+                        (_ M))
+                (tata
+                        (_ Titus1))
+                (mama
+                        (_ Zoe))
+        )
+)
+
+(Bianca
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Nicoara))
+                (prenume
+                        (_ Bianca))
+                (data-n
+                        (_ 1962_07_26))
+                (sex
+                        (_ F))
+        )
+)
+
+(cas5
+        instance ((Casatorie))
+        with (
+                (sot
+                        (_ Titus2))
+                (sotie
+                        (_ Sanda))
+        )
+)
+
+(cas6
+        instance ((Casatorie))
+        with (
+                (sot
+                        (_ Sandu))
+                (sotie
+                        (_ Silvia))
+        )
+)
+
+(cas7
+        instance ((Casatorie))
+        with (
+                (sot
+                        (_ Marius))
+                (sotie
+                        (_ Bianca))
+        )
+)
+
+(Bogdan
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Dumitriu))
+                (prenume
+                        (_ Bogdan))
+                (data-n
+                        (_ 1981_02_02))
+                (sex
+                        (_ M))
+                (tata
+                        (_ Radu))
+                (mama
+                        (_ Sanda))
+        )
+)
+
+(Denisa
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Nicoara))
+                (prenume
+                        (_ Denisa))
+                (data-n
+                        (_ 1990_06_28))
+                (sex
+                        (_ F))
+                (tata
+                        (_ Titus2))
+                (mama
+                        (_ Sanda))
+        )
+)
+
+(Anda
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Dumitriu))
+                (prenume
+                        (_ Anda))
+                (data-n
+                        (_ 1990_03_06))
+                (sex
+                        (_ F))
+                (tata
+                        (_ Radu))
+                (mama
+                        (_ Sorina))
+        )
+)
+
+(Andrei
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Neamtu))
+                (prenume
+                        (_ Andrei))
+                (data-n
+                        (_ 1981_05_16))
+                (sex
+                        (_ M))
+                (tata
+                        (_ Sandu))
+                (mama
+                        (_ Silvia))
+        )
+)
+
+(Dan
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Neamtu))
+                (prenume
+                        (_ Dan))
+                (data-n
+                        (_ 1982_07_02))
+                (sex
+                        (_ M))
+                (tata
+                        (_ Sandu))
+                (mama
+                        (_ Silvia))
+        )
+)
+
+(Petra
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Nicoara))
+                (prenume
+                        (_ Petra))
+                (data-n
+                        (_ 1988_08_14))
+                (sex
+                        (_ F))
+                (tata
+                        (_ Marius))
+                (mama
+                        (_ Bianca))
+        )
+)
+
+(Stanca
+        instance ((Persoana))
+        with (
+                (nume
+                        (_ Nicoara))
+                (prenume
+                        (_ Stanca))
+                (data-n
+                        (_ 1996_05_13))
+                (sex
+                        (_ F))
+                (tata
+                        (_ Marius))
+                (mama
+                        (_ Bianca))
+        )
+)
+
+(Bunic
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (bunic Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/Bunic persoana)
+                                        (or (member-of $parinte $pers tata) (member-of $parinte $pers mama))
+                                        (member-of $bunic $parinte tata)
+                                        (goal (attr $x * "bunic" $v * $t) $state (sigma (val $v $bunic)))
+                        ))))
+                )
+        )
+)
+
+(Bunica
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (bunica Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/Bunica persoana)
+                                        (or (member-of $parinte $pers tata) (member-of $parinte $pers mama))
+                                        (member-of $bunica $parinte mama)
+                                        (goal (attr $x * "bunica" $v * $t) $state (sigma (val $v $bunica)))
+                        ))))
+                )
+        )
+)
+
+(Nepot
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (nepot Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/Nepot persoana)
+                                        (instance-of $copil Persoana)
+                                        (or (member-of $pers $copil tata) (member-of $pers $copil mama))
+                                        (instance-of $nepot Persoana)
+                                        (or (member-of $copil $nepot tata) (member-of $copil $nepot mama))
+                                        (goal (attr $x * "nepot" $v * $t) $state (sigma (val $v $nepot)))
+                        ))))
+                )
+        )
+)
+
+(FrateSora
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (frate-sora Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/FrateSora persoana)
+                                        (member-of $tata $pers tata)
+                                        (member-of $mama $pers mama)
+                                        (instance-of $fs Persoana)
+                                        (not (is $fs $pers))
+                                        (member-of $tata $fs tata)
+                                        (member-of $mama $fs mama)
+                                        (goal (attr $x * "frate-sora" $v * $t) $state (sigma (val $v $fs)))
+                        ))))
+                )
+        )
+)
+
+(FrateSoraVitreg
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (frate-sora Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/FrateSoraVitreg persoana)
+                                        (member-of $tata $pers tata)
+                                        (member-of $mama $pers mama)
+                                        (instance-of $fs Persoana)
+                                        (not (is $fs $pers))
+                                        (or
+                                                (and
+                                                        (member-of $tata $fs tata)
+                                                        (member-of $mama2 $fs mama)
+                                                        (not (= $mama $mama2))
+                                                )
+                                                (and
+                                                        (member-of $mama $fs mama)
+                                                        (member-of $tata2 $fs tata)
+                                                        (not (= $tata $tata2))
+                                                )
+                                        )
+                                        (goal (attr $x * "frate-sora" $v * $t) $state (sigma (val $v $fs)))
+                        ))))
+                )
+        )
+)
+
+(Unchi
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (unchi Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/Unchi persoana)
+                                        (or (member-of $parinte $pers tata) (member-of $parinte $pers mama))
+                                        (member-of $tata $parinte tata)
+                                        (member-of $mama $parinte mama)
+                                        (instance-of $fsp Persoana)
+                                        (not (is $fsp $parinte))
+                                        (member-of M $fsp sex)
+                                        (or
+                                                (and
+                                                        (member-of $tata $fsp tata)
+                                                        (member-of $mama $fsp mama)
+                                                )
+                                                (and
+                                                        (member-of $tata $fsp tata)
+                                                        (member-of $mama2 $fsp mama)
+                                                        (not (= $mama $mama2))
+                                                )
+                                                (and
+                                                        (member-of $mama $fsp mama)
+                                                        (member-of $tata2 $fsp tata)
+                                                        (not (= $tata $tata2))
+                                                )
+                                        )
+                                        (goal (attr $x * "unchi" $v * $t) $state (sigma (val $v $fsp)))
+                        ))))
+                )
+        )
+)
+
+(Matusa
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (matusa Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/Matusa persoana)
+                                        (or (member-of $parinte $pers tata) (member-of $parinte $pers mama))
+                                        (member-of $tata $parinte tata)
+                                        (member-of $mama $parinte mama)
+                                        (instance-of $fsp Persoana)
+                                        (not (is $fsp $parinte))
+                                        (member-of F $fsp sex)
+                                        (or
+                                                (and
+                                                        (member-of $tata $fsp tata)
+                                                        (member-of $mama $fsp mama)
+                                                )
+                                                (and
+                                                        (member-of $tata $fsp tata)
+                                                        (member-of $mama2 $fsp mama)
+                                                        (not (= $mama $mama2))
+                                                )
+                                                (and
+                                                        (member-of $mama $fsp mama)
+                                                        (member-of $tata2 $fsp tata)
+                                                        (not (= $tata $tata2))
+                                                )
+                                        )
+                                        (goal (attr $x * "matusa" $v * $t) $state (sigma (val $v $fsp)))
+                        ))))
+                )
+        )
+)
+
+(Verisor
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (verisor Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/Verisor persoana)
+                                        (or (member-of $parinte $pers tata) (member-of $parinte $pers mama))
+                                        (member-of $tata $parinte tata)
+                                        (member-of $mama $parinte mama)
+                                        (instance-of $fsp Persoana)
+                                        (not (is $fsp $parinte))
+                                        (or
+                                                (and
+                                                        (member-of $tata $fsp tata)
+                                                        (member-of $mama $fsp mama)
+                                                )
+                                                (and
+                                                        (member-of $tata $fsp tata)
+                                                        (member-of $mama2 $fsp mama)
+                                                        (not (= $mama $mama2))
+                                                )
+                                                (and
+                                                        (member-of $mama $fsp mama)
+                                                        (member-of $tata2 $fsp tata)
+                                                        (not (= $tata $tata2))
+                                                )
+                                        )
+                                        (instance-of $var Persoana)
+                                        (or (member-of $fsp $var tata) (member-of $fsp $var mama))
+                                        (goal (attr $x * "verisor" $v * $t) $state (sigma (val $v $var)))
+                        ))))
+                )
+        )
+)
+
+(Nora
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (nora Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/Nora persoana)
+                                        (instance-of $fiu Persoana)
+                                        (member-of M $fiu sex)
+                                        (or (member-of $pers $fiu tata) (member-of $pers $fiu mama))
+                                        (instance-of $cas Casatorie)
+                                        (member-of $fiu $cas sot)
+                                        (member-of $nora $cas sotie)
+                                        (goal (attr $x * "nora" $v * $t) $state (sigma (val $v $nora)))
+                        ))))
+                )
+        )
+)
+
+(Ginere
+        instance ((M1-Class))
+        with (
+                (attribute
+                        (persoana Persoana)
+                        (ginere Persoana
+                                :with (meta-rule (mr1 (=>
+                                        (varp $v)
+                                        (member-of $pers $x/Ginere persoana)
+                                        (instance-of $fiica Persoana)
+                                        (member-of F $fiica sex)
+                                        (or (member-of $pers $fiica tata) (member-of $pers $fiica mama))
+                                        (instance-of $cas Casatorie)
+                                        (member-of $fiica $cas sotie)
+                                        (member-of $ginere $cas sot)
+                                        (goal (attr $x * "ginere" $v * $t) $state (sigma (val $v $ginere)))
+                        ))))
+                )
+        )
+)
+\end{verbatim}
+}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

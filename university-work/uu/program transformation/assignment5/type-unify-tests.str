@@ -1,0 +1,194 @@
+module type-unify-tests
+imports
+  Tiger
+  sunit
+  collect
+
+strategies
+
+main =
+	test-suite(!"Type Unifying Strategies Tests",
+		tust1(countFunctions)
+		; tust2(countFunctions)
+		; tust3(sumNumbers)
+		; tust4(sumNumbers)
+		; tust5(collectVars)
+		; tust6(collectVars)
+		; tust7(collectRHSVars)
+		; tust8(collectRHSVars)
+		; tust9(collectRHSVars)
+		; tust10(collectOuterFunctionCalls)
+		; tust11(freeVars)
+		; tust12(freeVars)
+		; tust13(freeVars)
+		; tust14(undefinedFunctions)
+		; tust15(undefinedFunctions)
+	)
+
+// 1.
+countFunctions =
+	<add>(<?FunDec(_,_,_,_) < !1 + !0>, <crush(!0, add, countFunctions)>)
+
+// 2.
+sumNumbers =
+	<add>(<?Int(x) < <string-to-int>x + !0 >, <crush(!0, add, sumNumbers)>)
+
+// 3. (this one eliminates duplicates)
+collectDistinctVars =
+	collect-all(?Var(_))
+
+// 3. (this one doesn't eliminate duplicates)
+collectVars =
+	collect-all(?Var(_), conc)
+
+// 4.
+collectRHSVars =
+	collect-all(?Var(_), conc, \ Assign(_, e) -> Assign(e) \ <+ \ Call(_, e) -> Call(e) \)
+
+// 5.
+collectOuterFunctionCalls =
+	collect-om(?Call(_, _))
+
+// 6.
+freeVars =
+	collect-exc(ExpVars, FreeVars)
+
+ExpVars :
+	Var(x) -> [x]
+
+FreeVars(fv) :
+	Let(decs, e) ->
+	<union>(<concat>fvs, <diff>(<fv>e, vars))
+	where <concat>(<map(\ VarDec(x, _, _) -> [x] \ <+
+			    \ FunDecs(funs) -> <map(\ FunDec(f, _, _, _) -> f \)>funs \)>decs) => vars
+		; <map(\ VarDec(_, _, e) -> <diff>(<fv>e, vars) \ <+
+		       \ FunDecs(funs) -> <diff>(<concat>(<map(fv)>funs), vars) \)>decs => fvs
+
+FreeVars(fv) :
+	FunDec(_, xs, _, e) ->
+	<diff>(<fv>e, args)
+	where <map(\ FArg(x, _) -> x \)>xs => args
+
+// 7.
+undefinedFunctions =
+	collect-exc(ExpCalls, UdefFuncs)
+
+ExpCalls :
+	Call(Var(f), _) -> [f]
+
+UdefFuncs(uf) :
+	Let(decs, e) ->
+	<union>(<concat>ufs, <diff>(<uf>e, fvars))
+	where <concat>(<filter(\ FunDecs(funs) -> <map(\ FunDec(f, _, _, _) -> f \)>funs \)>decs) => fvars
+		; <map(\ VarDec(_, _, e) -> <diff>(<uf>e, fvars) \ <+
+		       \ FunDecs(funs) -> <diff>(<concat>(<map(uf)>funs), fvars) \)>decs => ufs
+
+/**
+ * Tests
+ */
+
+tust1(s) =
+	apply-test(!"Type Unifying Strategies Test 1",
+		s,
+		!Let([FunDecs([FunDec("f",[],Tp(Tid("Int")),Int("5"))])],[Int("56")]),
+		!1
+	)
+
+tust2(s) =
+	apply-test(!"Type Unifying Strategies Test 2",
+		s,
+		!Let([FunDecs([FunDec("f",[],Tp(Tid("Bool")),Let([FunDecs([FunDec("g",[],Tp(Tid("Bool")),True),FunDec("h",[],Tp(Tid("Bool")),False)])],[Or(Call(Var("g"),[]),Call(Var("h"),[]))]))])],[Call(Var("f"),[])]),
+		!3
+	)
+
+tust3(s) =
+	apply-test(!"Type Unifying Strategies Test 3",
+		s,
+		!Plus(Plus(Plus(Int("1"),Int("2")),Int("3")),Int("4")),
+		!10
+	)
+
+tust4(s) =
+	apply-test(!"Type Unifying Strategies Test 4",
+		s,
+		!Let([VarDec("x",NoTp,Int("4")),VarDec("y",NoTp,Int("5")),VarDec("z",NoTp,Int("6"))],[Times(Var("z"),Int("8"))]),
+		!23
+	)
+
+tust5(s) =
+	apply-test(!"Type Unifying Strategies Test 5",
+		s,
+		!Let([VarDec("x",NoTp,Int("4")),VarDec("y",NoTp,Int("5")),VarDec("z",NoTp,Int("6"))],[Times(Var("z"),Int("8"))]),
+		![Var("z")]
+	)
+
+tust6(s) =
+	apply-test(!"Type Unifying Strategies Test 6",
+		s,
+		!Plus(Plus(Plus(Times(Var("x"),Var("y")),Var("z")),Var("t")),Var("t")),
+		![Var("x"),Var("y"),Var("z"),Var("t"),Var("t")]
+	)
+
+tust7(s) =
+	apply-test(!"Type Unifying Strategies Test 7",
+		s,
+		!Let([VarDec("x",NoTp,Int("5"))],[Assign(Var("x"),Plus(Var("y"),Int("6")))]),
+		![Var("y")]
+	)
+
+
+tust8(s) =
+	apply-test(!"Type Unifying Strategies Test 8",
+		s,
+		!Let([FunDecs([FunDec("f",[],Tp(Tid("Bool")),Let([FunDecs([FunDec("g",[],Tp(Tid("Bool")),True),FunDec("h",[],Tp(Tid("Bool")),False)])],[Or(Call(Var("g"),[]),Call(Var("h"),[]))]))])],[Call(Var("f"),[])]),
+		![]
+	)
+
+tust9(s) =
+	apply-test(!"Type Unifying Strategies Test 9",
+		s,
+		!Let([FunDecs([FunDec("f",[FArg("x",Tp(Tid("int")))],Tp(Tid("int")),Let([VarDec("x",NoTp,Int("5"))],[Seq([Assign(Var("x"),Int("6")),Assign(Var("x"),Call(Var("f"),[Var("x")]))])]))]),VarDec("y",NoTp,Int("7")),VarDec("z",NoTp,Int("8"))],[Assign(Var("x"),Plus(Var("y"),Var("z")))]),
+		![Var("x"),Var("y"),Var("z")]
+	)
+
+tust10(s) =
+	apply-test(!"Type Unifying Strategies Test 10",
+		s,
+		!Let([FunDecs([FunDec("f",[],Tp(Tid("Bool")),Let([FunDecs([FunDec("g",[],Tp(Tid("Bool")),True),FunDec("h",[],Tp(Tid("Bool")),False)])],[Or(Call(Var("g"),[]),Call(Var("h"),[]))]))])],[Call(Var("f"),[])]),
+		![Call(Var("g"),[]),Call(Var("h"),[]),Call(Var("f"),[])]
+	)
+
+tust11(s) =
+	apply-test(!"Type Unifying Strategies Test 11",
+		s,
+		!Let([VarDec("x",NoTp,Plus(Int("4"),Var("y"))),VarDec("y",NoTp,Plus(Int("5"),Var("z")))],[Plus(Plus(Var("a"),Var("b")),Times(Var("x"),Var("y")))]),
+		!["z", "a", "b"]
+	)
+
+tust12(s) =
+	apply-test(!"Type Unifying Strategies Test 12",
+		s,
+		!Let([FunDecs([FunDec("f",[FArg("x",Tp(Tid("int")))],Tp(Tid("int")),Plus(Plus(Plus(Int("5"),Var("x")),Var("y")),Var("a")))]),VarDec("y",NoTp,Int("7")),VarDec("z",NoTp,Int("8")),FunDecs([FunDec("g",[],Tp(Tid("int")),Int("6")),FunDec("h",[],Tp(Tid("int")),Int("7"))])],[Assign(Var("x"),Plus(Var("y"),Var("z")))]),
+		!["a", "x"]
+	)
+
+tust13(s) =
+	apply-test(!"Type Unifying Strategies Test 13",
+		s,
+		!Let([FunDecs([FunDec("f",[FArg("x",Tp(Tid("int")))],Tp(Tid("int")),Plus(Plus(Plus(Int("5"),Var("x")),Var("y")),Var("a")))]),VarDec("y",NoTp,Int("7")),VarDec("z",NoTp,Int("8")),FunDecs([FunDec("g",[],Tp(Tid("int")),Int("6")),FunDec("h",[],Tp(Tid("int")),Int("7"))])],[Assign(Var("x"),Plus(Plus(Plus(Plus(Plus(Var("y"),Var("z")),Call(Var("g"),[])),Call(Var("h"),[])),Call(Var("f"),[Var("z")])),Call(Var("i"),[])))]),
+		!["a", "x", "i"]
+	)
+
+tust14(s) =
+	apply-test(!"Type Unifying Strategies Test 14",
+		s,
+		!Let([FunDecs([FunDec("f",[FArg("x",Tp(Tid("int")))],Tp(Tid("int")),Plus(Plus(Plus(Int("5"),Var("x")),Var("y")),Var("a")))]),VarDec("y",NoTp,Int("7")),VarDec("z",NoTp,Int("8")),FunDecs([FunDec("g",[],Tp(Tid("int")),Int("6")),FunDec("h",[],Tp(Tid("int")),Int("7"))])],[Assign(Var("x"),Plus(Plus(Plus(Plus(Plus(Var("y"),Var("z")),Call(Var("g"),[])),Call(Var("h"),[])),Call(Var("f"),[Var("z")])),Call(Var("i"),[])))]),
+		!["i"]
+	)
+
+tust15(s) =
+	apply-test(!"Type Unifying Strategies Test 15",
+		s,
+		!Let([VarDec("x",NoTp,Call(Var("f"),[])),FunDecs([FunDec("f",[],Tp(Tid("bool")),True),FunDec("g",[],Tp(Tid("bool")),And(Call(Var("f"),[]),Call(Var("f1"),[])))]),VarDec("y",NoTp,Call(Var("h"),[]))],[Or(Call(Var("f"),[]),Call(Var("i"),[]))]),
+		!["f1", "h", "i"]
+	)

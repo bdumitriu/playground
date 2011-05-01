@@ -1,0 +1,7 @@
+let function f(y: int): int =
+      let function g(x: int): int =
+            3
+       in (3; y := g(y) + 2; if g((1; y+2+3)) > 2 then 6 else 7)
+       end
+ in printint(f(1))
+end

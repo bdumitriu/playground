@@ -1,0 +1,25 @@
++-----------------------------------------------------------------+
+¦ Selectia medianei din doua siruri sortate de n elemente fiecare ¦
++-----------------------------------------------------------------+
+
+MEDIANA(A,B,liA,lsA,liB,lsB)
+	if liA = lsA and liB = lsB then
+		if A[liA] < B[liB] then
+			return A[liA]
+		else
+			return B[liB]
+	else
+		ma <- [(liA+lsA)/2]
+		mb <- [(liB+lsB)/2]
+
+		if A[ma] = B[mb] then
+			return A[ma]
+
+		if (A[ma] > B[mb]) then
+			if (lsB-liB) mod 2 = 0 then
+				mb <- mb-1
+			return MEDIANA(A,B,liA,ma,mb+1,lsB)
+		else
+			if (lsA-liA) mod 2 = 0 then
+				ma <- ma-1
+			return MEDIANA(A,B,ma+1,lsA,liB,mb)

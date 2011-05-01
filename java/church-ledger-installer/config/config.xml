@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties version="1.0">
+
+	<!-- the directory where all the archives (*.zip, *.msi) are found -->
+	<entry key="archivedir">D:\downloads</entry>
+
+	<!-- the name of the msi file containing the mysql distribution -->
+	<entry key="mysql.zip">mysql-noinstall-4.1.10-win32.zip</entry>
+
+	<!-- the name of the zip file containing the php distribution -->
+	<entry key="php.zip">php-4.3.10-Win32.zip</entry>
+
+	<!-- the name of the msi file containing the apache distribution -->
+	<entry key="apache.msi">apache_2.0.53-win32-x86-no_ssl.msi</entry>
+
+	<!-- the default install path -->
+	<entry key="default.path">C:\Program Files\CL</entry>
+</properties>

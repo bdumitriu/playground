@@ -1,0 +1,31 @@
+  LDR  MP
+  annote SP 0 0 green "Static Link"
+  LDC  L0
+  annote SP 0 0 green "Start PC"
+  BRA L1
+L0: 
+  LDR  MP
+  annote SP 0 0 blue "Prev MP"
+  LDRR MP SP
+  LDL  -3
+  annote SP 0 0 green "copy of x"
+  LDL  -4
+  annote SP 0 0 green "copy of y"
+  ADD
+  STL  -4
+  LDRR SP MP
+  STR  MP
+  STS  -2
+  AJS  -1
+  RET
+L1: 
+  annote SP -1 0 green "def of add"
+  LDC  4
+  LDC  3
+  LDML 1 2
+  annote SP -1 0 green "copy of add"
+  JSR
+  STS  -2
+  AJS  -1
+  TRAP 0
+  HALT

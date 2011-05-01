@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+  <context-param>
+    <param-name>gw.svnrepos</param-name>
+    <param-value>https://svn.cs.uu.nl:12443/repos/test-wiki/</param-value>
+<!--    <param-value>svn://localhost:10000/</param-value> -->
+  </context-param>
+
+  <context-param>
+    <param-name>gw.svnuser</param-name>
+    <param-value>gwstorage</param-value>
+<!--    <param-value>gwuser</param-value> -->
+  </context-param>
+
+  <context-param>
+    <param-name>gw.svnpass</param-name>
+    <param-value>12345</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>applicationPrefix</param-name>
+    <param-value>/gw/</param-value>
+  </context-param>  
+  
+  <context-param>
+      <param-name>gw.emailfrom</param-name>
+      <param-value>Generalized Wiki Administrator &lt;gw@cs.uu.nl&gt;</param-value>
+  </context-param>
+
+  <context-param>
+      <param-name>gw.emailsmtp</param-name>
+      <param-value>smtp.students.cs.uu.nl</param-value>
+  </context-param>
+
+  <servlet>
+    <servlet-name>ACL</servlet-name>
+    <servlet-class>gw.actions.ACLFile</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>Login</servlet-name>
+    <servlet-class>gw.users.actions.ChallengeResponseLoginServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>View</servlet-name>
+    <servlet-class>gw.actions.ShowFile</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>Status</servlet-name>
+    <servlet-class>gw.actions.StatusFile</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Edit</servlet-name>
+    <servlet-class>gw.actions.EditFile</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Revision</servlet-name>
+    <servlet-class>gw.actions.RevisionInfo</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Preview</servlet-name>
+    <servlet-class>gw.actions.PreviewFile</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Diff</servlet-name>
+    <servlet-class>gw.actions.DiffFile</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Praise</servlet-name>
+    <servlet-class>gw.actions.PraiseFile</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Move</servlet-name>
+    <servlet-class>gw.actions.MoveFile</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Copy</servlet-name>
+    <servlet-class>gw.actions.CopyFile</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Delete</servlet-name>
+    <servlet-class>gw.actions.DeleteFile</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Revert</servlet-name>
+    <servlet-class>gw.actions.RevertFile</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Commit</servlet-name>
+    <servlet-class>gw.actions.CommitFileSet</servlet-class>
+  </servlet>
+      
+  <servlet>
+    <servlet-name>Save</servlet-name>
+    <servlet-class>gw.actions.SaveFile</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Attach</servlet-name>
+    <servlet-class>gw.actions.AttachFile</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>ResetPassword</servlet-name>
+    <servlet-class>gw.users.actions.GeneratePasswordServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+	<servlet-name>Logout</servlet-name>
+	<servlet-class>gw.users.actions.LogoutServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>CreateUser</servlet-name>
+    <servlet-class>gw.users.actions.UserCreateServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+	<servlet-name>SetPassword</servlet-name>
+	<servlet-class>gw.users.actions.SetPasswordServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Search</servlet-name>
+    <servlet-class>gw.query.Search</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>RebuildSearchIndex</servlet-name>
+    <servlet-class>gw.query.RebuildSearchIndex</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>StatisticsGraph</servlet-name>
+    <servlet-class>gw.query.StatisticsGraph</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Resolved</servlet-name>
+    <servlet-class>gw.actions.ResolvedFile</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>History</servlet-name>
+    <servlet-class>gw.actions.HistoryFile</servlet-class>
+  </servlet>  
+  
+  <!-- Conference -->
+  
+  <servlet>
+  	<servlet-name>NewConference</servlet-name>
+  	<servlet-class>gw.conference.actions.NewConference</servlet-class>
+  </servlet>
+  
+  <servlet>
+  	<servlet-name>AcceptPapers</servlet-name>
+  	<servlet-class>gw.conference.actions.AcceptPapers</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>UpdateState</servlet-name>
+    <servlet-class>gw.conference.actions.UpdateState</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>EditConference</servlet-name>
+    <servlet-class>gw.conference.actions.EditConference</servlet-class>
+  </servlet>
+
+  <servlet>
+  	<servlet-name>AddAuthor</servlet-name>
+  	<servlet-class>gw.conference.actions.AddAuthor</servlet-class>
+  </servlet>
+  
+  <servlet>
+  	<servlet-name>AssignReviewer</servlet-name>
+  	<servlet-class>gw.conference.actions.AssignReviewer</servlet-class>
+  </servlet>
+  
+  <servlet>
+  	<servlet-name>AddPaper</servlet-name>
+  	<servlet-class>gw.conference.actions.AddPaper</servlet-class>
+  </servlet>
+ 
+  <servlet>
+  	<servlet-name>AddRating</servlet-name>
+  	<servlet-class>gw.conference.actions.AddRating</servlet-class>
+  </servlet>
+  
+  <!-- /Conference -->
+  
+  <servlet>
+    <servlet-name>PreviewBlog</servlet-name>
+    <servlet-class>gw.blog.PreviewBlog</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>PreviewEntry</servlet-name>
+    <servlet-class>gw.blog.PreviewEntry</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>PreviewComment</servlet-name>
+    <servlet-class>gw.blog.PreviewComment</servlet-class>
+  </servlet>
+  
+   <servlet-mapping>
+    <servlet-name>ACL</servlet-name>
+    <url-pattern>/acl/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>View</servlet-name>
+    <url-pattern>/view/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Diff</servlet-name>
+    <url-pattern>/diff/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Praise</servlet-name>
+    <url-pattern>/praise/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Edit</servlet-name>
+    <url-pattern>/edit/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Preview</servlet-name>
+    <url-pattern>/preview/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Save</servlet-name>
+    <url-pattern>/save/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Status</servlet-name>
+    <url-pattern>/status/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Revision</servlet-name>
+    <url-pattern>/revision/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ResetPassword</servlet-name>
+    <url-pattern>/resetpassword/</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Login</servlet-name>
+    <url-pattern>/login/</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+     <servlet-name>CreateUser</servlet-name>
+     <url-pattern>/newuser/</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+	<servlet-name>SetPassword</servlet-name>
+	<url-pattern>/setpwd/</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+	<servlet-name>Logout</servlet-name>
+	<url-pattern>/logout/</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Search</servlet-name>
+    <url-pattern>/search/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>RebuildSearchIndex</servlet-name>
+    <url-pattern>/search/rebuildIndex</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>StatisticsGraph</servlet-name>
+    <url-pattern>/search/statistics</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Move</servlet-name>
+    <url-pattern>/move/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Copy</servlet-name>
+    <url-pattern>/copy/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Revert</servlet-name>
+    <url-pattern>/revert/*</url-pattern>
+  </servlet-mapping>  
+
+  <servlet-mapping>
+    <servlet-name>Delete</servlet-name>
+    <url-pattern>/delete/*</url-pattern>
+  </servlet-mapping>  
+
+  <servlet-mapping>
+    <servlet-name>Attach</servlet-name>
+    <url-pattern>/attach/*</url-pattern>
+  </servlet-mapping>  
+  
+  <servlet-mapping>
+    <servlet-name>Commit</servlet-name>
+    <url-pattern>/commit/*</url-pattern>
+  </servlet-mapping>
+
+ <servlet-mapping>
+    <servlet-name>Resolved</servlet-name>
+    <url-pattern>/resolved/</url-pattern>
+  </servlet-mapping>    
+  
+ <servlet-mapping>
+    <servlet-name>History</servlet-name>
+    <url-pattern>/history/*</url-pattern>
+  </servlet-mapping>    
+  
+  <!-- Conference -->
+  <!-- WARNING: if you change any of the servlet-mappings for the conference servlets, you must
+       also change the corresponding "SERVLET" constants in gw.conference.Constants
+  -->
+
+  <servlet-mapping>
+    <servlet-name>NewConference</servlet-name>
+    <url-pattern>/conference/newConference/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>AcceptPapers</servlet-name>
+    <url-pattern>/conference/acceptPapers/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>UpdateState</servlet-name>
+    <url-pattern>/conference/updateState/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>AddAuthor</servlet-name>
+    <url-pattern>/conference/addAuthor/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AssignReviewer</servlet-name>
+    <url-pattern>/conference/assignReviewer/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>AddPaper</servlet-name>
+    <url-pattern>/conference/addPaper/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>EditConference</servlet-name>
+    <url-pattern>/conference/editConference/*</url-pattern>
+  </servlet-mapping>   
+
+  <servlet-mapping>
+    <servlet-name>AddRating</servlet-name>
+    <url-pattern>/conference/addRating/*</url-pattern>
+  </servlet-mapping>
+  
+  <!-- /Conference -->
+  
+  <servlet-mapping>
+    <servlet-name>PreviewBlog</servlet-name>
+    <url-pattern>/blog/preview/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>PreviewEntry</servlet-name>
+    <url-pattern>/blog/preview-entry/*</url-pattern>
+  </servlet-mapping> 
+  
+  <servlet-mapping>
+    <servlet-name>PreviewComment</servlet-name>
+    <url-pattern>/blog/preview-comment/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>

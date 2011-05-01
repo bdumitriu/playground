@@ -1,0 +1,306 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{color}
+\usepackage{listings}
+
+\newcommand{\code}[1]{{\ttfamily #1}}
+
+\definecolor{listinggray}{gray}{0.9}
+
+\lstset{language=java}
+\lstset{numbers=left}
+\lstset{tabsize=4}
+\lstset{backgroundcolor=\color{listinggray}}
+\lstset{emptylines=1}
+\lstset{captionpos=b}
+\lstset{breaklines=true}
+\lstset{linewidth=450pt}
+
+\title{
+  Extensible and Customizable\\
+  Data-flow Transformation Strategies\\
+  for Object-Oriented Programs\\
+  ~\\
+  Thesis Proposal
+}
+
+\author{
+  Bogdan Dumitriu, 0402044\\
+  Master of Software Technology\\
+  Utrecht University\\
+  bdumitriu@bdumitriu.ro
+}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\begin{abstract}
+Abstract here.
+\end{abstract}
+
+\section{Introduction}
+
+Compilers for general-purpose languages, with complex generic optimization of code, seem to reach a barrier
+in terms of optimization.
+
+~\\
+To work around this, DSLs have been introduced. Examples of DSLs (MATLAB, regular expressions, SQL, context-free
+grammars). More ``general'' DSLs are mostly done with. Now it's about the truly domain-specific ones.
+
+~\\
+The concept is nice, but:
+\begin{itemize}
+\item maintaining such small, specific, languages \& toolsets for them is expensive and all initiatives seem
+to ``fade away''.
+\item mixing DSLs is difficult since each comes with its own compiler (aprox copy)
+\item reuse of optimization across DSLs is tedious (aprox copy)
+\end{itemize}
+
+~\\
+One track from here is language-oriented programming (see JetBrains et al).
+
+~\\
+The other track are active libraries.
+
+~\\
+Discuss DSLs vs libraries (new syntax vs none, compiler support vs none). Compilers cannot exploit the domain
+specific info which is implicit in libraries as they can in DSLs (copy). Access to performance must be made
+through the library's interface: specialized routines, exposing internals, etc (copy). 
+
+~\\
+Advantages of active libraries:
+\begin{itemize}
+\item keep domain specific info out of compiler (copy)
+\item handle multiple domains in the same language (since the domain specific info is in library annotations) (copy)
+\item current programming practices don't have too change too much since libraries are already there (copy)
+\item low (creation, maintenance) cost (copy)
+\end{itemize}
+
+~\\
+\section{Context}
+
+\subsection{Tools and Techniques}
+
+\subsubsection{Dataflow analysis}
+
+\subsubsection{Stratego}
+
+\subsubsection{Annotations}
+
+\subsubsection{Java / Modern languages?}
+
+How do exceptions fit in the picture?
+
+\subsection{Related work}
+
+\subsubsection{Broadway}
+
+Broadway is a project developed by Samuel Z. Guyer and Calvin Lin at the University of Texas at Austin. Broadway consists
+of an optimizing compiler and an annotation language which support a novel technique for optimizing software libraries.
+This technique is validated experimentally by applying it to the (production-quality) PLAPACK parallel linear algebra
+library. The authors claim that the observed performance increase of 26\% for large matrices and 195\% for small ones
+was made possible by having the compiler use the additional information given through annotations. Both the technique
+and the results are discussed at length in \cite{guyer99annotation, guyer-broadway}.
+
+The Broadway system is geared towards to the user who is in no way a professional compiler writer, but rather a
+regular library developer and in the same time domain expert. This type of user commonly has a thorough understanding
+of how a certain library is best used in various circumstances and would like to be able to put this knowledge to
+\emph{systematic} use. To this end, Broadway offers a number of features through its annotation language.
+
+Compilers have a hard time performing many of the traditional optimizations (constant propagation, dead-code elimination
+and the like) when library calls are involved. One reason for this is that often the library's source code is not available
+for inspection. In such cases, optimization algorithms have to ``assume the worst'' in order to ensure the soundness
+of the optimization process. Such conservative assumptions lead inevitably to missing opportunities for optimization.
+And even when source code is available, it can be the case that code from other (unavailable for inspection) libraries
+is called from the library functions. Another hindrance to compilers is that analysis of source code is not always enough
+for making certain decisions. And sometimes it can be the sheer cost (in terms of performance) for getting all the
+information needed for an optimization that makes it infeasible. Broadway's annotations allow the user to aid this
+optimization processes by letting her specify dependence information for each library function. The compiler can then
+incorporate this information in its dataflow and pointer analysis and use it to make more aggressive optimizations.
+
+The dependency information is expressed in a simple language. The pointer structure is specified using the
+\code{on\_entry} and \code{on\_exit} annotations, where the ``\code{-->}'' can be used to represent the
+``points-to'' relation between input objects and internal library structures. Two additional annotations,
+\code{access} and \code{modify} allow the library developer to specify the ``uses'' and the ``defs'' of the
+library routine. The values listed in the \code{access} set are those which are only read by the routine,
+while the ones listed in \code{modify} are those whose value is also changed by the routine. With this extra
+information, the compiler's analysis will usually yield a larger amount of optimization opportunities.
+
+The second type of improvement that Broadway proposes is the truly domain specific one. Libraries are used by different
+categories of users, ranging from beginners to experts. Most, if not all, libraries have their own quirks in terms how
+how they should be best used, which the user has to be aware of if she is to achieve both performance and saftey in usage.
+But since users are so diverse, it is unlikely that they will all manage to gain full understanding of how to utilize
+the library. Therefore, it is preferable that a mechanism exist to smooth away this potential lack of expertise. What
+Broadway does is propose such a mechanism.
+
+Concretely, the annotation language provides a means to specify and track any number of \emph{properties} across library
+calls. A property is created using the \code{property} keyword, and all its possible values are specified. For example,
+the following could be used to track whether or not an array is sorted (including information about how it is sorted,
+ascendingly or descendingly):
+
+\begin{verbatim}
+    property Sorted : { Yes { Asc, Desc }, No }
+\end{verbatim}
+
+Once such a property definition is established, its value for any particular input object and/or object an input object
+points to (either directly or indircectly) can be maintained based on a set of user-defined rules. For this purpose,
+the \code{analyze} annotation has been introduced. An analysis allows non-conditional or conditional assignment of values.
+If we were to write an annotation for a hypothetical array\_reverse routine, here is how it would look like (the name
+of the argument to the routine is assumed to be \code{array}):
+
+\begin{verbatim}
+    analyze Sorted
+    {
+        if (Sorted : array is-exactly Asc) { array <- Desc }
+        if (Sorted : array is-exactly Desc) { array <- Asc }
+        default { array <- No }
+    }
+\end{verbatim}
+
+Finally, maintaining these properties is useless if they are not part of the optimization process. The way Broadway
+achieves this is through the annotations for actions. There are three actions which can be specified by the user: code
+replacement, inlining and reporting. These actions can be guarded with conditions based on the property values which
+result from the analysis process. The conditions are evaluated at each callsite of a library routine, and it is the
+particular call to the routine that either gets replaced or inlined. The compiler ensures the syntatic correctness of
+the expanded code. To illustrate, assume that we have two routines, \code{array\_print} and \code{array\_print\_sorted}
+which print an array as is and print an array after first sorting it, respectively. Then, the annotation for the
+\code{array\_print\_sorted} routine would look as such:
+
+\begin{verbatim}
+    when (Sorted : array is-exactly Ascending) replace-with
+    %{ array_print(array); }%
+
+    when (Sorted : array is-exactly Descending) replace-with
+    %{
+        array_reverse(array);
+        array_print(array);
+    }%
+\end{verbatim}
+
+Based on all these annotations, the Broadway compiler takes an input program, performs a dataflow and pointer analysis,
+using all the extra information and eventually runs a number of traditional optimizers as well as all the user-specified
+transformations and reporting.
+
+Broadway is a very usable system, albeit a restricted one, especially in terms of what information is offered to the user
+for her to base decisions on. The trade-off made by the designers was to sacrifice power for usability. This extends the
+audience of the tool to common developers as well, but it is unlikely that it will fully fit the needs of serious compiler
+writers. All whole program optimizations are performed by the system, without offering the user any possibility
+of extending or adding to them. All the user can do is aid the available optimizations through annotations. In spite of
+this, if we strictly consider what is supported, we regard Broadway as a valuable example of what can be achieved with
+active libraries.
+
+
+\subsubsection{Magik}
+
+Magik, the work of Dawson R. Engler from Stanford Univerity, is the compiler writer's tool for experimenting with active
+libraries. In fact, referring to the tool's intent and capabilities as supporting active libraries is a bit of an
+overstatement. The author himself chooses to use the term \emph{interface compilation} to refer to what Magik is supposed
+to be used for \cite{engler99interface, englerenglerincorporating}. The starting points of Dawson Engler's efforts are
+nevertheless similar to concepts advocated by active libraries, thus qualifying Magik as research in this field. The first
+of his observations is that all optimization occurs at a very low level, where all the (otherwise rich) semantics of a
+library's interface is lost. The compiler neither makes a difference between calls to different libraries nor is able to
+use knowledge about the semantics of a particular library, hence missing any opportunities for library-specific optimization.
+The second observation is the lack of any kind of support for bringing the developer into the compilation loop, in an effort
+to fill the gap mentioned by the first observation. Magik tackles both of these issues with an extension mechanism which can
+be used to interact with the compiler.
+
+Magik is essentially a compiler framework in which a user can incorporate her own extensions. These extensions have access
+(through a specific API) to the entire abstract representation of the code base under compilation and are allowed to freely
+inspect and modify any part thereof. In this way, any number of code transformations and optimizations can be implemented.
+However, unlike Broadway, Magik offers no direct support for any particular type of transformation or optimization. It merely
+presents the user with all the code, leaving the entire analysis and decision-making process to her. However, it does offer
+access to the compiler's symbol table and flow graph information, which is admittedly valuable.
+
+The extension mechanism is basic, but powerful. Extensions are divided into \emph{transformers}, \emph{optimizers} and
+\emph{inspectors}. The distinction bewteen the three is only in intent, not in syntax. Transformers are run first, only
+once. Optimizers are run second, multiple times, in a loop, until running them produces no more changes. In the end inspectors
+are run, again only once. The way extensions are run is taken care of by the system. A very simple extension which would
+only change the name of a function call with another (in a possible scenario where one would want to replace the use of
+an API with another) is shown below as an example.
+
+\begin{verbatim}
+int RenameCall(X_IR c)
+{
+    for (c = FirstCall(c, "array_sort");
+         c != NULL;
+         c = NextCall(c, "array_sort"))
+    {
+        RewriteCall(c, "arraySort");
+    }
+
+    return MAGIK_OK;
+}
+\end{verbatim}
+
+It seems obvious from all that has been discussed above that Magik is really targeted at the professional compiler writer
+rather than at the regular library developer. Through its pardigm, the system quite clearly represents an open compiler,
+but unfortunately with support for easy generation or automatic checking of code completely missing. It would be overly
+optimistic to expect a normal user to posess the necessary expertise and determination for using a system like Magik; its
+use is arguably restricted to compiler experts. Providing full access to the entire code representation makes the system
+very powerful, allowing for a virtually unlimited number of code transformations (including optimizations). Unfortunately,
+there is no support for concrete syntax, which makes code generation a very tedious process. Composing even the simplest of
+statements can only be achieved by (a large number of) method calls to the API, rendering the generated code unreadable and
+very difficult to maintain.
+
+\subsubsection{Active Libraries}
+
+The concept of active libraries was introduced in \cite{Czarnecki:GP:2000} as a manifestation of generative programming.
+Generative programming is a new paradigm of creating particular software systems through a process of specification,
+derivation and composition which draws from a common set of elementary components forming a software family. The idea
+is to shift the system developer's work from an environment defined by general-purpose programming languages and
+traditional APIs to one of high level specifications expressed in domain-specific concepts. Such specifications define
+how (already existing) components of a software family should be modified and composed in order to yield a unique end-system.
+All the steps leading from specification to realization are to be conducted automatically, by a generative programming
+engine. This novel way of creating software, although promising, is still a long way from being a practical reality, since
+developing the infrastructure for achieving even part of the goal is quite an endeavour.
+
+And this brings us back to the relation with the active libraries. As discussed, generative programming requires a natural
+way for a user to specify domain-specific concepts. Resorting to (multiple) domain-specific languages is one possible answer,
+while turning to active libraries is the other. Combinations of the two are also possible. Quoting \cite{Czarnecki:GP:2000},
+active libraries can be used to cover a lot of ground through the capabilities they provide:
+
+\begin{quote}
+They may generate components, specialize algorithms, optimize code, automatically configure and tune themselves for a
+target machine, check source code for correctness, and report compile-time, domain-specific errors and warnings. They may
+also describe themselves to tools such as profilers and debuggers in an intelligible way or provide domain-specific debugging,
+profiling, and testing code themselves. Finally, they may contain code for rendering domain-specific textual and non-textual
+program representations and for interacting with such representations.
+\end{quote}
+
+Of the three types of active libraries discussed in \cite{Czarnecki:GP:2000} (those that extend a compiler, those that
+extend some sort of integrated development environment with domain-specific support and those which act as meta programs)
+and summarized in the quote above, we are particularly interested in the first type. Active libraries integrated with Stratego
+are most likely to fit the paradigm of a compiler extension rather than any of the other two. Additionally, Stratego already
+has extended support for inspection and transformation of the analyzed source code, thus providing a solid base for extension
+in the aforementioned direction. Even more, Stratego already addresses one of the issues of the article, namely the difficulty
+in manipulating the abstract representation of the source code of modern programming languages. The possibility to specify
+such changes to the source code as concrete syntax is a valuable asset and we hope to properly integrate it with our
+implementation of the active libraries.
+
+\subsubsection{Other approaches}
+
+Meta-programming (sytax macros, meta-object protocols). (copy)
+
+\section{Research questions}
+
+\begin{itemize}
+\item What do we need to allow the library writer to specify? Alias analysis? Dataflow analysis?
+\item Assuming we have dataflow information? What do we do with it?
+\item Who should be doing the optimizations? The user? The system? Both?
+\end{itemize}
+
+\section{Approach}
+
+\section{Expected results}
+
+\section{Planning}
+
+\bibliographystyle{plain}
+\bibliography{../ActiveLibraries}
+
+\end{document}

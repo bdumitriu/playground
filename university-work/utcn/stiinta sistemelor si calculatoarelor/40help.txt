@@ -1,0 +1,22 @@
+ - Functia DOS 40h -
+
+Functie:
+    Scriere in fisier.
+
+Asteapta:
+    ah: 40h
+    bx: descriptor de fisier deschis pentru scriere.
+    cx: numarul de octeti de scris (0 = trunchiere fisier).
+    ds:dx: adresa unui sir de caractere ce contine octetii de scris.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag e setat.
+        numarul de octeti scrisi daca nu apar erori.
+
+Descriere:
+    Se scriu cx octeti de date in fisierul sau dispozitivul cu descriptorul
+    bx. Datele  sunt scrise  de la adresa  furnizata in  ds:dx. Datele sunt
+    scrise in fisier de la pozitia curenta a indicatorului de pozitie.
+    
+    Totodata, se actualizeaza indicatorul de pozitie in fisier pentru o ci-
+    tire/scriere viitoare.

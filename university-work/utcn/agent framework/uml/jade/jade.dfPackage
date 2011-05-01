@@ -1,0 +1,35 @@
+package id41h25de8blk6ude8pte4l;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id3d63xde8blk6ude8ptpj7.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#jade.core:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id39a06deikzvd2deilipnh.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#jade.lang:oiref> 
+*/
+class reference6 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#id39a06deikzvd2deilipnh.diagram:oiref>=202,155,53,57,1:oigroup>
+<oigroup:<oiref:design#Class#id3d63xde8blk6ude8ptpj7.diagram:oiref>=81,86,53,68,1:oigroup>
+*/
+class __positions {
+}

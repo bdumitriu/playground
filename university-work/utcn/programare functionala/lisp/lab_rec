@@ -1,0 +1,55 @@
+(defun exp0 (m n)
+	(cond (
+		(and (numberp m) (numberp n))
+			(cond 
+				((zerop n) 1)
+				(T (* m (exp0 m (- n 1) ) ))
+		))
+		(T "go ... yourself... give us numbers")
+	)
+)
+
+(defun exp1 (m n p)
+	(if (and (numberp m) (numberp n))
+		(cond
+			((zerop n) p)
+			(T (exp1 m (- n 1) (* p m)))
+		)
+		(T "go ... yourself... give us numbers")
+	)
+)
+
+(defun exp2 (m n)
+	(exp1 m n 1)
+)
+
+(defun last0 (list)
+	(cond
+		( (atom list) list)
+		( (endp (rest list)) (first list))
+		(T (last0 (rest list) ))
+	)	
+)
+
+(defun firstn (list n)
+	(cond
+		((= n 0) NIL)
+		((not (null list)) (cons (first list) (firstn (rest list) (- n 1))))
+	)
+)
+
+(defun rev-all (list)
+	(cond
+		((null list) nil)
+		((atom (first list)) (append (rev-all (rest list)) `(,(first list))))
+		((listp (first list)) (append (rev-all (rest list)) `(,(rev-all (first list)))))
+	)
+)
+
+(defun nratoms (x)
+	(cond
+		((null x) 0)
+		((atom (first x)) (+ 1 (nratoms (rest x))))
+		((listp (first x)) (+ (nratoms (first x)) (nratoms (rest x))))
+	)
+)

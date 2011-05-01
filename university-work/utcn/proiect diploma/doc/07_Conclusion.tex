@@ -1,0 +1,191 @@
+\chapter{Future Development and Conclusions}
+
+This chapter presents some ideas which we think could be taken into account in order to direct
+future efforts in the group. We end the chapter with some brief conclusions which try to sum up our
+achievements.
+
+\section{Future development}
+
+There are several things which we thought about during our work worth mentioning here, hoping
+that they might be useful to current or future members of the group. These are all just ideas,
+not actual solutions to clear problems and should be regarded as such. Some of them might turn
+out to be feasible, while others might turn out to be rather difficult to achieve.
+
+\subsubsection{Mixed text/graphical editor}
+
+As currently we have two distinct asynchronous editors available, a text editor and a graphical
+editor, it seems like a good idea to work towards an integration of the two, such that we can
+create a system which would allow the user to insert graphics within the text (s)he is editing.
+The way we see this, the system should treat the graphic unit as a special character (which could
+seen as be a separate semantic unit, either a word or a sentence or a paragraph). In this way,
+the text algorithm can be applied without any modifications (with the exception of the introduction
+of the special character represented by the graphic) in order to edit the document. None of the
+operations, however, would have to be modified because if the graphic is a special character then
+we can simply use the same insertion/deletion operations as the ones for normal characters. The
+benefit of this would be that the merging algorithm would work exactly in the same way and no new
+inclusion/exclusion procedures would have to be created.
+
+
+As far as the graphic itself is concerned, the graphical editing subsystem could be used there
+to facilitate its collaborative editing. In this way, the system would automatically switch
+between text and graphical style of asynchronous collaborative editing and store separate logs
+for the text editor as well as for each separate graphic that appears in the document.
+
+This would be a feature with a lot of potential for most users, since there are many cases in
+which text documents need to include figures representing or describing the concepts from the
+text. The idea seems to have a rather straightforward implementation (given that the two subsystems
+already exist and seem to be working well), but there might be unexpected issues which might arise
+during the integration.
+
+Aside from allowing the simple graphics which the existing graphical editor currently supports,
+the system could also permit the integration of various image formats into the editor. Of course,
+there would be no
+possibility to edit such images (especially not in a collaborative manner), but still they
+could be inserted and deleted. They too would have to be regarded as a special character from
+the point of view of the text editor, but they would have to be differentiated from the normal
+graphics since there would be no possibility of editing them.
+
+\subsubsection{Extension of the editor features}
+
+A more difficult extension of our text editor would consist in adding attributes (such as
+font, size, color, bold, italic and underlined text) to the characters. We say this would
+be significantly more difficult than
+the previous idea because both the data structure representing the document and the set of
+operations would have to be changed. The data structure would have to provide the possibility
+of knowing exactly what attributes each semantic unit has (and overwriting of the attributes
+by child nodes). The set of operations, on the other hand, would have to be extended in order
+to offer the possibility of changing each attribute separately.
+
+These changes would have further implication in most of the algorithms used throughout the
+system. The merging algorithm would have to be transformed in order to cope with new types
+of conflicts and with new types of operations. The compression algorithm would have to be
+extended in order to be able to compress attribute changes both by means of combining several
+attribute changing operations at a lower level into a single attribute changing operation at
+a higher level and by means of canceling operations which have been overwritten by newer
+ones (this is case with all attribute changing operation which change the same attribute of
+the same semantic unit).
+
+The most difficult issue, however, would be to change the inclusion/exclusion functions in
+order to deal with the fact that some of the new operations might have an effect on more than
+just one semantic unit (for example, the user could change the font of two and a half paragraphs).
+This would probably imply changing the whole concept of inclusion and exclusion, because it might
+be the case that the effect of including an operation might change the current operation to
+two different new operations (think of two users, one of which changes the color of an entire
+paragraph, while the other changes the color of a sentence - neither the first, nor the last -
+in that paragraph to a different color than the first user; when the change paragraph color
+would include the change sentence color it would have to be transformed in at least two new
+operations - one that changes the color of all the sentences before the one changed by the
+second user and one that changes the color of all the sentences after that one).\\
+\\
+By combining this development of the text editor and the one mentioned previously we would
+obtain a collaborative editor suited for high-level text editing with support for fonts, color,
+text size and graphics. This is, of course, still far from what current (non-collaborative)
+text editors offer (support for creating tables, text alignment, etc.) but it would a significant
+step forward. The final goal would obviously be the creation of an collaborative editor which
+would offer all the features of current non-collaborative editors, but there is still a lot
+of work which has to be done before reaching that stage.
+
+\subsubsection{Extending the current data structure}
+
+As we have mentioned throughout this paper, the current merging algorithm is scalable to
+working on trees with more than just the four current levels (paragraph, sentence, word
+and character). We therefore propose as a project topic the extension of the current editor
+with what we call editor modes. These could be selected by the user based on the type of
+document (s)he is working on. There could be several predefined modes (such as book, report,
+article, etc.) which would imply the use of various tree structures and sets of operations
+by the editor.
+
+In a book mode, for example, certain semantic units should be added to the model (such as
+chapters, sections and subsections). Operations should also support
+the insertion/deletion of such units. The issue that would still have to be dealt with is
+that of finding the right separators for such units. Currently, it is pretty obvious what
+the paragraph, sentence and word separators are. In the case of units like chapters, however,
+the situation is bit more complicated. Possible solutions would be to introduce some special
+markers as chapter separators or to decide that a certain number of $\backslash$n's separate
+a chapter from the other.
+
+Either way, such editing modes would contribute to an even more increased efficiency of the
+entire system, especially if the chosen editing mode corresponds to the actual type of document
+that is being edited. To further support the idea, we believe that such an addition would be
+rather easily implementable.
+
+\subsubsection{The split/merge issue}
+
+Future work in this area could also focus on finding a better solution to the split/merge
+problem than the one we used. In a nutshell, the split/merge problem is this: when the user
+adds a character that is a word/sentence/paragraph separator in the middle of a
+word/sentence/paragraph (s)he is effectively \emph{splitting} an existing semantic
+unit into two new semantic unit; when the users deletes such a separator (s)he is
+\emph{merging} two existing semantic units into one. The actual problem arises when
+another user makes some modifications in the original semantic unit (in the case of
+a split) or in one of the two original semantic units (in the case of a merge). An
+operation encoding such a modification is very difficult to transform in order to be
+executed on the site of the user which performed the split or the merge. More precisely,
+it is very difficult to preserve user intention when doing such an operation. For example,
+in the case of a split, when one user inserts a word in the same place where a sentence
+separator (i.e. a '.') was inserted by the other user it is difficult to tell which of
+the two new sentences the inserted word should belong to.
+
+Currently, our solution to the problem is to treat a split as a deletion of the old semantic
+unit and the insertion of the two new semantic units and a merge as the deletion of the two
+old semantic units and the insertion of the new semantic unit. This ensures that the consistency
+of the local working copies is kept, but strange effects may appear in certain cases. In
+order to solve this, it is clear that two new special operations, split and merge, need to be
+introduced and the inclusion/exclusion procedures need to be modified in order to take these operations
+into account. However, this is not as simple as it sounds, as many research projects have dealt
+with the issue and a fully working solution has not yet been found. The split/merge problem is,
+consequently, still an open issue in the field of collaborative editing, and further efforts
+can and should be directed towards solving it.
+
+\subsubsection{XML editor}
+
+Another idea that reaches a bit further than a mere extension of the current work would be
+the creation of a collaborative XML editor. This is actually something we have attempted up
+to certain extent. What we had in mind was the creation of a DTD-driven collaborative editor
+which would take a DTD as input and allow several users to work together in order to graphically
+edit an XML document which would have to conform to the specified DTD. The tricky part
+here would be the ensuring of the conformity of the final document to the DTD (while allowing
+intermediate, local, version to be incorrect). This is something we have have given some thought
+to and appears to be no child's play.
+
+The main difficulty arises from the fact that we wanted the entire editing to be done by means
+of a graphical interface. The problem we got stuck on was how to create such an interface which,
+on one hand, should not allow the user to stray away from the grammar but also be aware that
+there might be cases when the grammar should be relaxed (since there might be other users
+filling out certain parts of the document which, when merged with the work of the current user,
+would yield a final correct document). Had we had more time to think about this, some solutions
+to this problem might have appeared. Nevertheless, we think it is a good project topic for
+future consideration.
+
+\section{Conclusions}
+
+This project had the purpose of studying and improving existing techniques in the field of 
+asynchronous collaborative editing. The result of this work was the design and implementation
+of an entire asynchronous editing system which allows a group of users to work together
+in order to create and modify a text document. The special achievements of this project were
+the creation of a system based on the hierarchical representation of the text documents and,
+more importantly, a system whose algorithms work with hierarchical logs of operations (as
+opposed to linear logs used in the other existing systems). We have successfully designed
+some new algorithms especially suited for this purpose and have informally proven that the
+performance improvements over their linear counterparts are significant.
+
+We also think that another improvement worth mentioning is the possibility of allowing the
+user to choose the granularity level (s)he wants to be working at. This, to the best of our
+knowledge, is something no other system is currently offering. In addition to that, another
+unique feature our system provides is the choice of the conflict resolution policy to be
+employed, allowing for automatic as well as manual resolution with several choices in both
+cases. Last, but not least, we are aware of no other system which offers the possibility of
+direct user synchronization as ours does.
+
+There are still some unsolved issues which need to be addressed in the future (some of which
+we have mentioned in the previous section of this chapter), but the system as it is now is
+a fully functional one which has proven to work correctly and also to be very helpful
+with the editing of some chapters of this paper itself. We believe our work is valuable,
+holds a lot of potential and is a prototype whose commercial implementation (with a few additions,
+perhaps) would be most welcome by real users.
+
+Our project fits into a greater project developed in the Global Information Systems group at
+Eidgen\" ossische Technische Hochschule Z\" urich and current intentions suggest that it will be
+part of a future integrated system which would allow various types of collaborative editing,
+with the final aim of providing groups of people working together with a complete tool for editing
+as many types of documents as possible.

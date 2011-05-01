@@ -1,0 +1,51 @@
+DATA Root
+	| Root expr: Expr
+
+DATA Expr
+	| Op op: Char le: Expr re: Expr
+	| Val val: Int
+
+SEM Root [ | | code: {[Instr]} ]
+  | Root	expr.protected	= []
+		expr.resultIn	= 0
+
+SEM Expr [ protected: {[Int]} resultIn: Int | | code: {[Instr]} val: Int ]
+  | Op		lhs.val		= oper @op @le.val @re.val
+		loc.leftRes	= getReg (@lhs.resultIn : @lhs.protected)
+		loc.rightRes	= getReg (@leftRes : @lhs.resultIn : @lhs.protected)
+		le.resultIn	= @leftRes
+		re.protected	= @leftRes : @lhs.protected
+		re.resultIn	= @rightRes
+		lhs.code	= @le.code ++ @re.code ++ [genInstr @op @lhs.resultIn @leftRes @rightRes]
+  | Val		lhs.val		= @val
+		lhs.code	= [Ld @lhs.resultIn @val]
+
+{
+
+data Instr = Add Int Int Int
+	   | Sub Int Int Int
+	   | Mul Int Int Int
+	   | Div Int Int Int
+	   | Ld  Int Int
+	   deriving (Eq, Ord, Show)
+
+oper :: Char -> Int -> Int -> Int
+oper '+' lv rv	= lv + rv
+oper '-' lv rv	= lv - rv
+oper '*' lv rv	= lv * rv
+oper '/' lv rv	= lv `div` rv
+
+genInstr :: Char -> Int -> Int -> Int -> Instr
+genInstr '+' = Add
+genInstr '-' = Sub
+genInstr '*' = Mul
+genInstr '/' = Div
+
+getReg :: [Int] -> Int
+getReg protected = head [ n | n <- [0 .. ], not (n `elem` protected)]
+
+testExpr :: Expr
+testExpr = Expr_Op '+' (Expr_Op '*' (Expr_Val 3) (Expr_Val 5)) (Expr_Op '/' (Expr_Val 8) (Expr_Val 4))
+
+
+}

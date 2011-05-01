@@ -1,0 +1,33 @@
+package id20xx9de8blk6ude8p9bbc;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#com.ibm.aglet.Aglet:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#com.ibm.aglet.Message:oiref><oihard>
+@__modelType reference 
+*/
+class reference10 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#com.ibm.aglet.Aglet:oiref>=55,90,83,82,1:oigroup>
+<oigroup:<oiref:java#Class#com.ibm.aglet.Message:oiref>=224,102,83,82,1:oigroup>
+*/
+class __positions {
+}

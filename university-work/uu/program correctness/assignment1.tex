@@ -1,0 +1,212 @@
+\documentclass[fleqn,oneside]{article}
+
+\usepackage{a4}
+\usepackage{latexsym}
+\usepackage{pncproofmacros}
+
+\title{Solution For Assignment 1}
+\author{Bogdan Dumitriu}
+
+\begin{document}
+
+\maketitle
+
+\begin{PROOF}{asgn1}
+
+\ASSUME{A1}{(\exists i: 0 \leq i < n: a[i] < 0)}
+
+\ASSUME{A2}{(\forall j: 0 \leq j < i: a[j] = 0)}
+
+\ASSUME{A3}{a[i] > i}
+
+\GOAL{G1}{(\exists j: i \leq j < n: a[j] < 0)}
+
+\begin{BODY}
+
+\item[1] \HINT{See proof (by contradiction) sp1}
+
+\EXPR{n \geq 0}
+
+\begin{PROOF}{sp1}
+
+\ASSUME{A1}{n < 0}
+
+\GOAL{G1}{F}
+
+\begin{BODY}
+
+\item[1] \HINT{Quantification over empty domain, justified by A1}
+
+\EXPR{(\exists i: 0 \leq i < n: a[i] < 0) = F}
+
+\item[2] \HINT{Contradiction between 1 and asgn1.A1}
+
+\EXPR{F}
+
+\end{BODY}
+
+\end{PROOF}
+
+\item[2] \HINT{See proof (by contradiction) sp2}
+
+\EXPR{i < n}
+
+\begin{PROOF}{sp2}
+
+\ASSUME{A1}{i \geq n}
+
+\GOAL{G1}{F}
+
+\begin{BODY}
+
+\item[1] \HINT{Negate $\exists$ on A2}
+
+\EXPR{\neg(\exists j: 0 \leq j < i: a[j] \not = 0)}
+
+\item[2] \HINT{Domain merging on 1, justified by asgn1.1 and A1}
+
+\EXPR{\neg(\exists j: 0 \leq j < n \vee n \leq j < i: a[j] \not = 0)}
+
+\item[3] \HINT{Domain split on 2}
+
+\EXPR{\neg((\exists j: 0 \leq j < n: a[j] \not = 0) \vee (\exists j: n \leq j < i: a[j] \not = 0))}
+
+\item[4] \HINT{De Morgan on 3}
+
+\EXPR{\neg(\exists j: 0 \leq j < n: a[j] \not = 0) \wedge \neg(\exists j: n \leq j < i: a[j] \not = 0)}
+
+\item[5] \HINT{$\wedge$-Elimination on 4}
+
+\EXPR{\neg(\exists j: 0 \leq j < n: a[j] \not = 0)}
+
+\item[6] \HINT{Rename bound variable of asgn1.A1}
+
+\EXPR{(\exists j: 0 \leq j < n: a[j] < 0)}
+
+\item[7] \HINT{Trivial, from 6}
+
+\EXPR{(\exists j: 0 \leq j < n: a[j] \not = 0)}
+
+\item[7] \HINT{Contradiction between 5 and 7}
+
+\EXPR{F}
+
+\end{BODY}
+
+\end{PROOF}
+
+\item[4] \HINT{see proof sp3}
+
+\EXPR{i < 0 \Rightarrow (\exists j: i \leq j < n: a[j] < 0)}
+
+\begin{PROOF}{sp3}
+
+\ASSUME{A1}{i < 0}
+
+\GOAL{G1}{(\exists j: i \leq j < n: a[j] < 0)}
+
+\begin{BODY}
+
+\item[1] \HINT{$\exists$-Elimination on asgn1.A1}
+
+\tt [SOME k]
+
+\EXPR{0 \leq k < n \wedge a[k] < 0}
+
+\item[2] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{0 \leq k < n}
+
+\item[3] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{a[k] < 0}
+
+\item[4] \HINT{Trivial from A1 and 2}
+
+\EXPR{i \leq k < n}
+
+\item[5] \HINT{Conjunction on 3 and 4}
+
+\EXPR{i \leq k < n \wedge a[k] < 0}
+
+\item[6] \HINT{$\exists$-Introduction on 5}
+
+\EXPR{(\exists k: i \leq k < n: a[k] < 0)}
+
+\item[7] \HINT{Rename bound variable of 6}
+
+\EXPR{(\exists j: i \leq j < n: a[j] < 0)}
+
+\end{BODY}
+
+\end{PROOF}
+
+\item[5] \HINT{See proof sp4}
+
+\EXPR{i \geq 0 \Rightarrow (\exists j: i \leq j < n: a[j] < 0)}
+
+\begin{PROOF}{sp4}
+
+\ASSUME{A1}{i \geq 0}
+
+\GOAL{G1}{(\exists j: i \leq j < n: a[j] < 0)}
+
+\begin{BODY}
+
+\item[1] \HINT{Negate $\forall$ on asgn1.A1}
+
+\EXPR{\neg(\forall i: 0 \leq i < n: a[i] \geq 0)}
+
+\item[2] \HINT{Trivial, from asgn1.2}
+
+\EXPR{i \leq n}
+
+\item[3] \HINT{Rename bound variable of 1}
+
+\EXPR{\neg(\forall j: 0 \leq j < n: a[j] \geq 0)}
+
+\item[4] \HINT{Domain merging on 3, justified by A1 and 2}
+
+\EXPR{\neg(\forall j: 0 \leq j < i \vee i \leq j < n: a[j] \geq 0)}
+
+\item[5] \HINT{Domain split on 4}
+
+\EXPR{\neg((\forall j: 0 \leq j < i: a[j] \geq 0) \wedge (\forall j: i \leq j < n: a[j] \geq 0))}
+
+\item[6] \HINT{De Morgan on 5}
+
+\EXPR{\neg(\forall j: 0 \leq j < i: a[j] \geq 0) \vee \neg(\forall j: i \leq j < n: a[j] \geq 0)}
+
+\item[7] \HINT{Trivial, from asgn1.A2}
+
+\EXPR{(\forall j: 0 \leq j < i: a[j] \geq 0)}
+
+\item[8] \HINT{Rewrite 6 with 7}
+
+\EXPR{F \vee \neg(\forall j: i \leq j < n: a[j] \geq 0)}
+
+\item[9] \HINT{Basic equalities of boolean connectors on 8}
+
+\EXPR{\neg(\forall j: i \leq j < n: a[j] \geq 0)}
+
+\item[10] \HINT{Negate $\forall$ on 9}
+
+\EXPR{(\exists j: i \leq j < n: a[j] < 0)}
+
+\end{BODY}
+
+\end{PROOF}
+
+\item[6] \HINT{Excluded middle}
+
+\EXPR{i < 0 \vee i \geq 0}
+
+\item[7] \HINT{Case split on 6, 4 and 5}
+
+\EXPR{(\exists j: i \leq j < n: a[j] < 0)}
+
+\end{BODY}
+
+\end{PROOF}
+
+\end{document}

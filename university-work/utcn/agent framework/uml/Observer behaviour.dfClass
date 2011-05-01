@@ -1,0 +1,44 @@
+package idwt4wdeu1xkakdeu2p7uf;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#ObserverBehaviour:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#ObserverEvent:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference41 {
+}/**
+@__ref <oiref:java#Class#Timer:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference99 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options option.detail = Implementation 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#Timer:oiref>=74,272,168,107,1:oigroup>
+<oigroup:<oiref:java#Extends#ObjectiveMissedBehaviour#AFBehaviour:oiref>=226,341,300,341:oigroup>
+<oigroup:<oiref:java#Class#ObserverBehaviour:oiref>=50,97,370,113,0:oigroup>
+<oigroup:<oiref:java#Class#ObserverEvent:oiref>=440,100,220,140,0:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#Timer#handler:oiref>=158,272,158,210:oigroup>
+*/
+class __positions {
+}

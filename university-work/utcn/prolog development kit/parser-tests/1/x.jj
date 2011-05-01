@@ -1,0 +1,61 @@
+PARSER_BEGIN(x)
+
+public class x
+{
+	public static void main(String args[]) throws ParseException
+	{
+		x parser = new x(System.in);
+		parser.input();
+	}
+}
+
+PARSER_END(x)
+
+SPECIAL_TOKEN:
+{
+	<WHITESPACE:
+	(
+		" "
+		| "\n"
+		| "\r"
+		| "\r\n"
+		| "\t"
+	)+>
+}
+
+SPECIAL_TOKEN: /* comments */
+{
+	<SINGLE_LINE_COMMENT: "%" (~["\n","\r"])* ( "\n" | "\r" | "\r\n" )>
+	| <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+}
+
+TOKEN:
+{
+	<NONWS: ~[" ","\t","\r","\n"] >
+}
+
+void input():
+{}
+{
+	(termReadIn())*
+}
+
+void termReadIn():
+{}
+{
+	term() "."
+}
+
+void term():
+{}
+{
+	functor() (<NONWS>)? "(" ")"
+}
+
+void functor():
+{}
+{
+	("a"
+	| "b"
+	| "c")*
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <name>log1</name>
+  <base-ref>logbase</base-ref>
+  <formvalues>
+    <formentry index="base">
+      <Date />
+      <Description />
+      <Duration>0</Duration>
+    </formentry>
+  </formvalues>
+</root>
+

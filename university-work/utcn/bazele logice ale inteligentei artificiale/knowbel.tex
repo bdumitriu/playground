@@ -1,0 +1,1292 @@
+\documentclass{article}
+\renewcommand{\contentsname}{Cuprins}
+\renewcommand{\appendixname}{Anexa}
+\title{Sistemul KNOWBEL}
+\author{Bogdan DUMITRIU, gr. 3231}
+\date{04.04.2002}
+\begin{document}
+\tableofcontents
+\maketitle
+Documenta\c{t}ia de fa\c{t}\u{a} \^{\i}\c{s}i propune s\u{a} descrie sistemul
+numit Knowbel, sistem realizat \^{\i}n 1991 de c\u{a}tre Bryan M. Kramer. 
+Sistemul Knowbel este un sistem de reprezentare a cuno\c{s}tin\c{t}elor, el fiind
+de fapt o implementare a limbajului Telos. Codul surs\u{a} al sistemului este
+disponibil pentru desc\u{a}rcare la adresa:
+\begin{verbatim}
+http://www-2.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas
+       /kr/systems/knowbel/
+\end{verbatim}
+
+\section{Despre limbajul Telos}
+Telos este un limbaj construit ini\c{t}ial ca limbaj pentru modelarea cerin\c{t}elor.
+El se compune din urm\u{a}toarele patru elemente:
+\begin{itemize}
+\item {\bf un limbaj de reprezentare a obiectelor}. Acesta descrie lumea \^{\i}n termeni
+de clase \c{s}i instan\c{t}e ale acestora. Clasele sunt organizate \^{\i}ntr-o
+ierarhie (specializare) de tip isA. Clasele, instan\c{t}ele lor \c{s}i rela\c{t}iile
+\^{\i}ntre atribute sunt toate, \^{\i}n aceea\c{s}i m\u{a}sur\u{a}, {\it propozi\c{t}ii
+Telos}.
+\item {\bf un limbaj subset al logicii de ordinul \^{\i}nt\^{a}i}. Acesta este folosit
+pentru a defini constr\^{a}ngerile de integritate, adic\u{a} anumite expresii logice
+care trebuie s\u{a} fie adev\u{a}rate \^{\i}n orice moment.
+\item {\bf un limbaj de programare logic pentru exprimarea deduc\c{t}iilor ce pot fi
+f\u{a}cute \^{\i}n baza de cuno\c{s}tin\c{t}e}.
+\item {\bf o reprezentare a timpului bazat\u{a} pe intervale}. Fiecare rela\c{t}ie
+are asociate dou\u{a} asfel de intervale de timp - perioada \^{\i}n care baza de
+cuno\c{s}tin\c{t}e a considerat-o adev\u{a}rat\u{a} (belief time\footnote{\^{\i}n
+englez\u{a} \^{\i}n original.}) \c{s}i timpul cronologic sau istoric, adic\u{a}
+intervalul pe axa timpului \^{\i}n care ea este efectiv adev\u{a}rat\u{a} (history
+time\footnote{\^{\i}n englez\u{a} \^{\i}n original.}).
+\end{itemize}
+Interac\c{t}iunea cu o baz\u{a} de cuno\c{s}tin\c{t}e Telos se realizeaz\u{a} prin
+cinci comenzi: {\sc ask, retrieve, tell, untell} \c{s}i {\sc retell}. {\sc ask}
+\c{s}i {\sc retrieve} se folosesc pentru a interoga baza de cuno\c{s}tin\c{t}e,
+diferen\c{t}a dintre ele const\^{a}nd \^{\i}n faptul c\u{a} {\sc retrieve} nu
+apeleaz\u{a} la reguli de deduc\c{t}ie, \^{\i}n timp de {\sc ask} face acest lucru.
+{\sc tell} se folose\c{s}te pentru a ad\u{a}uga fapte \^{\i}n baza de cuno\c{s}tin\c{t}e,
+{\sc untell} pentru a spune bazei c\u{a} un fapt nu mai este valid, iar {\sc retell}
+combin\u{a} func\c{t}ionalitatea celor dou\u{a}.
+
+\section{Descrierea sistemului Knowbel}
+Sistemul Knowbel se compune din trei componente principale: un demonstrator de
+teoreme, un modul pentru gestiunea obiectelor \c{s}i un ra\c{t}ionator temporal.
+
+Leg\u{a}tura dintre demonstratorul de teoreme \c{s}i modulul pentru obiecte este
+realizat\u{a} prin dou\u{a} modalit\u{a}\c{t}i. \^{I}n primul r\^{a}nd, toate
+variabilele din clauzele logice au asociate un obiect din modulul pentru obiecte.
+\^{I}n al doilea r\^{a}nd, atomii corespunz\u{a}tori obiectelor Telos sunt
+determina\c{t}i prin apeluri f\u{a}cute c\u{a}tre modulul pentru obiecte.
+
+Leg\u{a}tura dintre demonstratorul de teoreme \c{s}i ra\c{t}ionatorul temporal
+este oarecum similar\u{a}. Astfel, variabilele au asociat c\^{a}te un interval
+de timp \c{s}i, \^{\i}n al doilea r\^{a}nd, anumite predicate care implic\u{a}
+variabile temporale sunt gestionate prin intermediul ra\c{t}ionatorului temporal.
+
+\section{\^{I}nc\u{a}rcarea sistemului}
+Sistemul poate fi (teoretic) \^{\i}nc\u{a}rcat \^{\i}n orice versiune de Common
+Lisp existent\u{a}. Sistemul a fost dezvoltat \c{s}i testat efectiv \^{\i}ns\u{a}
+folosind Franz Allegro Common Lisp 4.0. De aceea se recomand\u{a} folosirea
+acestui interpretor Lisp. Teoretic vorbind, \^{\i}nc\u{a}rcarea sistemului
+se realizeaz\u{a} simplu prin:
+\begin{verbatim}
+        (load ''knowbel'')
+\end{verbatim}
+care va compila toate fi\c{s}ierele necesare rul\u{a}rii dup\u{a} care le va
+\^{\i}nc\u{a}rca. \^{I}ns\u{a}, din p\u{a}cate, lucrurile nu au stat chiar
+a\c{s}a \c{s}i \^{\i}n realitate. Eu am \^{\i}ncercat rularea sistemului
+at\^{a}t \^{\i}n Franz Allegro Common Lisp 6.1 (sub Linux \c{s}i sub Windows)
+c\^{a}t \c{s}i \^{\i}n clisp (sub Linux), \^{\i}n toate trei primind aceea\c{s}i
+eroare. Dup\u{a} o modificare prealabil\u{a} a codului am reu\c{s}it totu\c{s}i
+s\u{a} \^{\i}ncarc sistemul \^{\i}n Franz Allegro Common Lisp 6.1. Pentru a
+testa \^{\i}nc\u{a}rcarea cu succes a sistemului se recomand\u{a} lansarea
+comenzii
+\begin{verbatim}
+        (test-dr)
+\end{verbatim}
+care trebuie s\u{a} tip\u{a}reasc\u{a} pe ecran con\c{t}inutul anexei A.
+
+\section{Rularea unui exemplu}
+\^{I}mpreun\u{a} cu pachetul Knowbel exist\u{a} \c{s}i un exemplu creat
+de autor \c{s}i anume o baz\u{a} de cuno\c{s}tin\c{t}e despre zboruri de
+avioane \^{\i}ntre diferite ora\c{s}e.
+
+Pentru a putea rula acest exemplu se va \^{\i}ncepe cu \^{\i}nc\u{a}rcarea
+fi\c{s}ierului ce con\c{t}ine defini\c{t}iile de zboruri prin comanda:
+{\scriptsize
+\begin{verbatim}
+        (loadkb ''nume-fisier'')
+\end{verbatim}}
+Con\c{t}inutul fi\c{s}ierului se g\u{a}se\c{s}te \^{\i}n anexa B. Din
+acest moment se poate interoga baza de cuno\c{s}tin\c{t}e prin intermediul
+comenzilor {\sc ask} \c{s}i {\sc tell}. Dou\u{a} e\-xem\-ple de astfel de interog\u{a}ri
+ar fi:
+{\scriptsize
+\begin{verbatim}
+        (ask `(exists ($x/city $t@-^+) (attr flight3402 * ''destination'' $x $t)) :belief `(now +))
+\end{verbatim}}
+\c{s}i:
+{\scriptsize
+\begin{verbatim}
+        (ask-flight 'toronto 'chengdu '($x $cost))
+\end{verbatim}}
+Prima dintre acestea vrea s\u{a} determine ora\c{s}ul destina\c{t}ie al zborului
+cu numele ''flight3402'' precum \c{s}i perioada \^{\i}n timp \^{\i}n care
+aceast\u{a} destina\c{t}ie este valid\u{a}. Cele dou\u{a} informa\c{t}ii vor
+fi date prin intermediul variabilelor \$x \c{s}i \$t \^{\i}n modul urm\u{a}tor:
+{\scriptsize
+\begin{verbatim}
+        True
+        $x      <new-york>
+        $t      $0@-,1986/1/1-0:0:0
+\end{verbatim}
+}
+
+Cea de-a doua dore\c{s}te s\u{a} afle costul minim al unui zbor de la Toronto
+la Chengdu. Acesta este primit dup\u{a} cum urmeaz\u{a}:
+{\scriptsize
+\begin{verbatim}
+        True
+        $x      @/desc4/(((<proto-flight-path> $0-,+)) ((from
+                                         (_ <toronto>
+                                          $41970/1/1-0:0:0,1988/12/31-11:59:59))
+                                        (to
+                                         (_ <chengdu>
+                                          $41970/1/1-0:0:0,1988/12/31-11:59:59))
+                                        (flight
+                                         (_ <flight3502>
+                                          $41970/1/1-0:0:0,1988/12/31-11:59:59))
+                                        (cost
+                                         (_ 1600
+                                          $41970/1/1-0:0:0,1988/12/31-11:59:59))
+                                        (subpath
+                                         (_
+                                          @/desc5/(((<proto-flight-path> $1-,+)) ((# #) (# #) (# #) (# #) (# #)))
+                                          $41970/1/1-0:0:0,1988/12/31-11:59:59))))
+        $cost   1600
+        T        
+\end{verbatim}
+}
+
+\newpage
+\section{Elementele principale ale sintaxei}
+Cele dou\u{a} comenzi principale disponibile pentru interac\c{t}iunea cu sistemul
+Knowbel sunt {\sc ask} \c{s}i {\sc tell}.
+
+Sintaxa comenzii {\sc tell} este urm\u{a}toarea:
+{\scriptsize
+\newline\newline
+\verb|        |
+({\bf tell} expr &optional (theory *theory*) default-history (belief (std-belief)))
+\newline\newline
+\verb|        |
+expr :=
+\newline
+\verb|                |
+(name {\bf instance} ((class1 [time1]) (class2 [time2]) ...)
+\newline
+\verb|                    |
+{\bf isa} ((isa-class1 [isa-time1]) (isa-class2 [isa-time2]) ...)
+\newline
+\verb|                    |
+{\bf with} ((attribute-name1
+\newline
+\verb|                            |
+(attribute-label1-1 value1-1 [time1-1 [{\bf with} ...]])
+\newline
+\verb|                            |
+(attribute-label1-2 value1-2 ...)
+\newline
+\verb|                            |
+...)
+\newline
+\verb|                          |
+(attribute-name2 ...)
+\newline
+\verb|                          |
+...)
+\newline
+\verb|                |
+)
+}
+\newline\newline
+unde {\sf expr} este singurul parametru obligatoriu, pentru to\c{t}i ceilal\c{t}i
+exist\^{a}nd valori implicite. \^{I}n cadrul {\sf expr} trebuie furnizat numele
+obiectului, clasele a c\u{a}ror instan\c{t}\u{a} este acest obiect, precum \c{s}i
+valorile pe care obiectul le d\u{a} atributelor claselor pe care le instan\c{t}iaz\u{a}.
+
+\^{I}n mod similar exist\u{a} \c{s}i defini\c{t}ia pentru {\sc ask}:
+{\scriptsize
+\newline\newline
+\verb|        |
+({\bf ask} {\tt<}query-or-state{\tt>} \&key (vars :all) (belief (std-belief))
+\newline
+\verb|                |
+(theory *theory*) (horn t) (search :depth))
+}
+\newline\newline
+\^{\i}n care {\sf {\tt<}query-or-state{\tt>}} reprezint\u{a} fie o propozi\c{t}ie
+de ordinul \^{\i}nt\^{a}i, fie o stare \^{\i}ntoars\u{a} de un apel prealabil
+al lui {\sc ask}. To\c{t}i ceilal\c{t}i parametri sunt op\c{t}ionali. O propozi\c{t}ie
+de ordinul \^{\i}nt\^{a}i \^{\i}n Knowbel reprezint\u{a} una din urm\u{a}toarele:
+
+{\footnotesize
+\noindent \\
+1. \ (predicate-name arg1 arg2 ...)
+\\ \\
+2.  \ (and sentence1 sentence2 sentence3 ...)
+\\ \\
+3.  \ (or sentence1 sentence2 sentence3 ...)
+\\ \\
+4.  \ (not sentence)
+\\ \\
+5.  \ (forall variable sentence)
+\\ \\
+6.  \ (forall (variable1 variable2 variable3 ...) sentence)
+\\ \\
+7.  \ (exists variable sentence)
+\\ \\
+8.  \ (exists (variable1 variable2 variable3 ...) sentence)
+\\ \\
+9.  \ (unprovable sentence [belief-time [ theory-name [ search-strategy [ no-meta]]]])
+\\ \\
+10. (provable sentence [belief-time [ theory-name [ search-strategy [ no-meta]]]])
+\\ \\
+11. (quote sentence)
+\\ \\
+12. (bquote comma-sentence)
+}
+\\ \\
+iar predicatele disponibile spre utilizare sunt:
+\\ \\
+{\footnotesize
+1.\hspace{10}{\tt(= <arg1> <arg2>)} este adev\u{a}rat dac\u{a} cele dou\u{a} argumente
+se unific\u{a} cu succes.
+\\ \\
+2.\hspace{10}{\tt(instance-of <obj> <class> <time>)}: Acest predicat este adev\u{a}rat
+dac\u{a} $<$obj$>$ este o instan\c{t}\u{a} a $<$class$>$ la momentul de timp $<$time$>$.
+\\ \\
+3.\hspace{10}{\tt(is-a <class1> <class2> <time>)}: Acest predicat este adev\u{a}rat
+dac\u{a} $<$class1$>$ este o specializare a $<$class2$>$ la momentul de timp $<$time$>$.
+\\ \\
+4.\hspace{10}{\tt(attr <obj> <label> <class-label> <value> <prop> <time>)}: Aceste predicat
+este \linebreak adev\u{a}rat dac\u{a} $<$value$>$ este valoarea atributului $<$class-label$>$
+a obiectului $<$object$>$ la momentul de timp $<$time$>$. $<$label$>$ este eticheta propozi\c{t}iei
+atribut \c{s}i $<$prop$>$ propozi\c{t}ia \^{\i}ns\u{a}\c{s}i. \^{I}n practic\u{a}, * este
+folosit \^{\i}n mod uzual pentru $<$label$>$ \c{s}i $<$prop$>$ pentru c\u{a} nu este nevoie
+de aceste valori.
+\\ \\
+5.\hspace{10}{\tt(find-prop <pattern> <prop>)} este adev\u{a}rat\u{a} dac\u{a} $<$pattern$>$
+descrie $<$prop$>$ unde $<$prop$>$ este o propozi\c{t}ie memorat\u{a} explicit \^{\i}n modul
+descris anterior.
+\\ \\
+6.\hspace{10}{\tt(time-test <time-exp1> <op> <time-exp2>)} este adev\u{a}rat\u{a} dac\u{a} timpul
+reprezentat de $<$time-exp1$>$ se afl\u{a} \^{\i}n rela\c{t}ia $<$op$>$ cu $<$time-exp2$>$.
+Acest predicat nu va constr\^{a}nge suplimentar variabilele.
+\\ \\
+7.\hspace{10}{\tt(time-constrain <time-var1> <op> <time-exp2>)} este identic\u{a} cu time-test
+cu diferen\c{t}a c\u{a} primul argument trebuie s\u{a} fie o variabil\u{a} temporal\u{a}
+iar substitu\c{t}ia rezultat\u{a} va constr\^{a}nge aceast\u{a} variabil\u{a}.
+\\ \\
+8.\hspace{10}{\tt(time-of <thing> <var>)} transfer\u{a} constr\^{a}ngerea de timp de la
+$<$thing$>$ la $<$var$>$. $<$thing$>$ poate fi o variabil\u{a} \^{\i}n orice context
+o structur\u{a} de date de tip interval explicit\u{a} sau un prop-object.
+\\ \\
+9.\hspace{10}{\tt(print <anything> <anything> ...)} este \^{\i}ntotdeauna adev\u{a}rat\u{a}
+\c{s}i are ca efect lateral faptul c\u{a} toate argumentele sale sunt tip\u{a}rite.
+\\ \\
+10.\hspace{6}{\tt(current-clause-value <state> <val>)} este adev\u{a}rat\u{a} dac\u{a}
+valoarea nodului clauzei curente a st\u{a}rii de inferen\c{t}\u{a} este $<$val$>$.
+\\ \\
+11.\hspace{6}{\tt(<op> <arg1> <arg2> <result>)} pentru opera\c{t}iile aritmetice +, -, /, *
+este adev\u{a}rat\u{a} dac\u{a} $<$arg1$>$ $<$op$>$ $<$arg2$>$ = $<$result$>$.
+\\ \\
+12.\hspace{6}{\tt(<rel-op> <arg1> <arg2>)} pentru opera\c{t}iile rela\c{t}ionale $>$, $<$,
+$>$=, $<$= este adev\u{a}rat\u{a} dac\u{a} rela\c{t}ia respectiv\u{a} exist\u{a} \^{\i}ntre
+argumente.
+\\ \\
+13.\hspace{6}{\tt(belief-now <var>)} este adev\u{a}rat\u{a} dac\u{a} $<$var$>$ este legat\u{a}
+la timpul de tip belief \linebreak (now +).
+}
+
+\newpage
+\appendix
+
+\section{Anexa A: Ie\c{s}irea generat\u{a} de (test-dr)}
+{\scriptsize
+\begin{verbatim}
+DEF-SINGLE-CLASS <single-class>
+
+INST-SINGLE-CLASS
+ (ERROR INST-SC
+        ((INTEGRITY-CONSTRAINT-FAILURE
+          ((INST [attr x2 4 (#)#,# 11:9:46,+]
+            [attr x <number> (#)#,# 11:9:46,+])
+           single-constraint (MULTIPLE-VALUE . 1)
+           [attr x2 4 (T)tp1,tp0 11:9:46,+] [attr x1 3 (T)tp1,tp0 11:9:46,+]
+           INST-ALL-PATHS))))
+
+CLASS <aclass>
+
+OBJ <aobj1>
+
+QUERY
+
+--> ($2<proposition> 5748653990 $3<proposition> $6(t)tp1,tp0)
+comp_a4
+META
+mr1
+VARP
+NOW
+2874326992
+comp_a3
+META
+mr1
+VARP
+NOW
+2874326992
+<>( a2 ): 6 [(T)tp1,tp0][11:9:51,+]
+
+--> ($2<proposition> 2874327003 $3<proposition> $4(t)tp1,tp0)
+comp_a4
+META
+mr1
+VARP
+NOW
+2874326992
+comp_a3
+<>( a1 ): 5 [(T)tp1,tp0][11:9:51,+]
+<>( a2 ): 6 [(T)tp1,tp0][11:9:51,+]
+
+--> ($0<proposition> 2874327006 $1<proposition> $4(t)tp1,tp0)
+comp_a4
+<>( a1 ): 5 [(T)tp1,tp0][11:9:51,+]
+comp_a3
+META
+mr1
+VARP
+NOW
+2874326995
+<>( a2 ): 6 [(T)tp1,tp0][11:9:51,+]
+
+--> ($0<proposition> 16 $1<proposition> $2(t)tp1,tp0)
+comp_a4
+<>( a1 ): 5 [(T)tp1,tp0][11:9:51,+]
+comp_a3
+<>( a1 ): 5 [(T)tp1,tp0][11:9:51,+]
+<>( a2 ): 6 [(T)tp1,tp0][11:9:51,+]
+
+T
+\end{verbatim}
+}
+
+\newpage
+
+\section{Anexa B: Exemplul autorului}
+{\scriptsize
+\begin{verbatim}
+(time ( 1970 +))
+(belief 1975 1977)
+
+(local-time
+    instance ((class))
+    with (
+	  ((necessary single)
+	   (time integer)
+	   (zone string)
+	   ))
+    )
+
+(lt1
+    instance ((local-time))
+    with ((time (_ 3333)(_ 4444)))
+    )
+
+(belief)
+
+(Flight-class
+   instance ((M1-Class))
+   with (
+	 (attribute    
+	  (international-path proposition)
+	  (national-path proposition)
+	  (airline string)
+	  (airline-phone-no string)))
+)
+
+(Flight-parameter
+   instance ((M1-Class))
+)
+
+(City
+    instance ((Flight-parameter))
+    with (
+      (necessary 
+        (country  string)
+	(estimate-cost integer)
+        (continent  string))
+      (attribute
+        (name string)
+        (location list)
+        (population  integer))
+))
+
+(Company
+    instance ((Flight-parameter))
+    with (
+      ((necessary  single)
+        (name string)
+        (head-office  City))
+      (attribute
+        (regional-offices  City))
+))
+
+(TestCompany
+     instance ((flight-parameter))
+     isa ((company))
+     with (
+	   (attribute
+	     (regional-offices FooCity))
+	    )
+     )
+
+(TestOffice instance ((Company)))
+
+(TestInst
+     instance ((Company))
+     with (
+	   (name (_ "axaxaxax")
+		  (_ "yayy"))
+	   (head-office (_ TestOffice))
+	   )
+     )
+
+(Toronto
+   instance ((Token)  (City))
+   with (
+     (name 
+           (_ Toronto))
+     (country 
+           (_ Canada))
+     (continent 
+           (_ North-America))
+     (location
+	   (latitude (43 north))
+	   (longtitude (79 west)))
+     (estimate-cost
+           (vancouver 399)
+	   (tokyo 1431)
+           (hongkong 960)
+	   (beijing 3064))
+))
+
+(vancouver
+   instance ((Token)  (City))
+   with (
+     (country 
+           (_ Canada))
+     (continent 
+           (_ North-America))
+     (location
+	   (latitude (49 north))
+	   (longtitude (123 west)))
+     (estimate-cost
+	   (tokyo 3424)
+	   (hongkong 3064)
+	   (beijing 1254))
+))
+
+(Hongkong
+   instance ((Token)  (City))
+   with (
+     (name 
+           (_ Hong-Kong))
+     (country 
+           (_ Hongkong))
+     (continent 
+           (_ Asia))
+     (location
+	   (latitude (22 north))
+	   (longtitude (114 east)))
+     (estimate-cost
+	   (tokyo 664)
+	   (beijing 450))
+))
+
+(Tokyo
+   instance ((Token)  (City))
+   with (
+     (name 
+          (_ Tokyo))
+     (country 
+          (_ Japan))
+     (continent 
+          (_ Asia))
+     (location
+	   (latitude (35 north))
+	   (longtitude (140 east)))
+     (estimate-cost
+	  (hongkong 664)
+	  (beijing 705))
+))
+
+(Beijing
+   instance ((Token)  (City))
+   with (
+     (name 
+          (_ Beijing))
+     (country 
+          (_ China))
+     (continent 
+          (_ Asia))
+     (location
+	   (latitude (40 north))
+	   (longtitude (116 east)))
+     (estimate-cost
+	  (hongkong 450)
+	  (xian 110)
+	  (chengdu 210))
+))
+
+(Chengdu
+   instance ((Token)  (City))
+   with (
+     (name 
+          (_ Chengdu))
+     (country 
+          (_ China))
+     (continent 
+          (_ Asia))
+     (location
+	   (latitude (31 north))
+	   (longtitude (104 east)))
+
+))
+
+(Xian
+   instance ((Token)  (City))
+   with (
+     (name 
+          (_ Xian))
+     (country 
+          (_ China))
+     (continent 
+          (_ Asia))
+     (estimate-cost
+          (chengdu 80))
+     (location
+	   (latitude (34 north))
+	   (longtitude (108 east)))
+))
+
+(New-york
+   instance ((Token)  (City))
+   with (
+     (name 
+          (_ New-York))
+     (country 
+          (_ USA))
+     (continent 
+          (_ North-America))
+     (location
+	   (latitude (35 north))
+	   (longtitude (70 west)))
+))
+
+(Airplane 
+    instance ((Flight-parameter))
+    with (
+      (necessary
+        (name string)
+        (manufacturer  string)
+        (max-capacity  integer))
+))
+
+(BO747
+   instance ((Token)  (Airplane))
+   with (
+     (name 
+        (_ BO747))
+     (manufacturer 
+        (_ Boeing))
+     (max-capacity 
+        (_ 462))
+))
+
+(DH-6
+  instance ((Token)  (Airplane))
+   with (
+     (name 
+        (_ L211))
+     (manufacturer 
+        (_ Lockheed))
+     (max-capacity 
+        (_ 233))
+))
+
+(DC-9
+   instance ((Token)  (Airplane))
+   with (
+     (name 
+        (_ DC-9))
+     (manufacturer 
+        (_ McDonald-Douglas))
+     (max-capacity 
+        (_ 124))
+))
+
+(Flight-category
+   instance ((Flight-parameter))
+)
+
+(Flight
+   instance ((Flight-Class) (Flight-parameter))
+   with
+    (
+     ((necessary single)
+       (departure-time  integer)
+       (airline  Company)
+       (flight-number  string)
+       (max-passengers  Integer)
+       (available-seats  Integer))
+     (necessary
+       (arrival-time  integer)
+       (airline-phone-no  string))
+     (attribute
+      (aircraft-type  Airplane))
+
+     (deductive-rule
+       (_ (=>
+         (instance-of $flight Flight)
+         (member-of $city1/city $flight origin)
+	 (member-of $city2/city $flight destination)
+
+         (directly-connected $flight $city1 $city2)))
+
+        (_ (=>
+         (instance-of $flight Flight)
+         (directly-connected $flight $City1/city $City2/city)
+
+         (connected $City1 $City2)))
+
+        (_ (=>
+         (instance-of $flight Flight)
+         (directly-connected $flight $City1/city $City2/city)
+         (connected $City2 $City3)
+
+         (connected $City1 $City3)))
+
+	(_ (=>
+	 (forall $flight
+	   (=> (instance-of $flight Flight)
+	       (exists $price
+		 (=> (member-of $price $flight price)
+		     (> $price 1000)))))))
+	)
+
+     (integrity-constraint
+       (toronto_departure-time 
+       (forall ($flight $t1)
+	(=> 
+         (instance-of $flight Flight)
+	 (member-of toronto $flight origin)
+         (member-of $t1 $flight departure-time)
+          
+	 (and (> $t1 800) (< $t1 2300)))))
+
+       (toronto_arrival_time 
+       (forall ($flight $t1)
+	(=> 
+         (instance-of $flight Flight)
+	 (member-of toronto $flight destination)
+         (member-of $t1 $flight arrival-time)
+         
+	 (and (> $t1 800) (< $t1 2400))  ))))
+	))
+  
+(International-flight
+   isa ((Flight))
+   instance ((Flight-class))
+   with
+     (
+      (international-path
+	 (origin City)
+	 (destination City)
+	 (price integer))
+      (integrity-constraint
+         (_ 
+           (Forall $flight
+           (=>
+	   (instance-of $flight International-flight)
+	   (member-of $o/city $flight origin)
+	   (member-of $d/city $flight destination)
+	   (member-of $coun1/string $o country)
+	   (member-of $coun2/string $d country)
+
+           (not (is $coun1 $coun2)) )))))
+
+)
+
+(National-flight
+   isa ((Flight))
+   instance ((flight-class))
+   with
+     (
+      (national-path
+	 (origin City)
+	 (destination City)
+	 (price integer))
+      (integrity-constraint
+       (_ (not (and  (attr |$x(national-flight)| $l "origin" $origin $p |$t(-,+)|)
+		     (attr $x $l2 "destination" $origin $p2 $t))))
+       (_
+	(Forall $flight
+		(=>
+		 (instance-of $flight National-flight)
+		 (member-of $o/city $flight origin)
+		 (member-of $d/city $flight destination)
+		 (member-of $coun1/string $o country)
+		 (member-of $coun2/string $d country)
+
+		 (is $coun1 $coun2) )))))
+)
+
+(Regional-flight
+   isa ((National-flight))
+   instance ((flight-class))
+)
+
+(Local-flight
+   isa ((National-flight))
+   instance ((flight-class))
+)
+
+(AC-Flight
+    isa ((Flight-category))
+    instance ((flight-class))
+    with
+      (
+       (airline
+          (_ Air-Canada))
+       (airline-phone-no 
+         (reservations  416-783-7645)
+         (information  416-765-8790))
+
+      (deductive-rule
+	(_
+        (Forall $flight 
+          (=> 
+	  (instance-of $flight AC-Flight)
+	  (member-of $city1/city $flight origin)
+	  (member-of $city2/city $flight destination)
+	  (is $city1 toronto)
+	  (is $city2 vancouver)
+          (member-of 499 $flight price)
+	))))
+	)
+)
+
+(BA-Flight
+    isa ((Flight-category))
+    instance ((flight-class))
+    with
+     (
+       (airline
+          (_ British-Airways))
+       (airline-phone-no 
+         (reservations  202-654-4443)
+         (information  765-212-4323))
+ 	)	
+)
+
+(AA-Flight
+    isa ((Flight-category))
+    instance ((flight-class))
+    with (
+       (airline
+          (_ American-Airlines))
+       (airline-phone-no 
+         (reservations  303-684-2212)
+         (information  908-333-2123))
+	
+      (integrity-constraint
+	(_
+        (Forall ($flight $city1)
+          (=> 
+	  (instance-of $flight AA-Flight)
+	  (member-of $city1 $flight origin)
+	  (member-of $country1 $city1 country)
+          
+	  (not (is $country1 Iran)) )))
+	
+	(_ 
+        (Forall ($flight $city1)
+          (=> 
+	  (instance-of $flight AA-Flight)
+	  (member-of $city1 $flight destination)
+	  (member-of $country1 $city1 country)
+          
+	  (not (is $country1 Iran)) ))))
+
+	)
+)
+
+(CAAC-Flight
+    isa ((Flight-category))
+    instance ((flight-class))
+    with (
+       (airline
+          (_ CAAC))
+       (airline-phone-no 
+         (reservations  416-655-3331)
+         (information  416-333-6544)))
+)
+
+(Flight3402
+   instance ((Token)  (AC-Flight)  (International-flight))
+   with (
+       (flight-number 
+          (_ 3402))
+       (origin 
+          (_ Toronto))
+       (departure-time 
+          (_ 1405 (before 1988))
+          (_ 1505 (after 1988)))
+       (max-passengers 
+          (_ 256))
+       (available-seats 
+         (1st-class  10)
+         (2nd-class  5))
+       (destination
+          (_  Tokyo (after 1986))
+          (_  New-York (before 1986)))
+       (arrival-time
+           (_ 1500 (before 1986))
+           (_ 1600 (after 1986)))
+
+       (price
+         (_  299 (before 1986))
+         (_  1431 (after 1986))
+	)
+))
+
+(Flight3403
+   instance ((Token)  (AC-Flight)  (International-flight))
+   with (
+       (flight-number 
+          (_ 3403))
+       (origin 
+          (_ Toronto))
+       (departure-time 
+          (_ 1000))
+       (max-passengers 
+          (_ 256))
+       (available-seats 
+         (1st-class  10)
+         (2nd-class  5))
+       (destination
+          (_  Beijing))
+	
+       (arrival-time
+           (_ 1600))
+
+       (price
+         (_  3064)
+	)
+))
+
+(Flight3502
+   instance ((Token)  (AA-Flight)  (International-flight))
+   with (
+       (flight-number 
+          (_ 3502))
+       (origin 
+          (_ Toronto))
+       (departure-time 
+          (_ 1405 (before 1988))
+          (_ 1505 (after 1988)))
+       (max-passengers 
+          (_ 256))
+       (available-seats 
+          (1st-class  10)
+          (2nd-class  5))
+       (destination
+           (_ Hongkong (after 1988))
+           (_ New-York (before 1988)))
+       (arrival-time
+           (_ 1800 (before 1988))
+           (_ 1900 (after 1988)))
+       (price
+           (_  320 (before 1988))
+           (_  960 (after 1988))
+)))
+
+(Flight775
+   instance ((Token)  (AC-Flight)  (National-Flight))
+   with (
+       (flight-number 
+          (_ 775))
+       (origin 
+          (_ Toronto))
+       (departure-time 
+          (_ 805))
+       (max-passengers 
+          (_ 256))
+       (available-seats 
+          (2nd-class  55))
+       (destination
+           (_ Vancouver ))
+       (arrival-time
+           (_ 1300 ))
+       (price (_ 725))
+
+))
+
+(Flight1334
+ instance ((Token)  (AC-Flight)  (National-Flight))
+ with (
+       (flight-number 
+	(_ 1334))
+       (origin 
+	(_ Toronto))
+       (departure-time 
+	(_ 1005))
+       (max-passengers 
+	(_ 256))
+       (available-seats 
+	(2nd-class  85))
+       (destination
+	(_ Vancouver ))
+       (arrival-time
+	(_ 1400 ))
+       (price (_ 836))
+       ))
+
+(Flight655
+   instance ((Token)  (AC-Flight)  (International-Flight))
+   with (
+       (flight-number 
+          (_ 655))
+       (origin 
+          (_ Vancouver))
+       (departure-time 
+          (_ 805))
+       (max-passengers 
+          (_ 256))
+       (available-seats 
+          (2nd-class  225))
+       (destination
+           (_ Hongkong))
+       (arrival-time
+           (_ 1900))
+       (price
+           (_ 3064))
+))
+
+(Flight657
+   instance ((Token)  (AC-Flight)  (International-Flight))
+   with (
+       (flight-number 
+          (_ 657))
+       (origin 
+          (_ Vancouver))
+       (departure-time 
+          (_ 705))
+       (max-passengers 
+          (_ 256))
+       (available-seats 
+          (2nd-class  105))
+       (destination
+           (_ Tokyo))
+       (arrival-time
+           (_ 1700))
+       (price
+           (_ 3424))
+))
+
+(Flight1025
+   instance ((Token)  (CAAC-flight)  (International-Flight))
+   with (
+       (flight-number 
+          (_ 1025))
+       (origin 
+          (_ Vancouver))
+       (departure-time 
+          (_ 735))
+       (max-passengers 
+          (_ 256))
+       (available-seats 
+          (2nd-class  95))
+       (destination
+           (_ Beijing))
+       (arrival-time
+           (_ 2000))
+       (price
+           (_ 1254))
+))
+
+(Flight1344
+   instance ((Token)  (CAAC-flight)  (International-flight))
+   with (
+       (flight-number 
+          (_ 7809))
+       (origin 
+          (_ Tokyo))
+       (departure-time 
+          (_ 900))
+       (max-passengers 
+          (_ 256))
+       (available-seats 
+          (2nd-class  100))
+        (destination
+           (_ Beijing))
+       (arrival-time
+           (_ 1210))
+       (price
+          (2nd-class  705))
+       (aircraft-type  
+          (_ DC-9))
+))    
+
+(Flight7809
+   instance ((Token)  (CAAC-flight)  (International-flight))
+   with (
+       (flight-number 
+          (_ 7809))
+       (origin 
+          (_ Hongkong))
+       (departure-time 
+          (_ 1247))
+       (max-passengers 
+          (_ 124))
+       (available-seats 
+          (2nd-class  100))
+        (destination
+           (_ Tokyo))
+       (arrival-time
+           (_ 1445))
+       (price
+          (2nd-class  664))
+       (aircraft-type  
+          (_ DC-9))
+))
+
+(Flight7805
+   instance ((Token)  (CAAC-flight)  (International-flight))
+   with (
+       (flight-number 
+          (_ 7805))
+       (origin 
+          (_ Tokyo))
+       (departure-time 
+          (_ 1018))
+       (max-passengers 
+          (_ 124))
+       (available-seats 
+          (2nd-class  10))
+        (destination
+           (_ Hongkong))
+       (arrival-time
+           (_ 1345))
+       (price
+          (2nd-class  664))
+       (aircraft-type  
+          (_ DC-9))
+))    
+
+(Flight3304
+   instance ((Token)  (AA-flight)  (International-flight))
+   with (
+       (flight-number 
+          (_ 3304))
+       (origin 
+          (_ Hongkong))
+       (departure-time 
+          (_ 905))
+       (max-passengers 
+          (_ 124))
+       (available-seats 
+          (2nd-class  100))
+        (destination
+           (_ Beijing))
+       (arrival-time
+           (_ 1145))
+       (price
+          (2nd-class  450))
+       (aircraft-type  
+          (_ DC-9))
+))    
+
+(Flight7811
+   instance ((Token)  (CAAC-flight)  (National-flight))
+   with (
+       (flight-number 
+          (_ 7811))
+       (origin 
+          (_ Beijing))
+       (departure-time 
+          (_ 800))
+       (max-passengers 
+          (_ 105))
+       (available-seats 
+          (2nd-class  34))
+        (destination
+           (_ Xian))
+       (arrival-time
+           (_ 1105))
+       (price
+          (2nd-class  110))
+))    
+
+(Flight7822
+   instance ((Token)  (CAAC-flight)  (National-flight))
+   with (
+       (flight-number 
+          (_ 7822))
+       (origin 
+          (_ Beijing))
+       (departure-time 
+          (_ 1000))
+       (max-passengers 
+          (_ 85))
+       (available-seats 
+          (2nd-class  50))
+        (destination
+           (_ Chengdu))
+       (arrival-time
+           (_ 1605))
+       (price
+          (2nd-class  210))
+))      
+
+(Flight7840
+   instance ((Token)  (CAAC-flight)  (National-flight))
+   with (
+       (flight-number 
+          (_ 7840))
+       (origin 
+          (_ Xian))
+       (departure-time 
+          (_ 1400))
+       (max-passengers 
+          (_ 85))
+       (available-seats 
+          (2nd-class  25))
+        (destination
+           (_ Chengdu))
+       (arrival-time
+           (_ 1705))
+       (price
+          (2nd-class  80))
+))      
+
+(Air-Canada
+   instance ((Token)  (Company))
+   with (
+     (name 
+          (_ Air-Canada))
+     (head-office 
+          (_ Toronto))
+))
+
+(American-airlines
+   instance ((Token)  (Company))
+   with (
+     (name 
+         (_ American-Airlines))
+     (head-office 
+         (_ New-York))
+))
+
+(CAAC
+   instance ((Token)  (Company))
+   with (
+     (name 
+         (_ China-Airline))
+     (head-office 
+         (_ Beijing))
+))
+
+(proto-Flight-path
+   instance ((M1-Class))
+   with
+    ((attribute
+      (from city)
+      (flight flight)
+      (to city)
+      (cost number)
+      (flight-gen flight
+		  :with
+		  (meta-rule
+		   (flight-path-mr
+		    (=> (varp $v)
+			(time-of $h $ih)
+			(instance-of $obj/flight flight $ih)
+			(attr $proto * "from" $origin * $ih)
+			(attr $obj * "origin" $origin * $ih)
+			(attr $obj * "price" $price * $ih)
+			(current-clause-value $state $current)
+			(+ $current $price $new-val)
+			(goal (attr $proto/proto-flight-path * "flight-gen" $v * $h) $state (sigma (val $v $obj))
+			      (:value $new-val)))))
+		  )
+      (subpath proto-flight-path)))
+    )
+
+(null-flight-path
+ instance ((proto-flight-path))
+ )
+
+(Flight-path
+ instance ((M1-Class))
+ isa ((proto-flight-path))
+ with
+ ((deductive-rule
+   (path-recursive (=> 
+		    (instance-of $p/proto-flight-path proto-flight-path $t@-^+)
+		    (attr $p * "from" $origin * $t)
+		    (attr $p * "to" $to * $t)
+		    (attr $p * "flight-gen" $f/flight * $t)
+		    (attr $f * "origin" $origin * $t)
+		    (attr $f * "destination" $dest * $t)
+		    (= $subpath/proto-flight-path #@((proto-flight-path)(("from" (_ $dest $t))
+							    ("to" (_ $to $t))
+							    ("flight" (_ $subflight $t))
+							    ("cost" (_ $subcost $t))
+							    ("subpath" (_ $sp $t)))))
+		    (= $path-class flight-path)
+		    (instance-of $subpath $path-class $t)
+		    (attr $p * "subpath" $subpath * $t)
+		    (attr $p * "flight" $f * $t)
+		    (attr $f * "price" $price * $t)
+		    (+ $price $subcost $cost)
+		    (attr $p * "cost" $cost * $t)
+		    (instance-of $p flight-path $t)))
+
+   (path-base (=> (attr $p * "flight-gen" $f/flight * $t@-^+)
+		  (attr $f * "origin" $origin * $t)
+		  (attr $f * "destination" $dest * $t)
+		  (instance-of $p/proto-flight-path proto-flight-path $t)
+		  (attr $p * "from" $origin * $t)
+		  (attr $p * "to" $dest * $t)
+		  (attr $p * "subpath" null-flight-path * $t)
+		  (attr $p * "flight" $f * $t)
+		  (attr $f * "price" $price * $t)
+		  (attr $p * "cost" $price * $t)
+		  (instance-of $p flight-path $t)))
+   )
+  ))
+
+(international-path 
+   isa ((flight-path))
+   instance ((M1-Class))
+   with
+    (
+     (search-method
+      (_ best-first)
+    )))
+
+(national-path 
+   instance ((M1-Class))
+   isa ((flight-path))
+   )
+
+(national-path-in-china
+   instance ((M1-Class))
+   isa ((national-path))
+   with
+    (
+     (search-method
+      (_ breadth-first)
+    )))
+
+(national-path-in-canada
+   instance ((M1-Class))
+   isa ((national-path))
+   with
+    (
+     (search-method
+      (_ best-first)
+    )))
+\end{verbatim}
+}
+\end{document}

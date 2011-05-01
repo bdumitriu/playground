@@ -1,0 +1,7 @@
+pp-stratego --abstract -i Tiger.rtree
+
+./compile -i checks/for.tig
+
+./compile --pp off -i checks/return.tig
+
+make checks/for.ctig && cat checks/for.ctig

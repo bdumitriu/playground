@@ -1,0 +1,45 @@
+{-# LINE 8 "SLPrettyprint.lag" #-}
+imports
+{
+import UU.Pretty
+}
+ATTR Root  [  |  | ppExpr : PP_Doc]
+SEM Root
+  | Root lhs.ppExpr     =  @expr.pp
+  
+SEM Expr   [  |  | pp : PP_Doc]
+  | Unit      lhs.pp    =  text "()"
+  | Intexpr   lhs.pp    =  text $ show  @int
+  | Boolexpr  lhs.pp    =  text $ show  @bool
+  | Ident     lhs.pp    =  text  @var >|<  @errmsg
+  | Op        lhs.pp    =  @le.pp >#<  @lerr >#< text  @op >#<  @rerr >#<  @re.pp
+  | Apply     lhs.pp    =  pp_parens (@func.pp >|<  @funcErr) 
+                             >#< pp_parens (@arg.pp >|<  @argErr)
+  | Let       lhs.pp    =  text  "let" >|< pp_block "" "" "; "  @decls.pps
+                             >-< " in" >#< @expr.pp
+                             >-< " ni"
+  | If        lhs.pp    =  pp_ite "if " " then " " else " " fi"
+                             (@cond.pp >|<  @condErr)  @thenExpr.pp (@elseExpr.pp >|<  @ifErr)
+  | Assign    lhs.pp    =  text  @var >|<  @varErr >#< text ":=" >#<  @expr.pp >|<  @exprErr
+  | Seq       lhs.pp    =  pp_block "" "" "; " (@exprs.pps)
+  | Lam       lhs.pp    =  text "\\" >#<  @vars.pp >|<  @argErr >#< text "->" 
+                             >#<  @expr.pp >|<  @bodyErr
+
+SEM Decls  [  |  | pps : {[PP_Doc]} ]
+  | Nil       lhs.pps   =  []
+  | Cons      lhs.pps   =  @hd.pp :  @tl.pps
+  
+SEM Decl   [  |  | pp : PP_Doc]
+  | Decl      loc.ppTp  =  if isAnnotated  @type 
+                           then text "::" >#< show  @type 
+                           else text "::" >#< show  @inferredType
+              lhs.pp    =  text  @var >#<  @ppTp >|<  @declErr >#< text "=" >#<  @expr.pp
+
+
+SEM Exprs  [  |  | pps : {[PP_Doc]} ]
+  | Nil       lhs.pps   =  []
+  | Cons      lhs.pps   =  @hd.pp :  @tl.pps
+
+SEM Vars   [   |  | pp : PP_Doc]
+  | Nil       lhs.pp    =  empty
+  | Cons      lhs.pp    =  text  @hd >#<  @tl.pp

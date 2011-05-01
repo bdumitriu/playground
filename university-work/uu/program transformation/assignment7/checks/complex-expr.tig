@@ -1,0 +1,7 @@
+let var x : int
+    var y : int
+    function f(a: int, b: int): int = a + b + (a * b) + 5 
+ in x := 1 + 2 * 3
+  ; y := f(4 * 5, 6+x)
+  ; printint(y)
+end

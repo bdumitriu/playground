@@ -1,0 +1,18 @@
+Hardware (yega.dyn.students.cs.uu.nl):
+- Pentium 4 2.4GHz processor
+- 512 MB RAM
+- 40GB disk
+
+main - O1, auto-all.hp -> Heap usage, ran with -hc, raw data
+main - O1, auto-all, color.ps -> Heap usage, ran with -hc, color eps
+main - O1, auto-all, b&w.ps -> Heap usage, ran with -hc, b&w eps
+main - O1, auto-all.prof -> Time statistics
+
+Running main.exe without profiling information, with
+- sample0.world file
+- sample.ant red ant code
+- sample.ant black ant code
+gives the following time information:
+real    0m42.429s
+user    0m0.020s
+sys     0m0.010s

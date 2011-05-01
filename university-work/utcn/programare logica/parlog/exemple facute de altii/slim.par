@@ -1,0 +1,182 @@
+/*
+  PARLOG example: SLIM: a Front-End for PARLOG.
+
+  From Chapter 8 of Programming in PARLOG.
+
+  There are several minor differences from the program in the book,
+  mostly to sequence side-effects properly.
+*/
+
+mode slim.
+slim <-
+  initialize(WindowVars,StartProcs) &
+  user(Commands),
+  filter(Commands,LegalCommands),
+  manager(LegalCommands,WindowVars,StartProcs,SysMessages),
+  display_msgs(SysMessages),
+  display_wvars(WindowVars).
+
+mode user(commands^).
+user(Commands) <-
+  key &
+  write('Input Window','// ') &
+  special_gread(Cmd) &
+  user_check(Cmd,Commands).
+
+mode special_gread(cmd^).
+special_gread(Cmd) <-
+  cuwind('Input Window') &
+  gread(user,Cmd) &
+  cuwind(&:).
+
+mode user_check(cmd?,cmds^).
+user_check(quit,[]).
+user_check((Cmd,Cmds),[Cmd|Others]) <-
+  user_check(Cmds,Others);
+user_check(Cmd,[Cmd|Cmds]) <-
+  user(Cmds).
+
+mode filter(cmds?,legalcommands^).
+filter([],[]).
+filter([Cmd|Cmds],[Lcmd|Lcmds]) <-
+  map_command(Cmd,Lcmd),
+  filter(Cmds,Lcmds).
+
+mode map_command(cmd?,mappedcommand^).
+map_command(reset,reset).
+map_command(input(Var,Term),input(Var,Term));
+map_command(Call,run(Call)) <-
+  functor(Call,Rel,Arity),
+  defined(Rel/Arity) :
+  true;
+map_command(Cmd,unrecognized(Cmd)).
+
+mode initialize(winvars^,startprocs^).
+initialize(WindowVars,StartProcs) <-
+  WindowVars = wvars(WControl,[window('V1',_),window('V2',_),
+                               window('V3',_),window('V4',_),
+                               window('V5',_)]),
+  StartProcs = procs(PControl,[]),
+  create_screen.
+
+mode manager(filteredcmds?,winvars?,startprocs?,sysmsgs^).
+manager([run(Call)|Cmds],Wvars,Procs,[running(Call)|Msgs]) <-
+  install_call(Call,Procs,ProcsPlusCall,Wvars),
+  manager(Cmds,Wvars,ProcsPlusCall,Msgs).
+manager([input(Wvar,Term)|Cmds],Wvars,Procs,[Inputreply|Msgs]) <-
+  input_term(Wvar,Term,Wvars,Inputreply),
+  manager(Cmds,Wvars,Procs,Msgs).
+manager([reset|Cmds],Wvars,Procs,Msgs) <-
+  reinitialize(Wvars,Procs,InitWvars,InitProcs) &
+  Msgs = ['System reset ok!'|Msgs1],
+  display_wvars(InitWvars),
+  manager(Cmds,InitWvars,InitProcs,Msgs1).
+manager([unrecognized(Cmd)|Cmds],Wvars,Procs,[unrecognized(Cmd)|Msgs]) <-
+  manager(Cmds,Wvars,Procs,Msgs).
+manager([],Wvars,Procs,[]) <-
+  terminate(Wvars,Procs).
+
+mode install_call(call?,procs?,procs2^,wvars?).
+install_call(Call,procs(Ctrl,Procs),procs(Ctrl,[Call|Procs]),Wvars) <-
+  map_arguments(Call,Wvars,MappedCall),
+  call(MappedCall,_,Ctrl).
+
+mode map_arguments(call?,wvars?,mappedcall^).
+map_arguments(Call,wvars(Ctrl,Wins),MappedCall) <-
+  map_args(Call,Wins,MappedCall).
+
+mode map_args(call?,wins?,mappedcall^).
+map_args(Call,Wins,MappedCall) <-
+  Call =.. [R|Args],
+  maparglist(Args,Wins,Args2),
+  MappedCall =.. [R|Args2].
+
+mode maparglist(args?,wins?,mappedargs^).
+maparglist([],Wins,[]).
+maparglist([Arg|Args],Wins,[MappedArg|MappedArgs]) <-
+  map_term(Arg,Wins,MappedArg),
+  maparglist(Args,Wins,MappedArgs).
+
+mode map_term(term?,wins?,mappedterm^).
+map_term(N,_,N) <-
+  number(N) :
+  true.
+map_term(A,Wins,MappedA) <-
+  atom(A) :
+  map(A,Wins,MappedA);
+map_term(Str,Wins,MappedStr) <-
+  map_args(Str,Wins,MappedStr).
+
+mode map(atom?,wlist?,mappedatom^).
+map(A,[window(A,Value)|_],Value).
+map(A,[],A);
+map(A,[_|Wlist],MappedA) <-
+  map(A,Wlist,MappedA).
+
+mode input_term(winvar?,interm?,wvars?,inputreply^).
+input_term(W,InTerm,Wvars,input(W,InTerm,ok)) <-
+  vartail(W,Wvars,Tail) :
+  Tail = [InTerm|Y];
+input_term(W,InTerm,Wvars,input(W,InTerm,not_ok)).
+
+mode vartail(w?,wvars?,tail^).
+vartail(W,wvars(Ctrl,[window(W,WVal)|Wins]),Tail) <-
+  var_tail_of(WVal,Tail);
+vartail(W,wvars(Ctrl,[Win|Wins]),Tail) <-
+  vartail(W,wvars(Ctrl,Wins),Tail).
+
+mode var_tail_of(term?,vartail^).
+var_tail_of(X,X) <- var(X) : true.
+var_tail_of([H|T],Tail) <-
+  var_tail_of(T,Tail).
+
+mode reinitialize(wvars?,procs?,initwvars^,initprocs^).
+reinitialize(Wvars,Procs,InitWvars,InitProcs) <-
+  terminate(Wvars,Procs) &
+  initialize(InitWvars,InitProcs).
+
+/* 'terminate' kills windows after sending a 'stop' message to processes.
+   Really, it should wait for the processes to reply 'stopped' before
+   killing windows. */
+mode terminate(wvars?,procs?).
+terminate(Wvars,Procs) <-
+  Wvars = wvars(stop,W),
+  Procs = procs(stop,P) &
+  kill_all_windows.
+
+mode display_wvars(winvars?).
+display_wvars(wvars(Control,[])).
+display_wvars(wvars(Control,[window(Wname,Term)|Others])) <-
+  control_write(Control,Wname,Term),
+  display_wvars(wvars(Control,Others)).
+
+mode control_write(control?,window?,term?).
+control_write(Control,Window,Term) <-
+  call(incwrite(Window,Term),_,Control).
+
+mode display_msgs(messages?).
+display_msgs([]).
+display_msgs([Msg|Messages]) <-
+  incwrite('Message Window',Msg) &
+  nl('Message Window') &
+  display_msgs(Messages).
+
+mode create_screen.
+create_screen <-
+  crwind('V1',0,0,8,24),
+  crwind('V2',0,26,8,24),
+  crwind('V3',0,52,8,24),
+  crwind('V4',10,0,6,16),
+  crwind('V5',10,18,6,16),
+  crwind('Message Window',10,36,6,40),
+  crwind('Input Window',18,0,5,76).
+
+mode kill_all_windows.
+kill_all_windows <-
+  close('V1'),
+  close('V2'),
+  close('V3'),
+  close('V4'),
+  close('V5'),
+  close('Message Window'),
+  close('Input Window').

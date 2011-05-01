@@ -1,0 +1,12 @@
+let function f() = 
+      let var x := 2
+          function g() = x := x * 5
+          function h() =
+            let function i() = g()
+             in i()
+            end
+       in h()
+        ; printint(x)
+      end
+ in f()
+end

@@ -1,0 +1,186 @@
+<HTML>
+<HEAD>
+<TITLE>class DirectoryListing</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>class DirectoryListing</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1">This class manages a set of directory entries.
+ <small><A HREF="#longdesc">More...</A></small></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="so___include___driver___DirectoryListing_h.html">so/include/driver/DirectoryListing.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-DirectoryListing.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Methods</h4><ul><LI>&nbsp;<b><A HREF="#ref1">DirectoryListing</A></b> () 
+</LI>
+<LI>&nbsp;<b><A HREF="#ref2">DirectoryListing</A></b> (unsigned long initialCapaicty) 
+</LI>
+<LI>&nbsp;<b><A HREF="#ref3">~DirectoryListing</A></b> () 
+</LI>
+<LI>unsigned long &nbsp;<b><A HREF="#ref4">size</A></b> () 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref5">addEntry</A></b> (<A HREF="DirectoryEntry.html">DirectoryEntry</A>* entry) 
+</LI>
+<LI><A HREF="DirectoryEntry.html">DirectoryEntry</A>* &nbsp;<b><A HREF="#ref6">getEntry</A></b> (unsigned long index) 
+</LI>
+<LI><A HREF="DirectoryEntry.html">DirectoryEntry</A>* &nbsp;<b><A HREF="#ref7">getEntry</A></b> (const char* entryName) 
+</LI>
+<LI><A HREF="DirectoryEntry.html">DirectoryEntry</A>* &nbsp;<b><A HREF="#ref8">deleteEntry</A></b> (unsigned long index) 
+</LI>
+<LI>unsigned long &nbsp;<b><A HREF="#ref9">indexOf</A></b> (const char* entryName) 
+</LI>
+<LI>bool &nbsp;<b><A HREF="#ref10">contains</A></b> (const char* entryName) 
+</LI>
+</ul><h4>Private Members</h4><ul><LI>DirectoryEntry** <b><A HREF="#ref11">entries</A></b></LI>
+<LI>unsigned long <b><A HREF="#ref12">length</A></b></LI>
+<LI>unsigned long <b><A HREF="#ref13">capacity</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><p>
+ This class contains a set of directory entries (i.e. files or (sub)directories)
+ which represent a directory's contents. It allows manipulation of this set of
+ entries.
+</p>
+<p></p>
+<A NAME="DirectoryListing"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>DirectoryListing</strong> ()
+<br></td><td align="right"><h3><strong>DirectoryListing</strong></h3></td></tr></table><p></p><p>
+ Creates an empty directory listing with an initial capacity
+ of 50. This capacity represents the number of entries the
+ internal array can store. If this capacity is reached a
+ new array with a double capacity is allocated and the old
+ one is copied into the new one.
+	 </p>
+<A NAME="DirectoryListing"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>DirectoryListing</strong> (unsigned long initialCapaicty)
+<br></td><td align="right"><h3><strong>DirectoryListing</strong></h3></td></tr></table><p></p><p>
+ Creates an empty directory listing  with <code>initialCapacity</code>
+ as its initial capatcity. This capacity represents the number of
+ entries the internal array can store. If this capacity is reached a
+ new array with a double capacity is allocated and the old
+ one is copied into the new one.
+	 </p>
+<A NAME="~DirectoryListing"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>~DirectoryListing</strong> ()
+<br></td><td align="right"><h3><strong>~DirectoryListing</strong></h3></td></tr></table><p></p><p>
+ The destructor of the class. This destructor deletes the
+ internal array and all the DirectoryEntry objects as
+ well.
+	 </p>
+<A NAME="size"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long &nbsp;<strong>size</strong> ()
+<br></td><td align="right"><h3><strong>size</strong></h3></td></tr></table><p></p><p>
+ Returns the number of entries in the directory listing.
+</p>
+<p></p>
+<p><b>Returns</b>: the number of entries in the directory listing.
+	 </p>
+<A NAME="addEntry"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>addEntry</strong> (<A HREF="DirectoryEntry.html">DirectoryEntry</A>* entry)
+<br></td><td align="right"><h3><strong>addEntry</strong></h3></td></tr></table><p></p><p>
+ Adds the entry received as parameter in the listing.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>entry</i></TD><TD align="left" valign="top">the entry too add.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="getEntry"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="DirectoryEntry.html">DirectoryEntry</A>* &nbsp;<strong>getEntry</strong> (unsigned long index)
+<br>throw(<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>getEntry</strong></h3></td></tr></table><p></p><p>
+ Returns the entry in the <code>index</code>th position
+ of the directory.
+</p>
+<p> The method throws:
+ <ul>
+ <li>	ArrayIndexOutOfBoundsException* if <code>index</code>
+ is less than 0 or greater than or equal to <code>this->size()</code>.
+ </li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>index</i></TD><TD align="left" valign="top">the index of the entry to be returned.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: the entry in the <code>index</code>th position
+	of the directory.
+	 </p>
+<A NAME="getEntry"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="DirectoryEntry.html">DirectoryEntry</A>* &nbsp;<strong>getEntry</strong> (const char* entryName)
+<br></td><td align="right"><h3><strong>getEntry</strong></h3></td></tr></table><p></p><p>
+ Returns the DirectoryEntry whose entry name is equal to
+ <code>entryName</code>. If no such entry exists, NULL
+ is returned.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>entryName</i></TD><TD align="left" valign="top">the entry name of the entry you want. It
+	should be a string (i.e., it should end with '\0').
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: the DirectoryEntry whose entry name is equal to
+	<code>entryName</code>.
+	 </p>
+<A NAME="deleteEntry"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="DirectoryEntry.html">DirectoryEntry</A>* &nbsp;<strong>deleteEntry</strong> (unsigned long index)
+<br>throw(<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>deleteEntry</strong></h3></td></tr></table><p></p><p>
+ Delete the <code>index</code>th entry in the listing
+ and shifts the entries that follow one position to
+ the left.
+</p>
+<p> The method throws:
+ <ul>
+ <li>	ArrayIndexOutOfBoundsException* if <code>index</code>
+ is less than 0 or greater than or equal to <code>this->size()</code>.
+ </li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>index</i></TD><TD align="left" valign="top">the index of the entry to be deleted.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: the deleted DirectoryEntry.
+	 </p>
+<A NAME="indexOf"></A><A NAME="ref9"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long &nbsp;<strong>indexOf</strong> (const char* entryName)
+<br></td><td align="right"><h3><strong>indexOf</strong></h3></td></tr></table><p></p><p>
+ Returns the index of the DirectoryEntry whose entry name is
+ equal to <code>entryName</code>. If no such entry exists, this->size()
+ is returned.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>entryName</i></TD><TD align="left" valign="top">the entry name of the entry whose index you want. It
+	should be a string (i.e., it should end with '\0').
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: the index of the DirectoryEntry whose entry name is
+	equal to <code>entryName</code>.
+	 </p>
+<A NAME="contains"></A><A NAME="ref10"></A><table width="100%"><tr bgcolor="#eeeeee"><td>bool &nbsp;<strong>contains</strong> (const char* entryName)
+<br></td><td align="right"><h3><strong>contains</strong></h3></td></tr></table><p></p><p>
+ Returns true if listing contains an entry with <code>entryName</code>
+ as its entry name and false otherwise.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>entryName</i></TD><TD align="left" valign="top">the entry name of the entry you are looking for It
+	should be a string (i.e., it should end with '\0').
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: true if listing contains an entry with <code>entryName</code>
+ as its entry name and false otherwise.
+	 </p>
+<A NAME="entries"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="DirectoryEntry.html">DirectoryEntry</A>**  <strong>entries</strong>
+</td><td align="right"><h3><strong>entries</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="length"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long  <strong>length</strong>
+</td><td align="right"><h3><strong>length</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="capacity"></A><A NAME="ref13"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long  <strong>capacity</strong>
+</td><td align="right"><h3><strong>capacity</strong></h3></td></tr></table><p> <small>[private]</small></p><HR><UL><LI><i>Version</i>: 0.1
+ </LI><LI><i>Author</i>: Bogdan DUMITRIU
+</LI><LI><i>Generated</i>: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</LI></UL></BODY></HTML>

@@ -1,0 +1,55 @@
+module part3
+imports integers
+
+rules
+
+Int :
+	Int(x) -> <string-to-int>x
+
+Plus :
+	Plus(x, y) -> <add>(x, y)
+
+Times :
+	Times(x, y) -> <mul>(x, y)
+
+strategies
+
+eval =
+	evaluate-expr ; !Int(<int-to-string>)
+
+evaluate-expr =
+	Int <+
+	?Plus(x, y) ; !Plus(<evaluate-expr>x, <evaluate-expr>y) ; Plus <+
+	?Times(x, y) ; !Times(<evaluate-expr>x, <evaluate-expr>y) ; Times
+
+/*
+ * Here is the second alternative, commented out.
+ *
+
+module part3
+imports integers
+
+rules
+
+Int :
+        Int(x) -> <string-to-int>x
+
+Plus :
+        Plus(x, y) -> <add>(xx, yy)
+                where <evaluate-expr>x => xx ; <evaluate-expr>y => yy
+
+Times :
+        Times(x, y) -> <mul>(xx, yy)
+                where <evaluate-expr>x => xx ; <evaluate-expr>y => yy
+
+strategies
+
+eval =
+        evaluate-expr ; !Int(<int-to-string>)
+
+evaluate-expr =
+        Int <+
+        Plus <+
+        Times
+
+*/

@@ -1,0 +1,255 @@
+module factorout
+imports liblib Tiger
+strategies
+
+  main = 
+    io-wrap(factorout-options,
+      topdown(try(?Seq([<id>])))
+      ; if-verbose2(debug(!"input:              "))
+      ; factorout(|<get-config>"--factor")
+    )
+
+  factorout-options = 
+    ArgOption(
+      "--factor"
+    , <set-config>("--factor", <id>)
+    , "--factor"
+    )
+
+  factorout(|x) =
+      sum-of-monomonials
+    ; commute-right(|x)
+    ; collect-by-power(|x)
+    ; factor-out(|x)
+    ; beautify
+    ; left-assoc
+
+  sum-of-monomonials =
+    innermost(
+      LiftPlus
+      <+ AssocPlus
+      <+ EvalPlus
+      <+ AssocTimes
+      <+ ShiftLeftTimes
+      <+ EvalTimes
+      <+ DecPower
+    )
+    ; if-verbose2(debug(!"sum of monomonials: "))
+
+  commute-right(|x) =
+    innermost(
+      CommuteRight(|x)
+      <+ ReducePowers(|x)
+    )
+    ; if-verbose2(debug(!"commute right:      "))
+
+  collect-by-power(|x) =
+    innermost(
+      SortPowers(|x)
+    )
+    ; if-verbose2(debug(!"collect by power:   "))
+
+  factor-out(|x) =
+    innermost(
+      Factorize(|x)
+    )
+    ; if-verbose2(debug(!"factored out:       "))
+
+  beautify =
+    innermost(
+      ShiftRightPlus
+      <+ EvalPlus
+      <+ Pow0
+      <+ Pow1
+    )
+
+  left-assoc =
+    innermost(
+      LeftAssocTP
+    )
+
+  is-factor(|x) =
+    ?Var(x) + ?Power(Var(x), Int(_))
+
+  atomic =
+    Var(id) + Int(id)
+
+  exponent-of(|x) =
+    factor-of(|x); Snd; ?Int(<string-to-int>) <+ !0
+
+/**
+ * Factoring out powers of x
+ */
+rules
+
+  factor-of(|x) :
+    Times(e, Power(Var(x), Int(i))) -> (e, Int(i))
+
+  factor-of(|x) :
+    Times(e, Var(x)) -> (e, Int("1"))
+
+  factor-of(|x) :
+    Power(Var(x), Int(i)) -> (Int("1"), Int(i))
+
+  factor-of(|x) :
+    Var(x) -> (Int("1"), Int("1"))
+
+  factor-of(|x) :
+    Times(e1, e2) -> (Times(e1, const), factor) where <?Times(_, _)>e2; <factor-of(|x)>e2 ; ?(const, factor)
+
+/**
+ * Basic rules for multiplication
+ */
+rules
+
+  EvalTimes :
+    Times(Int(i), Int(j)) -> Int(<mulS> (i, j))
+
+  EvalTimes :
+    Times(Int(i), Times(Int(j), e)) -> Times(Int(<mulS> (i, j)), e)
+
+  EvalTimes :
+    Times(Int("1"), e) -> e
+
+/**
+ * Basic rules for addition
+ */
+rules
+
+  EvalPlus :
+    Plus(Int(i), Int(j)) -> Int(<addS> (i, j))
+
+  EvalPlus :
+    Plus(Int(i), Plus(Int(j), e)) -> Plus(Int(<addS> (i, j)), e)
+
+/**
+ * Lift Plus above Times
+ */
+rules
+
+  LiftPlus :
+    Times(Plus(i, j), x) -> Plus(Times(i, x), Times(j, x))
+
+  LiftPlus :
+    Times(x, Plus(i, j)) -> Plus(Times(x, i), Times(x, j))
+
+/**
+ * Associate all Times the same way & commute constants to the left
+ */
+rules
+
+  ShiftLeftTimes :
+    Times(x, Int(i)) -> Times(Int(i), x) where not(<?Int(_)>x)
+
+  ShiftLeftTimes :
+    Times(x, Times(Int(i), y)) -> Times(Int(i), Times(x, y)) where not(<?Int(_)>x)
+
+  AssocTimes :
+    Times(Times(x, y), z) -> Times(x, Times(y, z)) where not(<?Times(_, _)>z)
+
+  AssocTimes :
+    Times(Times(x, y), Times(z, t)) -> Times(x, Times(y, Times(z, t)))
+
+/**
+ * Associate all Plus the same way
+ */
+rules
+
+  AssocPlus :
+    Plus(Plus(x, y), z) -> Plus(x, Plus(y, z)) where not(<?Plus(_, _)>z)
+
+  AssocPlus :
+    Plus(Plus(x, y), Plus(z, t)) -> Plus(x, Plus(y, Plus(z, t)))
+
+/**
+ * Decompose Power expressions
+ */
+rules
+
+  DecPower :
+    Power(Times(x, y), n) -> Times(Power(x, n), Power(y, n))
+
+  DecPower :
+    Power(e, Int("0")) -> Int("1")
+
+  DecPower :
+    Power(e, Int("1")) -> e
+
+  DecPower :
+    Power(e, Int(n)) -> Times(e, Power(e, Int(<subtS>(n, "1")))) where <not(atomic)>e; <not(?Times(_, _))>e; <gtS>(n, "1")
+
+/**
+ * Commute the x factors to the right (where x is not "x", but the term variable)
+ */
+rules
+
+  CommuteRight(|x) :
+    Times(a, Times(b, c)) -> Times(b, Times(a, c)) where <is-factor(|x)>a; <not(is-factor(|x))>b
+
+  CommuteRight(|x) :
+    Times(a, b) -> Times(b, a) where <is-factor(|x)>a; <not(is-factor(|x))>b; <not(?Times(_, _))>b
+
+/**
+ * If we have something like x**n * x**m * ... collect it into a single term (x**(n+m+...))
+ */
+rules
+
+  ReducePowers(|x) :
+    Times(a, b) -> <combine> where <is-factor(|x)>a; <is-factor(|x)>b
+
+  combine :
+    Times(Var(x), Var(x)) -> Power(Var(x), Int("2"))
+
+  combine :
+    Times(Var(x), Power(Var(x), Int(n))) -> Power(Var(x), Int(<addS>(n, "1")))
+
+  combine :
+    Times(Power(Var(x), Int(n)), Var(x)) -> Power(Var(x), Int(<addS>(n, "1")))
+
+  combine :
+    Times(Power(Var(x), Int(n)), Power(Var(x), Int(m))) -> Power(Var(x), Int(<addS>(m, n)))
+
+/**
+ * Bubble sorts the powers of x (where x is not "x", but the term variable) descendingly
+ */
+rules
+
+  SortPowers(|x) :
+    Plus(a, Plus(b, c)) -> Plus(b, Plus(a, c)) where <gt>(<exponent-of(|x)>b, <exponent-of(|x)>a)
+
+  SortPowers(|x) :
+    Plus(a, b) -> Plus(b, a) where <gt>(<exponent-of(|x)>b, <exponent-of(|x)>a)
+
+/**
+ * Factor terms with same power for x (where x is not "x", but the term variable) together
+ */
+rules
+
+  Factorize(|x) :
+    Plus(e1, Plus(e2, e3)) -> Plus(Times(Plus(c1, c2), Power(Var(x), f)), e3) where <factor-of(|x)>e1; ?(c1, f); <factor-of(|x)>e2 ; ?(c2, f)
+
+  Factorize(|x) :
+    Plus(e1, e2) -> Times(Plus(c1, c2), Power(Var(x), f)) where <not(?Plus(_, _))>e2; <factor-of(|x)>e1; ?(c1, f); <factor-of(|x)>e2 ; ?(c2, f)
+
+/**
+ * Beautification rules
+ */
+rules
+
+  ShiftRightPlus :
+    Plus(Int(i), x) -> Plus(x, Int(i)) where not(<?Int(_)>x)
+
+  ShiftRightPlus :
+    Plus(Int(i), Plus(x, y)) -> Plus(x, Plus(Int(i), y)) where not(<?Int(_)>x)
+
+  Pow0 :
+    Power(e, Int("0")) -> Int("1")
+
+  Pow1 :
+    Power(e, Int("1")) -> e
+
+  LeftAssocTP :
+    Plus(e1, Plus(e2, e3)) -> Plus(Plus(e1, e2), e3) where <not(?Plus(_, _))>e1
+
+  LeftAssocTP :
+    Times(e1, Times(e2, e3)) -> Times(Times(e1, e2), e3) where <not(?Times(_, _))>e1

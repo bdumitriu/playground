@@ -1,0 +1,21 @@
+body
+{
+	background-color: white;
+	font-family: Arial, Comic Sans MS, cursive;
+	font-size: 12px;
+	font-weight: lighter;
+}
+
+a, a:link, a:active, a:visited
+{
+	text-decoration: none;
+	font-family: Trebuchet MS, Comic Sans MS, Arial;
+	font-size: 18px;
+	font-variant: small-caps;
+	color: #000000;
+}
+
+a:hover
+{
+	color: blue;
+}

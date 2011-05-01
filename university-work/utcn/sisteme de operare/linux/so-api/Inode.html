@@ -1,0 +1,515 @@
+<HTML>
+<HEAD>
+<TITLE>class Inode</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>class Inode</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1">Represents an interface to any of the hard disk's inodes.
+ <small><A HREF="#longdesc">More...</A></small></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="so___include___driver___Inode_h.html">so/include/driver/Inode.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-Inode.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Methods</h4><ul><LI>&nbsp;<b><A HREF="#ref1">Inode</A></b> () 
+</LI>
+<LI>&nbsp;<b><A HREF="#ref2">~Inode</A></b> () 
+</LI>
+<LI>bool &nbsp;<b><A HREF="#ref3">isValid</A></b> () 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref4">getFileType</A></b> () 
+</LI>
+<LI>unsigned char* &nbsp;<b><A HREF="#ref5">getChecksum</A></b> () 
+</LI>
+<LI>unsigned long &nbsp;<b><A HREF="#ref6">getFileSizeInBytes</A></b> () 
+</LI>
+<LI>unsigned long &nbsp;<b><A HREF="#ref7">getFileSizeInBlocks</A></b> () 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref8">getFileNameSize</A></b> () 
+</LI>
+<LI><A HREF="Date.html">Date</A>* &nbsp;<b><A HREF="#ref9">getCreationDate</A></b> () 
+</LI>
+<LI><A HREF="Date.html">Date</A>* &nbsp;<b><A HREF="#ref10">getLastAccessDate</A></b> () 
+</LI>
+<LI><A HREF="Date.html">Date</A>* &nbsp;<b><A HREF="#ref11">getLastUpdateDate</A></b> () 
+</LI>
+<LI>char* &nbsp;<b><A HREF="#ref12">getFileName</A></b> () 
+</LI>
+<LI>unsigned long &nbsp;<b><A HREF="#ref13">getDirectBlockAddress</A></b> (unsigned long index) 
+</LI>
+<LI>unsigned long &nbsp;<b><A HREF="#ref14">getIndirectBlockAddress</A></b> (unsigned long index) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref15">setValid</A></b> (bool valid) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref16">setFileType</A></b> (unsigned char fileType) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref17">setChecksum</A></b> (unsigned char* checksum) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref18">setFileSizeInBytes</A></b> (unsigned long fileSizeInBytes) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref19">setFileSizeInBlocks</A></b> (unsigned long fileSizeInBlocks) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref20">setFileNameSize</A></b> (unsigned char fileNameSize) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref21">setCreationDate</A></b> (<A HREF="Date.html">Date</A>* creationDate) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref22">setLastAccessDate</A></b> (<A HREF="Date.html">Date</A>* lastAccessDate) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref23">setLastUpdateDate</A></b> (<A HREF="Date.html">Date</A>* lastUpdateDate) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref24">setFileName</A></b> (const char* fileName, unsigned long fileNameSize) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref25">setDirectBlockAddress</A></b> (unsigned long index, unsigned long address) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref26">setIndirectBlockAddress</A></b> (unsigned long index, unsigned long address) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref27">readFromHardDisk</A></b> (<A HREF="HDD.html">HDD</A>* hdd, unsigned long blockNo) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref28">writeToHardDisk</A></b> (<A HREF="HDD.html">HDD</A>* hdd, unsigned long blockNo) 
+</LI>
+<LI>unsigned char* &nbsp;<b><A HREF="#ref29">getAsBytes</A></b> () 
+</LI>
+</ul><h4>Private Methods</h4><ul><LI>unsigned char* &nbsp;<b><A HREF="#ref42">serialize</A></b> () 
+</LI>
+</ul><h4>Private Members</h4><ul><LI>bool <b><A HREF="#ref30">valid</A></b></LI>
+<LI>unsigned char <b><A HREF="#ref31">fileType</A></b></LI>
+<LI>unsigned char* <b><A HREF="#ref32">checksum</A></b></LI>
+<LI>unsigned long <b><A HREF="#ref33">fileSize</A></b></LI>
+<LI>unsigned long <b><A HREF="#ref34">nrBlocks</A></b></LI>
+<LI>unsigned char <b><A HREF="#ref35">fnSize</A></b></LI>
+<LI>Date* <b><A HREF="#ref36">crDate</A></b></LI>
+<LI>Date* <b><A HREF="#ref37">laDate</A></b></LI>
+<LI>Date* <b><A HREF="#ref38">luDate</A></b></LI>
+<LI>char* <b><A HREF="#ref39">fileName</A></b></LI>
+<LI>unsigned long* <b><A HREF="#ref40">dirBlocks</A></b></LI>
+<LI>unsigned long* <b><A HREF="#ref41">indirBlocks</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><p>
+ This class represents an interface to any of the hard disk's inodes.
+ Thus it allows read/write access to the various inode elements.
+ Here's the configuration of the inode which this class assumes:
+</p>
+<p> <table border="1" align="center">
+ <caption>Inode configuration</caption>
+ <tr>
+ <td align="center" bgcolor="cyan">1 <u>bit</u></td>
+ <td align="center" bgcolor="cyan">7 <u>bits</u></td>
+ <td align="center" bgcolor="cyan">16 bytes</td>
+ <td align="center" bgcolor="cyan">4 bytes</td>
+ <td align="center" bgcolor="cyan">4 bytes</td>
+ <td align="center" bgcolor="cyan">1 byte</td>
+ <td align="center" bgcolor="cyan">14 bytes</td>
+ </tr>
+ <tr>
+ <td align="center" bgcolor="lightblue">inode valid/invalid</td>
+ <td align="center" bgcolor="lightblue">file type</td>
+ <td align="center" bgcolor="lightblue">checksum</td>
+ <td align="center" bgcolor="lightblue">size of file<br />(in bytes)</td>
+ <td align="center" bgcolor="lightblue">nr. of blocks<br />occupied by file</td>
+ <td align="center" bgcolor="lightblue">size of file name</td>
+ <td align="center" bgcolor="lightblue">reserved</td>
+ </tr>
+ </table>
+</p>
+<p> <table border="1" align="center">
+ <caption>Inode configuration (cont'd)</caption>
+ <tr>
+ <td align="center" bgcolor="cyan">4 bytes</td>
+ <td align="center" bgcolor="cyan">4 bytes</td>
+ <td align="center" bgcolor="cyan">4 bytes</td>
+ <td align="center" bgcolor="cyan">128 bytes</td>
+ <td align="center" bgcolor="cyan">60 bytes</td>
+ <td align="center" bgcolor="cyan">rest up to include/defs.h::BLOCK_DIM</td>
+ </tr>
+ <tr>
+ <td align="center" bgcolor="lightblue">creation date</td>
+ <td align="center" bgcolor="lightblue">last access date</td>
+ <td align="center" bgcolor="lightblue">last update date</td>
+ <td align="center" bgcolor="lightblue">file name</td>
+ <td align="center" bgcolor="lightblue">15 direct block addresses</td>
+ <td align="center" bgcolor="lightblue">nr. of left bytes/4 indirect block addresses</td>
+ </tr>
+ </table>
+</p>
+<p></p>
+<A NAME="Inode"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>Inode</strong> ()
+<br></td><td align="right"><h3><strong>Inode</strong></h3></td></tr></table><p></p><p>
+ Creates a new Inode and initializes all its members with 0 or
+ arrays of 0. The members of type Date* will be initialized with
+ the current date.
+	 </p>
+<A NAME="~Inode"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>~Inode</strong> ()
+<br></td><td align="right"><h3><strong>~Inode</strong></h3></td></tr></table><p></p><p>
+ The destructor of the class.
+	 </p>
+<A NAME="isValid"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>bool &nbsp;<strong>isValid</strong> ()
+<br></td><td align="right"><h3><strong>isValid</strong></h3></td></tr></table><p></p><p>
+ Returns true if the information conatined in the inode is valid and
+ false otherwise.
+</p>
+<p></p>
+<p><b>Returns</b>: true if the information conatined in the inode is valid and
+	false otherwise.
+	 </p>
+<A NAME="getFileType"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>getFileType</strong> ()
+<br></td><td align="right"><h3><strong>getFileType</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the fileType data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the fileType data member.
+	 </p>
+<A NAME="getChecksum"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char* &nbsp;<strong>getChecksum</strong> ()
+<br></td><td align="right"><h3><strong>getChecksum</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the checksum data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the checksum data member.
+	 </p>
+<A NAME="getFileSizeInBytes"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long &nbsp;<strong>getFileSizeInBytes</strong> ()
+<br></td><td align="right"><h3><strong>getFileSizeInBytes</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the fileSizeInBytes data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the fileSizeInBytes data member.
+	 </p>
+<A NAME="getFileSizeInBlocks"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long &nbsp;<strong>getFileSizeInBlocks</strong> ()
+<br></td><td align="right"><h3><strong>getFileSizeInBlocks</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the fileSizeInBlocks data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the fileSizeInBlocks data member.
+	 </p>
+<A NAME="getFileNameSize"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>getFileNameSize</strong> ()
+<br></td><td align="right"><h3><strong>getFileNameSize</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the fileNameSize data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the fileNameSize data member.
+	 </p>
+<A NAME="getCreationDate"></A><A NAME="ref9"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="Date.html">Date</A>* &nbsp;<strong>getCreationDate</strong> ()
+<br></td><td align="right"><h3><strong>getCreationDate</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the creationDate data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the creationDate data member.
+	 </p>
+<A NAME="getLastAccessDate"></A><A NAME="ref10"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="Date.html">Date</A>* &nbsp;<strong>getLastAccessDate</strong> ()
+<br></td><td align="right"><h3><strong>getLastAccessDate</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the lastAccessDate data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the lastAccessDate data member.
+	 </p>
+<A NAME="getLastUpdateDate"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="Date.html">Date</A>* &nbsp;<strong>getLastUpdateDate</strong> ()
+<br></td><td align="right"><h3><strong>getLastUpdateDate</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the lastUpdateDate data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the lastUpdateDate data member.
+	 </p>
+<A NAME="getFileName"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td>char* &nbsp;<strong>getFileName</strong> ()
+<br></td><td align="right"><h3><strong>getFileName</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the fileName data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the fileName data member.
+	 </p>
+<A NAME="getDirectBlockAddress"></A><A NAME="ref13"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long &nbsp;<strong>getDirectBlockAddress</strong> (unsigned long index)
+<br>throw(<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>getDirectBlockAddress</strong></h3></td></tr></table><p></p><p>
+ Returns the <code>index</code>th entry of the directBlockAddress
+ data member.
+</p>
+<p> The method throws:
+ <ul>
+ <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which is
+	rather hard, since it's an unsigned long) or greater than or equal
+	to include/defs.h::DIRECT_BLOCKADDR_ENTRIES.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>index</i></TD><TD align="left" valign="top">the index in the array of direct block addresses.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: the <code>index</code>th entry of the directBlockAddress
+	data member.
+	 </p>
+<A NAME="getIndirectBlockAddress"></A><A NAME="ref14"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long &nbsp;<strong>getIndirectBlockAddress</strong> (unsigned long index)
+<br>throw(<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>getIndirectBlockAddress</strong></h3></td></tr></table><p></p><p>
+ Returns the <code>index</code>th entry of the indirectBlockAddress
+ data member.
+</p>
+<p> The method throws:
+ <ul>
+ <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which is
+	rather hard, since it's an unsigned long) or greater than or equal
+	to (include/defs.h-180-(include/defs.h::DIRECT_BLOCKADDR_ENTRIES*4))/4.
+	</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>index</i></TD><TD align="left" valign="top">the index in the array of indirect block addresses.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: the <code>index</code>th entry of the indirectBlockAddress
+	data member.
+	 </p>
+<A NAME="setValid"></A><A NAME="ref15"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setValid</strong> (bool valid)
+<br></td><td align="right"><h3><strong>setValid</strong></h3></td></tr></table><p></p><p>
+ Sets the valid data member to <code>valid</code>.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>valid</i></TD><TD align="left" valign="top">the new value of the valid data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setFileType"></A><A NAME="ref16"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setFileType</strong> (unsigned char fileType)
+<br></td><td align="right"><h3><strong>setFileType</strong></h3></td></tr></table><p></p><p>
+ Sets the fileType data member to <code>fileType</code>.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileType</i></TD><TD align="left" valign="top">the new value of the fileType data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setChecksum"></A><A NAME="ref17"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setChecksum</strong> (unsigned char* checksum)
+<br></td><td align="right"><h3><strong>setChecksum</strong></h3></td></tr></table><p></p><p>
+ Sets the checksum data member to <code>checksum</code>.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>checksum</i></TD><TD align="left" valign="top">the new value of the checksum data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setFileSizeInBytes"></A><A NAME="ref18"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setFileSizeInBytes</strong> (unsigned long fileSizeInBytes)
+<br></td><td align="right"><h3><strong>setFileSizeInBytes</strong></h3></td></tr></table><p></p><p>
+ Sets the fileSizeInBytes data member to <code>fileSizeInBytes</code>.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileSizeInBytes</i></TD><TD align="left" valign="top">the new value of the fileSizeInBytes data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setFileSizeInBlocks"></A><A NAME="ref19"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setFileSizeInBlocks</strong> (unsigned long fileSizeInBlocks)
+<br></td><td align="right"><h3><strong>setFileSizeInBlocks</strong></h3></td></tr></table><p></p><p>
+ Sets the fileSizeInBlocks data member to <code>fileSizeInBlocks</code>.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileSizeInBlocks</i></TD><TD align="left" valign="top">the new value of the fileSizeInBlocks data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setFileNameSize"></A><A NAME="ref20"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setFileNameSize</strong> (unsigned char fileNameSize)
+<br></td><td align="right"><h3><strong>setFileNameSize</strong></h3></td></tr></table><p></p><p>
+ Sets the fileNameSize data member to <code>fileNameSize</code>. If
+ the parameter's value is greater than 128, the date member will be
+ set to 128.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileNameSize</i></TD><TD align="left" valign="top">the new value of the fileNameSize data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setCreationDate"></A><A NAME="ref21"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setCreationDate</strong> (<A HREF="Date.html">Date</A>* creationDate)
+<br></td><td align="right"><h3><strong>setCreationDate</strong></h3></td></tr></table><p></p><p>
+ Sets the creationDate data member to <code>creationDate</code>.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>creationDate</i></TD><TD align="left" valign="top">the new value of the creationDate data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setLastAccessDate"></A><A NAME="ref22"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setLastAccessDate</strong> (<A HREF="Date.html">Date</A>* lastAccessDate)
+<br></td><td align="right"><h3><strong>setLastAccessDate</strong></h3></td></tr></table><p></p><p>
+ Sets the lastAccessDate data member to <code>lastAccessDate</code>.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>lastAccessDate</i></TD><TD align="left" valign="top">the new value of the lastAccessDate data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setLastUpdateDate"></A><A NAME="ref23"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setLastUpdateDate</strong> (<A HREF="Date.html">Date</A>* lastUpdateDate)
+<br></td><td align="right"><h3><strong>setLastUpdateDate</strong></h3></td></tr></table><p></p><p>
+ Sets the lastUpdateDate data member to <code>lastUpdateDate</code>.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>lastUpdateDate</i></TD><TD align="left" valign="top">the new value of the lastUpdateDate data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setFileName"></A><A NAME="ref24"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setFileName</strong> (const char* fileName, unsigned long fileNameSize)
+<br></td><td align="right"><h3><strong>setFileName</strong></h3></td></tr></table><p></p><p>
+ Sets the first <code>fileNameSize</code> bytes of the fileName data
+ member to the first fileNameSize bytes of <code>fileName</code>. If
+ fileNameSize is greater than 128 (the maximum file name size) only
+ the first 128 bytes will be copied. This method does not modify the
+ fileNameSize data member in any way. Consistency is supposed to be
+ ensured from the outside.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileName</i></TD><TD align="left" valign="top">the new value of the fileName data member.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>fileNameSize</i></TD><TD align="left" valign="top">the number of bytes to copy from <code>fileName</code>.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setDirectBlockAddress"></A><A NAME="ref25"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setDirectBlockAddress</strong> (unsigned long index, unsigned long address)
+<br>throw(<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>setDirectBlockAddress</strong></h3></td></tr></table><p></p><p>
+ Sets the <code>index</code>th entry of the directBlockAddress
+ data member to <code>address</code>.
+</p>
+<p> The method throws:
+ <ul>
+ <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which is
+	rather hard, since it's an unsigned long) or greater than or equal
+	to include/defs.h::DIRECT_BLOCKADDR_ENTRIES.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>index</i></TD><TD align="left" valign="top">the index in the array of direct block addresses.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>address</i></TD><TD align="left" valign="top">the value to set the direct block address to.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setIndirectBlockAddress"></A><A NAME="ref26"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setIndirectBlockAddress</strong> (unsigned long index, unsigned long address)
+<br>throw(<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>setIndirectBlockAddress</strong></h3></td></tr></table><p></p><p>
+ Sets the <code>index</code>th entry of the indirectBlockAddress
+ data member to <code>address</code>.
+</p>
+<p> The method throws:
+ <ul>
+ <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which is
+	rather hard, since it's an unsigned long) or greater than or equal
+	to (include/defs.h-180-(include/defs.h::DIRECT_BLOCKADDR_ENTRIES*4))/4.
+	</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>index</i></TD><TD align="left" valign="top">the index in the array of indirect block addresses.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>address</i></TD><TD align="left" valign="top">the value to set the indirect block address to.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="readFromHardDisk"></A><A NAME="ref27"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>readFromHardDisk</strong> (<A HREF="HDD.html">HDD</A>* hdd, unsigned long blockNo)
+<br>throw(
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="IOException.html">IOException</A>*,
+		<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*,
+		<A HREF="InvalidDateException.html">InvalidDateException</A>*)</td><td align="right"><h3><strong>readFromHardDisk</strong></h3></td></tr></table><p></p><p>
+ This method reads the inode from block number <code>blockNo</code>
+ of the <code>hdd</code> hard disk and initializes all of the class'
+ data members according to the inode configuration scheme
+ presented above. Beware that if isValid() returns false after a
+ read it means that all the rest of the data is just garbage. Do
+ not use it without previously checking whether the inode is valid
+ or not.
+</p>
+<p> If valid is true and either one of creation date, last access date or
+ last update date is an invalid date an InvalidDateException is thrown,
+ but all the data members are properly initialized. The invalid date(s)
+ will be initialized with the current date. If such a behavior is not what you
+ want, you can take whichever action you desire in the exception handling
+ code.
+</p>
+<p> If the size of the file name on disk is greater than 128, the internal
+ data member will be set to 128.
+</p>
+<p> The method throws:
+ <ul>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidDateException* if valid is true and either one of creation date,
+	last access date or last update date is an invalid date.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>hdd</i></TD><TD align="left" valign="top">the hard disk where to read the inode from.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>blockNo</i></TD><TD align="left" valign="top">the number of the hard disk block to read.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="writeToHardDisk"></A><A NAME="ref28"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>writeToHardDisk</strong> (<A HREF="HDD.html">HDD</A>* hdd, unsigned long blockNo)
+<br>throw(<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*, <A HREF="IOException.html">IOException</A>*, <A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*)</td><td align="right"><h3><strong>writeToHardDisk</strong></h3></td></tr></table><p></p><p>
+ This method writes the inode as the <code>blockNo</code>th block
+ of the <code>hdd</code> hard disk with its data member values
+ according to the inode configuration scheme presented
+ above.
+</p>
+<p> If any of the array data members is NULL, zero (0) characters will
+ be written for the entire length of the array. If any of the dates
+ is NULL, the current date will be used.
+</p>
+<p> The method throws:
+ <ul>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>hdd</i></TD><TD align="left" valign="top">the hard disk to write the inode to.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>blockNo</i></TD><TD align="left" valign="top">the number of the hard disk block to write.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="getAsBytes"></A><A NAME="ref29"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char* &nbsp;<strong>getAsBytes</strong> ()
+<br></td><td align="right"><h3><strong>getAsBytes</strong></h3></td></tr></table><p></p><p>
+ This method returns the inode in the exact same manner as it is
+ stored on the hard disk (as an array of include/defs.h::BLOCK_DIM
+ unsigned chars).
+</p>
+<p> If any of the array data members is NULL, zero (0) characters will
+ be written for the entire length of the array. If any of the dates
+ is NULL, the current date will be used.
+</p>
+<p></p>
+<p><b>Returns</b>: the inode as it is stored on the hard disk.
+	 </p>
+<A NAME="valid"></A><A NAME="ref30"></A><table width="100%"><tr bgcolor="#eeeeee"><td>bool  <strong>valid</strong>
+</td><td align="right"><h3><strong>valid</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="fileType"></A><A NAME="ref31"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char  <strong>fileType</strong>
+</td><td align="right"><h3><strong>fileType</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="checksum"></A><A NAME="ref32"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char*  <strong>checksum</strong>
+</td><td align="right"><h3><strong>checksum</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="fileSize"></A><A NAME="ref33"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long  <strong>fileSize</strong>
+</td><td align="right"><h3><strong>fileSize</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="nrBlocks"></A><A NAME="ref34"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long  <strong>nrBlocks</strong>
+</td><td align="right"><h3><strong>nrBlocks</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="fnSize"></A><A NAME="ref35"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char  <strong>fnSize</strong>
+</td><td align="right"><h3><strong>fnSize</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="crDate"></A><A NAME="ref36"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="Date.html">Date</A>*  <strong>crDate</strong>
+</td><td align="right"><h3><strong>crDate</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="laDate"></A><A NAME="ref37"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="Date.html">Date</A>*  <strong>laDate</strong>
+</td><td align="right"><h3><strong>laDate</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="luDate"></A><A NAME="ref38"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="Date.html">Date</A>*  <strong>luDate</strong>
+</td><td align="right"><h3><strong>luDate</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="fileName"></A><A NAME="ref39"></A><table width="100%"><tr bgcolor="#eeeeee"><td>char*  <strong>fileName</strong>
+</td><td align="right"><h3><strong>fileName</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="dirBlocks"></A><A NAME="ref40"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long*  <strong>dirBlocks</strong>
+</td><td align="right"><h3><strong>dirBlocks</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="indirBlocks"></A><A NAME="ref41"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long*  <strong>indirBlocks</strong>
+</td><td align="right"><h3><strong>indirBlocks</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="serialize"></A><A NAME="ref42"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char* &nbsp;<strong>serialize</strong> ()
+<br></td><td align="right"><h3><strong>serialize</strong></h3></td></tr></table><p> <small>[private]</small></p><p>
+ This method returns a serialized representation of the inode (as it's
+ supposed to appear on the hard disk).
+</p>
+<p> If any of the array data members is NULL, zero (0) characters will
+ be written for the entire length of the array. If any of the dates
+ is NULL, the current date will be used.
+</p>
+<p></p>
+<p><b>Returns</b>: a include/defs.h::BLOCK_DIM byte representation of the inode.
+	 </p>
+<HR><UL><LI><i>Version</i>: 0.1
+ </LI><LI><i>Author</i>: Bogdan DUMITRIU
+</LI><LI><i>Generated</i>: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</LI></UL></BODY></HTML>

@@ -1,0 +1,77 @@
+/*
+  PARLOG example: Surgery Simulation.
+
+  From Chapter 8 of Programming in PARLOG.
+
+  This is the single-doctor version, with statistics.
+  Run the query
+
+    Patients :: go(Patients).
+*/
+
+mode go(display_me^).
+go(OutPatients) <-
+  street(InPatients),
+  w_room(InPatients,CalledPatients),
+  c_room(CalledPatients,OutPatients).
+
+mode street(arrivals^).
+street(People) <-
+  read_clock(StartTime),
+  EndTime is StartTime+90,
+  pause(street,EndPauseTime) &
+  admit_people(EndPauseTime,EndTime,People).
+
+mode admit_people(timenow?,closingtime?,arrivals^).
+admit_people(TimeNow,ClosingTime,[]) <-
+  TimeNow >= ClosingTime :
+  true;
+admit_people(TimeNow,ClosingTime,
+             [patient(in(TimeNow),called(_),out(_))|Others]) <-
+  pause(street,EndPauseTime) &
+  admit_people(EndPauseTime,ClosingTime,Others).
+
+mode pause(location?,endtime^).
+pause(Location,EndTime) <-
+  required_delay(Location,Delay),
+  read_clock(TimeNow),
+  EndTime is TimeNow+Delay,
+  busy_wait(TimeNow,EndTime).
+
+mode busy_wait(timenow?,endtime?).
+busy_wait(TimeNow,EndTime) <-
+  TimeNow >= EndTime :
+  true;
+busy_wait(T,EndTime) <-
+  read_clock(TimeNow) &
+  busy_wait(TimeNow,EndTime).
+
+mode read_clock(timenow^).
+read_clock(TimeNow) <-
+  ticks(T),
+  TimeNow is floor(T/18.2).
+
+mode required_delay(location?,delay^).
+required_delay(street,Delay) <-
+  Delay is irand(6).
+required_delay(c_room,Delay) <-
+  Delay is irand(6)+3.
+
+mode w_room(patientsin?,demands?).
+w_room([patient(In,called(CallTime),Out)|Pins],[Pcall|Pcalls]) <-
+  read_clock(CallTime),
+  Pcall = patient(In,called(CallTime),Out),
+  w_room(Pins,Pcalls).
+w_room([],[Pcall|Pcalls]) <-
+  Pcall = no_more_patients.
+
+mode c_room(patientcalls^,patientdischarges^).
+c_room([Pcall|Pcalls],Discharges) <-
+  read_respond(Pcall,Pcalls,Discharges).
+
+mode read_respond(replytocall?,pcalls^,pdischarges^).
+read_respond(patient(In,Called,out(EndTime)),Pcalls,Pdischarges) <-
+  pause(c_room,EndTime) &
+  Pdischarges = [patient(In,Called,out(EndTime))|Others],
+  c_room(Pcalls,Others).
+read_respond(no_more_patients,[],[]).

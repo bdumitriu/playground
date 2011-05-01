@@ -1,0 +1,134 @@
+{-# LINE 22 "SLCodeGen.lag" #-}
+INCLUDE "SLCodeGenEnv.ag"
+
+{type CodeGen  = [S] -> [S]}
+
+ATTR Root [  |  | ppCode : PP_Doc ]
+SEM Root
+  | Root      lhs  . ppCode         =  vlist  .  map (text . show )  .  (@expr.code)  .  (TRAP 0:)  .  (HALT:)  $   []
+
+ATTR Expr [  |  | code : CodeGen]
+SEM Expr
+  | Unit      lhs  . code           =  id
+  | Intexpr   lhs  . code           =  (LDC @int:)
+  | Boolexpr  lhs  . code           =  if  @bool then (LDC 1:) else (LDC 0:)
+  | Ident     lhs  . code           =  (loadLocal  @lhs.level  @idLevel  @idDispl (codeSize  @restp))
+                                       .  (annoteCode ("copy of " ++  @var) (codeSize  @restp))
+              loc  . (idLevel,idDispl)
+                                    =  lookupVar  @var  @lhs.env
+  | Op        lhs  . code           =  @le.code .  @re.code . (opCode  @op:)
+  | If        lhs  . code           =  @cond.code
+                                       .  (BRF  @afterThenLabel :) 
+                                       .  @thenExpr.code
+                                       .  annoteCode "then value" (codeSize  @thenExpr.resType)
+                                       .  (BRA  @afterElseLabel :)
+                                       .  (DEFLABEL  @afterThenLabel:)
+                                       .  @elseExpr.code
+                                       .  annoteCode "else value" (codeSize  @elseExpr.resType)
+                                       .  (DEFLABEL  @afterElseLabel:)
+  | While     lhs  . code           =  (DEFLABEL @whileLabel:)
+                                       .  @cond.code
+				       .  (BRF @afterWhileLabel:)
+				       .  @expr.code
+				       .  (BRA @whileLabel:)
+				       .  (DEFLABEL @afterWhileLabel:)
+  | Let       loc  . exprSize       =  codeSize  @expr.resType
+              lhs  . code           =  @decls.code
+                                       .  @expr.code
+                                       .  store  STS STMS (-(@decls.localVarsSize +  @exprSize - 1))
+                                                 (codeSize  @expr.resType)
+                                       .  (AJS (- (@decls.localVarsSize - codeSize  @expr.resType)):)
+  | Assign    lhs  . code           =  @expr.code 
+                                       .  storeLocal   @lhs.level  @varLevel
+                                                       @varDispl (codeSize  @expr.resType)
+              loc  . (varLevel,varDispl)
+                                    =  lookupVar @var @lhs.env
+  | Apply     lhs  . code           =  @arg.code .  @func.code
+  | Lamcall   lhs  . code           =  @call.code . (JSR:)
+  | Lam       lhs  . code           =  lamDefCode   @lamLabel  @afterLamLabel  @vars.paramsSize
+                                                    @expr.code (codeSize  @expr.resType)
+  | Seq       lhs  . code           =  @exprs.code
+  
+ATTR Exprs [  |  | code : CodeGen ]
+SEM Exprs
+  | Nil       lhs  . code           =  id
+  | Cons      loc  . codesize       =  codeSize  @hd.resType
+              lhs  . code           =  let adjustSP =  if null  @tl.resTypes ||  @codesize == 0
+                                                       then id
+                                                       else (AJS (-(@codesize)):)
+                                       in  @hd.code . adjustSP .  @tl.code
+
+SEM Decl [  |  | code : CodeGen localVarSize : Int]
+  | Decl      lhs  . code           =  @expr.code
+                                       .  annoteCode ("def of " ++  @var) (codeSize  @type)
+              lhs  . localVarSize   =  codeSize  @type
+SEM Decls [  |  | code : CodeGen localVarsSize : Int]
+  | Nil       lhs  . code           =  id
+              lhs  . localVarsSize  =  0
+  | Cons      lhs  . code           =  @hd.code .  @tl.code
+              lhs  . localVarsSize  =  @hd.localVarSize +  @tl.localVarsSize
+
+SEM Vars [  |  | paramsSize : Int]
+  | Nil       lhs  . paramsSize     =  0
+  | Cons      lhs  . paramsSize     =  @tl.paramsSize + codeSize  @argtp
+{-# LINE 91 "SLCodeGen.lag" #-}
+{
+lookupVar _ []              = error "Unbound variable!"
+lookupVar v ((v',x,y):env)  = if v == v' then (x,y) else lookupVar v env
+
+store singleStore mulStore displ size = 
+  if size == 1
+  then (singleStore displ:)
+  else (mulStore displ size:)
+
+load singleLoad mulLoad displ size = 
+  if size == 1
+  then (singleLoad displ:)
+  else (mulLoad displ size:)
+
+storeLocal fromLevel toLevel displ size =
+  if fromLevel == toLevel
+  then store STL STML displ size
+  else  ( (LDL (-(paramDispl)):)
+        . (followStaticLink toLevel (fromLevel - 1))
+        . (store STA STMA displ size)
+        )
+loadLocal fromLevel toLevel displ size = 
+  if fromLevel == toLevel
+  then load LDL LDML displ size
+  else  ((LDL (-(paramDispl)):)
+        . (followStaticLink toLevel (fromLevel - 1))
+        . (load LDA LDMA displ size))
+
+followStaticLink toLevel fromLevel =
+  if toLevel == fromLevel
+  then id
+  else  (  (LDA (-(paramDispl)):)
+        . (annoteCode ("SL lev " ++ show fromLevel) 1)
+        . (followStaticLink toLevel (fromLevel - 1)))
+        
+
+lamDefCode entryLabel afterLabel szParams bodyCode szResult = 
+  let  disOfRET  = szParams + sizeOfLamAdm - szResult - 1
+       szOfAJS   = disOfRET - 1
+  in  (LDR "MP":)
+      . (annoteCode "Static Link" 1)
+      . (LDLABEL entryLabel:)
+      . (annoteCode "Start PC" 1)
+      . (BRA afterLabel:)
+      . (DEFLABEL entryLabel:)
+      . (LDR "MP":) 
+      . (ANNOTE "SP" 0 0 "blue" "Prev MP":)
+      . (LDRR "MP" "SP":)
+      . bodyCode
+      . (storeLocal 0 0 (-(paramDispl + szParams)) szResult)
+      . (LDRR "SP" "MP":) . (STR "MP":)
+      . (if disOfRET > 0 then (STS (-(disOfRET)):) else id)
+      . (if szOfAJS > 0 then (AJS (-(szOfAJS)):) else id)
+      . (RET:)
+      . (DEFLABEL afterLabel:)
+
+annoteCode msg size = (ANNOTE "SP" (1-size) 0 "green" msg:)
+
+sizeOfLamAdm =  2 :: Int
+}

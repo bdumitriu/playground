@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <edit>
+    <displayedit />
+  </edit>
+  <view>
+    <displayedit />
+  </view>
+  <name>lg</name>
+  <formbase>
+    <Date />
+    <Description />
+    <Duration />
+  </formbase>
+  <formvalues>
+    <formentry index="base">
+      <Date />
+      <Description />
+      <Duration />
+    </formentry>
+  </formvalues>
+</root>
+

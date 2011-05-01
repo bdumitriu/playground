@@ -1,0 +1,66 @@
+module Calendar
+{
+	interface Date;		// forward declaration
+	interface Period;	// forward declaration
+	interface Appointment;	// forward declaration
+
+	typedef sequence<Period> PeriodSet;
+	typedef sequence <Appointment> AppointmentSet;
+
+	interface Group
+	{
+		PeriodSet getTimeSlots(in long duration, in Date earliest,  in Date latest, in long granularity);
+		boolean	createGroupAppointment(in Appointment appointment);
+		boolean moveGroupAppointment(in long appointmentId, in Period newTimeSlot);
+		boolean deleteGroupAppoiment(in long appointmentId);
+	};
+
+	interface Calendar
+	{
+		boolean addAppointment(in Appointment appointment);
+		boolean changeAppointment(in Appointment appointment);
+		boolean deleteAppointment(in long appointmentId);
+		AppointmentSet getAllAppointments();
+		AppointmentSet getAppointmentsForDay(in Date day);
+		AppointmentSet getAppointmentsForWeek(in long weeknumber, in long year);
+		AppointmentSet getAppointmentsForMonth(in long month, in long year);
+		AppointmentSet getAppointmentsForPeriod(in Period period);
+		AppointmentSet getAppointmentsWith(in string userName);
+		Appointment getNextAppointment();
+	};
+
+	// This will not be a remote object. It will only be copied over the
+	// network (i.e. used as data container). It is only defined here in
+	// order to be used as a IDL type.
+	interface Date
+	{
+		attribute long milisecond;
+		attribute long second;
+		attribute long minute;
+		attribute long hour;
+		attribute long day;
+		attribute long month;
+		attribute long year;
+	};
+
+	// This will not be a remote object. It will only be copied over the
+	// network (i.e. used as data container). It is only defined here in
+	// order to be used as a IDL type.
+	interface Period
+	{
+		attribute Date startDate;
+		attribute Date endDate;
+	};
+
+	// This will not be a remote object. It will only be copied over the
+	// network (i.e. used as data container). It is only defined here in
+	// order to be used as a IDL type.
+	interface Appointment
+	{
+		attribute long id;
+		attribute Period timeSlot;
+		attribute string location;
+		attribute string description;
+		attribute boolean isGroupAppointment;
+	};
+};

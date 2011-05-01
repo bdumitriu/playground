@@ -1,0 +1,9 @@
+module JavaExtractMethod
+
+imports Java-15
+    
+exports  
+
+  context-free syntax
+
+    "@" Id BlockStm+ "@" -> BlockStm{cons("Extract")}

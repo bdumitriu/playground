@@ -1,0 +1,32 @@
+Probably the most important part of our strategy is the "keeper" structure.
+This consists of 7 ants surrounding an empty square on our base, like so:
+
+(ants are X or Y)
+
+ # # . Y X X + + + . .
+  # . X + X + + + + . .
+ # . X X + + + + + + .
+  . + + + + + + + + + .
+ . + + + + + + + + + +
+  + + + + + + + + + + +
+ . + + + + + + + + + +
+  . + + + + + + + + + .
+ . . + + + + + + + + .
+  . . + + + + + + + . .
+ . . . + + + + + + . .
+
+This is constructed at the beginning by everyone turning left two (so
+that the ant marked Y is the lowest ID, to simplify the code - see
+startup.txt) and then doing a bit of looking to figure out which ant is
+which. Everyone else disappears off in all 6 directions once the keeper
+is setup.
+
+The ants marked X sit there all game; ants returning with food are
+directed by marks into the structure via the only entrance. Each one drops its
+food, and the ant marked Y sees this, turns round, waits a bit for the 
+delivering ant to finish resting, and goes off to hunt food. The ant that
+just dropped food moves forward into that spot and takes up the function
+of Y.
+
+The idea of this strategy is that it makes it highly unlikely that we
+will have food stolen.

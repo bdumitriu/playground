@@ -1,0 +1,3 @@
+#!/bin/bash
+
+hugs -98 -h4M +s -P/usr/lib/hugs/libraries:/usr/lib/hugs:/usr/local/lib/uust $*

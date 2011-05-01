@@ -1,0 +1,26 @@
+module part2
+imports list
+
+rules
+
+Var :
+	Var(x) -> [x]
+
+Int :
+	Int(x) -> []
+
+Plus :
+	Plus(x, y) -> <conc>(xx, yy)
+		where <collect-vars>x => xx ; <collect-vars>y => yy
+
+Times :
+	Times(x, y) -> <conc>(xx, yy)
+		where <collect-vars>x => xx ; <collect-vars>y => yy
+
+strategies
+
+collect-vars =
+	Plus <+
+	Times <+
+	Int <+
+	Var

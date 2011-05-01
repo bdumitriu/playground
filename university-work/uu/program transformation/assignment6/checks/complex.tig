@@ -1,0 +1,6 @@
+let var x : int
+
+ in x := 1 + 2 * 3
+  ; printint(6)
+  ; printint(4 * x)
+end

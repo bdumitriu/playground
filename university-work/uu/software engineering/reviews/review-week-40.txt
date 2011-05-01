@@ -1,0 +1,82 @@
+The paper [[http://portal.acm.org/citation.cfm?id=353183][Finding Refactorings via Change Metrics]]
+describes the authors' experience with trying to determine refactorings performed on source code by
+applying a number of metrics to the source code and combining them in various ways to draw conclusions
+about potential design-relevant code changes. Their approach is to look for such refactorings between
+consecutive software versions, thus hoping for a contained amount of changes, which makes their
+measurement-based heuristics more reliable. The final goal of the technique is to help reverse engineers
+with investigating an existing system in order to determine how it has evolved in terms of significant
+design changes.
+
+The setup of the experiment follows the "traditional" Goal-Question-Metric (GQM) paradigm to define the
+kind of changes to look for: =creation of template methods=, =incorporation of object composition relationships=
+and =optimization of class hierarchies=. A number of metrics (such as number of direct children of
+a class, number of instance/class variables or number of methods in a class) are used to define each
+of the heuristics for finding refactorings. For example, for detecting the movement of functionality
+from one class to another (may it be a subclass, superclass or sibling class), the following metrics
+are considered: number of methods, number of class/instance variables, hierarchy nesting level and
+number of direct children. Depending on how the values of these metrics change from one version to
+the subsequent one, the heuristic can spot possible occurrences of the refactoring.
+
+The authors have run their experiment on three different software systems (with certain selected
+characteristics, the most relevant of which is that they are all written in Smalltalk) and have
+found out that the heuristics are quite good at detecting refactorings. First of all, the number
+of refactorings is not overwhelming, thus allowing for further manual investigation. Then, out of
+the potential refactorings signaled by the heuristics, only a small fraction are false positives,
+which advertises good reliability (false negatives were rather difficult to evaluate, but the authors
+claim that at least all the documented design changes in all three projects were detected). Finally,
+the heuristics seem to quite accurately point to those places of the system for which further human
+analysis is justified. In other words, they could prove to be useful in giving tips to reverse
+engineers as to where to look.
+
+While most of the listed downsides appear to be inherent to tools with similar goals, one of them
+stands out as particular to this approach: if the difference between the investigated software versions
+is too big, then the heuristics seem to return imprecise results, both in terms of focus (too many
+irrelevant changes are detected) and reliability (the false positives to correct results ratio increases).
+Also, the technique has only been validated experimentally under very particular conditions (Smalltalk
+language, successful open source projects, etc.). As the authors also mention, this has to be
+kept in the back of one's mind when considering the generality of the technique.
+
+In terms of goals, the subject of the article falls into that part of software engineering which
+deals with reverse engineering, while in terms of methods used, it falls into that part which
+deals with software inspection by measurement (I emphasize _by measurement_ because software
+inspection can be performed in other ways as well). Software measurements are generally done
+to detect problems with the software or to point to parts of the software which are relevant to a
+certain purpose. Measurements in this article are targeted towards the latter use, since the goal
+is to allow for more efficient reverse engineering by giving tips as to where relevant changes occur
+in a piece of software. Last, but not least, the area of empirical research is also covered, since
+the authors present a more or less by-the-book approach to how such a research is supposed to be
+done. They clearly state their goals, their research questions, the measurements used, the context
+in which the research is done, the applicability of the results as well as an unbiased interpretation
+of the results.
+
+The experiment declaratively follows Basili-Rombach's hypothesis from chapter 12
+(=measurements require both goals and models=). It uses the GQM paradigm, as mentioned above,
+to make sure that the measurements are properly backed up by goals and questions. This means that,
+at least from this point of view, the experiment is set up according to good software engineering
+practices. The experiment, as explained, actually uses an extra step, namely that of defining heuristics
+based on metrics. Thus, instead of using metrics individually, they are actually combined to produce
+potentially more significant results by controlling each other (if one metric goes askew, the other
+two or three used together with it will probably detect and correct this).
+
+Conjecture 7 of the same chapter (=human-based methods can only be studied empirically=) predicts
+the outcome of the experiment, namely that the proposed heuristics can aid in finding out significant
+design changes, but they have to be backed up by human investigation, at least in order to eliminate
+false positive. The very evaluation of the technique performed by the authors themselves implied
+manual browsing of the source code for confirming or denying the results of the heuristics. This only
+comes to support the validity of the aforementioned conjecture.
+
+What I found surprising about this article was the authors' statement that the heuristics are reliable.
+I was surprised because, in my opinion (as opposed to theirs), the number of false positives is actually
+quite large. In most measurements, their number is equal or almost equal to the number of refactorings
+detected, while only in a small number of cases is their number significantly smaller. I have to disagree,
+then, with the reliability of the method. Even then, however, it can still be argued that given the good
+focus of the method (with which I have to agree, given the figures), using the heuristics is probably
+still going to save a lot of time to a reverse engineer.
+
+Results aside, however, I found the paper as a very nice example of an empirical research. I liked the
+fact that the authors clearly separated and defined the steps they took, convincing the reader that,
+at least method-wise, their approach was sound. I was a bit taken aback by the simplicity of the
+heuristics, however, as I didn't expect them to perform all so well (and, as I've discussed above, I
+tend to think that they actually don't).
+
+Back to the [[PaperReviews][paper reviews index]].

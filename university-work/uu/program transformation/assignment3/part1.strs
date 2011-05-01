@@ -1,0 +1,66 @@
+import part1;;
+
+!Plus("1","2");;
+tiger-bin;;
+!Times("4","5");;
+tiger-bin;;
+!Divide("5");;
+not(tiger-bin);;
+
+!Call(Var("f"),[Assign(Var("x"),Int("9")),Var("y")]);;
+tiger-call;;
+!Call(Var("f"),[Var("x"),Assign(Var("y"),Int("10"))]);;
+tiger-call;;
+!Call(Var("f"),[Assign(Var("x"),Int("9")),Assign(Var("y"),Int("10"))]);;
+tiger-call;;
+!Call(Var("f"),[Var("x"),Var("y")]);;
+not(tiger-call);;
+!Call(Var("f"),[Assign(Var("x"),Int("9")),Var("y"),Var("z")]);;
+not(tiger-call);;
+
+!Call(Var("foo"),[Int("7")]);;
+tiger-first-arg;;
+!Call(Var("foo"),[Var("x"),Int("7")]);;
+tiger-first-arg;;
+!Call(Var("foo"),[Assign(Var("a"),Var("b")),Var("x"),Int("7")]);;
+tiger-first-arg;;
+!Call(Var("foo"),[]);;
+not(tiger-first-arg);;
+
+!Call(Var("foo"),[Int("7")]);;
+tiger-tail-args;;
+!Call(Var("foo"),[Var("x"),Int("7")]);;
+tiger-tail-args;;
+!Call(Var("foo"),[Assign(Var("a"),Var("b")),Var("x"),Int("7")]);;
+tiger-tail-args;;
+!Call(Var("foo"),[]);;
+not(tiger-tail-args);;
+
+!1 ; fail <+ !2;;
+not(!1 < fail + !2);;
+
+![1,2,3];;
+last-term;;
+![1];;
+last-term;;
+![];;
+not(last-term);;
+
+![1,1,2];;
+remove-from-start(?1);;
+![2,2,3,4];;
+remove-from-start(?t);;
+![2,2,3,4];;
+remove-from-start(?0);;
+![];;
+remove-from-start(?t);;
+
+![3,2,1,2,3];;
+apply-first(\ 1 -> 4 \);;
+![3,2,1,2,3];;
+apply-first(\ 3 -> 33 \);;
+![1,2,3,4];;
+not(apply-first(\ 5 -> 6 \));;
+
+!Call(Var("f"),[Int("1"),Assign(Var("x"),Int("2")),Int("3")]);;
+transform-to-seq;;

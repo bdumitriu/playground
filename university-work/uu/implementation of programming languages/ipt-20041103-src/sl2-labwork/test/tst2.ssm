@@ -1,0 +1,46 @@
+  LDR  MP
+  annote SP 0 0 green "Static Link"
+  LDC  L0
+  annote SP 0 0 green "Start PC"
+  BRA L1
+L0: 
+  LDR  MP
+  annote SP 0 0 blue "Prev MP"
+  LDRR MP SP
+  LDL  -3
+  annote SP 0 0 green "copy of n"
+  LDC  0
+  GT
+  BRF L2
+  LDL  -3
+  annote SP 0 0 green "copy of n"
+  LDL  -3
+  annote SP 0 0 green "copy of n"
+  LDC  1
+  SUB
+  LDL  -2
+  LDMA 1 2
+  annote SP -1 0 green "copy of fac"
+  JSR
+  MUL
+  annote SP 0 0 green "then value"
+  BRA L3
+L2: 
+  LDC  1
+  annote SP 0 0 green "else value"
+L3: 
+  STL  -3
+  LDRR SP MP
+  STR  MP
+  STS  -1
+  RET
+L1: 
+  annote SP -1 0 green "def of fac"
+  LDC  4
+  LDML 1 2
+  annote SP -1 0 green "copy of fac"
+  JSR
+  STS  -2
+  AJS  -1
+  TRAP 0
+  HALT

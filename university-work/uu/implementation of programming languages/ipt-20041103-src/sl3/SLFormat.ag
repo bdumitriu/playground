@@ -1,0 +1,30 @@
+{-# LINE 10 "SLFormat.lag" #-}
+ATTR Expr  [ format:String |  |  ]
+
+SEM Root 
+  | Root   expr.format      =  ("b")
+  
+SEM Expr
+  | Ident  loc.format       =  if  @unq ==  @lhs.unique 
+                                 then  @lhs.format 
+                                                                 else "b"
+  | Op     le.format        =  ("n")
+           re.format        =  ("r")   
+  | Apply  func.format      =  ("n")
+           arg.format       =  ("r")
+  | If     cond.format      =  ("n")
+           thenExpr.format  =  ("n")
+               elseExpr.format  =  ("r")
+  | Let    expr.format      =  ("r")
+  | Lam    expr.format      =  ("b")
+  | Assign loc.varformat    =  ("n")
+
+
+ATTR Exprs [  |  | nil : Bool]
+SEM Exprs
+  | Nil    lhs.nil          =  True
+  | Cons   lhs.nil          =  False
+           hd.format        =  if  @tl.nil then "r" else "n"
+                        
+SEM Decl
+  | Decl   expr.format      = ("n")

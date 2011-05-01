@@ -1,0 +1,16 @@
+First run the script in the sql/ directory, in order to setup the database:
+
+# mysql -u root -p < sql/db-setup.sql
+
+Then modify the config.php file to match your settings.
+
+Then copy all the remaining files (including the calendar/ directory) to your
+php-enabled web server directory and direct your browser at
+
+http://your-server/your-path/csv-importer.php
+
+for the csv importer and at
+
+http://your-server/your-path/reports.php
+
+for the reports.

@@ -1,0 +1,84 @@
+\documentclass[a4paper]{article}
+
+\title{Editare colaborativ\u a asincron\u a de text}
+\author{Bogdan Dumitriu}
+\date{29 iunie 2004}
+
+\begin{document}
+
+\maketitle
+
+Scopul proiectului de fa\c t\u a a fost crearea unui sistem complet
+func\c tional care s\u a permit\u a utilizatorilor editarea
+concurent\u a, \^ in izolare unul fa\c t\u a de altul, a aceluia\c si
+document (de tip text) precum \c si sincronizarea la cerere a
+versiunilor \^ in vederea ob\c tinerii unei versiuni comune unice a
+documentului editat. Procesul de sincronizare trebuie s\u a se fac\u a
+\^ intr-un mod sigur \c si consistent, astfel \^ inc\^ at nici o
+modificare s\u a nu se piard\u a, s\u a nu apar\u a modific\u ari
+inexistente (de exemplu prin dublarea unor opera\c tii) \c si astfel
+\^ incat to\c ti utilizatorii s\u a ajung\u a s\u a aib\u a exact
+aceea\c si versiune a documentului dup\u a ce sincronizarea s-a \^ incheiat.
+
+Cea mai solicitant\u a parte a proiectului a constat \^ in dezvoltarea
+unui algoritm robust care s\u a fie folosit \^ in faza de sincronizare.
+Chiar dac\u a astfel de algoritmi exist\u a deja integra\c ti \^ in produse
+comerciale (cum ar fi CVS, Subversion, BitKeeper sau Microsoft SourceSafe),
+ei sunt baza\c ti pe compararea st\u arilor diverselor versiuni ale
+documentelor gestionate, \^ in timp ce cercet\u arile din domeniu  \^ in
+ultimul deceniu sunt \^ indreptate spre algoritmi baza\c ti pe compararea
+opera\c tiilor efectuate asupra documentelor \c si nu a documentelor propriu-zise.
+Pornind de la ni\c ste studii serioase a altor proiecte similare dezvoltate
+\^ in ultimii ani (\c si prelu\^ and \c si dezvolt\^ and idei din acestea)
+am reu\c sit s\u a cre\u am unui algoritm care, consider\u am noi, este
+mai bun \^ in mai multe privin\c te dec\^ at to\c ti cei care exist\u a la ora
+actual\u a. Dintre \^ imbun\u at\u a\c tirile aduse am dori s\u a men\c tion\u am:
+reprezentarea arborescent\u a a textului (majoritatea cov\^ ar\c sitoare a
+proiectelor similare sunt bazate pe o reprezentare liniar\u a), distribuirea
+log-ului de opera\c tii efectuate asupra textului \^ in nodurile arborelui
+(pu\c tinele proiecte care lucreaz\u a pe reprezentare arborescent\u a folosesc
+log-uri asociate documentului \c si nu distribuite \^ in arbore), crearea
+unui algoritm care s\u a poat\u a fi aplicat recursiv pe un astfel de arbore
+\c si care s\u a aduc\u a astfel un spor semnificativ de performan\c t\u a
+(prin reducerea masiv\u a a num\u arului de opera\c tii care trebuie comparate),
+precum \c si dezvoltarea unei proceduri de reducere a log-ului existent \^ in momentul
+sincroniz\u arii, sc\u az\^ and astfel la minim num\u arul de opera\c tii care
+trebuie gestionate.
+
+Un alt aspect inedit al proiectului se refer\u a la posibilitatea (implementat\u a
+de noi) de a se realiza \c si o sincronizare direct\u a \^ intre utilizatori, f\u ar\u a
+a mai fi nevoie de folosirea repository-ului ca intermediar. Astfel, orice utilizator
+poate solicita permisiunea oric\u arui alt utilizator pentru a prelua direct de la acesta
+modific\u arile curente aduse textului. Opera\c tiile preluate prin sincronizare direct\u a
+trebuie tratate special, astfel \^ inc\^ at \^ in momentul \^ in care se trimit
+(\^ impreun\u a cu cele locale) c\u atre repository s\u a se evite duplicarea lor
+(av\^ and \^ in vedere c\u a vor fi trimise at\^ at de c\u atre utilizatorul care le-a
+generat c\^ at \c si de cel care le-a preluat prin sincronizare direct\u a). Alte dou\u a
+aspecte ale proiectului care \^ il diferen\c tiaz\u a de unele similare sunt posibilit\u a\c tile
+multiple de rezolvare a conflictelor \c si configurabilitatea granularit\u a\c tii la
+care sunt definite conflictele.
+
+Desigur, a fost necesar\u a construirea unei \^ intregi infrastructuri \^ in jurul
+algoritmilor dezvolta\c ti pentru a furniza utilizatorului final un produs complet. Aceasta
+a inclus un sistem de comunicare \^ in re\c tea compus din partea de repository \c si
+cea de client (care s\u a asigure comunicarea cu repository-ul). Dintre func\c tiile
+repository-ului amintim stocarea tuturor versiunilor documentului, furnizarea
+opera\c tiilor solicitate de clien\c ti pentru efectuarea sincroniz\u arii
+(opera\c tii care reprezint\u a liniariz\u ari ale log-urilor trimise de al\c ti
+clien\c ti) sau reg\u asirea numerelor de versiuni pe baza datei la care au fost
+create. Clien\c tii, la r\^ andul lor, pe l\^ ang\u a asigurarea comunic\u arii
+\^ in re\c tea, con\c tin at\^ at interfa\c ta grafic\u a prin care se re\-a\-li\-zea\-z\u a
+de c\u atre utilizatori toate opera\c tiile permise de sistem (editare, trimitere
+de opera\c tii c\u atre repository, sincronizare cu modific\u arile f\u acute de
+al\c tii, gestionare listei de utilizatori cu care se face sincronizarea direct\u a,
+etc.) c\^ at \c si o serie de module auxiliare precum parser de XML pentru citirea
+fi\c sierelor de con\-fi\-gu\-ra\-re, parser de text (bazat pe o gramatic\u a definit\u a de
+noi) pentru crearea \c si \^ intre\c tinerea structurii de arbore asociate documentului,
+server pentru permiterea sincroniz\u arii directe \c si multe altele.
+
+\^ Intregul proiect a fost implementat folosind exclusiv tehnologii Java. Ca detalii,
+comunicarea \^ in re\c tea s-a realizat folosind RMI, interfa\c ta grafic\u a s-a
+creat \^ in Swing, iar pentru parsing XML s-a folosit pachetul destinat acestui
+scop furnizat de API-ul Java standard.
+
+\end{document}

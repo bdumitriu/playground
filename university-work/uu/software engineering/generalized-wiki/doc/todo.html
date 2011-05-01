@@ -1,0 +1,170 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>GW 2005/2006</title>
+    <style type="text/css">
+      h1, h2, h3 {
+        color:#5F73A8;
+      }
+
+      h1 {
+        display : block;
+	background-color: #EEEEEE;
+	border: 1px dotted #BBBBBB;
+	padding:5px 5px 5px 5px;
+
+        font-size:145%;
+      }
+
+      h2 {
+        font-size:115%;
+	margin-left: 50pt;
+      }
+
+      h3 {
+        font-size:95%;
+      }
+
+      body > ul {
+	margin-left: 50pt;
+      }
+
+      li {
+	margin-top: 1em;
+      }
+
+
+      body > p {
+	margin-left: 50pt;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Architecture</h1>
+
+    <h2>Storage</h2>
+    
+    <ul>
+      <li>Storage - well-defined and stable interface</li>
+      <li>Storage is session specific</li>
+      <li>
+	Different implementations:
+	<ul>
+	  <li>SVNStorage</li>
+	  <li>RAStorage</li>
+	</ul>
+      </li>
+    </ul>
+
+    <h2>Stylesheets and Parsers</h2>
+
+    <ul>
+      <li>Stylesheet - render path to OutputStream</li>
+      <li>StylesheetLocator - find a stylesheet</li>
+      <li>StylesheetFactory - register stylesheet by stylesheetcontent-type.</li>
+      <li>XSLTStylesheet - applies XSLT</li>
+      <li>URIResolverImpl - returns XML representations</li>
+      <li>Parser - process content to XML</li>
+      <li>ParserFactory - Map content-types to parsers.</li>
+    </ul>
+
+    <h2>User Authentication</h2>
+
+    <ul>
+      <li>SecuredStorage decorates a Storage</li>
+      <li>AuthenticationManager</li>
+      <li>UserManager</li>
+      <li>UserDataAdapter: user data stored in Subversion</li>
+    </ul>
+
+    <h2>Search</h2>
+
+    <ul>
+      <li>Index (Lucene)</li>
+      <li>Live pages, etc.</li>
+    </ul>
+
+    <h1>Pipeline: Show</h1>
+
+    <ul>
+      <li>Servlet</li>
+      <li>getStorage</li>
+      <li>StylesheetLocator</li>
+      <li>StylesheetFactory</li>
+      <li>Stylesheet</li>
+    </ul>
+
+    <h1>Pipeline: Edit/Preview/Save/Commit</h1>
+
+    <ul>
+      <li>ShowFile</li>
+      <li>EditFile</li>
+      <li>
+	PreviewFile
+	<ul>
+	  <li>Uses ProxyStorage</li>
+	</ul>
+      </li>
+      <li>
+	SaveFile
+	<ul>
+	  <li>Checkout modified</li>
+	</ul>
+      </li>
+      <li>Commit</li>
+    </ul>
+
+    <h1>Main Problems in Current Implementation</h1>
+    
+    <h2>Poor performance of Subversion checkout</h2>
+
+    <ul>
+      <li>Checkout is too expensive</li>
+      <li>Checkout is session specific</li>
+      <li>Work on RA layer already started</li>
+    </ul>
+
+    <h2>Java code needed to support new content-types</h2>
+
+    <ul>
+      <li>StylesheetLocator</li>
+    </ul>
+
+    <h2>Too much HTML/GWML generation in Servlets</h2>
+
+    <ul>
+      <li>Available as XML, processed by stylesheets</li>
+      <li>Maybe <em>virtual</em> files in gw</li>
+    </ul>
+
+    <h2>Session Scope</h2>
+
+    <ul>
+      <li>No concept of a GwSession</li>
+      <li>Application-scope objects mixed with ession-scope objects</li>
+    </ul>
+
+    <h2>No architecture for forms</h2>
+
+    <ul>
+      <li>Various solutions, unclear what's best</li>
+    </ul>
+
+    <h1>Working with GW</h1>
+
+    <ul>
+      <li>Servlet container configured by Nix</li>
+      <li>Build process applies unit tests</li>
+      <li>Also checked in buildfarm: don't break the build!</li>
+      <li>
+	Use Eclipse
+	<ul>
+	  <li>Project files are in repository</li>
+	  <li>Use standard format (but use spaces)</li>
+	  <li>Fix warnings</li>
+	  <li>Mark things todo with FIXME (and create issue)</li>
+	</ul>
+      </li>
+      <li>Need a library? Ask us and then add it yourself.</li>
+    </ul>
+  </body>
+</html>

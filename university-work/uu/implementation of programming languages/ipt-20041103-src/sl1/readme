@@ -1,0 +1,19 @@
+Index of modified files:
+ - SLTypes.hs
+ - SLParser.hs
+ - SLAttributes.ag
+ - SLPrettyprint.ag
+ - SLEvaluate.ag
+
+The explanation of the tests is given as a comment in each particular test.
+
+Detailed explanations about design decisions and implemented extra features are
+given in the SLEvaluate.ag file, as comments.
+
+A list of extra features:
+ - tuples with random number of members
+ - selection function (called sel) for selecting any member of the tuple
+ - relational operators for tuples (==, /=, <=, >=, <, >)
+ - pattern matching in lambda function arguments
+ - new operator (!!) for selecting elements of a tuple
+ - assignment to a (possibly nested) tuple

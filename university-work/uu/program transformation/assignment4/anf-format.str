@@ -1,0 +1,27 @@
+module anf-format
+imports
+  Tiger
+  options
+
+strategies
+
+ANFFormat =
+	ANFPlusWithInt
+
+ANFPlusWithInt =
+	Plus(ANFPlusWithoutInt, ANFPlusWithInt)
+	<+ ANFTimesWithInt
+	<+ Int(id)
+
+ANFPlusWithoutInt =
+	Plus(ANFPlusWithoutInt, ANFPlusWithoutInt)
+	<+ (Int(id) < fail + ANFTimesWithInt)
+
+ANFTimesWithInt =
+	Times(ANFTimesWithInt, ANFTimesWithoutInt)
+	<+ Var(id)
+	<+ Int(id)
+
+ANFTimesWithoutInt =
+	Times(ANFTimesWithoutInt, ANFTimesWithoutInt)
+	<+ Var(id)

@@ -1,0 +1,5 @@
+a {text-decoration: none; font-family: "Trebuchet MS"; font-size: 12; color: blue}
+a:hover {color: brown}
+font.normal {font-family: "Trebuchet MS"; color: black; font-size: 12}
+font.mark {font-family: "Trebuchet MS"; color: red; font-size: 12}
+i {font-family: "Trebuchet MS"; color: black; font-size: 14}

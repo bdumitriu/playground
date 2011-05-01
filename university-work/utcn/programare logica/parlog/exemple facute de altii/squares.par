@@ -1,0 +1,11 @@
+/*
+  PARLOG example: Squares.
+
+  From 'Hands on Parlog for Windows'.
+*/
+
+mode squares(nums?,squares^).
+squares([Num|Nums],[Square|Squares]) <-
+  Square is Num * Num,
+  squares(Nums,Squares).
+squares([],[]).

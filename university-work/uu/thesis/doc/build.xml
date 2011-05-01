@@ -1,0 +1,20 @@
+<?xml version="1.0"?> 
+<project name="doc" default="" basedir=".">
+
+	<!-- Run "ant pdf" in all subdirectories -->
+	<target name="pdf">
+		<subant target="pdf">
+			<fileset dir="." includes="*/build.xml" />
+		</subant>
+	</target>
+
+	<!-- Run "ant clean" in all subdirectories -->
+	<target name="clean">
+		<subant target="clean">
+			<fileset dir="." includes="*/build.xml" />
+		</subant>
+		<delete file="Thesis.bib~" />
+		<delete file="build.xml~" />
+	</target>
+
+</project>

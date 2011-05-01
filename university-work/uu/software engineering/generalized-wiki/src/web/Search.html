@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 
+Simple HTML file to test server setup and configuration. 
+   
+Taken from Core Servlets and JavaServer Pages 2nd Edition
+from Prentice Hall and Sun Microsystems Press,
+http://www.coreservlets.com/.
+(C) 2003 Marty Hall; may be freely used or adapted.
+-->
+<HTML>
+<HEAD><TITLE>Search</TITLE></HEAD>
+<BODY BGCOLOR="#FDF5E6">
+<H1>Search Test</H1>
+<form method=post action=/gw/search/>
+    Topic search: <input type=text name="query"><br>
+   <input type=hidden name="type" value="topic">
+   <input type="submit"  value="Search">
+</form>
+<hr>
+
+<form method=post action=/gw/search/>
+  Content search: <input type=text name="query"><br>
+  <input type=hidden name="type" value="content">
+  <input type="submit"  value="Search">
+</form>
+
+<hr>
+Show the index statistics
+<form method=post action=/gw/search/>
+  <input type=hidden name="type" value="indexstats">
+  <input type="submit"  value="Show Stats">
+</form>
+<hr>
+
+<form method=post action=/gw/search/>
+  Show all documents modified after: <input type=text name="query"><br>
+  <input type=hidden name="type" value="modified">
+  <input type="submit"  value="Search">
+</form>
+<hr>
+
+<form method=post action=/gw/search/>
+  Query live pages:   <input type=hidden name="type" value="livepages">
+  <input type="submit"  value="Show live pages">
+</form>
+<hr>
+
+<form method=post action=/gw/search/>
+  Query dead pages:   <input type=hidden name="type" value="deadpages">
+  <input type="submit"  value="Show dead pages">
+</form>
+<hr>
+
+<a href='search/statistics'>Graph of the wiki structure, with color coding showing last-modified date</a>
+
+</BODY></HTML>

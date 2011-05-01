@@ -1,0 +1,1 @@
+ghc -icommon -package wx -O2 --make -o visualizer.exe Visualizer

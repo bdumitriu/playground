@@ -1,0 +1,209 @@
+\chapter{Viewpoints}
+
+\section{Logical Viewpoint}
+Because of the fact that all the stakeholders have different requirements and 
+different concerns, not all those concerns can be covered in one view. The next view
+is the Logical view, which is part of the "4+1 View Model of Software Architecture".
+This chapter will first describe which stakeholders will be addressed by this view.
+At second, the concerns that are covered with this view are mentioned, and after that
+we will show diagrams with explanation on how the system should be implemented to 
+cover all these concerns.
+
+\subsubsection{Stakeholders}
+The stakeholders that are addressed by the logical view are:
+\begin{itemize}
+\item Developers and the Project Manager
+\item Maintainers
+\item Management and the Acquirers (partially)
+\end{itemize}
+
+\subsubsection{Concerns}
+The concerns that are covered by the logical view are:
+\begin{itemize}
+\item Will the system have a progressive evolution? %Progressive evolution of the system
+\item How is the correctness and usability guaranteed during the transitions? %Correctness / usability during transitions
+\item Will the system be interoperable? %Interoperability
+\item Will the system be modular? %Modularity
+\item Will the system be testable? %Testability
+\item Will the system be changeable? %Changeability
+\end{itemize}
+
+\subsubsection{Modelling techniques}
+The logical viewpoint can be modelled by using any of the following UML diagrams:
+\begin{itemize}
+\item Class- / Object diagrams
+\item Sequence/collaboration diagrams
+\item State-chart diagrams
+\item Activity diagrams
+\end{itemize}
+
+\subsubsection{Library reference}
+For more details about the logical viewpoint, you are referred to \cite{kru95}.
+
+\section{Process Viewpoint}
+
+The process viewpoint is meant to give an image of the running system, as described by
+the architecture. It comes to complete the logical viewpoint by modelling the processes
+which, through their interaction, define the behaviour of the system. The viewpoint explains
+issues such as synchronization, concurrency, communication protocols, threads of control
+and so on.
+
+\subsubsection{Stakeholders}
+
+The stakeholders the process viewpoint is relevant to are:
+
+\begin{itemize}
+\item Developers and project manager
+\item Maintainers
+\item System administrator (to some extent)
+\item Management (to a very small extent)
+\end{itemize}
+
+\subsubsection{Concerns}
+
+The concerns addressed by this viewpoint are:
+
+\begin{itemize}
+\item How does the system behave dynamically?
+\item What are the processes that co-exist in the system and how do they interact?
+\item What are the protocols used for communication?
+\item How is the system scalable (in terms of process multiplication)?
+\item What is influenced by changes in the behaviour of a process?
+\item Which processes have to be able to communicate directly with others?
+\end{itemize}
+
+\subsubsection{Modelling techniques}
+
+The process viewpoint can be modelled by using any of the following UML diagrams:
+
+\begin{itemize}
+\item Sequence/collaboration diagrams (usu. including active objects)
+\item Component diagrams
+\item State diagrams
+\item Activity diagrams
+\end{itemize}
+
+Naturally, any other kind of diagram the architect might find appropriate is welcome
+if accompanied by appropriate explanations.
+
+\subsubsection{Library reference}
+
+For a slightly more extended description of the what the process viewpoint should contain,
+as well as for an example of a process view, you are referred to \cite{kru95}.
+
+The description of UML diagrams can be found in a variety of sources (both printed and
+on-line), one of which is \cite{fow00}.
+
+\section{Development viewpoint}
+
+\subsubsection{Stakeholders}
+The stakeholders that are addressed by the development view are:
+\begin{itemize}
+\item Developers and the Project Manager
+\item Maintainers
+\end{itemize}
+
+\subsubsection{Concerns}
+The concerns that are covered by the development view are:
+\begin{itemize}
+\item Is the final system modular? %Modularity
+\item Is the final system testable? %Testability
+\item Is the final system easily changeable? %Changeability
+\end{itemize}
+
+\subsubsection{Modelling techniques}
+The development viewpoint can be modelled by using any of the following diagrams:
+\begin{itemize}
+\item Package/component diagrams
+\item Gantt diagrams
+\end{itemize}
+
+\section{Scenarios Viewpoint}
+
+The scenarios viewpoint is redundant with most of the other viewpoints, its purpose being
+that of providing a guide to reading the other architectural views. By describing a number
+of relevant, representative use cases of the system and explaining how their goal can be
+achieved by using the proposed architecture, the scenarios viewpoint can also be regarded
+as a proof that the architecture is a good solution for the creation of the required system.
+
+\subsubsection{Stakeholders}
+
+The stakeholders the scenarios viewpoint is relevant to are:
+
+\begin{itemize}
+\item Acquirers
+\item Management
+\item Developers and project manager
+\item Maintainers (to some extent)
+\item System administrator (to some extent)
+\end{itemize}
+
+\subsubsection{Concerns}
+
+The concerns addressed by this viewpoint are:
+
+\begin{itemize}
+\item To what extent does this architecture comply with the requirements?
+\item How can the proposed architecture be used for achieving user goals?
+\item How (in what order) should the other views be read through?
+\item Where (in what view) can relevant information about a certain aspect of the system be found?
+\item What actions of the system are implied by (some relevant) user goals?
+\end{itemize}
+
+\subsubsection{Modelling techniques}
+
+The scenarios viewpoint is usually described using UML use case diagrams, accompanied by
+a narrative description of each use case. The sentences in the description will be in the active
+voice, present tense, describing an actor successfully achieving a goal.
+
+\subsubsection{Library reference}
+
+For a understanding the scenarios viewpoint in a larger context, you are referred to \cite{kru95}.
+
+\section{Security Viewpoint}
+
+The purpose of the security viewpoint is to provide developers and system deployers with vital
+information about how the system has to be built and later on deployed, such that all the
+security concerns expressed by the customer are handled. Security information can vary from
+instructions about what protocols to be used to network configuration and yet to suggestions
+about authentication and authorization mechanisms. The viewpoint should express enough details
+about what has to be done, but should also be clear enough so that the acquirer stakeholder can
+understand it and be convinced that the system security will indeed correspond to his/her level of
+expectation.
+
+\subsubsection{Stakeholders}
+
+The stakeholders the security viewpoint is relevant to are:
+
+\begin{itemize}
+\item System administrator
+\item Developers and project manager
+\item Acquirer
+\item Maintainers (to some extent)
+\end{itemize}
+
+\subsubsection{Concerns}
+
+The concerns addressed by this viewpoint are:
+
+\begin{itemize}
+\item What protocols have to be used in order to secure communication?
+\item What parts of the system have the highest security requests?
+\item How should the network be configured in order to protect the system?
+\item How is authentication/authorization to be done?
+\item How secure is the system?
+\item What parts of the system are less secure and why?
+\end{itemize}
+
+\subsubsection{Modelling techniques}
+
+The security viewpoint will mostly be narrative, but appropriate diagrams can be
+used where they could make understanding easier. Examples of such diagrams:
+
+\begin{itemize}
+\item (annotated) Deployment diagrams
+\item (any kind of) Network diagrams
+\item UML State diagrams (for explaining security protocols)
+\item Database entity-relation diagrams (for, e.g., explaining access control mechanisms)
+\item \ldots\ and many more
+\end{itemize}

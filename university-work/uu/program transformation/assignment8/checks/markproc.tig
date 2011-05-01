@@ -1,0 +1,9 @@
+let function twice(y : int) : int = y + y
+    var x : int
+
+ in twice(1+1)
+  ; x := twice(2)
+  ; printint(x)
+  ; while x < 5 do (twice(3) ; x := x + 1)
+  ; if 1 then printint(twice(4)) else printint(twice(5))
+end

@@ -1,0 +1,583 @@
+module compile
+imports liblib Tiger Tiger-Sugar-Rules
+signature
+  constructors
+    Proc : Exp -> Exp
+
+/**
+ * Entry point stuff
+ */
+strategies
+
+  main = 
+    default-args
+    ; xtc-io-wrap(compiler-args,
+        xtc-transform(!"parse-tiger")
+        ; xtc-transform(!"Tiger-Desugar")
+        ; xtc-transform(!"Tiger-Rename")
+        ; read-from
+        ; compile
+        ; write-to
+        ; if <get-config> "--sugar" => "on" then
+            xtc-transform(!"Tiger-Ensugar")
+          end
+        ; if <get-config> "--pp" => "on" then
+            xtc-transform(!"pp-tiger")
+          else 
+            xtc-transform(!"pp-aterm")
+          end
+      )
+
+  /**
+   * Set default values for command-line arguments
+   */
+  default-args =
+    where(
+      <set-config>("--pp", "on")
+      ; <set-config>("--sugar", "on")
+      ; <set-config>("--gotos", "on")
+      ; <set-config>("--stack", "off")
+    )
+
+  /**
+   * Handle command-line arguments
+   */
+  compiler-args =
+      ArgOption("--pp"
+      , <set-config>("--pp", <id>)
+      , !"--pp on|off      Apply pretty-printer at end of pipeline [on]"
+      )
+    + ArgOption("--sugar"
+      , <set-config>("--sugar", <id>)
+      , !"--sugar on|off   Ensugar before pretty-printing [on]"
+      )
+    + ArgOption("--gotos"
+      , <set-config>("--gotos", <id>)
+      , !"--gotos on|off   Desugar structured control-flow [on]"
+      )
+    + ArgOption("--stack"
+      , <set-config>("--stack", <id>)
+      , !"--stack on|off   Replace function arguments with a stack [on]"
+      )
+    + ArgOption(fail, fail, !"")
+
+
+/**
+ * Composition of all the compilation phases
+ */
+strategies
+
+  compile =
+    for-with-while
+    ; return-value
+    ; mark-procedure-calls
+    ; simple-expressions
+
+    ; if <get-config> "--gotos" => "on" then
+        control-flow-to-goto
+      end
+
+    ; collect-declarations
+    ; use-return-register
+    ; wrap-in-main
+    ; vars-on-stack
+    ; collect-functions
+    ; add-stack-machine
+    ; unmark-procedure-calls
+    ; flatten-sequences
+
+/**
+ * Desugar for loop to while
+ */
+strategies
+
+  for-with-while = bottomup(try(ForToWhile))
+
+rules
+
+  ForToWhile :
+    For(Var(x), lb, ub, expr) ->
+    Let([VarDec(x, NoTp, lb), VarDec(newVar, NoTp, ub)], [While(RelOp(LE, Var(x), Var(newVar)), Seq([expr, Assign(Var(x), BinOp(PLUS, Var(x), Int("1")))]))])
+    where <newname>x => newVar
+
+/**
+ * Marking procedure calls
+ */
+strategies
+
+  mark-procedure-calls =
+    let stm-level =
+          While(exp-level, stm-level)
+          <+ Let(exp-level, map(stm-level))
+          <+ Seq(map(stm-level))
+          <+ If(exp-level, stm-level, stm-level)
+          <+ FunDec(id, id, NoTp(), stm-level)
+          <+ \ Call(f, args) -> Proc(Call(f, <exp-level>args)) \
+          <+ all(exp-level)
+
+        exp-level =
+          While(exp-level, stm-level)
+          <+ Let(exp-level, handle-init-last)
+          <+ Seq(handle-init-last)
+          <+ FunDec(id, id, NoTp(), stm-level)
+          <+ all(exp-level)
+
+        handle-init-last =
+          split-init-last => (init, last);
+          <conc>(<map(stm-level)>init, [<exp-level>last])
+
+     in stm-level
+    end
+
+  unmark-procedure-calls = bottomup(try(UnwrapCall))
+
+rules
+
+  UnwrapCall :
+    Proc(x) -> x
+
+/**
+ * Use the global rt register.
+ */
+strategies
+
+  return-value =
+    bottomup(try(AddRt))
+
+  use-return-register =
+    bottomup(try(UseRt))
+
+rules
+
+  AddRt :
+    FunDec(f, args, t, expr) ->
+    FunDec(f, args, t, Seq([Assign(Var("rt"), expr), Var("rt")]))
+    where <not(?NoTp())>t
+
+  UseRt :
+    Assign(x, Call(f, args)) -> Seq([Proc(Call(f, args)), Assign(x, Var("rt"))])
+
+/**
+ * Support for simplification
+ */
+strategies
+
+  is-atomic = 
+    Var(id) + String(id) + Int(id) + NilExp
+
+rules
+
+  MkVarDec :
+    e -> ([VarDec(x, NoTp, e)], Var(x))
+    where <not(is-atomic)> e
+	; new => x
+
+  MkVarDec :
+    e -> ([], e)
+    where <is-atomic> e
+
+  make-vardecs =
+    fetch(not(is-atomic))
+    ; map(MkVarDec)
+    ; unzip
+    ; (concat, id)
+
+/**
+ * Simplify expressions
+ */
+strategies
+
+  simple-expressions =
+    innermost(
+      SimpleAssign
+      <+ SimpleCall
+      <+ SimpleIf
+      <+ SimpleWhile
+      <+ SimpleLet
+    )
+
+  get-decs =
+    map(\ VarDec(x, NoTp, e) -> VarDecNoInit(x, NoTp) \)
+
+  get-exps =
+    map(\ VarDec(x, NoTp, e) -> Assign(Var(x), e) \)
+
+rules
+
+  SimpleAssign :
+    Assign(x, BinOp(op, e1, e2)) -> Let(decs, <conc>(extra, [Assign(x, BinOp(op, newE1, newE2))]))
+    where <make-vardecs>[e1, e2] => (vardecs, [newE1, newE2])
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleAssign :
+    Assign(x, RelOp(op, e1, e2)) -> Let(decs, <conc>(extra, [Assign(x, RelOp(op, newE1, newE2))]))
+    where <make-vardecs>[e1, e2] => (vardecs, [newE1, newE2])
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleAssign :
+    Assign(x, Let(vardecs, exps)) -> Let(vardecs, <conc>(init, [Assign(x, last)]))
+    where <split-init-last>exps => (init, last)
+
+  SimpleAssign :
+    Assign(x, If(cond, exp1, exp2)) -> If(cond, Assign(x, exp1), Assign(x, exp2))
+
+  SimpleAssign :
+    Assign(x, Seq(exps)) -> Seq(<conc>(init, [Assign(x, last)]))
+    where <split-init-last>exps => (init, last)
+
+  SimpleAssign :
+    Assign(x, Assign(y, exp)) -> Seq([Assign(y, exp), Assign(x, y)])
+
+  SimpleCall :
+    Assign(x, Call(f, args)) -> Let(decs, <conc>(extra, [Assign(x, Call(f, newArgs))]))
+    where <make-vardecs>args => (vardecs, newArgs)
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleCall :
+    Proc(Call(f, args)) -> Let(decs, <conc>(extra, [Proc(Call(f, newArgs))]))
+    where <make-vardecs>args => (vardecs, newArgs)
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleIf :
+    If(cond, exp1, exp2) -> Let(decs, <conc>(extra, [If(newCond, exp1, exp2)]))
+    where <make-vardecs>[cond] => (vardecs, [newCond])
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleWhile :
+    While(cond, exp) -> Let(decs, <conc>(extra, [While(newCond, Seq(<conc>([exp], extra)))]))
+    where <make-vardecs>[cond] => (vardecs, [newCond])
+        ; <get-decs>vardecs => decs
+        ; <get-exps>vardecs => extra
+
+  SimpleLet :
+    Let(decs, exps) -> Let(newDecs, <conc>(newExps, exps))
+    where <filter(?(VarDec(_, _, _)))>decs => [_|_]
+        ; <map(\ VarDec(x, t, _) -> VarDecNoInit(x, t) \ <+ id)>decs => newDecs
+        ; <collect-all(\ VarDec(x, _, e) -> Assign(Var(x), e) \, conc)>decs => newExps
+
+/**
+ * Lifting variable declarations
+ */
+strategies 
+
+  collect-declarations =
+    \ x -> Let(decs, [<recurse-with-elim>x]) where <concat>(<collect-vars>x) => decs \
+
+  collect-vars =
+    collect-all(
+      ?Let(<filter(?VarDecNoInit(_, _))>, _), conc, \ FunDec(_, _, _, _) -> [] \
+    )
+
+  recurse-with-elim =
+    FunDec(id, id, id, collect-declarations)
+    <+ \ Let(decs, exp) -> Let(<recurse-with-elim>fundecs, <recurse-with-elim>exp) where <filter(not(?VarDecNoInit(_, _)))>decs => fundecs \
+    <+ all(recurse-with-elim)
+
+/**
+ * Flatten sequences of statements in Seq and Let
+ */
+strategies
+
+  flatten-sequences =
+    innermost(LetSplit + EmptyLet + LetSeq + SplitSeq + EmptySeq + SingletonSeq + AssocSeqR)
+    ; innermost(LetFlat + LetFlat1 + LetFlat2 + FlatSeq)
+    ; improve-flat
+
+  improve-flat =
+    innermost(FLet + FSeq)
+
+  flatten =
+    map(try(SeqF)); flatten-list
+
+  alt-flatten =
+    map(SeqF <+ OtherF); concat
+
+  has-nested =
+    fetch(?Seq(_))
+
+rules
+
+  FLet :
+    Let(decs, exps) -> Let(decs, <flatten>exps)
+    where <has-nested>exps
+
+  FSeq :
+    Seq(exps) -> Seq(<flatten>exps)
+    where <has-nested>exps
+
+  SeqF :
+    Seq(exps) -> exps
+
+  OtherF :
+    x -> [x]
+
+/**
+ * Replace structured control-flow by gotos
+ */
+strategies
+
+  control-flow-to-goto = bottomup(try(IfToGoto <+ WhileToGoto))
+
+rules
+
+  IfToGoto :
+    If(cond, exp1, exp2) ->
+    Let([VarDecNoInit(x, NoTp)],
+        [Assign(Var(x), Call(Var("not"), [cond])),
+         IfGoto(Var(x), elseLabel),
+         exp1,
+         Goto(endLabel),
+         Label(elseLabel),
+         exp2,
+         Label(endLabel)])
+    where <newname>"l" => elseLabel
+        ; <newname>"l" => endLabel
+        ; new => x
+
+  WhileToGoto :
+    While(cond, exp) ->
+    Let([VarDecNoInit(x, NoTp)],
+        [Label(startLabel),
+        Assign(Var(x), Call(Var("not"), [cond])),
+        IfGoto(Var(x), endLabel),
+        exp,
+        Goto(startLabel),
+        Label(endLabel)])
+    where <newname>"l" => startLabel
+        ; <newname>"l" => endLabel
+        ; new => x
+
+/**
+ * Use global stack for:
+ * - passing & accessing function arguments
+ * - using local variables
+ */
+strategies
+
+  wrap-in-main =
+    !FunDec("main", [], NoTp, <id>)
+
+  vars-on-stack =
+    HandleCall
+    <+ {| CurrentScope: HandleFunDec |}
+    <+ HandleFunArg
+    <+ HandleLocalVar
+    <+ all(vars-on-stack)
+
+  put-args-on-stack(|displ) =
+    [] <+ [ !Assign(Subscript(Var("stack"), [Scalar(BinOp(MINUS, Var("sp"), Int(displ)))]), <vars-on-stack>) | put-args-on-stack(|<addS>(displ, "1")) ]
+
+  create-rewrite-arg-rule(|f, displ) =
+    ?(index, FArg(x, _))
+    ; rules (
+              HandleFunArg :+ Var(x) -> Subscript(Var("stack"), [Scalar(BinOp(MINUS, expr, Int(<addS>(displ, <int-to-string>index))))])
+              where <follow-static-link(|<CurrentScope>(), f)>Var("sp") => expr
+      )
+
+  create-rewrite-var-rule(|f, displ) =
+    ?(index, VarDecNoInit(x, _))
+    ; rules (
+              HandleLocalVar :+ Var(x) -> Subscript(Var("stack"), [Scalar(BinOp(MINUS, expr, Int(<subtS>(displ, <int-to-string>index))))])
+              where <follow-static-link(|<CurrentScope>(), f)>Var("sp") => expr
+      )
+
+  follow-static-link(|startAt, endAt) =
+    where (<eq>(startAt, endAt)) < id + ?expr ; <StaticLink(|expr)>startAt; follow-static-link(|<ParentScope>startAt, endAt)
+
+  create-current-scope-rule(|f) =
+    rules( CurrentScope : _ -> f )
+
+  create-parent-scope-rule(|f) =
+    <eq>(f, "main") < rules( ParentScope : f -> "main" ) +
+    ( <CurrentScope>() => parent
+      ; rules( ParentScope : f -> parent )
+    )
+
+  create-static-link-rule(|f, fSize) =
+    rules( StaticLink(|expr) : f -> Subscript(Var("stack"), [Scalar(BinOp(MINUS, expr, <addS>(fSize, "1")))]) )
+
+rules
+
+  HandleCall :
+    Call(Var(f), args) -> Seq(<concat>[ [Assign(Subscript(Var("stack"), [Scalar(BinOp(MINUS, Var("sp"), Int("1")))]), slf)],
+                                        <put-args-on-stack(|"2")>args,
+                                        [Call(Var(f), [])]
+                                      ])
+    where <not(eq)>(f, "printint")
+        ; <not(eq)>(f, "not")
+        ; <not(eq)>(f, "print")
+        ; <follow-static-link(|<CurrentScope>(), <ParentScope>f)>Var("sp") => slf
+
+  HandleCall :
+    Call(Var(f), args) -> Seq(<concat>[ [Assign(Subscript(Var("stack"), [Scalar(BinOp(MINUS, Var("sp"), Int("1")))]), Int("0"))],
+                                        <put-args-on-stack(|"2")>args,
+                                        [Call(Var(f), [])]
+                                      ])
+    where <eq>(f, "printint") <+ <eq>(f, "not") <+ <eq>(f, "print")
+
+  HandleFunDec :
+    FunDec(f, vars, t, Let(decs, body)) -> FunDec(f, [], t, Seq(<concat>[ [Assign(Var("sp"), BinOp(PLUS, Var("sp"), Int(fSize)))],
+                                                                          <vars-on-stack>body,
+                                                                          [Assign(Var("sp"), BinOp(MINUS, Var("sp"), Int(fSize)))]
+                                                                        ]))
+    where <not(fetch(?FunDecs(_)))>decs
+        ; <int-to-string>(<framesize>FunDec(f, vars, t, Let(decs, body))) => fSize
+        ; <map-with-index(create-rewrite-arg-rule(|f, <addS>(fSize, "1")))>vars
+        ; <map-with-index(create-rewrite-var-rule(|f, <addS>(fSize, "1")))>decs
+        ; <create-parent-scope-rule(|f)>()
+        ; <create-current-scope-rule(|f)>()
+        ; <create-static-link-rule(|f, fSize)>()
+
+  HandleFunDec :
+    FunDec(f, vars, t, Let(decs, body)) -> FunDec(f, [], t, Let(letFunctions, <concat>[ [Assign(Var("sp"), BinOp(PLUS, Var("sp"), Int(fSize)))],
+                                                                                        <vars-on-stack>body,
+                                                                                        [Assign(Var("sp"), BinOp(MINUS, Var("sp"), Int(fSize)))]
+                                                                                      ]))
+    where <fetch(?FunDecs(_))>decs
+        ; <filter(?VarDecNoInit(x, tp))>decs => letVars
+        ; <filter(?FunDecs(fd))>decs => letFunctions
+        ; <int-to-string>(<framesize>FunDec(f, vars, t, Let(decs, body))) => fSize
+        ; <map-with-index(create-rewrite-arg-rule(|f, <addS>(fSize, "1")))>vars
+        ; <map-with-index(create-rewrite-var-rule(|f, <addS>(fSize, "1")))>letVars
+        ; <create-parent-scope-rule(|f)>()
+        ; <create-current-scope-rule(|f)>()
+        ; <create-static-link-rule(|f, fSize)>()
+
+  HandleFunDec :
+    FunDec(f, vars, t, body) -> FunDec(f, [], t, Seq([Assign(Var("sp"), BinOp(PLUS, Var("sp"), Int(fSize))),
+                                                      <vars-on-stack>body,
+                                                      Assign(Var("sp"), BinOp(MINUS, Var("sp"), Int(fSize)))]))
+    where <not(?Let(_, _))>body
+        ; <int-to-string>(<framesize>FunDec(f, vars, t, body)) => fSize
+        ; <map-with-index(create-rewrite-arg-rule(|f, <addS>(fSize, "1")))>vars
+        ; <create-parent-scope-rule(|f)>()
+        ; <create-current-scope-rule(|f)>()
+        ; <create-static-link-rule(|f, fSize)>()
+
+strategies
+
+  /**
+   * Calculates the frame size
+   *
+   * @type FunDec -> Int
+   */
+  framesize =
+    ?FunDec(_, _, _, e);
+
+    let collect-calls =
+          <collect-all(?Call(_, _), conc, IgnoreFunDec)> e
+
+        max-nr-of-args =
+          collect-calls
+          ; map(?Call(_, <length>))
+          ; (list-max; inc <+ !0)
+
+        nr-of-vars =
+          <vars-of-funbody> e
+          ; length
+
+       in <add> (<max-nr-of-args> (), <nr-of-vars> ())
+      end
+
+  /**
+   * Returns a list of variables in this function body
+   *
+   * @type Exp -> List(Var)
+   */
+  vars-of-funbody = 
+    if ?Let(decs, _) then
+      <filter(?VarDecNoInit(<id>, _))> decs
+      ; map(!Var(<id>))
+    else
+      ![]
+    end
+
+rules
+
+  IgnoreFunDec :
+    FunDec(f, x*, ta, e) -> []
+
+/**
+ * Collect all the functions at the same level
+ */
+strategies
+
+  collect-functions :
+    FunDec(fMain, aMain, tMain, body) -> FunDec(fMain, aMain, tMain, Let(FunDecs(allFuns), <topdown(try(Let(![], id)))>body))
+    where <collect-funs>body => allFuns
+
+  collect-funs =
+    collect-all(
+      \ FunDec(f, vars, t, body) -> FunDec(f, vars, t, <topdown(try(Let(![], id)))>body) \, conc
+    )
+
+/**
+ * Wrap the program in a template code.
+ */
+strategies
+
+  add-stack-machine = //id
+//  add-stack-machine-ph =
+!Let(
+  [ TypeDecs([TypeDec("tstack", ArrayTy(Tid("int")))])
+  , VarDec(
+      "stack"
+    , NoTp
+    , Array(Tid("tstack"), [Int("10000")], Int("0"))
+    )
+  , VarDec("sp", NoTp, Int("0"))
+  , VarDec("rt", NoTp, Int("0"))
+  , FunDecs(
+      [ <id>
+      , FunDec(
+          "printint"
+        , []
+        , NoTp
+        , Call(
+            Var("printint")
+          , [ Subscript(
+                Var("stack")
+              , [Scalar(Minus(Var("sp"), Int("2")))]
+              )
+            ]
+          )
+        )
+      , FunDec(
+          "print"
+        , []
+        , NoTp
+        , Call(
+            Var("print")
+          , [ Subscript(
+                Var("stack")
+              , [Scalar(Minus(Var("sp"), Int("2")))]
+              )
+            ]
+          )
+        )
+      , FunDec(
+          "not"
+        , []
+        , NoTp
+        , Assign(
+            Var("rt")
+          , Call(
+              Var("not")
+            , [ Subscript(
+                  Var("stack")
+                , [Scalar(Minus(Var("sp"), Int("2")))]
+                )
+              ]
+            )
+          )
+        )
+      ]
+    )
+  ]
+, [Call(Var("main"), [])]
+)

@@ -1,0 +1,85 @@
+
+  LDR	MP
+  LDC	L0
+  BRA	L3
+
+L0:
+  LDR	MP
+  LDRR	MP SP
+
+  LDL	-3
+  LDC	0
+  GT
+  BRF	L1
+  LDL	-3
+  LDL	-3
+  LDC	1
+  SUB
+  LDL	-2
+  LDMA	1 2
+  JSR
+  MUL
+  BRA	L2
+L1:
+  LDC	1
+L2:
+
+  STL	-3
+  LDRR	SP MP
+  STR	MP
+  STS	-1
+  RET
+
+L3:
+  LDC	4
+  LDML	1 2
+  JSR
+  STS	-2
+  ADJ	-1
+
+  TRAP	0
+  HALT
+
+Stack layout before fac 1 is called:
+
++---------+
+| SLfac   |
++---------+
+| ADfac   |
++---------+
+| 4       |
++---------+
+| SLfac   |
++---------+
+| RA      |
++---------+
+| OldMP   |
++---------+
+| 4       |
++---------+
+| 3       |
++---------+
+| SLfac   |
++---------+
+| RA      |
++---------+
+| OldMP   |
++---------+
+| 3       |
++---------+
+| 2       |
++---------+
+| SLfac   |
++---------+
+| RA      |
++---------+
+| OldMP   | <- MP
++---------+
+| 2       |
++---------+
+| 1       |
++---------+
+| SLfac   |
++---------+
+| ADfac   | <- SP
++---------+

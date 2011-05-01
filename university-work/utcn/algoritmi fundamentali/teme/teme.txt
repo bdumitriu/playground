@@ -1,0 +1,157 @@
++-------------------------+
+¦ 7.5. COZI DE PRIORITATI ¦
++-------------------------+
+
+7.5-3 Aratati cum se poate implementa o lista de tip FIFO cu ajutorul unei cozi de
+prioritati. Aratati cum se poate implementa o stiva cu ajutorul unei cozi de prioritati.
+
+7.5-4 Scrieti o implementare a procedurii HEAP-CU-CHEI-CRESCATOARE(A,i,k) de timp
+O(lgn) care realizeaza atribuirea A[i] <- max(A[i],k) si actualizeaza structura
+heap în mod corect.
+
+7.5-5 Operatia STERGE-DIN-HEAP(A,i) sterge elementul atasat nodului i din heap-ul
+A. Gasiti o implementare pentru operatia STERGE-DIN-HEAP care se executa pentru un
+heap având n elemente într-un timp O(lgn).
+
+7.5-6 Gasiti un algoritm de timp O(nlgk) pentru a interclasa k liste ordonate, unde
+n este numarul total de elemente din listele de intrare. (Indicatie: se utilizeaza
+un heap).
+
++-------------+
+¦ 7. HEAPSORT ¦
++-------------+
+
+7-1 Construirea unui heap prin inserare.
+Procedura CONSTRUIESTE-HEAP poate fi implementata folosind în mod repetat procedura
+INSERARE-IN-HEAP, în scopul inserarii elementelor în heap. Fie urmatoarea implementare:
+
+CONSTRUIESTE-HEAP'(A)
+	dimensiune-heap[A] <- 1
+	for i <- 2,lungime[A] do
+		INSEREAZA-IN-HEAP(A,A[i])
+
+a. Pentru date de intrare identice procedurile CONSTRUIESTE-HEAP si CONSTRUIESTE-HEAP'
+construiesc acelasi heap? Demonstrati sau gasiti contraexemple.
+
+b. Aratati ca, în cazul cel mai defavorabil, procedura CONSTRUIESTE-HEAP' cere un timp
+T(nlgn) pentru a construi un heap având n elemente.
+
++---------------------------------+
+¦ 8.1. DESCRIEREA SORTARII RAPIDE ¦
++---------------------------------+
+
+8.1-3 Sa se argumenteze, pe scurt, afirmatia ca timpul de executie al procedurii
+PARITIE, pentru un vector de n elemente, este O(n).
+
+8.1-4 Cum trebuie modificata procedura QUICKSORT pentru a ordona descrescator?
+
++------------------------------------------------+
+¦ 8.2 PERFORMANTA ALGORITMULUI DE SORTARE RAPIDA ¦
++------------------------------------------------+
+
+8.2-1 Demonstrati ca timpul de executie al algoritmului QUICKSORT, in cazul unui vector
+A cu toate elementele egale intre ele este O(nlgn).
+
++--------------------------------------------+
+¦ 8.3 VARIANTE ALEATOARE ALE SORTARII RAPIDE ¦
++--------------------------------------------+
+
+8.3-4 * Scrieti un algoritm care ruleaza in O(n) unitati de timp, are ca intrare un
+vector A[1..n] si produce la iesire o permutare a elementelor de intrare.
+
++--------------------+
+¦ 8. SORTAREA RAPIDA ¦
++--------------------+
+
+8-2 Consideram urmatoarea varianta a procedurii PARTITIE, data de N.Lomuto. Vectorul
+A[p..r] se imparte in vectorii A[p..i] si A[i+1..j] astfel incat fiecare element din
+primul vector este mai mic sau egal cu x=A[r] si fiecare element din cel de al doilea
+vector este mai mare ca x.
+
+PARTITIE-LOMUTO(A,p,r)
+	x <- A[r]
+	i <- p-1
+	for j <- p,r do
+		if A[j] <= x then
+			i <- i+1
+			A[i] <-> A[j]
+		if i < r then
+			return i
+		else
+			return i-1
+
+a. Argumentati ca procedura PARTITIE-LOMUTO este corecta.
+
+b. Cel mult de cate ori poate fi mutat un element in procedura PARTITIE? Dar in procedura
+PARTITIE-LOMUTO?
+
+c. Argumentati ca timpul de executie al procedurii PARTITIE-LOMUTO, ca de altfel si al
+procedurii PARTITIE, pe un subsir de n elemente, este O(n).
+
+d. Cum afecteaza inlocuirea procedurii PARTITIE cu procedura PARTITIE-LOMUTO timpul
+de executie al algoritmului de sortare rapida QUICKSORT cand toate datele de intrare
+sunt egale?
+
+8-4 Reimplementarea algoritmului de sortare rapida prin tehnica recursivitatii de
+coada:
+
+QUICKSORT'(A,p,r)
+	while p < r do
+		q <- PARITITE(A,p,r)
+		QUICKSORT'(A,p,q)
+		p <- q+1
+
++-----------------------------+
+¦ 9.2. SORTAREA PRIN NUMARARE ¦
++-----------------------------+
+
+9.2-5 Date fiind n numere intregi din intervalul [1,k], preprocesati datele de intrare
+si apoi raspundeti intr-un timp O(1) la orice interogare privind numarul total de valori
+intregi dintre cele n, care se situeaza in intervalul [a..b]. Alogoritmul propus ar
+trebui sa foloseasca un timp de preprocesare O(n+k).
+
++----------------------------+
+¦ 9. SORTAREA IN TIMP LINIAR ¦
++----------------------------+
+
+9-2 a. Sa presupunem ca avem de sortat un tablou cu n articole si cheia fiecarui articol
+are valoarea 0 sau 1. Realizati un algoritm simplu, de timp liniar, care sa sorteze pe
+loc cele n articole. Pe langa memoria necesara reprezentarii tabloului puteti folosi un
+spatiu suplimentar de memorie avand dimensiunea constanta.
+
+b. Poate sortarea realizata la punctul (a) sa fie utilizata pentru o ordonare pe baza
+cifrelor de timp O(bn) a n articole avand chei pe b biti? Explicati cum sau de ce nu.
+
+c. Sa presupunem ca cele n inregistrari au chei in intervalul [1,k]. Aratati cum se
+poate modifica sortarea prin numarare astfel incat inregistrarile sa poata fi sortate
+pe loc in timpul O(n+k). Puteti folosi un spatiu suplimentar de memorie de ordinul O(k),
+pe langa tabloul de intrare. (Indicatie: Cum ati realiza acest lucru pentru k = 3?)
+
++----------------------------------------------------------+
+¦ 10. SELECTIA IN TIMP LINIAR IN CAZUL CEL MAI DEFAVORABIL ¦
++----------------------------------------------------------+
+
+10.3-4 Sa presupunem ca un algoritm utilizeaza numai comparatii pentru a determina al
+i-lea cel mai mic element dintr-o multime de n elemente. Aratati ca el poate determina
+si cele i-1 elemente mai mici si cele n-i elemente mai mari fara nici o comparatie in
+plus.
+
+10.3-5 Fiind data o procedura de tip "cutie neagra", care in cazul cel mai defavorabil
+determina mediana in timp liniar, proiectati un algoritm simplu care sa rezolve problema
+selectiei pentru orice statistica de ordine in timp liniar.
+
+10.3-6 k-cuantilele unei multimi de n elemente sunt cele k-1 statistici de ordine care
+impart multimea sortata in k multimi de marimi egale (cu cel putin un element). Realizati
+un algoritm in timpul O(nlgk) care sa listeze k-cuantilele unei multimi.
+
+10.3-7 Descrieti un algoritm de timp O(n) care, fiind data o multime S de n numere dis-
+tincte si un intreg pozitiv k <= n, determina cele k numere din S care sunt cele mai 
+apropiate de mediana lui S.
+
+10.3-8 Fie X[1..n] si Y[1..n] doua tablouri ce contin fiecare n numere deja sortate. 
+Scrieti un algoritm simplu de timp O(lgn) care gaseste mediana tuturor celor 2n elemente
+din tablourile X si Y.
+
+10.3-9 Cunoscandu-se coordonatele x si y ale puturilor, cum trebuie profesorul sa
+localizeze optim conducta principala? Aratati ca pozitia optima poate fi determinata
+in timp liniar. (avem n puturi)

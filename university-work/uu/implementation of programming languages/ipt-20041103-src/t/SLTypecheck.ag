@@ -1,0 +1,105 @@
+{-# LINE 7 "SLTypecheck.lag" #-}
+ATTR Root [  |  | type : Type]
+SEM Root
+  | Root      lhs   . type            = @expr.resType
+              expr  . typeEnv         = []
+              expr  . expType         = anytype      
+
+
+ATTR Expr [ expType : Type| | resType : Type]
+SEM Expr
+  | Unit      lhs   . resType         =  unittype
+  | Intexpr   lhs   . resType         =  inttype
+  | Boolexpr  lhs   . resType         =  booltype
+  | Ident     loc   . (restp,errmsg)  =  lookupType  @var  @lhs.typeEnv
+              lhs   . resType         =  @restp
+  | Op        loc   . (restp, lerr, rerr)
+                                      =  typeCheckOp  @op  @le.resType  @re.resType
+              lhs   . resType         =  @restp 
+  | If        loc   . (restp, ifErr)  =  matchTypes  @thenExpr.resType  @elseExpr.resType
+              loc   . (_,condErr)     =  matchTypes  @cond.resType booltype
+              lhs   . resType         =  @restp
+  | Let       lhs   . resType         =  @expr.resType
+  | Assign    loc   . (vartp,varErr)  =  lookupType  @var  @lhs.typeEnv
+              loc   . (_, exprErr)    =  matchTypes  @expr.resType  @vartp 
+              lhs   . resType         =  unittype
+  | Apply     loc   . (argtp,restp,funcErr)
+                                      =  checkIfLambda  @func.resType
+              loc   . (_,argErr)      =  matchTypes  @arg.resType  @argtp
+              arg   . expType         =  @argtp
+              lhs   . resType         =  @restp   
+  | Lam       loc   . bodyType        =  extractResType  @lhs.expType
+              loc   . (_,bodyErr)     =  matchTypes  @expr.resType  @bodyType 
+              loc   . argTypes        =  extractArgTypes  @lhs.expType
+              loc   . argErr          =  if length  @argTypes == length  @vars.resTypes
+                                                then empty
+                                                else ppErr "Wrong number of arguments"
+              vars  . expTypes        =  @argTypes
+              expr  . expType         =  @bodyType
+              lhs   . resType         =  makeFunctionType  @vars.resTypes  @expr.resType 
+  | Seq       lhs   . resType         =  if null  @exprs.resTypes 
+                                                then anytype 
+                                                else last  @exprs.resTypes
+  
+ATTR Expr [typeEnv : TypeEnv |  |  ]
+SEM Expr
+  | Lam       expr  . typeEnv         = addVarsToEnv  @vars.variables  @vars.resTypes  @lhs.typeEnv 
+  | Let       expr  . typeEnv         = @decls.typeEnv
+  
+ATTR Exprs [typeEnv : TypeEnv | | resTypes : Types]
+SEM Exprs
+  | Cons      lhs   . resTypes        = @hd.resType :  @tl.resTypes
+              hd    . expType         = anytype
+              hd    . typeEnv         = @lhs.typeEnv
+  | Nil       lhs   . resTypes        = []
+
+ATTR Vars [expTypes : Types | | resTypes : Types variables : {[String]}]
+SEM Vars
+  | Cons      loc   . (argtp,argtps)  = getFirstArgType  @lhs.expTypes 
+              tl    . expTypes        = @argtps
+              lhs   . resTypes        = @argtp :  @tl.resTypes
+              lhs   . variables       = @hd :  @tl.variables
+  | Nil       lhs   . resTypes        = []
+              lhs   . variables       = []
+
+ATTR Decl [ | typeEnv : TypeEnv | ]
+SEM Decl
+  | Decl      expr  . expType         = @type  
+              loc   . typeEnv         = addToEnv (@var, @type)  @lhs.typeEnv
+              expr  . typeEnv         = @typeEnv
+              lhs   . typeEnv         = @typeEnv
+              loc   . declErr         = empty
+              loc   . inferredType    = text "<ERROR: Missing type annotation>"
+         
+ATTR Decls [ | typeEnv : TypeEnv | ]
+SEM Decls
+  | Nil       lhs   . typeEnv         = []
+  | Cons      lhs   . typeEnv         = @hd.typeEnv ++  @tl.typeEnv
+              hd    . typeEnv         = @lhs.typeEnv
+{-# LINE 87 "SLTypecheck.lag" #-}
+{
+type TypeEnv = [(String,Type)]
+
+typeCheckOp op leftType rightType = 
+  let check ltp rtp restp = (restp, snd (matchTypes leftType ltp), snd (matchTypes rightType rtp))
+  in  case op of
+          "+"   -> check inttype  inttype  inttype
+          "-"   -> check inttype  inttype  inttype
+          "*"   -> check inttype  inttype  inttype
+          "/"   -> check inttype  inttype  inttype
+          "=="  -> check inttype  inttype  booltype
+          "/="  -> check inttype  inttype  booltype
+          "<"   -> check inttype  inttype  booltype
+          ">"   -> check inttype  inttype  booltype
+          "<="  -> check inttype  inttype  booltype
+          ">="  -> check inttype  inttype  booltype
+          "&&"  -> check booltype booltype booltype
+          "||"  -> check booltype booltype booltype
+
+lookupType var env = maybe  (anytype,ppErr "Undeclared variable") 
+                            (\tp -> (tp,empty)) 
+                            (lookup var env) 
+
+addToEnv v env           = v : env 
+addVarsToEnv vs tps env  = (zip vs tps) ++ env 
+}

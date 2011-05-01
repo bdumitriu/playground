@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ghci -fglasgow-exts -H4M -package lang -i/usr/lib/ghc-6.2.2/uust $*

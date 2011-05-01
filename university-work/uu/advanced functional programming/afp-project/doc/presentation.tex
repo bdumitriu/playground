@@ -1,0 +1,265 @@
+\documentclass{beamer}
+
+\usepackage{listings}
+
+\lstset{% general command to set parameter(s)
+        frame=single, % frame code fragments
+        breaklines=true, % break long lines
+        basicstyle=\tt\small % print whole listing small
+        %keywordstyle=\color{black}\bfseries\underbar, % underlined bold black keywords
+        %identifierstyle=, % nothing happens
+        %commentstyle=\color{white}, % white comments
+        %stringstyle=\ttfamily % typewriter type for strings
+        %showstringspaces=false % no special string spaces
+       }
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  %\setbeamercovered{transparent}
+}
+
+\usepackage[english]{babel}
+
+\usepackage[latin1]{inputenc}
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+\title{Dinner with Ambiants}
+\subtitle{ICFP 2004 Programming Contest - Adapted version at University Utrecht, AFP 2005}
+
+\author{Bogdan \textsc{Dumitriu} \and Jos\'e Pedro \textsc{Magalh\~aes} \and Huanwen \textsc{Qu}}
+
+\institute
+{
+  Department of Computer Science\\
+  Utrecht University
+}
+
+\date{30th June 2005}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command:
+%\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents%[pausesections]
+\end{frame}
+
+\section{Defining a high level ant language}
+
+\subsection{Features}
+
+\begin{frame}
+  \frametitle{High level features}
+  \framesubtitle{The basics}
+  \texttt{data HLI \ = \ldots}
+  \pause
+
+  \texttt{data Cond = \ldots}
+  \pause
+  \begin{block}{The features we all know}
+    \begin{itemize}
+    {\tt
+        \item drop, turnLeft, turnRight :: HLI
+        \pause \item markRaw, unmarkRaw :: Marker -> HLI
+        \pause \item sense :: SenseDir -> Condition -> Cond
+        \pause \item move, pickUp :: Cond
+        \pause \item flip :: Int -> Cond
+    }
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{High level features}
+  \framesubtitle{Extensions}
+
+  \begin{block}{\ldots and a few others:}
+    \begin{itemize}
+    {\tt \small
+        \item label, goto :: String -> HLI
+        \pause \item nop, break :: HLI
+        \pause \item true, false :: Cond
+        \pause \item not :: Cond -> Cond
+        \pause \item (.\&), (.|) :: Cond -> Cond -> Cond
+        \pause \item (.<) :: Cond -> HLI -> (HLI -> HLI)
+        \pause \item (.+) :: (HLI -> HLI) -> HLI -> HLI
+        \pause \item (.:) :: HLI -> HLI -> HLI
+        \pause \item (.@) :: HLI -> Cond -> HLI
+        \pause \item (.*) :: Cond -> HLI -> HLI
+    }
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\subsection{Utilities}
+
+\frame[all:1] {
+  \frametitle{High level features}
+  \framesubtitle{Defining utilities for easier programming}
+
+  \begin{lstlisting}
+unite :: [HLI] -> HLI
+unite = foldr (.:) nop
+
+repeatN :: Int -> HLI -> HLI
+repeatN n = unite
+            . take n
+            . repeat
+
+turnBack :: HLI
+turnBack = repeatN 3 turnLeft
+
+wanderAroundP :: Int -> HLI
+wanderAroundP n = turnLeft .@ (move .& (flip n))
+  \end{lstlisting}
+}
+
+\section{A compiler for the high level ant language}
+\subsection{The compiler as a State Monad}
+
+\frame[all:1] {
+  \frametitle{The high level ant language compiler}
+  \framesubtitle{implemented as a State Monad}
+  Since the compiler has to keep track of state information,
+we implement it using a State Monad:
+  \begin{lstlisting}
+data CompilerState =
+  CompilerState
+    { ic           :: Int
+    , inDo         :: Maybe Int
+    , jumpTo       :: Maybe (Int, Int)
+    , env          :: FiniteMap String Int
+    , compileGotoF :: Bool
+    }
+
+type Compiler a = State CompilerState a
+  \end{lstlisting}
+}
+
+\begin{frame}
+  \frametitle{The high level ant language compiler}
+\begin{block}{Some remarks}
+\begin{itemize}
+    \item Nothing more than a (simple) compiler
+    \pause \item Tracks code size and keeps an environment for the labels
+    \pause \item Makes (naive) optimizations automatically
+    \pause \item Could be extended with {\tt call}, but\ldots
+        \begin{itemize}
+            \pause \item Maybe that's not really necessary
+            \pause \item That would generate too much code
+        \end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\section{Example - our own ant}
+\subsection{Strategy description}
+
+\begin{frame}
+  \frametitle{Strategy description of our ant}
+  \framesubtitle{Initialization}
+\begin{center}
+      \pgfdeclareimage[interpolate=true,height=3cm]{anthillMarked}{../images/anthillMarked}
+      \pgfuseimage{anthillMarked}
+  \end{center}
+    \begin{block}{Initialization procedures}
+    \begin{itemize}
+        \pause \item Form a protective storage area where all food is
+        dropped
+        \pause \item Mark paths to the storage area on all borders
+        of the anthill
+        \pause \item Carefully mark the exit point
+    \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Strategy description of our ant}
+  \framesubtitle{Marking paths to food}
+\begin{center}
+      \pgfdeclareimage[interpolate=true,height=3cm]{pathToFood}{../images/antMarkPathToFood}
+      \pgfuseimage{pathToFood}
+  \end{center}
+    \begin{block}{\small Food gathering}
+    \begin{itemize}
+    {\small
+        \pause \item Ant finds food, picks it up and then returns home
+        \pause \item Follows home markers and marks a new path to food
+        \pause \item When exiting, walks around the anthill searching for a path to food
+        \pause \item Paths that lead to no food are erased
+    }
+    \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Strategy description of our ant}
+  \framesubtitle{Home markers}
+\begin{center}
+      \pgfdeclareimage[interpolate=true,height=6cm]{worldMarked}{../images/worldMarked}
+      \pgfuseimage{worldMarked}
+  \end{center}
+\end{frame}
+
+\subsection{Excerpt of the code}
+\frame[all:1] {
+  \frametitle{The high level language - example}
+  \framesubtitle{A collision handling routine}
+\begin{lstlisting}
+getOutOfTheWay :: Dir -> HLI
+getOutOfTheWay d = unite [
+ label $ tag "Get out of the way" d,
+ wait 12,
+ move
+  .< goto (tag "Go home and mark" d)
+  .+ (flip 2
+      .< (turnRight .: tryMove .:
+         (goto (tag "Go home and don't mark" (turn Right d))))
+      .+ (turnLeft .: tryMove .:
+         (goto (tag "Go home and don't mark" (turn Left d)))))]
+\end{lstlisting}
+}
+
+\section{Conclusion}
+
+\begin{frame}
+  \frametitle{Conclusion}
+  \framesubtitle{Analysis of the solution}
+  The pros and cons of our EDSL:\pause
+  \begin{block}{Pros}
+	\begin{itemize}
+	\item Rely on Haskell for functional style and correctness
+	\pause \item Extending the low level ant language with many useful features
+	%\pause \item 
+	%\pause \item 
+	%\pause \item 
+	%\pause \item 
+	\end{itemize}
+  \end{block}
+  \pause
+  \begin{block}{Cons}
+	\begin{itemize}
+	\item The high level language might still be hard to use
+	\pause \item Nested blocks require parenthesis
+	\pause \item Compiler could (probably) optimize more
+	%\pause \item 
+	%\pause \item 
+	%\pause \item 
+	%\pause \item 
+	\end{itemize}
+  \end{block}\end{frame}
+
+
+\end{document}

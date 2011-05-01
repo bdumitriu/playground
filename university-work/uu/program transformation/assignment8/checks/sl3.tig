@@ -1,0 +1,12 @@
+let var x
+    var y
+    var z
+ in x := 2
+  ; y := 4
+  ; z := 0
+  ; let function mul(a : int, b : int) =
+          z := a * b
+     in mul(x, y)
+    end
+  ; printint(z)
+end

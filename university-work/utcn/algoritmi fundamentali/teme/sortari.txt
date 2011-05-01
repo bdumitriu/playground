@@ -1,0 +1,150 @@
++---------+
+¦ Sortari ¦
++---------+
+
+SORTEAZA-PRIN-INSERTIE-DIRECTA(A)
+	for j <- 2,lungime[A] do
+		cheie <- A[j]
+		i <- j-1
+		while i > 0 and A[i] > cheie do
+			A[i+1] <- A[i]
+			i <- i-1
+		A[i+1] <- cheie
+
+SORTEAZA-PRIN-INSERTIE-BINARA(A)
+	for j <- 2,lungime[A] do
+		cheie <- A[j]
+		li <- 1
+		ls <- j-1
+		gata <- FALSE
+		repeat
+			med <- [(ls-li)/2]+li
+			if A[med] < cheie then
+				li <- med+1
+			else
+				if A[med] > cheie then
+					ls <- med-1
+				else
+					gata <- TRUE
+		until gata = TRUE or li > ls
+		if gata = TRUE then
+			idx <- med
+		else
+			idx <- li
+		for i <- j,idx+1 do
+			a[i] <- a[i-1]
+		a[idx] <- cheie
+
+SORTEAZA-PRIN-SELECTIE(A)
+	for j <- 2,lungime[A] do
+		idx <- j
+		for i <- j+1,lungime[A]
+			if A[idx] > A[i] then
+				idx <- i
+		min <- A[idx]
+		A[idx] <- A[j]
+		A[j] <- min
+
+PARTITIONARE(A,p,r)
+	x <- A[p]
+	i <- p-1
+	j <- r+1
+	while TRUE do
+		repeat
+			j <- j-1
+		until A[j] <= x
+		repeat
+			i <- i+1
+		until A[i] >= x
+		if i < j 
+			A[i] <-> A[j]
+		else
+			return j
+
+QUICK-SORT(A,p,r)
+	if p < r then
+		q <- PARTITIONARE(A,p,r)
+		QUICK-SORT(A,p,q)
+		QUICK-SORT(A,q+1,r)
+
+INTERCLASEAZA(A,li,med,ls)
+	i <- li
+	j <- med+1
+	k <- 1
+	while i < med+1 and j < ls+1 do
+		if A[i] < A[j] then
+			C[k] <- A[i]
+			i <- i+1
+		else
+			C[k] <- A[j]
+			j <- j+1
+		k <- k+1
+	if i = med+1 then
+		for i <- j,ls do
+			C[k] <- A[j]
+			k <- k+1
+	else
+		for j <- i,med do
+			C[k] <- A[j]
+			k <- k+1
+	for i = li,ls do
+		a[i] <- c[i-li+1]
+
+SORTEAZA-PRIN-INTERCLASARE(A,p,r)
+	if p < r then
+		q <- [(p+r)/2]
+		SORTEAZA-PRIN-INTERCLASARE(A,p,q)
+		SORTEAZA-PRIN-INTERCLASARE(A,q+1,r)
+		INTERCLASEAZA(A,p,q,r);
+
+PARINTE(i)
+	return [i/2]
+
+STANGA(i)
+	return 2*i
+
+DREAPTA(i)
+	return 2*i+1
+
+RECONSTITUIE-HEAP(A,i)
+	l <- STANGA(i)
+	r <- DREAPTA(i)
+	if l <= dimensiune-heap[A] and A[l] > A[i] then
+		maxim <- l
+	else
+		maxim <- i
+	if r <= dimensiune-heap[A] and A[r] > A[maxim] then
+		maxim <-r
+	if maxim != i then
+		A[i] <-> A[maxim]
+		RECONSTITUIE-HEAP(A,maxim)
+
+CONSTRUIESTE-HEAP(A)
+	dimensiune-heap[A] <- lungime[A]
+	for i <- [lungime[A]/2],1 do
+		RECONSTITUIE-HEAP(A,i)
+
+HEAPSORT(A)
+	CONSTRUIESTE-HEAP(A)
+	for i <- lungime[A],2 do
+		A[1] <-> A[i]
+		dimensiune-heap[A] <- dimensiune-heap[A]-1
+		RECONSTITUIE-HEAP(A,1)
+
+QUICKSORT'(A,p,r)
+	while p < r do
+		q <- PARTITIE(A,p,r)
+		QUICKSORT'(A,p,q)
+		p <- q+1
+
+PARTITIE-LOMUTO(A,p,r)
+	x <- A[r]
+	i <- p-1
+	for j <- p,r do
+		if A[j] <= x then
+			i <- i+1
+			A[i] <-> A[j]
+	if i < r then
+		return i
+	else
+		return i-1

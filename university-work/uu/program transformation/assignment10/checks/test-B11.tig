@@ -1,0 +1,7 @@
+let type intlist = {hd: int, tl: intlist}
+
+    var tail : intlist := intlist{ hd = x, tl = nil}
+    var list : intlist := intlist{ hd = x, tl = tail}
+
+ in printint(list.tl.hd)
+end

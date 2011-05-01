@@ -1,0 +1,37 @@
+#!/bin/bash 
+
+#
+# NOTE: start the script using your root account, otherwise it won't
+# be allowed to open a listening socket on port 80.
+#
+
+#
+# the document root of your web server
+#
+webroot=/srv/www/htdocs
+
+#
+# Download & install a netcat version that supports the -e switch.
+# In order to see if it supports it, type 'netcat -h' and check if
+# there is such an option anywhere in there
+# I've downloaded from here (~300k): http://netcat.sourceforge.net/download.php
+#
+
+#
+# path to netcat
+#
+netcat=/usr/local/bin/netcat
+
+if [ "$zzz" ]
+then
+	read line
+	uri=`echo $line | cut -d " " -f 2`
+	echo -n -e "HTTP/1.0 200 OK\r\nConnection: close\r\nContent-type: text/html\r\n\r\n"
+	cat ${webroot}${uri}
+else
+	export zzz=true
+	while [ 1 ]
+	do
+		$netcat -l -p 80 -e $0
+	done
+fi

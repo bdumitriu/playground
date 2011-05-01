@@ -1,0 +1,194 @@
+GWML Language definition
+
+The basic idea is to use xhtml with extentions for the special wiki
+constructs.
+
+Basic formatting rules can be changed to standard xhtml tags:
+
+
+Twiki formatting command:    GWML format:
+\n\n                         <p>
+---+                         <gwml:header level=1>
+---++                        <gwml:header level=2>
+---+++                       <gwml:header level=3>
+---++++                      <gwml:header level=4>
+---+++++                     <gwml:header level=5>
+---++++++                    <gwml:header level=6>
+"---++++++" "+"+             <gwml:header level=N>
+*bold*                       <b>
+_italic_                     <i>
+__boldItalic__               <b><i>
+=fixed=                      <tt>
+==boldFixed==                <b><tt>
+---                          <hr>
+<verbatim>                   <gwml:verbatim>
+   *                         <li> (within a <ul>)
+   1                         <li> (within a <ol>)
+   term: def                 <dt>term<dt><dd>def</dd> (within a dl)
+
+FooBar                          <gwml:link href="FooBar"/>
+Web.FooBar                      <gwml:link href="Web/FooBar"/>
+[[Foo bar]]                     <gwml:link href="FooBar">Foo bar</gwml:link>
+[[Web.Foo bar]]                 <gwml:link href="Web/FooBar">Foo bar</gwml:link>
+[[FooBar][text]]                <gwml:link href="FooBar">text</gwml:link>
+[[Web.FooBar][text]]            <gwml:link href="Web/FooBar">text</gwml:link>
+[[mailto:address desc]]         <gwml:mailto address="address">desc</gwml:mailto>
+[[http://foo.bar][text]]        <a href="http://foo.bar">text</a>
+[[http://foo.bar text]]         <a href="http://foo.bar">text</a>
+<nop>FooBar                     FooBar (no tag needed because gwml links are between tags)
+<noautolink>FooBar</noautolink> FooBar (no tag needed because gwml links are between tags)
+
+[[#fooBar]]                     <a href="#FooBar"/>
+[[FooBar#FooBar]]               <gwml:link href="FooBar#FooBar"/>
+#FooBar                         <a name="FooBar">FooBar</a> 
+#FooBar text                    <a name="FooBar">text</a> 
+
+#### todo: describe tables ####
+             <table>
+               <thead>
+| *header* |     <th><td>header</td></th>
+               </thead>
+               <tbody>
+| element |      <tr><td>element</td></tr>
+               </tbody>
+             </table>
+
+
+
+All variable attributes are placed in nested tags:
+
+
+Twiki variables              GWML format
+
+%WIKIHOMEURL%                <wikihomeurl>
+%SCRIPTURL%                  <scripturl>
+%SCRIPTURLPATH%              <scripturlpath>
+%SCRIPTSUFFIX%               <scriptsuffix>
+%PUBURL%                     <puburl>    
+%PUBURLPATH%                 <puburlpath>
+%ATTACHURL%                  <attachurl>
+%ATTACHURLPATH%              <attachurlpath>
+%URLPARAM{"name"}%           <urlparam>name</urlparam>
+%URLENCODE{"string"}%        <urlencode>string</urlencode>
+%WIKITOOLNAME%               <wikitoolname>
+%WIKIVERSION%                <wikiversion>
+%USERNAME%                   <username>
+%WIKINAME%                   <wikiname>
+%WIKIUSERNAME%               <wikiusername>
+%MAINWEB%                    <mainweb>                 
+%TWIKIWEB%                   <twikiweb>
+%WEB%                        <web>     
+%BASEWEB%                    <baseweb>
+%INCLUDINGWEB%               <includingweb>
+%HOMETOPIC%                  <hometopic>
+%NOTIFYTOPIC%                <notifytopic>
+%WIKIUSERSTOPIC%             <wikiusertopic>
+%WIKIPREFSTOPIC%             <wikiprefstopic>
+%WEBPREFSTOPIC%              <webprefstopic>
+%STATISTICSTOPIC%            <statisticstopic>
+%TOPIC%                      <topic>
+%BASETOPIC%                  <basetopic>
+%INCLUDINGTOPIC%             <includingtopic>
+%SPACEDTOPIC%                <spacedtopic>
+
+%TOPICLIST{"format"}%        <topiclist>
+                                <format>format</format>
+                                <seperator>seperator</seperator>
+                                <web>web</web>
+                             </topiclist>
+
+%WEBLIST{"format"}%          <weblist>
+                                <format>format</format>
+                                <seperator>seperator</seperator>
+                                <webs>webs</webs>
+                                <marker>marker</marker>
+                                <selection>selection</selection>
+                             </weblist>
+
+%GMTIME%                     <gmtime>
+%GMTIME{"format"}%           <gmtime>format</gmtime>
+%SERVERTIME%                 <servertime>
+%SERVERTIME{"format"}%       <servertime>format</servertime>
+%HTTP_HOST%                  <http_host>
+%REMOTE_ADDR%                <remote_addr>
+%REMOTE_PORT%                <remote_port>
+
+%INCLUDE{"page" ...}%        <include>
+                                <page>page</page>
+                                <patern>patern</patern>
+                                <rev>rev</rev>
+                             </include>
+
+%STARTINCLUDE%               <startinclude>
+%REMOTE_USER%                <remote_user>              
+%STOPINCLUDE%                <stopinclude>
+%TOC%                        <toc>
+           
+%TOC{"SomeTopic" ...}%       <toc>
+                                <topic>topicname</topic>
+                                <web>webname</web>
+                                <depth>depthvalue</depth>
+                             </toc>
+
+%SEARCH{"text" ...}%         <search>
+                                <text>searchtext</text>
+                                <web>webname</web>
+                                <scope>scope</scope>
+                                <order>order</order>
+                                <limit>limit</limit>
+                                <regex>on/off<regex>
+                                <reverse>on/off</reverse>
+                                <casesensitive>on/off</casesensitive>
+                                <nosummary>on/off</nosummary>
+                                <bookview>on/off</bookview>
+                                <nosearch>on/off</nosearch>
+                                <noheader>on/off</noheader>
+                                <nototal>on/off</nototal>  
+                                <header>headerformat</header>
+                                <format>format</format>
+                             </search>
+
+%METASEARCH{...}%            <metasearch>
+                                <type>topictype</type>
+                                <web>webname</web>
+                                <topic>topicname</topic>
+                                <title>title</title>
+                             </metasearch>
+
+%VAR{"NAME" web="Web"}%      <var>
+                                <varname>varname</varname>
+                                <web>webname</web>
+                             </var>
+
+
+Preferences Variables:                               
+  
+
+%WIKIWEBMASTER%              <wikiwebmaster>     
+%WIKIWEBLIST%                <wikiweblist>
+%WEBTOPICLIST%               <webtopiclist>
+%WEBCOPYRIGHT%               <webcopyright>
+%WEBBGCOLOR%                 <webbgcolor>
+%NOSEARCHALL%                <nosearchall>
+%NEWTOPICBGCOLOR%            <newtopicbgcolor>
+%NEWTOPICFONTCOLOR%          <newtopicfontcolor>
+%EDITBOXWIDTH%               <editboxwidth>
+%EDITBOXHEIGHT%              <editboxheight>
+%RELEASEEDITLOCKCHECKBOX%    <releaseeditlockcheckbox> 
+%DONTNOTIFYCHECKBOX%         <dontnotifycheckbox>
+%ATTACHLINKBOX%              <attachlinkbox>
+%HTTP_EQUIV_ON_VIEW%         <http_equiv_on_view>
+%HTTP_EQUIV_ON_EDIT%         <http_equiv_on_edit>
+%HTTP_EQUIV_ON_PREVIEW%      <http_equiv_on_preview>
+%DENYWEBCHANGE%              <denywebchange>
+%ALLOWWEBCHANGE%             <allowwebchange>
+%DENYTOPICCHANGE%            denytopicchange>
+%ALLOWTOPICCHANGE%           <allowtopicchange>   
+%DENYWEBRENAME%              <denywebrename>
+%ALLOWWEBRENAME%             <allowwebrename>
+%DENYTOPICRENAME%            <denytopicrename>
+%ALLOWTOPICRENAME%           <allowtopicrename> 
+%FINALPREFERENCES%           <finalpreferences>
+
+
+                                                                                  

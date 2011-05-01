@@ -1,0 +1,17 @@
+ - Functia DOS 19h -
+
+Functie:
+    Aflarea drive-ului curent implicit.
+
+Asteapta:
+    ah: 19h
+
+Intoarce:
+    al: drive-ul curent implicit (0 = A, 1 = B, etc.)
+
+Descriere:
+    Intoarce numarul drive-ului curent implicit.
+
+Nota:
+    Pentru a afla litera corespunzatoare drive-ului se poate aduna valoarea
+    65 (codul ascii al literei A) la al.

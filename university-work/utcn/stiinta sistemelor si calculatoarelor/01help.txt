@@ -1,0 +1,23 @@
+ - Functia DOS 01h -
+
+Functie:
+    Citirea unui caracter si afisarea lui la iesirea standard.
+
+Asteapta:
+    ah: 01h
+
+Intoarce:
+    al: codul ascii al caracterului primit de la intrarea standard.
+
+Descriere:
+    In momentul in care se apeleaza, se asteapta introducerea unui caracter
+    de la intrarea standard.  In momentul in care caracterul  este introdus
+    el se afiseaza la iesirea standard  si codul sau ascii este scris in al
+    dupa care  executia functiei  se incheie. Daca  se detecteaza  apasarea
+    combinatiei de taste Ctrl+Break se apeleaza intreruperea 23h.
+
+Nota:
+    Daca se doreste citirea unui caracter din codul ascii extins vor fi ne-
+    cesare doua  apeluri succesive  ale functiei.  Dupa primul  apel in  al
+    se va  gasi valoarea  0. Dupa  al doilea  apel, in  al se va gasi codul
+    ascii extins.

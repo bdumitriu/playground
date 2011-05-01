@@ -1,0 +1,21 @@
+/**
+ * Invoking tools with xtc
+ */
+module tiger-xtc-tools
+strategies
+
+  parse-tiger =
+    xtc-transform(!"parse-tiger", pass-verbose)
+
+  tiger-desugar =
+    xtc-transform(!"Tiger-Desugar", pass-verbose)
+
+  tiger-elim-dead =
+      xtc-transform(!"Tiger-Simplify", pass-verbose)
+    ; xtc-transform(!"Tiger-DeadFunElim", pass-verbose)
+
+  tiger-ensugar =
+    xtc-transform(!"Tiger-Ensugar", pass-verbose)
+
+  pp-tiger =
+    xtc-transform(!"pp-tiger", pass-verbose)

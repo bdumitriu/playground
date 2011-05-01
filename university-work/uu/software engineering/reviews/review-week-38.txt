@@ -1,0 +1,126 @@
+The purpose of a =version management system= is to provide a way for its
+users to track the history of their work on a project (file, collection
+of files, etc.). The history of a project consists of all the changes
+ever made to that project, since its inception. A system which maintains
+such a history has to provide three basic functions: allow communication
+of changes performed by the users back to the system (every time a set
+of changes is committed by a user, a new =revision= - or =version= - of
+the project is created), allow retrieval of any of the revisions of a
+project and support a mechanism which ensures that no changes submitted
+by a user are lost (regardless of whether or not they were performed
+while another user was making his/her own changes).
+
+=Subversion= is a newer generation version management system, developed
+mainly as a =CVS= replacement. While CVS has been the traditional tool
+for version management, there are some design flaws which make it less
+powerful/usable than it could be. Among others, Subversion improves over
+CVS by providing =directory versioning= (not only files, but directories
+are versioned as well), =better version history= (files can be renamed
+and moved to different directories, while their history is carried
+through such renames and moves; aditionally, new files start with a
+fresh history, even if there used to be a file with the same name in
+that directory) and =atomic commits= (an entire revision is committed
+atomically).
+
+Subversion's architecture consists of a central store of data (called
+a =repository=), a repository access layer (which supports multiple
+protocols through various access modules) and a client library. The
+client library (well, actually a client program built on top of the
+client library) provides the users with the possibility of accessing
+the repository through the repository access layer. Subversion implements
+a so-called =copy-modify-merge= policy, which means that any number
+of users can work on the same file(s) concurrently by first creating
+a local =copy=, which they can then =modify= and later on =merge= back into
+the repository. To prevent (apparent) loss of data, Subversion's policy
+enforces that a user can only merge his/her copy back into the repository
+if the repository version has not changed since the user made his/her
+copy (i.e., nobody else has merged their changes in the meantime). If
+this has happened, then the user must first =update= his local, working
+copy with the changes from the repository (esentially merging these
+changes into his/her local copy) and only then send his/her own changes
+to the repository for merging. Ocasionally, conflicts that the system
+cannot solve automatically may appear. If this happens, the user must
+first manually solve these conflicts before being able to send his/her
+changes to the repository.
+
+In addition to the basic work cycle described above, supported by the
+=svn checkout=, =svn update= and =svn commit= commands, Subversion also
+allows for extra actions which aid with the use of the system. Differences
+between virtually any two versions (may they be on the repository or in
+the local copy thereof) can be inspected with =svn diff=. Also, =svn status=
+can be used to see local changes made to the copy since its retrieval
+from the repository, and so on. Two more complicated actions which
+Subversion allows are the so called =branching= and =merging= actions.
+
+Branching means (in Subversion terms) creating a repository copy (as
+opposed to local copy) of a certain directory of the project
+(conventionally called =trunk=) to a new directory (conventionally,
+=branches/branch-name=). The purpose of this is to allow experimental
+or maintenance work to be carried out on a branch in isolation of the
+development of the main branch (or trunk). Often, such work is
+done with the intention of later integrating it back into the trunk.
+This is achieved by the merging operation. Merging in Subversion is
+usually done by first applying all the changes which took place in
+the trunk since the moment of branching to the current branch version,
+and then merging the updated branch into the main trunk. Both operations
+are performed using the =svn merge= command, which allows the difference
+between any two versions to be applied on a third, possibly different,
+version.
+
+Version management covers a wide range of Software Engineering aspects.
+It first comes into play when development starts in order to aid developers
+to code concurrently and to have the saftey net needed for unrestricted
+development (one decides more easily to try out new things, if one has such
+a safety net available). Depending on whether or not we're dealing with
+Extreme Programming, before or after development a system like Subversion
+will be used for managing tests. It will also come in handy, given its
+branching possibilities, in easing handling of a company's release
+and after-release process (since releases can be saved as separate
+branches for future reference and bugfixing). Last, but not least,
+a version management system can be used to aid many of the other tasks
+related to software engineering (such as documentation writing or analysis
+& design), since these tasks as well produce computer files for which
+history, along with all the other advantages of version management,
+can prove useful.
+
+One of the conjectures in the book which is clearly at the bottom of
+the ongoing concern for automatic system management is conjecture 5 in
+chapter 8 (=the larger the system, the greater the administration effort that is needed=).
+Since an important part of the administration effort is synchronization
+between developers (so that the system works well together, so that
+the same bug is not fixed twice and so on), Subversion can be viewed
+as the right tool for the right job, the job being to minimize the
+administration effort.
+
+Another aspect mentioned throughout the book that can be mitigated
+by the use of a version management system are the risks incurred by the
+development of a system. One major risk in a system is code integration.
+If developers work separately and postpone integrating their code, it
+might well be that several (possibly major) erros are only discovered
+late in the software process, which makes them a lot more costly to
+remove. Version management offers a nice an easy way for code to be
+continuously integrated and thus avoid this risk.
+
+In my opinion, it cannot be overstressed just how important version
+management is. And I also think Subversion does a great job at it.
+Since its strong points are probably obvious, I'd rather say something
+about one of its weak ones. What I find particularly nasty is the lack
+of support for tracking merges. The fact that the user needs to remember
+the last time he merged his branch into the trunk is a nuisance, since
+failing to do so can lead to unwanted problems. And this is especially
+annoying if more developers work on a branch, where one could do a
+merge without letting the others know. Thus, some out-of-Subversion
+synchronization becomes necessary, which is not really positive.
+
+What came as a novelty to me, and found an interesting idea, is that
+Subversion allows the user to set up various parts of his/her working
+copy as mirrors of various branches, so that, for example, he can just
+branch a certain subdirectory of the project, let the rest of the project
+be "linked" to the main trunk, and when he updates his/her working copy,
+it will be updated with the trunk changes, execept for the subdirectory
+which is "linked" to the branch. This subdirectory gets updated with the
+branch changes. Of course, this is a simple scenario, but more complex
+ones could be imagined as well. I find this to be quite useful, so I
+would add it to the list of Subversion's strong points.
+
+Back to the [[PaperReviews][paper reviews index]].

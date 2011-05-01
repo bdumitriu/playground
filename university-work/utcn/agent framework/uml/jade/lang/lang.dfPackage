@@ -1,0 +1,28 @@
+package id39a06deikzvd2deilipnh;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id24a9kdeikzvd2deiliy20.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#jade.lang.acl:oiref> 
+*/
+class reference {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#id24a9kdeikzvd2deiliy20.diagram:oiref>=138,158,53,57,1:oigroup> 
+*/
+class __positions {
+}

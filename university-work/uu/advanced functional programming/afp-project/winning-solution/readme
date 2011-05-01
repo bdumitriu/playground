@@ -1,0 +1,10 @@
+Dunkosmiloolump
+Ian Lynagh
+icfp2004-team@lists.urchin.earth.li
+Ian Lynagh <igloo@earth.li>
+Ganesh Sittampalam <ganesh@earth.li>
+Andres Loeh <ksicfp@andres.loeh.de>
+Duncan Coutts <duncan.coutts@worcester.oxford.ac.uk>
+Everything written in Haskell (including the version control system - darcs);
+Consists of a compiler for a (hurriedly designed!) combinator language, 
+a simulator and a visualizer.

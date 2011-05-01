@@ -1,0 +1,26 @@
+\renewcommand{\r}[1]
+{\ifx#1a\u{a}%
+\else\ifx#1o\^{a}%
+\else\ifx#1i\^{\i}%
+\else\ifx#1s\c{s}%
+\else\ifx#1t\c{t}%
+\else\ifx#1^\u{A}%
+\else\ifx#1O\^{A}%
+\else\ifx#1I\^{I}%
+\else\ifx#1S\c{S}%
+\else\ifx#1T\c{T}%
+\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi}
+
+%
+% Romanian titles
+%
+\def\contentsname{Cuprins}
+\def\listfigurename{Lista figurilor}
+\def\listtablename{Lista tabelelor}
+\def\figurename{Figura}
+\def\tablename{Tabelul}
+\def\partname{Partea}
+\def\chaptername{Capitolul}
+\def\refname{Referin\r{t}e bibliografice}
+\def\bibname{Bibliografie}
+\def\appendixname{Anexa}

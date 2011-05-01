@@ -1,0 +1,15 @@
+ - Functia DOS 2ah -
+
+Functie:
+    Aflarea datei curente.
+
+Asteapta:
+    ah: 2ah
+
+Intoarce:
+    cx: anul (intre 1980 si 2099).
+    dh: luna (intre 1 si 12).
+    dl: ziua (intre 1 si 31).
+
+Descriere:
+    Intoarce data curenta a sistemului.

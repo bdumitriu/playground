@@ -1,0 +1,25 @@
+
+/*	-----------------------------------------------------------
+	LAYOUT
+	positioning of page elements
+	-----------------------------------------------------------	*/
+
+.gwLeftBar, .gwTopic {
+	position: absolute;
+	margin-top: 1.5em;
+}
+
+.gwLeftBar {
+	margin-left: 1.5em;
+	width: 11.5em;
+}
+
+.gwLeftBar /* needed for Explorer 5.0 */ {
+  margin-right : 2.5em;
+}
+
+.gwTopic {
+  left : 15.5em;
+  right : 1.5em;
+}
+

@@ -1,0 +1,229 @@
+options
+{
+	DEBUG_TOKEN_MANAGER = false;
+	DEBUG_PARSER = true;
+}
+
+PARSER_BEGIN(PDK)
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+public class PDK
+{
+	public static void main(String args[]) throws ParseException
+	{
+		PDK parser = null;
+		try
+		{
+			parser = new PDK(new FileInputStream(args[0]));
+			parser.input();
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println("File " + args[0] + " doesn't exist!");
+		}
+	}
+}
+
+PARSER_END(PDK)
+
+void input():
+{}
+{
+	(termReadIn())*
+}
+
+void termReadIn():
+{}
+{
+	term() "."
+}
+
+void term():
+{
+	Token t;
+}
+{
+	name() ("(" arguments() ")")? ((<INFIX_OP>|":-"|"+"|"-") term())?
+	| (<PREFIX_OP>|":-"|"+"|"-") term() //((<INFIX_OP>|":-"|"+"|"-") term())?
+	| <NUMBER> ((<INFIX_OP>|":-"|"+"|"-") term())?
+	| "(" term() ")" ((<INFIX_OP>|":-"|"+"|"-") term())?
+	| "{" term() "}" ((<INFIX_OP>|":-"|"+"|"-") term())?
+	| list() ((<INFIX_OP>|":-"|"+"|"-") term())?
+	| <STRING> ((<INFIX_OP>|":-"|"+"|"-") term())?
+	| t=<VARIABLE> {System.out.println("var");} ((<INFIX_OP>|":-"|"+"|"-") term())?
+}
+
+void arguments():
+{}
+{
+	(term())?
+}
+
+void list():
+{}
+{
+	"[]"
+	| "[" listexpr() "]"
+}
+
+void listexpr():
+{}
+{
+	term() ("|" term())?
+}
+
+/*
+	Add this to name...
+	| "[" [<LAYOUT_TEXT>] "]"
+	| "{" [<LAYOUT_TEXT>] "}"
+*/
+void name():
+{}
+{
+	<QUOTED_ITEM>
+	| <WORD>
+	| <SOLO_CHAR>
+	| <SYMBOL>
+}
+
+SKIP:
+{
+	" "
+	| "\n"
+	| "\r"
+	| "\r\n"
+	| "\t"
+}
+
+SPECIAL_TOKEN: /* comments */
+{
+	<SINGLE_LINE_COMMENT: "%" (~["\n","\r"])* ( "\n" | "\r" | "\r\n" )>
+	| <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+}
+
+TOKEN:	/* non-associative prefix operators */
+{
+	<#NON_ASSOC_PREFIX_OP:
+	(
+		"?-"
+		| "mode"
+		| "public"
+		| "dynamic"
+		| "volatile"
+		| "discontiguous"
+		| "multifile"
+		| "block"
+		| "meta_predicate"
+		| "initialization"
+	)>
+}
+
+TOKEN:	/* associative prefix operators */
+{
+	<#ASSOC_PREFIX_OP:
+	(
+		"\\+"
+		| "spy"
+		| "nospy"
+		| "\\"
+	)>
+}
+
+TOKEN:	/* prefix operators */
+{
+	<PREFIX_OP: (<NON_ASSOC_PREFIX_OP>|<ASSOC_PREFIX_OP>)>
+}
+
+TOKEN:	/* non-associative infix operators */
+{
+	<#NON_ASSOC_INFIX_OP:
+	(
+		":-"
+		| "-->"
+		| "="
+		| "\\="
+		| "is"
+		| "=.."
+		| "=="
+		| "\\=="
+		| "@<"
+		| "@>"
+		| "@=<"
+		| "@>="
+		| "=:="
+		| "=\\="
+		| "<"
+		| ">"
+		| "=<"
+		| ">="
+		| "**"
+		| "mod"
+	)>
+}
+
+TOKEN:	/* left-associative infix operators */
+{
+	<#LEFT_ASSOC_INFIX_OP:
+	(
+		"+"
+		| "-"
+		| "#"
+		| "/\\"
+		| "\\/"
+		| "*"
+		| "/"
+		| "//"
+		| "rem"
+		| "<<"
+		| ">>"
+	)>
+}
+
+TOKEN:	/* right-associative infix operators */
+{
+	<#RIGHT_ASSOC_INFIX_OP:
+	(
+		";"
+		| "->"
+		| ","
+		| ":"
+		| "^"
+	)>
+}
+
+TOKEN:	/* infix operators */
+{
+	<INFIX_OP: ( <NON_ASSOC_INFIX_OP> | <LEFT_ASSOC_INFIX_OP> | <RIGHT_ASSOC_INFIX_OP> ) >
+}
+
+TOKEN:
+{
+	<NUMBER: <DIGIT> (<DIGIT>)*>
+	| <#DIGIT: ["0"-"9"]>
+}
+
+TOKEN:
+{
+	<QUOTED_ITEM: "'" ( (~["'","\\"]) | ("\\" (~[])) | "''" )* "'">
+	| <STRING:
+		"\""
+		(
+			(~["\"","\\"])
+        		| ("\\" (~[]))
+		)*
+		"\"">
+
+}
+
+/*  */
+/* | <LAYOUT_TEXT: (" "|"\t"|"\n"|"\r"|"\r\n")+> */
+TOKEN:
+{
+	<VARIABLE: ("_"|["A"-"Z"]) (<ALPHA>)*>
+	| <WORD: ["a"-"z"] (<ALPHA>)*>
+	| <SYMBOL: ["+","-","*","/","\\","^","<",">","=","~",":",".","?","@","#","$","&"]>
+	| <SOLO_CHAR: ["!",";"]>
+	| <ALPHA: ["A"-"Z","a"-"z","0"-"9","_"]>
+}

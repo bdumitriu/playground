@@ -1,0 +1,12 @@
+\newenvironment{PROOF}[1]{\tt PROOF #1 \\}{}
+
+\newenvironment{BODY}{\vspace*{10pt} \tt BEGIN \hrulefill \begin{enumerate}}{\end{enumerate} \par \tt END \hrulefill}
+
+\newenvironment{EQPROOF}[1]{\tt EQUATIONAL PROOF #1 \hrulefill \begin{enumerate}}{\end{enumerate} \tt END \hrulefill}
+
+\newcommand{\HINT}[1]{\{#1\}}
+\newcommand{\EXPR}[1]{$\tt #1$}
+\newcommand{\ASSUME}[2]{{[\bf #1:]} $\tt #2$}
+\newcommand{\GOAL}[2]{{[\bf #1:]} $\tt #2$}
+\newcommand{\DEF}[2]{{[\bf #1:]} $\tt #2$}
+\newcommand{\COND}[1]{$\{*\ \tt #1\ *\}$}

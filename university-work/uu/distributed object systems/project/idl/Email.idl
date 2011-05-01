@@ -1,0 +1,62 @@
+module Email 
+{
+	interface Message;
+	interface Contact;
+
+	typedef sequence<Set> ContactSet;
+	typedef sequence<Message> MessageSet;
+
+	enum ContactType { SingleUser, MailingList };
+
+	interface MailBox;
+
+	interface AddressBook
+	{
+		ContactSet getAllContacts();
+		boolean addContact(in Contact contact);
+		boolean deleteContact(in Contact contact);
+	};
+
+	interface MailAccount
+	{
+		MailBox getMailBox(in long mailBoxId);
+		MailBox getMailBox(in string name);
+		MailBox getDefaultMailBox();
+		MailBoxes getAllMailBoxes();
+		boolean addMailBox(in string name);
+		boolean deleteMailBox(in long mailBoxId);
+		boolean moveMessage(in long messageId, in long fromMailBoxId, in long toMailBoxId);
+	};
+
+	interface MailBox
+	{
+		MessageSet getAllMessages();
+		Message getMessage(in long messageId);
+		boolean deleteMessage(in long messageId);
+		void markMessageAsRead(in long messageId);
+	};
+
+	// This will not be a remote object. It will only be copied over the
+	// network (i.e. used as data container). It is only defined here in
+	// order to be used as a IDL type.
+	interface Message
+	{
+		attribute long id;
+		attribute Contact recepient;
+		attribute string subject;
+		attribute Date time;
+		attribute string body;
+		attribute string sender;
+		attribute boolean isNew;
+	};
+
+	// This will not be a remote object. It will only be copied over the
+	// network (i.e. used as data container). It is only defined here in
+	// order to be used as a IDL type.
+	interface Contact
+	{
+		attribute string name;
+		attribute ContactType contactType;
+		attribute string description;
+	};
+};

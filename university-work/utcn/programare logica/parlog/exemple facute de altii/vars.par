@@ -1,0 +1,11 @@
+/*
+  PARLOG example: Variables.
+
+  From 'Hands on Parlog for Windows'.
+*/
+
+mode variables(from?,to?,varlist^) .
+variables(N,N,[V]) .
+variables(N1,N2,[V|Rest]) <- N1 < N2 :
+  Next is N1 + 1,
+  variables(Next,N2,Rest) .

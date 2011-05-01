@@ -1,0 +1,56 @@
+
+For the formal definition see: gw/src/xslt/gw/schemas
+<document>
+	<head title="" subtitle="" />
+	<toc depth="" /> <- creates a table of contents
+	<section>
+		<title></title>
+		<section /> <- recursive more sections
+		<para>  <- paras are inside sections
+			
+			<table>
+				<col>
+					<row />
+				</col>
+			</table>
+			
+			<table>
+						<col/>
+			</table>
+			
+			<table>
+						<row />
+			</table>
+			
+			<list type="1">
+				<item />
+				<list />
+			</list>
+			
+			<img target="" />
+			<b />
+			<i />
+			<br />
+			<tt />
+			<hr />
+			<pre />
+			<link target="">txt</link>
+			<link target="TestDrie"/>
+			
+			<form action="blaat" method="post">
+					<input type="text" maxlength="10" name="texttest" /><br />
+					<textarea name="areatest" cols="5" rows="5">HELLO THERE</textarea><br />
+					<input type="submit" />
+			</form>
+			
+			<include target="" type=""/>
+			
+			text
+		</para>
+	</section>
+</document>
+
+
+
+
+                                                                                                                                                  

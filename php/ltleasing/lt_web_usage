@@ -1,0 +1,2 @@
+
+	command prompt: mysql -u root -ppassword < filename.sql

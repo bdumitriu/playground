@@ -1,0 +1,597 @@
+@f seq
+@a N.J. Nes  / Hans Philippi
+@* Genome Sequences Module
+
+@* Implementation
+
+@+ MEL specification
+@m
+.MODULE seq;
+
+.COMMAND seq_str( BAT[void,chr] seq, int pos, int len) : str = seq_str;
+ "convert seq[pos,pos+len] into a string"
+
+.COMMAND str_encode (str s, int q) : int = str_encode;
+ "encodes q-gram"
+
+.COMMAND str_decode (int qgram, int q) : str = str_decode;
+ "decodes q-gram"
+
+.END seq;
+
+@mil
+
+
+#LEVEL 1.1
+proc find_qgrams(str q):BAT[int,oid]
+{
+        var qqb := bat(int,int);
+        decompose_query(q, 3, qqb);
+        var qid := bat("qg_qid");
+
+        # Delivers a bat with [index_query, gposID]
+        # So the index of the 3gram in the query string
+        # and an id that refers to a row where this
+        # 3gram matches the database
+
+        return(join(qqb, qid.reverse()));
+}
+
+
+#LEVEL 1.2
+proc find_hits(str q):void
+{
+        var qindex := find_qgrams(q);
+
+        # Here we use the [-] to substract the index of
+        # the qgram in the query from the position of the
+        # match in the qg_pos bat. This operator computes the
+        # natural join automatically. The result corresponds
+        # to a bat with gposIDs in the head and something
+        # you might call a diagonal id in the tail.
+
+        var newtable := bat("qg_pos")[-]qindex.reverse();
+
+        # using the ctgroup operator on the qg_sid bat, we
+        # get a new bat with an identical head column to
+        # the argument, but in the tail each stringid is
+        # replaced by the id in the head column where this
+        # stringid first occured.
+
+        var gpos_gposStr := (bat("qg_sid")).CTgroup();
+
+        # Now we do a binary grouping with respect to
+        # the table containing the diagonal id's. So now
+        # in the tail all identical diagonals in the same
+        # string will be in the same group
+        # So now every id that occurs more then once in
+        # the right collumn is a hit
+
+        newtable := gpos_gposStr.CTgroup(newtable);
+
+        # histogram is a function that computes
+        # a histogram on the tail values
+
+        var counttable := newtable.histogram();
+
+        # Using the select operator we obtain all groupID's
+        # that occured more then once since these
+        # correspond to hits
+
+        counttable := counttable.select(2,int(nil));
+
+        # By doing this join we get a bat containging
+        # gposID and groupID for all hits
+        newtable := newtable.join(counttable.mirror());
+
+        # in the email it said that you would like it
+        # if we would include the index position of the
+        # 3gram in the query. This join gives us the
+        # positions of all 3grams occuring in hits
+        var qindex_table := newtable.mirror().join(qindex.reverse());
+
+        # Because the result exists of multiple bats, here
+        # we print them together as one table
+        table("1,2,3",newtable, newtable.mirror(), qindex_table);
+}
+
+proc runass():void
+{
+        find_hits("MKFLILLFNILCLFPVLAADNHGVGPQGASGVDPITFDINSNQ");
+}
+
+proc query_ref
+  (str query) : BAT[int, oid]
+  # Solution to: "Write mil code to compute a bat containing the 3-grams,
+  # present in the query, with the references to the original qgram data."
+  #
+  # Before running this, you should make sure that you have called 
+  # qgrecreate() first, so that you have the qg_qid bat available.
+{
+  var qqb := bat(int, int);
+  var qref;
+
+  decompose_query(query, 3, qqb);
+  qref := qqb.join(bat("qg_qid").reverse()).reverse().mark(oid(0)).reverse();
+  return qref;
+}
+
+proc hits
+  (str query) : BAT[oid, oid]
+  # Solution to: "Write mil code to compute a bat containing the "hits", where
+  # hits are defined by " having 2 matching qgrams within the same data string
+  # on the same diagonal."
+  #
+  # Before running this, you should make sure that you have called qgrecreate()
+  # & strcreate() first.
+  #
+  # The result of this procedure is a bat which in its head contains oids which
+  # are valid oids in the qg_* bats, while in the tail it contains a group marker.
+  # All BUNs with the same group marker in their tail are hits on the same diagonal
+  # in the same string.
+{
+  # give some names to the bats that represent the database for easier use
+  var qg_sid := bat("qg_sid");
+  var qg_qid := bat("qg_qid");
+  var qg_pos := bat("qg_pos");
+  var s_sid := bat("s_sid");
+
+  # retrieve the q-grams in the query along with their positions
+  var qqb := bat(int, int);
+  decompose_query(query, 3, qqb);
+
+  # pair the positions with the oid's of the qg_* bats
+  var qref := qqb.join(qg_qid.reverse());
+
+  # compute the difference of position between the positions of
+  # the query q-grams and those of the database q-grams. Entries
+  # in offset for which the tail value is equal are on the same
+  # diagonal (if they are also hits in the same string).
+  var offset := [-](qg_pos, qref.reverse());
+
+  # refine the grouping to a per string grouping. The result will
+  # be that entries for which the tail value is equal are now sure
+  # to be part of the same string, in addtion to being on the same
+  # diagonal.
+  module("xtables");
+  offset := CTderive(offset, qg_sid);
+  drop("xtables");
+
+  # find those group markers which appear at least twice
+  var counts := select({count}(offset.reverse()), 2, int(nil)).mirror();
+
+  # eliminate the entries from the offset bat which are single in
+  # their group
+  var hits := offset.join(counts);
+
+  return hits;
+}
+
+proc very_slow_implementation_of_hits
+  (str query) : BAT[oid, oid]
+  # Note: this was my first attempt to implement this and it is extremely slow
+  # (for the example string on the web site, it takes probably hours). So I have
+  # left it here only for the purpose of showing what I've tried. Although it
+  # does give correct results, the runnig time prevents it for being useful.
+  #
+  # Solution to: "Write mil code to compute a bat containing the "hits", where
+  # hits are defined by " having 2 matching qgrams within the same data string
+  # on the same diagonal."
+  #
+  # Before running this, you should make sure that you have called qgrecreate()
+  # & strcreate() first.
+  #
+  # The result of this procedure is a bat which in its head contains oids which
+  # are valid oids in the qg_* bats, while in the tail it contains a group marker.
+  # All BUNs with the same group marker in their tail are hits on the same diagonal
+  # in the same string.
+{
+  # give some names to the bats that represent the database for easier use
+  var qg_sid := bat("qg_sid");
+  var qg_qid := bat("qg_qid");
+  var qg_pos := bat("qg_pos");
+  var s_sid := bat("s_sid");
+
+  # retrieve the q-grams in the query along with their positions
+  var qqb := bat(int, int);
+  decompose_query(query, 3, qqb);
+
+  # this is the same thing query_ref is doing, but I inline it here to avoid
+  # double computation of decompose_query(query, 3, qqb).
+  var qref := qqb.join(bat("qg_qid").reverse()).reverse().mark(oid(0)).reverse();
+
+  # the bat in which the final result is produced
+  var hits := bat(oid, int);
+
+  # Plan: perform the following procedure for each string in the database:
+  #  * obtain a bat with the positions in the query of the q-grams that matched
+  #  * obtain a bat with the positions in the current string of the q-grams that
+  #     matched
+  #  * in each of the two bats, use the oid from the head of the qref bat as
+  #     identifier
+  #  * compute the difference of position in the query and in the string of each
+  #     q-gram that matched. q-grams on the same diagonal will have the same
+  #     difference of position
+  #  * filter the elements which are single in their group
+  #  * insert the remaining results in the result table
+  # 
+  # In the end, after the loop refine the result table so that hits are restricted
+  # to single strings (since, before doing that, there could be hits with the same
+  # group marker which belong to different strings).
+  #
+  # Hint: variable names starting with an "_" are local to the loop
+
+  var i := 0;
+
+  s_sid@batloop()
+  {
+    # get the OID's from qref which pertain to string id $t.
+    # BUNs of _qref will be [OID-of-qref, OID-of-qg_*]
+    var _qref := qref.join(qg_sid.select($t).mirror());
+
+    # get the q-gram id's associated to the OID's selected at the previous step.
+    # BUNs of _qids will be [OID-of-qg_*, q-gram-id]
+    var _qids := _qref.reverse().mirror().join(qg_qid);
+
+    # get the positions of the selected q-grams in the query
+    # BUNs of _pos_q will be [OID-of-qg_*, position-in-query]
+    var _pos_q := _qids.join(qqb.reverse());
+
+    # get the positions of the selected q-grams in the current string
+    # BUNs of _pos_s will be [OID-of-qg_*, position-in-string]
+    var _pos_s := _qref.reverse().mirror().join(qg_pos);
+
+    # compute the offset between the positions of the same q-gram in the query
+    # and the current string. q_grams with the same offset are on the same
+    # diagonal. Nicely enough, in the Monet context, I can use the offset as a
+    # group marker, each group containing the q-grams on the same diagonal.
+    var _offset := [-](_pos_s, _pos_q);
+
+    # count how many hits each group has, select the ones with at least 2
+    # and mirror the result in order to prepare it for the join that follows
+    var _counts := select({count}(_offset.reverse()), 2, int(nil)).mirror();
+
+    # eliminate those entries which are part of a group with just one element
+    _offset := _offset.join(_counts);
+
+    # put all the entries from _offset into the hits bat
+    insert(hits, _offset);
+
+    # print progress info
+    if ((i % 1468) = 0)
+    {
+      (str(i / 1468) + "% completed").print();
+    }
+
+    i := i + 1;
+  }
+
+  print("Iteration complete. Applying final CTderive...");
+
+  # load module xtables
+  module("xtables");
+
+  var result := CTderive(hits, qg_sid);
+
+  # unload module xtables
+  drop("xtables");
+
+  return result;
+}
+
+proc hits20
+  (str query) : BAT[oid, oid]
+  # Solution to: "Limit the hit distance on the diagonal to a certain value, say 20."
+  #
+  # Before running this, you should make sure that you have called qgrecreate()
+  # & strcreate() first.
+  #
+  # Note: running this with the string "MKFLILLFNILCLFPVLAADNHGVGPQGASGVDPITFDINSNQ"
+  # takes quite a long time (about an hour), but the results produced seem correct.
+{
+  # give some names to the bats that represent the database for easier use
+  var qg_sid := bat("qg_sid");
+  var qg_qid := bat("qg_qid");
+  var qg_pos := bat("qg_pos");
+  var s_sid := bat("s_sid");
+
+  # retrieve the q-grams in the query along with their positions
+  var qqb := bat(int, int);
+  decompose_query(query, 3, qqb);
+
+  # The following code is more or less the same as the one for finding the hits
+  # without the diagonal 20 restriction. The difference is that here, I am not
+  # pumping count over the hits table in order to get the hits which are in
+  # groups of 2 or more, but I am pumping diag20 over the hits table, in order
+  # to mark the groups which are within a distance of 20.
+
+  var qref := qqb.join(qg_qid.reverse());
+  var offset := [-](qg_pos, qref.reverse());
+  module("xtables");
+  var per_string := CTderive(offset, qg_sid);
+  drop("xtables");
+  var per_diag_20 := {diag20}(per_string.reverse());
+
+  # The result of pumping diag20 is a BAT[oid, BAT[oid, oid]] and here, I simply
+  # concatenate the nested bats into a single one, which is the result. See the
+  # explanation for diag20 to understand why this is sufficient (i.e., why the
+  # group markers will not overlap).
+  var result := bat(oid, oid);
+  per_diag_20@batloop()
+  {
+    result.insert($t);
+  }
+
+  return result;
+}
+
+proc diag20
+  (BAT[oid, oid] hits) : BAT[oid, oid]
+  # Takes a bat which is supposedly given by the pump operator. This bat is
+  # a mirrored bat (that's what the pump operator sends), and its values are
+  # all the values in any one group from the bat this operator is pumped over.
+  #
+  # The result is a bat in which all sequences of 2 or more hits which are all
+  # within a distance of 20 are marked as part of the same group. The marker
+  # used for the group is one of the oids of the members of the group. In this
+  # way, we can make sure that the markers are unique with respect to the other
+  # diagonals which are going to be processed by diag20. As a result, the bats
+  # which are obtained can simply be merged together after the pump, and we are
+  # sure that the group markers will be globally unique as well.
+{
+  # give some names to the bats that represent the database for easier use
+  var qg_sid := bat("qg_sid");
+  var qg_qid := bat("qg_qid");
+  var qg_pos := bat("qg_pos");
+  var s_sid := bat("s_sid");
+
+  # get the positions associated with the oids & sort the bat
+  # on positions
+  var h := hits.join(qg_pos).reverse().sort().reverse();
+
+  # the purpose of the following loop is to:
+  #  * remove entries which are single within a distance of 20
+  #  * mark each group of 2 or more entries with the same marker
+
+  var result := bat(oid, oid);
+  var curGroupMarker;
+  var curBaseOffset := -21;
+  var curBaseInserted;
+  h@batloop()
+  {
+    if ($t > curBaseOffset + 20)
+    {
+      curGroupMarker := $h;
+      curBaseOffset := $t;
+      curBaseInserted := false;
+    }
+    else
+    {
+      if (curBaseInserted = false)
+      {
+        result.insert(curGroupMarker, curGroupMarker);
+        curBaseInserted := true;
+      }
+      result.insert($h, curGroupMarker);
+    }
+  }
+
+  return result;
+}
+
+proc decompose_query 
+  (str query, int q, BAT[int, int] qqb) : void
+  # fill q-gram bat with the query string  
+{
+  const n := length(query);
+  var qgramcode;
+
+  var i := 0;
+  while (i <= n-q) {
+    qgramcode := str_encode(string(query,i), q);   
+    insert(qqb, i, qgramcode);
+    i := i+1;
+  }
+} # decompose_query
+
+
+proc qgrecreate () : void
+  # import qgpos table into bats "qg_sid, qg_qid, qg_pos"
+{
+  var filename := "/local/private/seqdata/qgpos.txt";
+
+  module("ascii_io");
+
+  const tablegrade := 3;
+  const scan_to_eof := -1; 
+  const into_virtualmem := 1;
+  
+  # remove existing tables, if present
+
+  if (view_bbp_name().reverse().exist("qg_sid")) bat("qg_sid").persists(false);
+  if (view_bbp_name().reverse().exist("qg_qid")) bat("qg_qid").persists(false);
+  if (view_bbp_name().reverse().exist("qg_pos")) bat("qg_pos").persists(false);
+
+  commit();
+
+  # define layout for import: column names, separators, types
+  # for qgram bats
+
+  var names := bat(void, str, tablegrade); 
+  var seps  := bat(void, str, tablegrade);
+  var types := bat(void, str, tablegrade);
+
+  append (names, "qg_sid");
+  append (names, "qg_qid");
+  append (names, "qg_pos");
+
+  append (seps, ",");
+  append (seps, ",");
+  append (seps, "\n");
+
+  append (types, "int");
+  append (types, "int");
+  append (types, "int");
+
+  var loaded := load (names, seps, types, filename, scan_to_eof);
+
+  var sid := find(loaded,"qg_sid").reverse().mark(oid(0)).reverse();
+  var qid := find(loaded,"qg_qid").reverse().mark(oid(0)).reverse();
+  var pos := find(loaded,"qg_pos").reverse().mark(oid(0)).reverse();
+
+  sid.rename("qg_sid").persists(true).mmap(into_virtualmem);
+  qid.rename("qg_qid").persists(true).mmap(into_virtualmem);
+  pos.rename("qg_pos").persists(true).mmap(into_virtualmem);
+  commit();
+
+} # qgrecreate
+
+proc strecreate () : void
+  # import string table into bats "s_sid, s_str"
+{
+  var filename := "/local/private/seqdata/string.txt";
+
+  module("ascii_io");
+
+  const tablegrade := 2;
+  const scan_to_eof := -1; 
+  const into_virtualmem := 1;
+  
+  # remove existing tables, if present
+
+  if (view_bbp_name().reverse().exist("s_sid")) bat("s_sid").persists(false);
+  if (view_bbp_name().reverse().exist("s_str")) bat("s_str").persists(false);
+
+  commit();
+
+  # define layout for import: column names, separators, types
+
+  var names := bat(void, str, tablegrade); 
+  var seps  := bat(void, str, tablegrade);
+  var types := bat(void, str, tablegrade);
+
+  append (names, "s_sid");
+  append (names, "s_str");
+
+  append (seps, ",");
+  append (seps, "\n");
+
+  append (types, "int");
+  append (types, "str");
+
+  var loaded := load (names, seps, types, filename, scan_to_eof);
+
+  var ssid := find(loaded,"s_sid");
+  var sstr := find(loaded,"s_str");
+
+  ssid.rename("s_sid").persists(true).mmap(into_virtualmem);
+  sstr.rename("s_str").persists(true).mmap(into_virtualmem);
+  commit();
+
+} # strecreate
+
+
+
+
+@h
+#ifndef __seq_H__
+#define __seq_H__
+
+#include <gdk.h>
+
+#include "seq.proto.h"
+
+#endif /* __seq_H__ */
+
+@+ Implementation Code for seq module. 
+@c
+#include "seq_config.h"
+#include "seq.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <time.h>
+
+
+
+int seq_str( str *s, BAT *seq, int *pos, int *len){
+	int lst = BATcount(seq);
+	char *p = BUNtloc(seq,BUNfirst(seq));
+	
+	if ( (*pos + *len) < lst)
+		lst = *pos + *len;
+	*s = GDKmalloc(lst - *pos + 1);
+	strncpy(*s, p + *pos, lst - *pos );
+	(*s)[lst - *pos] = '\0';
+	return GDK_SUCCEED;
+} /* seq_str */
+
+
+int str_encode (int *res, str s, int *qq)
+
+/* encodes s[0..q-1] into integer res based on radix 24 */
+/* using protein lettercodes ABCDEFGHIKLMNPQRSTVWXYZ */
+/* for q=3, "ABC" gives 1*24^2 + 2*24^1 + 3*24^0 = 627 */
+
+{
+  char c;
+  int i, factor = 1;
+  const int radix = 24, n = *qq; 
+  *res = 0;
+
+  for (i = n-1; i >= 0; i-- ) {
+    c = s[i];
+    if (c >= 'a' && c <= 'z')
+      c += 'A' - 'a';
+        
+    if (c >= 'A' && c <= 'I')
+      *res = *res + factor * (int)(c - 'A' + 1);
+    else if (c >= 'P' && c <= 'T')
+      *res = *res + factor * (int)(c - 'P' + 14);
+    else if (c >= 'V' && c <= 'Z')
+      *res = *res + factor * (int)(c - 'V' + 19);
+    else if (c >= 'K' && c <= 'N')
+      *res = *res + factor * (int)(c - 'K' + 10);
+    else  
+      return GDK_FAIL;
+
+    factor = factor * radix;
+  } /* for */
+
+  return GDK_SUCCEED;
+
+} /* str_encode */
+
+
+int str_decode (str *res, int *qgramcode, int *qq)
+
+/* decodes q-gram code *qgramcode into string res */
+/* for *qq=3, *qgramcode = 627 gives "ABC" */
+
+{
+  int i, mod, rest = *qgramcode;
+  const int radix = 24, n = *qq; 
+  *res = GDKmalloc(n+1);
+  (*res)[n] = '\0';
+
+  for (i = n-1; i >= 0; i-- ) {
+    mod = rest % radix;
+    rest = rest / radix;
+
+    if ((1 <= mod) && (mod <= 9))
+      (*res)[i] = ((char)(mod) + 'A' - 1);
+    else if ((mod <= 13))
+      (*res)[i] = ((char)(mod) + 'B' - 1);
+    else if ((mod <= 18))
+      (*res)[i] = ((char)(mod) + 'C' - 1);
+    else if ((mod <= 23))
+      (*res)[i] = ((char)(mod) + 'D' - 1);
+    else  
+      return GDK_FAIL;
+  } /* for */
+
+  return GDK_SUCCEED;
+
+} /* str_decode */

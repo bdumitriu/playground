@@ -1,0 +1,143 @@
+<!--
+	The elements in this file are the following:
+
+	- main container
+		<security>...</security>
+
+	- actions for which the user has to have a valid userID, a valid
+	classID and be teacher in that class:
+		<teacher-actions>
+			<action>action_1_ID</action>
+			<action>action_2_ID</action>
+			...
+			<action>action_n_ID</action>
+		</teacher-actions>
+
+	- actions for which the user has to have a valid userID, a valid
+	classID and be student in that class:
+		<student-actions>
+			<action>action_1_ID</action>
+			<action>action_2_ID</action>
+			...
+			<action>action_n_ID</action>
+		</student-actions>
+
+	- actions for which the user has to have a valid userID, a valid
+	classID and be either a student or a teacher in that class:
+		<user-actions>
+			<action>action_1_ID</action>
+			<action>action_2_ID</action>
+			...
+			<action>action_n_ID</action>
+		</user-actions>
+
+	- actions for which the user has to have a valid userID only:
+		<partial-authentication-actions>
+			<action>action_1_ID</action>
+			<action>action_2_ID</action>
+			...
+			<action>action_n_ID</action>
+		</partial-authentication-actions>
+
+	- actions for which the user requires no authentication:
+		<no-authentication-actions>
+			<action>action_1_ID</action>
+			<action>action_2_ID</action>
+			...
+			<action>action_n_ID</action>
+		</no-authentication-actions>
+-->
+
+<security>
+
+	<teacher-actions>
+		<action>addAnn</action>
+		<action>listAnn2</action>
+		<action>editAnn1</action>
+		<action>editAnn2</action>
+		<action>delAnn</action>
+		<action>addConf</action>
+		<action>listConf</action>
+		<action>editConf1</action>
+		<action>editConf2</action>
+		<action>delConf</action>
+		<action>reorderConf1</action>
+		<action>reorderConf2</action>
+		<action>addTask</action>
+		<action>listTask</action>
+		<action>viewTask</action>
+		<action>editTask1</action>
+		<action>editTask2</action>
+		<action>delTask</action>
+		<action>assTask1</action>
+		<action>assTask2</action>
+		<action>assTask3</action>
+		<action>assTask4</action>
+		<action>tchListAss</action>
+		<action>tchViewAss</action>
+		<action>markAsRead</action>
+		<action>delAss</action>
+		<action>gradeAss</action>
+		<action>getCourseAbout</action>
+		<action>getClassTM</action>
+		<action>removeResource</action>
+		<action>editResource</action>
+		<action>updateResource</action>
+		<action>createResource</action>
+		<action>listGrades</action>
+		<action>addGradeColumn</action>
+		<action>deleteGradeColumn</action>
+		<action>displayGrades</action>
+		<action>removeGrade</action>
+		<action>editGrade</action>
+		<action>addGrade</action>
+		<action>getGradeColumns</action>
+	</teacher-actions>
+
+	<student-actions>
+		<action>studListAss</action>
+		<action>studViewAss</action>
+		<action>submitAnswer</action>
+		<action>listStudentGrades</action>
+	</student-actions>
+
+	<user-actions>
+		<action>listAnn1</action>
+		<action>listMess1</action>
+		<action>listMess2</action>
+		<action>displayConf</action>
+		<action>displayMess</action>
+		<action>showMainTopic</action>
+		<action>showMess</action>
+		<action>addMess</action>
+		<action>editMess1</action>
+		<action>editMess2</action>
+		<action>chat</action>
+		<action>singleEmail</action>
+		<action>multipleEmails</action>
+		<action>sendEmail</action>
+		<action>multipleEmailsSelect</action>
+		<action>sendMultipleEmails</action>
+		<action>attFiles</action>
+		<action>logout</action>
+		<action>readAnswer</action>
+		<action>readCom</action>
+		<action>viewCourse</action>
+		<action>viewSchedule</action>
+		<action>viewPolicies</action>
+		<action>viewReferences</action>
+		<action>viewAddInfo</action>
+		<action>viewGradingInfo</action>
+		<action>attSingleFile</action>
+	</user-actions>
+
+	<partial-authentication-actions>
+		<action>classChoice</action>
+		<action>displayMenu</action>
+	</partial-authentication-actions>
+
+	<no-authentication-actions>
+		<action>login</action>
+	</no-authentication-actions>
+
+</security>

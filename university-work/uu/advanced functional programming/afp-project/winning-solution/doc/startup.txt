@@ -1,0 +1,34 @@
+
+We work out which ant we are by looking to see what marks ants ahead of
+us are laying down. As marks can propogate twice as fast in ant ID order,
+and signals are propogating from the lead ant back through the colony, we
+start by turning left twice.
+
+The precise algorithm has a reasonable amount of complexity to cope with
+the keeper structure (keeper.txt), but the gist of it is:
+
+* Look ahead
+* Look left
+* Look right
+* If left and right were both clear we are the lead ant. Set a marker.
+  (the other keeper members will use this marker to work out who they
+   are, and will communicate this to the other keepers with signals of
+   their own)
+* If left and ahead were clear then we are on the left front row.
+  Set marker 2, then marker 0.
+* If right and ahead were clear then we are on the right front row.
+  Set marker 1, then marker 0.
+
+Each ant who doesn't know where he is then alternates looking for marker 2
+and marker 1 ahead, 6 times each. In the first three times looking for
+marker n it sets n then 0. In the latter 3 times it only sets n.
+See markers.txt for more details on what this is doing (other than ant
+identification).
+
+Finally, if an ant still doesn't know who he is, he is either along the
+column in the middle or at the back. He sets marker 0.
+
+Dependent on when the ant worked out what sort of ant it is it then goes
+off in a direction so that the net effect is that the ants spread out in
+sensible directions giving a reasonably even split.
+

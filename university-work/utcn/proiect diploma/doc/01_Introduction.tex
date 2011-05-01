@@ -1,0 +1,148 @@
+\chapter{Introduction}
+
+\section{Why do research in this area?}
+
+In this day and age it is becoming increasingly clear that all individuals that keep on working
+alone are destined to be easily overcome by groups of people working together. In a business environment
+that relies strongly on concurrency (as the one nowadays certainly is), assigning serious tasks to the
+individual (as opposed to groups) is no longer feasible. Every business that persists in doing so
+is destined to fail sooner or later in such an environment.
+
+As one might expect, this exact same principle applies roughly identically in most other areas of human
+life as well, it is not limited to business environments alone. It is a well known fact that people work
+much more efficiently in groups than alone and that, consequently, there is a strong tendency in our society
+that involves the migration towards group work above all else. One can notice this tendency in virtually all
+present day organizations, may them be profit or non-profit.
+
+Another ingredient which is essential to the argument "I'm trying to make" refers to the omnisciency of technology
+in day to day life. Every single area of work uses and benefits from the advances of technology in some way or
+another. Undoubtedly, the most widely occurring form of technology is materialized in computers. They are everywhere
+around us, all qualified personnel interacts with them daily and their penetration of the market is ever more deeper.
+Under such circumstances, it is only natural that group work itself, along with all other types of human activities,
+should eventually migrate towards this emerging digital world. Naturally, in order for such a migration to be
+possible, adequate support has to be made available to those that need it. 
+
+This slowly brings us to the point where this research comes into play, namely the point of thinking about the precise
+technological tools that members of a group require in order for them to truly benefit from the advantages that
+computers have to offer. These tools should ideally form the software foundation on which groups should be able to
+base their work. The common name currently used for the study and research directed towards the development of
+such tools is Computer-Supported Cooperative Work (CSCW). Essentially, this is a multi-disciplinary
+field which brings social and computer scientists together, presenting them with the common task of discovering how
+groups can best benefit from technological advances of the moment and developing the right software for this to become
+a reality.
+
+The particular subarea of Computer-Supported Cooperative Work that this paper tries to approach is called Collaborative
+(or Cooperative) Editing Systems. A rough description of this field can be found in \cite{sun98a} and implies that
+such systems are very useful groupware tools that allow physically dispersed people to edit a shared textual document,
+draw a shared graph structure, record ideas during a brainstorm meeting or hold a design meeting. Of course, these are
+just some basic examples; additional ones can easily be imagined. The motivation for developing such systems can be
+found by looking at the means used today by most groups in order to coordinate their work. A typical scenario involves
+a very tight group policy to which all members, with no exception, must conform. This policy would usually indicate precisely
+what parts of the common objective (may it be a document, a piece of graphics, an architectural design, etc.) each member
+of the group can modify, rendering all its other parts virtually inaccessible (or at least unchangeable) to this particular
+member. For two (or more) persons to actually work on the same part of the ``document'' extremely careful coordination must
+be employed, with geographical distance making this a difficult, if not impossible, task. Therefore, most ``real'' group
+work today is drastically limited by the need of physical proximity of the group members. Under these circumstances, the
+necessity for the kind of tools advertised by the field of Collaborative Editing Systems becomes obvious.
+
+Open source software development is, for many, the most relevant example of collaborative work which involves members scattered
+all over the world. These people may be freelance programmers, developers working for various companies, researchers in universities
+or simply individuals who want to contribute with their own share to the advance of the various software tools. It is clear that
+each of these people do their part of the work from their own physical location (home, university, office or wherever) and
+somehow must be aided by technology in order for their joint efforts to actually materialize into something useful.
+This particular example has been brought into discussion with the purpose of extending the argument exposed so far with
+the concept of ``asynchrony'' that appears in the title of this paper alongside that of ``collaborative editing systems''.
+In this line of thought, the remark that needs to be made is that open source software development, besides
+being a relevant example of collaborative work, is also a typical case in which the members of the group don't
+need to keep so tight a synchronization among each other as in the case of various other group activities. The reason for
+this is that often during the process of software development several changes (some of which could take hours or even days
+to be completed) have to be joined before the master ``document'' can be updated in order for the others to become aware
+of the modifications. By contrast, there are many cases when a more frequent (up to the point of constant) synchronization
+must be kept among the participants. Such cases do not constitute the subject of this paper, even though reference
+to them will occasionally be made, when aspects thereof are relevant to the subject at hand.
+
+This research work, as explained before, places itself within the area of Collaborative Editing Systems and comes as an
+addition to the already existing achievements in the field, narrowing its focus, however, into two major ways. The first
+confine is given by the fact that only asynchronous editing will be employed throughout this paper, while the second
+is related to the issue of dealing with text editing only. This implies that the results achieved by the current work
+will be useful to those interested in editing various types of text documents (such as source code, technical reports,
+\LaTeX{} documents, books and virtually anything that can be expressed in characters alone) in an asynchronous manner
+(i.e. working together on the same project(s), but only interested in reaching common versions only every once in a while).
+Despite the fact that serious research is being conducted in this field, there is still a lot of room for
+improvement in various areas, such as efficiency (both in running time and in storage capacity usage), closer
+adherence to the user's intentions, reliability or mere usability.
+
+In light of all that has been discussed up to this point, hopefully both the subject and the motivation
+of this research have become sufficiently clear to the reader, thus enabling us to move on to a short
+description of the work that has been done.
+
+\section{Project outline}
+
+The idea behind this project was to create a completely functional system which would allow users to
+concurrently edit in isolation the same text document(s) and synchronize their work in order to obtain
+a common view of the edited documents. The synchronization process is to be done in a reliable and
+consistent way, such that none of the modifications made by any of the users are lost and that all
+users end up with exactly the same version of the document after the synchronization has taken place.
+Additionally, all the editing and network communication support has to be provided by the application.
+
+The most challenging aspect of the project consisted in developing the robust algorithm to be
+used during the synchronization phase. For this purpose, the first part of the work involved
+a thorough survey of available algorithms both for real-time and asynchronous synchronization,
+including those requiring the use of a dedicated central server as well as those without such
+a requirement. This was done with the intention of identifying the most appropriate one to
+be adapted for the project's needs. Developing this algorithm was a thorough process, during
+which several very serious issues had to be overcome in order to obtain a correctly working
+version. The most notable of these issues arose from our idea of going even further than other
+researchers have gone and design this algorithm so that it could be recursively applied on a tree
+representation of the document. Choosing a general structured model of the document allows
+modelling of a larger class of documents such as XML documents compared to the linear model
+approach. Moreover, the hierarchical structure offers a set of enhanced features such as
+increased efficiency and improvements in the semantic.
+
+An entire ``infrastructure'' had then to be built around this algorithm in order to present
+the user with a usable and fully functional product. This included the development of an
+appropriate repository where all versions of the document(s) could be stored and offered,
+on request, to any interested client. Aside from this, the repository also had to provide
+its clients with the possibility of committing their changes to the document in order for
+others to have access to them. Another part of the ``infrastructure'' consisted in the
+implementation of a graphical user interface to allow the clients to retrieve, modify
+and send their modifications back to the repository (only to mention the basic functions).
+
+Direct user synchronization is yet another feature that we wanted to provide our users
+with. This had implications both at the algorithmic level (since we needed to further
+ensure consistency and user intention preservation in the presence of this new type of
+synchronization) and at the ``infrastructure'' level (since all clients needed to be
+able to behave not only as editors of documents, but also as providers of documents).
+Efforts were made in this direction because we realized that such an addition to the
+functions of the application would be a great benefit to the users that prefer working
+in smaller groups within the large groups.
+
+The entire project was implemented using exclusively Java technologies, thus making it
+possible for users with various platforms and operating systems to easily work together
+with the exact same software.
+
+\section{Overview}
+
+This paper begins by looking at the efforts of other researchers which have worked in this field and
+showing their achievements as well as their weak points, and suggesting the new ideas we have pursued in
+order to fill some of the gaps others have left empty. We also try to explain why we think our
+work is worth while by presenting some real life possible uses of asynchronous text editing.
+
+The next chapter goes into more detail regarding various aspects, concepts and ideas peculiar
+to asynchronous editing in general and asynchronous text editing in particular, concepts which
+are necessary for the understanding of the rest of this paper.
+
+Chapter four presents some (mostly theoretical) issues concerning operation-based editing. The most
+important part of the chapter tries to explain what the inclusion and exclusion transformations
+are as these are fundamental aspects which are important for the actual implementation. Other
+concepts such as consistency models and operation context are introduced as well.
+
+The fifth chapter represents the most important part of this paper since it is the chapter in
+which our actual work is presented. We begin by describing some of the data strctures we use, the
+employed operation model and the basic functions that work with the model. Then we go on to
+describing the most important algorithms we have developed as well as some of the extra features
+we have introduced. The chapter ends with an informal efficiency analysis of the most relevant
+algorithms.
+
+Our paper ends by suggesting a few ways in which we believe our work can be continued by others
+and drawing some conclusions based on our results.

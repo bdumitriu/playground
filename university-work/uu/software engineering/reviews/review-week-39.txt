@@ -1,0 +1,108 @@
+In a nutshell, Nix attempts to be a fairly complete =software deployment system=.
+The purpose of a software deployment system is to install a piece of software
+in a given environment in such a way that it functions appropriately in that
+environment. Since the term _complete_ is quite vague, the introduction from
+above should be detailed by saying that Nix makes sure that not only the software
+itself gets installed, but also all of its =dependencies= as well as their
+dependencies (and so on down to the last level). Another important aspect
+which is part of the _completeness_ is the =flexibility= which Nix offers by
+allowing co-existence of multiple versions and variants of the same software,
+by allowing both source- and binary-based deployment and by allowing easy configuration
+of any number of parallel user environments (i.e., views of the system as the
+users perceive it).
+
+If there is a central idea in Nix, that has to be the idea of =unique paths of installation=
+for each variant or version of any application or library. This is done by
+computing (and using as part of the path of) a =cryptographic hash= based on all
+the details which define a piece of software (system and compiler used to compile
+it, versions of the software itself and its dependencies, etc.). This is where
+all the flexibility begins, since by installing each particular configuration in a
+separate, uniquely identifiable path, the world of options then opens. It is
+straightforward that multiple versions and/or variants of the same software can
+co-exist, that views can be created in which particular variants of the software are
+included, while others are not, and so on.
+
+What makes Nix different from other deployment systems (which also provide, for
+example, automatic dependency installation) is that it enforces a model of dependency
+specification which prevents administrators from forgetting about =compile-time dependencies=
+of a piece of software when they are writing the so-called =Nix expressions= for
+it (these expressions define how a piece of software is to be compiled and installed).
+The way it does this is quite simple; Nix just makes sure that the compile & install
+script specified by the Nix expression is run using an empty environment (actually, an
+environment only containing the variables described in the expression itself, but no
+other default ones), so that nothing is available to the compile & install script
+_unless specified explicitly_. In this way, if a dependency is left out, the program
+just won't compile, thus forcing the writer/maintainer of the Nix expression to
+include it. On the other hand, =run-time dependencies= are detected automatically, by
+simply scanning all the compiled files for any of the cryptographic hashes of the build
+time dependencies. Since any run-time dependency translates into a compiled-in path,
+this process will ensure that all the run-time dependencies are correctly detected.
+
+There are many other nice (and possibly unique) features of Nix which could be mentioned,
+but the last one I want to talk about here is management of user environments. Nix is
+offering something that the databases have already brought to mainstream use ages ago:
+(simplified) user views of the system. For doing that Nix makes use of symbolic links
+(on systems that have such a facility). A view of the system is created by simply generating
+a collection of symbolic links to the (unique) installation paths of the desired programs
+variants and versions. Switching from one view to another thus becomes a matter of changing
+yet another symbolic link to point to one or the other of these collections. As a side
+note, the collections (called user environments) are also stored in unique paths, and they
+serve connected purposes as well (such as garbage collection or rollback, but I won't go
+into those).
+
+The relation of Nix with software engineering is defined by the purpose Nix serves:
+software deployment. Of course, all software engineering would be in vain if the
+engineered software product didn't end up being used by users _in their environment_.
+Software deployment (also known as installation) is that part of software engineering
+which comes after design, development and testing (and possibly manufacturing) is
+completed, and the software has to be transferred to its end users. Doing this in
+the wrong way is quite trivial, but doing it right (i.e., safe and flexible) is quite
+a challenge, which Nix thoroughly addresses. In a sense, Nix (as well as other software
+deployment systems) is designed to maintain order where there would otherwise be chaos
+and prevent the user from any potential headaches in getting his/her new software to
+run _and_ keeping the old software running as well.
+
+Conjecture 5 of chapter 8 says that =the larger the system, the greater the administration effort that is needed=.
+Despite the lack of strong evidence, personal experience has shown me that this statement
+is more than a mere conjecture. As such, Nix comes to help contain the complexity,
+by supporting automatic management of compilation, installation and (test) deployment
+of the application (as in the Generalized Wiki case). It can be then used in an incremental
+manner, regularly modifying the nix expression(s) and/or build script(s) from simple
+to more complex, as the project advances. In this way, the administration effort can
+be greatly reduced, so that development can still proceed at a constant rate (i.e., no
+decrease in developer productivity due to constant increase of build/deploy complexity).
+
+On the other hand, Nix comes to apparently contradict conjecture 4 of chapter 7, which
+states that =installability must be designed in=. One could argue that installability
+can be disregarded, while the user could just rely on Nix to deploy the software. This
+is, however, apparent, since the bulk of the project-specific functionality comes from
+the Nix expressions and those would still have be "built in" by the developers. From this
+point of view, then, Nix can be regarded as a way to support easy building in of this
+installability, since the developers no longer have to come up with costly software for
+providing this, they can simply build on top of Nix. Moreover, by using Nix, they get
+more than what they bargained for, since Nix will insure multi-platform deployment,
+dependency management as well as variability management, and all this at no extra cost.
+
+In my opinion, Nix does quite a good job at solving a lot of the problems that software
+deployment traditionally incurs. As a fairly long-time Linux user, I can say that using
+(and reading about) Nix makes me hope that one day somebody will take on the task of
+creating a Nix-based Linux distribution. I say this especially because I have run into
+most of the problems Nix is said to solve myself: missing or wrong dependencies,
+conflicting packages or impossibility of having multiple versions of the same software
+on my system. It is still a dream for me to be sure that installing new things is _certain_
+not to break old ones. From all these points of view, I truly think Nix is acutely needed
+on the market. Of course, Linux distributions are just an example. Nix is equally useful
+in automating software installation in any type of environment, not just a Linux one.
+
+My experience of using it, however, has lead me to the conclusion that the price to pay
+for all the advantages mentioned above is increased complexity in the tool itself. If
+using rpm, emerge or apt-get is quite easy, I have to say that Nix involves a much
+steeper learning curve. This is mainly due to its large amount of flexibility, made
+available by a model which needs some getting used to. Writing Nix expressions implies
+using a new language. Simple as it may be (or said to be), it is still a new language.
+I guess what I'm trying to say is that the system has a lot of aspects, and they all
+have to be properly grasped before being able to make use of its (full) power. And
+this is not such an easy task, but, to end on a positive note, I think is one well worth
+while.
+
+Back to the [[PaperReviews][paper reviews index]].

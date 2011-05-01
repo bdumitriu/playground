@@ -1,0 +1,44 @@
+{
+import UU.Parsing
+
+instance Symbol Char
+
+test :: Show a => Parser Char a -> String -> IO ()
+test p input =
+	do	result <- parseIO p input
+		putStrLn (show result)
+
+pBitString :: Parser Char T_Bin
+pBitString = sem_Bin_Zero <$ pSym '0' <*> pBitString
+	<|> sem_Bin_One <$ pSym '1' <*> pBitString
+	<|> sem_Bin_Empty <$ pSucceed ""
+}
+
+DATA Bin
+	| Empty
+	| Zero  bin: Bin
+	| One   bin: Bin
+{-
+ATTR Bin [| | val : Int]
+SEM Bin
+  | Empty	lhs.val = 0
+  | Zero	lhs.val = @bin.val
+  | One		lhs.val = @bin.val + 2 ^ @bin.level
+
+ATTR Bin [| | level : Int]
+SEM Bin
+  | Empty	lhs.level = 0
+  | Zero	lhs.level = @bin.level + 1
+  | One		lhs.level = @bin.level + 1
+-}
+
+ATTR Bin [| | val : Int]
+SEM Bin
+  | Empty	lhs.val = 0
+  | One		lhs.val = @bin.val + 2 ^ @bin.level
+
+ATTR Bin [| | level : Int]
+SEM Bin
+  | Empty	lhs.level = 0
+  | Zero	lhs.level = @bin.level + 1
+  | One		lhs.level = @bin.level + 1

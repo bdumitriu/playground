@@ -1,0 +1,106 @@
+imports
+{
+import UU.Pretty
+}
+
+DATA Table
+     | Table Rows
+TYPE Rows = [Row]
+DATA Row
+     | Row Elems
+TYPE Elems = [Elem]
+DATA Elem
+     | Elem Lines
+TYPE Lines = [Line]
+
+ATTR Table [ | | minWidths: {[Int]} fte: {[[[Line]]]} pp: PP_Doc ]
+
+ATTR Rows [ widths: {[Int]} | | minWidths: {[Int]} fte: {[[[Line]]]} pps: {[PP_Doc]} ]
+
+ATTR Row [ widths: {[Int]} | | minHeight: Int minWidths: {[Int]} fte: {[[Line]]} pp: PP_Doc ]
+
+ATTR Elems [ height: Int widths: {[Int]} | | minHeight: Int minWidths: {[Int]} fte: {[[Line]]} pps: {[PP_Doc]} ]
+
+ATTR Elem [ height: Int width: Int | | minHeight: Int minWidth: Int fte: {[Line]} pp: PP_Doc ]
+
+ATTR Lines [ height: Int width: Int | | minWidth: Int nr: Int fte: {[Line]} pps: {[PP_Doc]} ]
+
+
+SEM Table
+  | Table	rows.widths	= @rows.minWidths
+		lhs.pp		= pp_block "" "" "" @rows.pps
+
+SEM Rows
+  | Nil		lhs.minWidths	= [0 ..]
+		lhs.fte		= []
+		lhs.pps		= []
+  | Cons	lhs.minWidths	= zipWith max @hd.minWidths @tl.minWidths
+		lhs.fte		= @hd.fte : @tl.fte
+		lhs.pps		= @hd.pp : @tl.pps
+
+SEM Row
+  | Row		elems.height	= @elems.minHeight
+		lhs.pp		= pp_block "" "" " | " @elems.pps
+
+SEM Elems
+  | Nil		lhs.minHeight	= 0
+		lhs.minWidths	= []
+		lhs.fte		= []
+		lhs.pps		= []
+  | Cons	lhs.minHeight	= max @hd.minHeight @tl.minHeight
+		lhs.minWidths	= @hd.minWidth : @tl.minWidths
+		hd.width	= head @lhs.widths
+		tl.widths	= tail @lhs.widths
+		lhs.fte		= @hd.fte : @tl.fte
+		lhs.pps		= @hd.pp : @tl.pps
+
+SEM Elem
+  | Elem	lhs.minHeight	= @lines.nr
+		lhs.pp		= pp_block "" "" "" @lines.pps
+
+SEM Lines
+  | Nil		lhs.nr		= 0
+		lhs.minWidth	= 0 
+		lhs.fte		= replicate @lhs.height "" 
+		lhs.pps		= []
+  | Cons	lhs.nr		= 1 + @tl.nr
+		lhs.minWidth	= max (length @hd) @tl.minWidth
+		tl.height	= @lhs.height - 1
+		lhs.fte		= pad @hd @lhs.width : @tl.fte
+		lhs.pps		= text @hd : @tl.pps
+
+{
+type Line = String
+}
+
+{
+
+test = let (fte, mw, pp) = sem_Table testTbl in fte
+-- putStrLn (disp pp 30 "")
+
+testTbl :: Table
+testTbl = toTable [[["aap", "noot"], ["langestring"]], [["langestring"], ["kort"]]]
+
+toTable :: [[[Line]]] -> Table
+toTable x	= Table_Table (toRows x)
+
+toRows :: [[[Line]]] -> Rows
+toRows xs	= map toRow xs
+
+toRow :: [[Line]] -> Row
+toRow x		= Row_Row (toElems x)
+
+toElems :: [[Line]] -> Elems
+toElems xs	= map toElem xs
+
+toElem :: [Line] -> Elem
+toElem x	= Elem_Elem x
+
+pad :: Line -> Int -> Line
+pad st n
+ | (n - length st) `mod` 2 == 0		= replicate p ' ' ++ st ++ replicate p ' '
+ | otherwise				= replicate p ' ' ++ st ++ replicate (p + 1) ' '
+ where
+ p = (n - length st) `div` 2
+
+}

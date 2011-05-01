@@ -1,0 +1,50 @@
+{-# LINE 17 "SLCodeGenEnv.lag" #-}
+{
+type Level  = Int
+type Displ  = Int
+type Env    = [(String, Level, Displ)]
+
+displOfLocalVars   = 1 :: Int
+sizeOfLambdaAdmin  = 2 :: Int
+paramDispl         = 2 :: Int
+
+}
+
+ATTR Expr [ level: Level env : Env | displ : Displ |  ]
+SEM Root
+  | Root expr.level  = 0
+         expr.env    = []
+         expr.displ  = displOfLocalVars
+
+SEM Expr
+  | Intexpr   lhs.displ       = @lhs.displ + codeSize inttype
+  | Boolexpr  lhs.displ       = @lhs.displ + codeSize booltype
+  | Ident     lhs.displ       = @lhs.displ + codeSize  @restp
+  | Op        lhs.displ       = @lhs.displ + codeSize  @restp
+  | If        thenExpr.displ  = @lhs.displ
+              elseExpr.displ  = @lhs.displ
+  | Let       lhs.displ       = @lhs.displ + codeSize (@expr.resType)
+  | Apply     arg.displ       = @lhs.displ
+              func.displ      = @arg.displ
+              lhs.displ       = @func.displ
+  | Lamcall   lhs.displ       = @lhs.displ + codeSize  @call.resType
+  | Lam       loc.lamLevel    = @lhs.level + 1
+              expr.level      = @lamLevel
+              expr.displ      = displOfLocalVars
+              expr.env        = @vars.env
+              vars.displ      = -(sizeOfLambdaAdmin)
+              vars.level      = @lamLevel
+              vars.env        = @lhs.env
+
+SEM Decl [level : Level | env: Env displ :Displ |  ]
+  | Decl  loc.declEnv       = (@var, @lhs.level, @lhs.displ) : @lhs.env 
+          expr.env          = @declEnv
+          lhs.env           = @declEnv
+          lhs.displ         = @lhs.displ + codeSize  @type
+SEM Vars [level : Level | env: Env displ :Displ |  ]
+  | Cons  loc.varDispl = @lhs.displ - codeSize  @argtp
+          tl.env       = (@hd, @lhs.level, @varDispl) :  @lhs.env
+          tl.displ     = @varDispl
+   
+ATTR Decls [ level :Level | env: Env displ :Displ |  ] 
+ATTR Exprs [ level :Level env: Env displ :Displ |  |  ]

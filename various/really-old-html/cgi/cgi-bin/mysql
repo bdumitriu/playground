@@ -1,0 +1,86 @@
+#!/usr/bin/perl
+
+#this is just for further reference 
+
+#constants (modifiy at your own risk)
+$database = "mysql";
+$table = "user";
+$user = "cgis";
+$password = `cat ./pf1`;
+$trace_filename = "/home/bdumitriu/http/cgi-bin/trace";
+$trace_level = 0; # can be between 0 and 9
+
+#the oh so necessary inclusion
+use DBI;
+
+#create a database handle, $dbh
+$dsn = "DBI:mysql:database=$database";
+$dbh = DBI->connect($dsn, $user, $password) || die("Can't connect!\n");
+
+#now let's trace everything that's happenig into $tracefile
+$dbh->trace($trace_level, $trace_filename);
+
+&PrintDBs; #see function at the end of the script
+&PrintTables; #see function at the end of the script
+
+#create a statement handle, $sth and use it
+$sth = $dbh->prepare("SELECT * FROM $table") || die("Can't prepare select!\n");
+$sth->execute() || die("Can't execute statement handle!\n");
+
+#$names will be a reference to an array containing the names of the table's
+#fields. We'll print it
+$names = $sth->{NAME};
+print("Columns in table: @$names\n");
+
+#$nrFields will contain the number of fields in the table
+$nrFields = $sth->{NUM_OF_FIELDS};
+
+#now we'll print all the selected data
+$row_nr = 0;
+while ($row = $sth->fetchrow_arrayref)
+{
+    $row_nr++;
+    print("Data from row $row_nr: @$row\n");
+}
+
+#last thing to do, disconnect
+$sth->finish();
+$dbh->disconnect();
+
+#lists all the databases on the mysql server
+sub PrintDBs
+{
+    my @dbs = $dbh->func('_ListDBs');
+    print("List of databases: @dbs\n");
+}
+
+#lists all the tables in the open database
+sub PrintTables
+{
+    my @tables = $dbh->func('_ListTables');
+    print("List of tables: @tables\n");
+}
+
+#create a new database (just to see that we can - if indeed we can)
+#$dbname = "tempdb";
+#if ($dbh->func("createdb", $dbname, 'admin'))
+#{
+#    print("I just added a new database called $dbname.\n");
+#    &PrintDBs;
+#}
+#else
+#{
+#    print("Can't create it!\n");
+#}
+
+#delete the newly created database (just to
+#see that we can - isn't this stupid?)
+#if ($dbh->func("dropdb", $dbname, 'admin'))
+#{
+#    print("I just deleted the database called $dbname.\n");
+#    &PrintDBs;
+#}
+#else
+#{
+#    print("Can't delete it!\n");
+#}

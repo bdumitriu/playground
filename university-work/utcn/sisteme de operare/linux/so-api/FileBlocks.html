@@ -1,0 +1,196 @@
+<HTML>
+<HEAD>
+<TITLE>class FileBlocks</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>class FileBlocks</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1">Provides a simple means to use the blocks which contain a file's data.
+ <small><A HREF="#longdesc">More...</A></small></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="so___include___driver___FileBlocks_h.html">so/include/driver/FileBlocks.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-FileBlocks.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Methods</h4><ul><LI>&nbsp;<b><A HREF="#ref1">FileBlocks</A></b> (<A HREF="HDD.html">HDD</A>* hdd, <A HREF="Inode.html">Inode</A>* inode) 
+</LI>
+<LI>&nbsp;<b><A HREF="#ref2">~FileBlocks</A></b> () 
+</LI>
+<LI>unsigned long &nbsp;<b><A HREF="#ref3">getBlock</A></b> (unsigned long index) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref4">setBlock</A></b> (unsigned long index, unsigned long blockAddress) 
+</LI>
+<LI>unsigned long* &nbsp;<b><A HREF="#ref5">getBlocks</A></b> (unsigned long beginIndex, unsigned long length) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref6">setBlocks</A></b> (unsigned long beginIndex, unsigned long length, unsigned long* addresses) 
+</LI>
+</ul><h4>Private Members</h4><ul><LI>HDD* <b><A HREF="#ref7">hdd</A></b></LI>
+<LI>Inode* <b><A HREF="#ref8">inode</A></b></LI>
+<LI>unsigned char* <b><A HREF="#ref9">address</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><p>
+ This class makes inode addressing transparent. It allows the
+ user not to care whether (s)he's working with direct or indirect
+ addressing.
+</p>
+<p></p>
+<A NAME="FileBlocks"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>FileBlocks</strong> (<A HREF="HDD.html">HDD</A>* hdd, <A HREF="Inode.html">Inode</A>* inode)
+<br></td><td align="right"><h3><strong>FileBlocks</strong></h3></td></tr></table><p></p><p>
+ Creates a new FileBlocks. <code>hdd</code> is the hard disk to be
+ used for read/write operations (what will be read/written are the blocks
+ used for indirect addressing). <code>inode</code> represents the
+ inode associated with the file whose block addresses you want to
+ read/write. The <code>inode</code> received as parameter is supposed
+ to be valid and is used as such.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>hdd</i></TD><TD align="left" valign="top">the hard disk to be used for read/write operations.
+	 @ @param inode the inode of the file whose block addresses you want.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="~FileBlocks"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>~FileBlocks</strong> ()
+<br></td><td align="right"><h3><strong>~FileBlocks</strong></h3></td></tr></table><p></p><p>
+ The destructor of the class. This destructor does not free either
+ the <code>hdd</code> or the <code>inode</code> received as parameters
+ in the constructor.
+	 </p>
+<A NAME="getBlock"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long &nbsp;<strong>getBlock</strong> (unsigned long index)
+<br>throw(
+		<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*,
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*,
+		<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>getBlock</strong></h3></td></tr></table><p></p><p>
+ Returns the address of the <code>index</code>th block of data of the file.
+</p>
+<p> The method throws:
+ <ul>
+ <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which is rather
+	difficult, since it's an unsigned long) or greater than or equal to
+	include/defs.h::MAX_BLOCKS.</li>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>index</i></TD><TD align="left" valign="top">the index of the file's block whose address you want.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: the address of the <code>index</code>th block of data of the file.
+	 </p>
+<A NAME="setBlock"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setBlock</strong> (unsigned long index, unsigned long blockAddress)
+<br>throw(
+		<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*,
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*,
+		<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>setBlock</strong></h3></td></tr></table><p></p><p>
+ Sets the address of the <code>index</code>th block of data of the file
+ to <code>blockAddress</code>. Beware that the method does not allocate
+ space for the indirection blocks. It simply assumes that the index you
+ provide is an index in an already allocated & written in the inode
+ structure indirection block.
+</p>
+<p> Remeber to write the inode on the disk after calling this method.
+</p>
+<p> The method throws:
+ <ul>
+ <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which is rather
+	difficult, since it's an unsigned long) or greater than or equal to
+	include/defs.h::MAX_BLOCKS.</li>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>index</i></TD><TD align="left" valign="top">the index of the file's block whose address you want to change.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>blockAddress</i></TD><TD align="left" valign="top">the block address you want to set the <code>index</code>th
+	block address to.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="getBlocks"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long* &nbsp;<strong>getBlocks</strong> (unsigned long beginIndex, unsigned long length)
+<br>throw(
+		<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*,
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*,
+		<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>getBlocks</strong></h3></td></tr></table><p></p><p>
+ Returns the addresses of <code>length</code> blocks of data of
+ the file starting with <code>beginIndex</code>. The array will contain
+ <code>length</code> elements.
+</p>
+<p> The method throws:
+ <ul>
+ <li> ArrayIndexOutOfBoundsException* if <code>beginIndex</code>+<code>length</code>
+	is less than 0 (which is rather difficult, since they're both unsigned longs)
+	or greater than or equal to include/defs.h::MAX_BLOCKS.</li>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>beginIndex</i></TD><TD align="left" valign="top">the index of the first block whose address you want.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>length</i></TD><TD align="left" valign="top">the number of blocks you want.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: an array containing the addresses of <code>length</code> blocks
+	of data starting with <code>beginIndex</code>.
+	 </p>
+<A NAME="setBlocks"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setBlocks</strong> (unsigned long beginIndex, unsigned long length, unsigned long* addresses)
+<br>throw(
+		<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*,
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*,
+		<A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>setBlocks</strong></h3></td></tr></table><p></p><p>
+ Sets the addresses of <code>length</code> blocks of data of
+ the file starting with <code>beginIndex</code> to the values
+ contained in the <code>addresses</code> array. The array should
+ therefore contain at least <code>length</code> valid elements.
+</p>
+<p> Remeber to write the inode on the disk after calling this method.
+</p>
+<p> The method throws:
+ <ul>
+ <li> ArrayIndexOutOfBoundsException* if <code>beginIndex</code>+<code>length</code>
+	is less than 0 (which is rather difficult, since they're both unsigned longs)
+	or greater than or equal to include/defs.h::MAX_BLOCKS.</li>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>beginIndex</i></TD><TD align="left" valign="top">the index of the first block whose address you want.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>length</i></TD><TD align="left" valign="top">the number of blocks you want.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>addresses</i></TD><TD align="left" valign="top">the values of the block address you want to set.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="hdd"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="HDD.html">HDD</A>*  <strong>hdd</strong>
+</td><td align="right"><h3><strong>hdd</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="inode"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="Inode.html">Inode</A>*  <strong>inode</strong>
+</td><td align="right"><h3><strong>inode</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="address"></A><A NAME="ref9"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char*  <strong>address</strong>
+</td><td align="right"><h3><strong>address</strong></h3></td></tr></table><p> <small>[private]</small></p><HR><UL><LI><i>Version</i>: 0.1
+ </LI><LI><i>Author</i>: Bogdan DUMITRIU
+</LI><LI><i>Generated</i>: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</LI></UL></BODY></HTML>

@@ -1,0 +1,27 @@
+ - Functia DOS 3fh -
+
+Functie:
+    Citirea din fisier.
+
+Asteapta:
+    ah: 3fh
+    bx: descriptor de fisier deschis pentru citire.
+    cx: numarul de octeti de citit.
+    ds:dx: adresa unei zone tampon in care se vor scrie octetii cititi.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag e setat.
+        numarul de octeti cititi daca nu apar erori.
+
+Descriere:
+    Se citesc cx octeti de date (sau  mai putini) din fisierul sau dispozi-
+    tivul cu  descriptorul bx. Datele  sunt citite de la  pozitia curenta a
+    indicatorului de pozitie in fisier si plasate in zona tampon specifica-
+    ta.
+    
+    Totodata, se actualizeaza indicatorul de pozitie in fisier pentru o ci-
+    tire/scriere viitoare.
+
+Nota:
+    Cand se citeste de la un dispozitiv,  ax contine la iesire lungimea li-
+    niei citite pana la si incluzand caracterul CR (cod ascii 13h).

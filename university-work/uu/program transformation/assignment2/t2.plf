@@ -1,0 +1,1 @@
+forall a : forall b : not(a /\ b) <-> (not a \/ not b)

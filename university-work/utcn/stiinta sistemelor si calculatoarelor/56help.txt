@@ -1,0 +1,39 @@
+ - Functia DOS 56h -
+
+Functie:
+    Redenumirea unui fisier sau director sau mutarea unui fisier.
+
+Asteapta:
+    ah: 56h
+    ds:dx: adresa unui  sir de caractere care se  termina cu nul (cod ascii
+        00h) si care reprezinta numele vechi al fisierului/directorului.
+    es:di: adresa unui  sir de caractere care se  termina cu nul (cod ascii
+        00h) si care reprezinta numele nou al fisierului/directorului.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag e setat.
+
+Descriere:
+    In urma apelului functiei se va  muta un fisier intr-un alt director de
+    pe acelasi disc sau se va redenumi un fisier sau un director.
+    
+    ds:dx si es:di trebuie sa contina adresa unui sir de forma:
+        [d:][\cale\]nume_fisier.ext
+    Daca se omit litera ce identifica drive-ul urmata de : si/sau calea, se
+    iau valorile implicite.
+    
+    Fisierul/directorul cu numele vechi trebuie sa existe.
+    
+    Fisierul/directorul cu numele nou *nu* trebuie sa existe. Daca se folo-
+    seste si litera ce  identifica drive-ul, atunci  aceasta trebuie sa fie
+    aceeasi cu a fisierului/directorului dat de numele vechi.
+    
+    Daca numele vechi si cel nou indica cai diferite, atunci fisierul va fi
+    mutat in directorul specificat de numele nou.
+
+Note:
+    1. Aceasta functie nu se poate folosi pentru a muta un director intr-un
+    altul.
+    
+    2. Aceasta functie nu se poate  folosi pentru a muta un fisier de pe un
+    drive pe altul.

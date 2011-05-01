@@ -1,0 +1,112 @@
+
+  LDC	5
+  LDR	MP
+  LDC	L0
+  BRA	L1
+
+L0:
+  LDR	MP
+  LDRR	MP SP
+
+  LDR	MP
+  LDC	L2
+  BRA	L3
+
+L2:
+  LDR	MP
+  LDRR	MP SP
+
+  LDR	MP
+  LDC	L4
+  BRA	L5
+
+L4:
+  LDR	MP
+  LDRR	MP SP
+
+  LDL	-2
+  LDA	-2
+  LDA	-2
+  LDA	1
+
+  STL	-3
+  LDRR	SP MP
+  STR	MP
+  STS	-1
+  RET
+
+L5:
+  LDC	3
+  LDML	1 2
+  JSR
+  STS	-2
+  ADJ	-1
+
+  STL	-3
+  LDRR	SP MP
+  STR	MP
+  STS	-1
+  RET
+
+L3:
+  LDC	3
+  LDML	1 2
+  JSR
+  STS	-2
+  ADJ	-1
+
+  STL	-3
+  LDRR	SP MP
+  STR	MP
+  STS	-1
+  RET
+
+L1:
+  LDC	5
+  LDML	2 2
+  JSR
+  STS	-3
+  ADJ	-2
+
+  TRAP	0
+  HALT
+
+Stack layout before body of h is executed:
+
++---------+
+| 5       |
++---------+
+| SLf     |
++---------+
+| ADf     |
++---------+
+| 5       |
++---------+
+| SLf     |
++---------+
+| RA      |
++---------+
+| OldMP   |
++---------+
+| SLg     |
++---------+
+| ADg     |
++---------+
+| 3       |
++---------+
+| SLg     |
++---------+
+| RA      |
++---------+
+| OldMP   | <- MP
++---------+
+| SLh     |
++---------+
+| ADh     |
++---------+
+| 3       |
++---------+
+| SLh     |
++---------+
+| ADh     | <- SP
++---------+

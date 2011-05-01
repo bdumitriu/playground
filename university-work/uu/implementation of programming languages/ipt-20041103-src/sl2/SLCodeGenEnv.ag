@@ -1,0 +1,137 @@
+{-# LINE 17 "SLCodeGenEnv.lag" #-}
+{
+type Level  = Int
+type Displ  = Int
+type Env    = [(String, Level, Displ)]
+
+--
+-- A new type (level usage) used for associating a Level with an Int value.
+-- The significance of the Int value is (depending on where the type is used) one of the following:
+--  * number of times the level is used (i.e. number of accesses (load/store) to variables in the level)
+--  * displacement (with respect to the mark poninter) of the precomputed static link which leads to the level
+--
+type LUsage = [(Level, Int)]
+
+displOfLocalVars   = 1 :: Int
+sizeOfLambdaAdmin  = 2 :: Int
+paramDispl         = 2 :: Int
+
+--
+-- A new constant stating the displacement of the first precomputed static link with respect
+-- to the mark pointer.
+--
+displOfSLs         = 1 :: Int
+
+}
+
+--
+-- Two new attributes have been introduced:
+--
+--  * lusage (level usage) - a list containing associations of levels with Int's stating
+--    how many accesses are made to variables in the level.
+--
+--  * psldispl (precomputed static link displacement) - a list containing associations of
+--    levels with the displacement (with respect to the mark pointer) of the precomputed
+--    static link which leads to the level.
+--
+-- Also, the definition of the displ attribute for the expression of a lambda definition
+-- is changed so that it includes the number of precomputed static links used.
+--
+
+ATTR Expr [ level: Level env : Env psldispl : LUsage | displ : Displ | lusage : LUsage ]
+SEM Root
+  | Root expr.level   = 0
+         expr.env     = []
+         expr.displ   = displOfLocalVars
+	 expr.psldispl = []
+
+SEM Expr
+  | Unit      lhs.lusage      = []
+  | Intexpr   lhs.displ       = @lhs.displ + codeSize inttype
+              lhs.lusage      = []
+  | Boolexpr  lhs.displ       = @lhs.displ + codeSize booltype
+              lhs.lusage      = []
+  | Ident     lhs.displ       = @lhs.displ + codeSize @restp
+              lhs.lusage      = [(@idLevel, 1)]
+	      loc.psldispl    = @lhs.psldispl
+  | Op        lhs.displ       = @lhs.displ + codeSize @restp
+              lhs.lusage      = combineUsages @le.lusage @re.lusage
+  | If        thenExpr.displ  = @lhs.displ
+              elseExpr.displ  = @lhs.displ
+              lhs.lusage      = combineUsages (combineUsages @cond.lusage @thenExpr.lusage) @elseExpr.lusage
+  | Let       lhs.displ       = @lhs.displ + codeSize (@expr.resType)
+              lhs.lusage      = @expr.lusage
+  | Assign    lhs.lusage      = combineUsages [(@varLevel, 1)] @expr.lusage
+              loc.psldispl    = @lhs.psldispl
+  | Apply     arg.displ       = @lhs.displ
+              func.displ      = @arg.displ
+              lhs.displ       = @func.displ
+              lhs.lusage      = combineUsages @func.lusage @arg.lusage
+  | Lamcall   lhs.displ       = @lhs.displ + codeSize @call.resType
+              lhs.lusage      = @call.lusage
+  | Lam       loc.lamLevel    = @lhs.level + 1
+              loc.lusage      = @expr.lusage
+	      loc.psldispl    = staticLinkDisplacement @lusage @lamLevel displOfSLs
+              lhs.lusage      = []
+              expr.level      = @lamLevel
+              expr.displ      = displOfLocalVars + length @psldispl
+              expr.env        = @vars.env
+              vars.displ      = -(sizeOfLambdaAdmin)
+              vars.level      = @lamLevel
+              vars.env        = @lhs.env
+	      expr.psldispl   = @psldispl
+  | Seq       lhs.lusage      = @exprs.lusage
+
+SEM Decl [ level : Level psldispl : LUsage | env : Env displ : Displ |  ]
+  | Decl  loc.declEnv       = (@var, @lhs.level, @lhs.displ) : @lhs.env 
+          expr.env          = @declEnv
+          lhs.env           = @declEnv
+          lhs.displ         = @lhs.displ + codeSize @type
+
+SEM Vars [ level : Level | env: Env displ :Displ | ]
+  | Cons  loc.varDispl = @lhs.displ - codeSize @argtp
+          tl.env       = (@hd, @lhs.level, @varDispl) :  @lhs.env
+          tl.displ     = @varDispl
+   
+ATTR Decls [ level : Level psldispl : LUsage | env : Env displ : Displ | ]
+ATTR Exprs [ level : Level env : Env displ : Displ psldispl : LUsage |  | lusage : LUsage ]
+
+SEM Exprs
+  | Nil   lhs.lusage   = []
+  | Cons  lhs.lusage   = combineUsages @hd.lusage @tl.lusage
+
+{
+
+--
+-- Takes two LUsage lists sorted by level as arguments and returns another LUsage list,
+-- also sorted by level, which combines the two input lists as follows:
+--   * if an entry for level i exists in just one of the two lists, then it will appear
+--     unchanged in the result.
+--   * if an entry for level i exists in both lists, then it will appear only once in
+--     the result, with the level usage being equal with the sum of the two input level
+--     usages.
+--
+combineUsages :: LUsage -> LUsage -> LUsage
+combineUsages xs []			= xs
+combineUsages [] ys			= ys
+combineUsages ((xl, xn) : xs) ((yl, yn) : ys)
+  | xl == yl				= (xl, xn+yn) : combineUsages xs ys
+  | xl < yl				= (xl, xn) : combineUsages xs ((yl,yn):ys)
+  | otherwise				= (yl, yn) : combineUsages ((xl,xn):xs) ys
+
+--
+-- Takes a level usage list and two Int's as arguments and returns a precomputed static link
+-- displacement list. The first Int represents the current level for which the output list
+-- is computed and, based on it, those entries for that level and for the level immediately
+-- below it are dropped (since no static links for these 2 levels are computed). Also, the
+-- entries for which the number of usages is 1 are also dropped, since for those we don't
+-- precompute a static link. The second Int argument gives the displacement of the first
+-- static link with respect to the mark pointer.
+--
+staticLinkDisplacement :: LUsage -> Int -> Int -> LUsage
+staticLinkDisplacement [] _ _		= []
+staticLinkDisplacement ((x, y) : xs) level displ
+  | (level - x <= 1) || (y == 1)	= staticLinkDisplacement xs level displ
+  | otherwise				= (x, displ) : staticLinkDisplacement xs level (displ + 1)
+
+}

@@ -1,0 +1,23 @@
++--------------------+
+¦ Cozi de prioritati ¦
++--------------------+
+
+PARINTE(i)
+	return [i/2]
+
+EXTRAGE-MAX-DIN-HEAP(A)
+	if dimensiune-heap[A] < 1 then
+		eroare: "depasire inferioara heap"
+	maxim <- A[1]
+	A[1] <- A[dimensiune-heap[A]]
+	dimensiune-heap[A] <- dimensiune-heap[A]-1
+	RECONSTITUIE-HEAP(A,1)
+	return maxim
+
+INSEREAZA-IN-HEAP(A,cheie)
+	dimensiune-heap[A] <- dimensiune-heap[A]+1
+	i <- dimensiune-heap[A]
+	while i > 1 and A[PARINTE(i)] < cheie do
+		A[i] <- A[PARINTE(i)]
+		i <- PARINTE(i)
+	A[i] <- cheie

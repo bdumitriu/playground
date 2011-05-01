@@ -1,0 +1,17 @@
+ - Functia DOS 09h -
+
+Functie:
+    Afisarea unui sir de caractere la iesirea standard.
+
+Asteapta:
+    ah: 09h
+    ds:dx: adresa unui  sir de caractere care se  termina cu '$' (cod ascii
+        24h).
+
+Intoarce:
+    nimic.
+
+Descriere:
+    In urma apelului functiei se  va afisa la iesirea standard sirul de ca-
+    ractere indicat de ds:dx. Daca se intalneste backspace se procedeaza la
+    fel ca si in cazul functiei 02h (vezi explicatiile aferente).

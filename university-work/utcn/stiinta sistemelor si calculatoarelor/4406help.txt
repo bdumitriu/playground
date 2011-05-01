@@ -1,0 +1,27 @@
+ - Functia DOS 4406h -
+
+Functie:
+    Verificare disponibilitate date  pentru citire de la un fisier sau dis-
+    pozitiv.
+
+Asteapta:
+    ax: 4406h
+    bx: un descriptor de fisier sau dispozitiv.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag este setat.
+    al: starea dispozitivului sau fisierului
+        00h: nu exista date disponibile.
+        ffh: exista date disponibile.
+
+Descriere:
+    Aceasta functie verifica daca  un dispozitiv sau fisier are date dispo-
+    nibile spre citire.
+
+Nota:
+    Descriptoarele de dispozitivele standard sunt:
+     - 0000h: Intrarea standard (de obicei tastatura)
+     - 0001h: Iesirea standard (de obicei monitorul)
+     - 0002h: Iesirea de eroare
+     - 0003h: Dispozitivul auxiliar (de obicei COM1)
+     - 0004h: Imprimanta standard

@@ -1,0 +1,1 @@
+exists a: forall b: (not a /\ b <-> (exists c: b/\c))

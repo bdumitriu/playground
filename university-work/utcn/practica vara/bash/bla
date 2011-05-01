@@ -1,0 +1,151 @@
+#!/bin/bash
+# Author:		Bogdan DUMITRIU
+#
+# Date:			29.01.2001
+# Modified in:		23.02.2001, 03.03.2001
+#
+# Function:		Modifies all the names of the files in the current
+#			directory, changing them as follows:
+#			1. underscores are turned into spaces
+#			2. one of the "-"s (with all its leading and trailing
+#			   spaces) from the filename is turned into underscore.
+#			   If more than one, the user is prompted to find out
+#			   which of them should be changed
+#			3. The filenames are changed in such a way that all
+#			   the words before the "_" are capitalized and low
+#			   lettered and the ones after the "_" are entirely
+#			   in low letters except the first one after the
+#			   "_" which will be capitalized. A few examples...
+#
+#			   abc DEF_TTt rst ERjs-Sfrgt.mp3 will become
+#			   Abc Def_Ttt rst erjs-sfrgt.mp3
+#
+#			   HELLOWEEN_A Tale That Wasn't Right
+#			   Helloween_A tale that wasn't right
+#
+#			!BEWARE!
+#
+#			1. Since at step 1 underscores are changed into spaces
+#			that means that if your file is something like
+#			Artist_Name-Song_Name everything will be fine
+#			but if you file is something like 
+#			Artist Name_Song Name there will be problems because
+#			the underscore will be lost!
+#
+#			2. Since at step 3 all words after the "_" are
+#			decapitalized you might have to change a few back
+#			such as i to I, names of people, names of towns, etc.
+#
+#			!END OF BEWARE!
+#
+# Is working:		yes
+#
+# Yet to be done:	change the script in such a way that the user can
+#			easily customize the way he/she wants the names of
+#			the files to be changed
+
+# Get our name
+we_are_called=`echo $0 | tr -d [\.\/]`
+
+# Get all the files in current directory, except ourselves,
+# and rename them. I have to translate spaces in %s and
+# back because otherwise I'd cycle through each word of
+# each filename with my i variable.
+for i in `ls -1 | grep -v $we_are_called | sed s/[[:space:]]/\%/g` ; do
+
+    # translate %s back to spaces
+    oldname=`echo $i | sed y/\%/\ /`
+    
+    if [ -f "$oldname" ]; then
+
+	# translate _s to spaces
+	# change the following two lines (comment the 1st
+	# and uncomment the 2nd) if the underscore part is
+	# already solved
+	newname=`echo $oldname | sed y/_/\ /`
+	#newname=$oldname
+	
+        # count the number of "-"s in the name of the file
+        #
+        # ${#variable} - the number of characters of the variable
+        # ${variable:offset:length} - the substring starting from offset
+        #	of the lenght length from variable
+        nr_of_occurences=0
+        for (( i=0 ; $i < ${#newname} ; i=$i+1 )) ; do
+	    if [ "${newname:i:1}" == "-" ]; then
+		((nr_of_occurences++))
+	    fi
+	done
+
+        # I use "read answer trash" instead of "read answer" to make sure that
+        # no gibberish is read.
+	if ((nr_of_occurences>1)); then
+	    echo "The number of \"-\"s in the name of the file"
+    	    echo $newname
+	    echo "is greater than 1. Which of them do you wish to change to \"_\"?"
+	    echo "The answer should be something like 1, 2, 3 etc."
+    	    read answer trash
+        else
+	    answer=1
+	fi
+
+	newname=`echo $newname | sed s/[\ ]*-[\ ]*/\_/$answer`
+	
+	
+	underscore_found="true"
+	delimiter_found="true"
+	first="true"
+	name=""
+	for (( i=0 ; $i < ${#newname} ; i=$i+1 )) ; do
+	    char="${newname:i:1}"
+	    if [ "$char" == " " ]; then
+		delimiter_found="true"
+		name=$name$char
+	    elif [ "$char" == "-" ]; then
+		delimiter_found="true"
+		name=$name$char
+	    elif [ "$char" == "," ]; then
+		delimiter_found="true"
+		name=$name$char
+	    elif [ "$char" == "(" ]; then
+		delimiter_found="true"
+		name=$name$char
+	    elif [ "$char" == ")" ]; then
+		delimiter_found="true"
+		name=$name$char
+	    elif [ "$char" == ";" ]; then
+		delimiter_found="true"
+		name=$name$char
+	    elif [ "$char" == "." ]; then
+		delimiter_found="true"
+		name=$name$char
+	    elif [ "$char" == "_" ]; then
+		delimiter_found="true"
+		underscore_found="true"
+		first="true"
+		name=$name$char
+	    else
+		if [ "$delimiter_found" == "true" ]; then
+		    if [ "$underscore_found" == "true" ]; then
+			if [ "$first" == "true" ]; then
+			    char=`echo $char | tr a-z A-Z`
+			    first="false"
+			else
+			    char=`echo $char | tr A-Z a-z`
+			fi
+		    else
+			char=`echo $char | tr a-z A-Z`
+		    fi
+		    delimiter_found="false"
+		else
+		    char=`echo $char | tr A-Z a-z`
+		fi
+		name=$name$char
+	    fi
+	done
+	newname=$name
+
+	echo "Changing $oldname to $newname..."
+	mv "$oldname" "$newname"
+    fi
+done

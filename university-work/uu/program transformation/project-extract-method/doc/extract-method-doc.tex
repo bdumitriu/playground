@@ -1,0 +1,442 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{verbatim}
+\usepackage{listings}
+
+\begin{comment}
+
+\end{comment}
+
+\title{Program Transformation Project\\The \emph{Extract Method} refactoring in Java}
+\author{Bogdan \textsc{Dumitriu}\\Jos\'e Pedro Rodrigues \textsc{Magalh\~aes}}
+
+\begin{document}
+
+\maketitle
+
+\section{Description}
+\emph{Extract Method} is the transformation that deals with
+selecting a piece of code and extracting it to a new
+method\footnote{or function, procedure or similar construct,
+depending on the language.}, accordingly removing the old code and
+invoking the new method. The behavior of the program must be
+preserved in the transformation, with the objectives being:
+\begin{itemize}
+\item increased readability, since the parent method becomes
+shorter, and the extracted code's purpose can be easily understood
+if given a meaningful name;
+\item reusability, since the extracted method might be useful somewhere
+else.
+\end{itemize}
+
+Our project deals with the implementation of \emph{Extract Method}
+in Java, using Stratego \cite{stratego} as our language of choice.
+
+\section{General architecture}
+
+\subsection{Overview}
+The refactoring is achieved through a three-state process, namely:
+
+\begin{enumerate}
+
+\item Parsing an input Java source code file, which includes marking
+for what fragment to extract as well as the name for the new method;
+
+\item Performing the actual transformation;
+
+\item Pretty printing the result as Java source code.
+
+\end{enumerate}
+
+The first part is performed with the aid of the SGLR parser fed with the
+parse table for Java and an extension for delimiting the region to extract.
+
+The second one uses our own code for the transformation as well as components
+of \textbf{Dryad} \cite{dryad}, for ambiguous names reclassification
+and type checking.
+
+The last part is done with the existing hand-crafted pretty printer for Java.
+
+\subsection{Information to collect}
+To perform the extraction, the following information must be considered:
+
+\begin{itemize}
+
+\item Is the extraction really possible?
+
+\item What are the various kinds of variables affected by or involved in
+the process?
+
+\item What exceptions are thrown in the fragment to extract and
+which of them, if any, are not caught by potential \textsf{catch} clauses
+that appear in the fragment?
+
+\end{itemize}
+
+\subsubsection{Is extraction possible?}
+Some situations may not allow for extraction to be performed:
+
+\begin{enumerate}
+
+\item Does the code contain the markup for the fragment to extract?
+If not, then the input file did not contain the necessary
+information for extraction to be done.
+
+\item Does the fragment contain any control-flow instructions? With
+our implementation, a fragment cannot contain any of the
+instructions \textsf{return}, \textsf{break}, \textsf{continue} or
+\textsf{label}. Although some configurations could be allowed (like
+a \textsf{return} statement at the end of the fragment or a
+loop that is fully enclosed in the fragment to extract and contains
+any number of \textsf{break} or \textsf{continue}
+statements), most situations will imply that the normal flow of the
+program is disrupted from the current block, thus not allowing the
+extraction (since the fragment can only direct the flow back to the
+parent method, by means of a \textsf{return}).
+
+\item How many variables does the fragment modify? If the fragment
+modifies --- by assignment --- more than one external variable (that
+is, a variable declared before the fragment) which is also used
+after the fragment, then the extraction cannot be done, since a
+method can only return one variable. Some solutions would be
+possible, but they would imply too big a change to the original
+source code, thus contributing against the main purpose of the
+refactoring, namely to increase readability. One such solution could
+be to construct and use a holder class with setters and getters for
+all the changed variables. Another solution could be to extend the
+original class by adding some more fields to it, one for each
+variable and use those for variable passing between methods.
+
+\end{enumerate}
+
+The extraction is possible only if all the conditions above are met.
+
+\subsubsection{Variable information}
+\label{vars}
+In order to generate the new method, three sets of variables need to
+be collected:
+
+\begin{itemize}
+
+\item Variables used in the fragment, but not assigned to in the fragment.
+These have to be sent as parameters to the new method;
+
+\item Variables whose value is changed by assignment in the fragment
+and are then used after the fragment as well. If one variable is
+changed inside the fragment, its value can be returned as the return
+value of the extracted method and assigned to the original variable
+in the calling fragment. If two or more variables of this type are
+changed the refactoring will be disallowed (as we have already
+discussed above);
+
+\item Variables declared in the fragment and used after it. Extracting the
+fragment to a different method would make the scope of the declaration
+restricted to that method. The effect is that the usage of such a variable
+after the fragment would result into a compilation error, due to the fact
+that the variable would no longer be declared in that scope. The simple
+solution to this problem is moving the declaration of the variable before
+the fragment, and passing the variable itself as a parameter to the extracted
+method.
+
+\end{itemize}
+
+\subsubsection{Exceptions}
+For exception handling, we need to know all the exceptions that
+every instruction in the fragment can throw. Furthermore, we need to
+analyze which of those are already caught in any (possibly nested) \textsf{try -
+catch} clause, not forgetting to consider that catching an exception
+implies catching all the exceptions from the hierarchy of exceptions
+rooted in the explicitly caught one. After effectively knowing which
+exceptions are not caught, we have to add them to the \textsf{throws}
+clause of the new method.
+
+\section{Implementation details}
+
+\subsection{One problem, two implementations}
+Our implementation actually consists of two separate solutions,
+although they share some commonalities. There is a naive
+implementation, the first one we attempted, and afterwards, with the
+gathered knowledge, we tried to come up with a more efficient and
+elegant solution, which would achieve the same effect with a single
+traversal on the program tree. However, since the second, improved
+version was mostly worked as a ``proof of concept'' based on the
+experience of the first one, we have not aimed to fully complete it.
+Notably, it misses exception handling. Therefore, we supply the two
+solutions: the first one\footnote{file \textsf{extract-method.str.}},
+less efficient and perhaps less readable, but more powerful, and the
+second one\footnote{file \textsf{better-extract-method.str.}}, which
+is meant as a starting point of a reimplementation, but actually goes
+quite a bit further than that.
+
+\subsection{Parsing extended Java syntax}
+To know what fragment to extract and what name to give to the new
+method, we extended the syntax for Java with a new symbol
+(\textsf{@}) to mark both the beginning and the end of the piece of
+code to extract to a new method. The name to be be given to the extracted
+method is expected as a string after the first \textsf{@} symbol.
+
+In terms of implementation, this is essentially a one-line work:
+\begin{lstlisting}[basicstyle=\small,breaklines=true,frame=single]
+"@" Id BlockStm+ "@" -> BlockStm{cons("Extract")}
+\end{lstlisting}
+Of course this is followed by the generation of the new parse table
+(by combining the original Java syntax definition and our extension),
+and using the new parse table to parse files (instead of a plain
+invocation to \textsf{parse-java}).
+
+\subsection{\textbf{Dryad} issues}
+Our implementation introduces a new constructor in the Java
+representation: the \textsf{Extract(name, code)}, which is used to
+name and mark the piece of code to extract. Unfortunately,
+\textbf{Dryad} is not expecting its input files to contain such
+markup, and thus fails when applied. We were then confronted with
+the following problem: Dryad cannot easily be extended to support
+extra constructors, but it had to be applied in order to reclassify
+ambiguous names and obtain type information. We solved this issue by
+converting the \textsf{Extract} markup to annotations: every
+statement inside the block to extract is annotated with a
+\textsf{{"extract-ann", name}}, where \textsf{name} is the name of
+the method to extract, and the first string is just a markup for
+later recognizing the annotation. After this we can apply
+\textsf{dryad-reclassify-ambnames} and \textsf{dryad-type-checker},
+and then reconvert the annotations back into the \textsf{Extract}
+constructor.
+
+Another problem with \textbf{Dryad} is that it currently does not
+support field variables distinction. So far, our project works correctly
+as long as there are no name clashes between the field names and
+the variable names whose declaration we might have to move up
+(the third category of variables described above). As soon as \textbf{Dryad}
+will classify field names in a distinguishable way from local variables,
+the project can be quickly updated with some minor modifications
+to support this.
+
+\subsection{\textsf{extract-method.str} overview}
+
+Our first implementation can be found in the file
+\textsf{extract-method.str}. Basically, it traverses the entire Java
+code to collect all the necessary information about variables and
+exceptions, binds all the information in the \textsf{config} hash
+table and retrieves it any time it needs.
+
+Most strategies are commented in the source code itself, making it
+easy to understand how the whole information gathering and actual
+rewriting happens throughout the process.
+
+Perhaps an interesting thing to discuss about this version, especially
+since it does not also appear in the other one, is the exception handling
+mechanism. The strategy for exception collection (\textsf{define-exception-rules})
+is based on three dynamic rules:
+
+\begin{itemize}
+
+\item \textsf{InTry} - this rule will be defined as long as the current
+traversal point is within a (possibly nested) \textsf{try} block.
+It's simply a marker to help us know whether we are inside a
+\textsf{try} block or not;
+
+\item \textsf{TempException} - this rule is appended with each exception
+thrown by a method invocation. Also, every time a \textsf{try-catch}
+block is exited, but the current point of traversal is still in a
+higher-level \textsf{try} block, a \textsf{TempException} rule is
+defined for each uncaught exception;
+
+\item \textsf{PermException} - this rule will collect all the uncaught
+exceptions which will eventually have to appear in the \textsf{throws}
+clause of the extracted method. A \textsf{PermException} is defined
+when a \textsf{try-catch} block is exited and the current point of traversal
+is no longer inside a higher-level \textsf{try} block. All uncaught exceptions
+thrown in the block are appended to \textsf{PermException}.
+
+\end{itemize}
+
+You should note that \textsf{TempException} is scoped at the level of
+each \textsf{try} block, which means that all \textsf{TempException}'s
+are automatically undefined when the \textsf{try} block is exited. The
+only \textsf{TempException}'s which might still be defined after the
+traversal are the ones which are outside any \textsf{try} block. Therefore,
+a union of the \textsf{bagof-TempException} and the \textsf{bagof-PermException}
+is taken after the traversal.
+
+\subsection{\textsf{better-extract-method.str} overview}
+
+The second implementation, available in the \textsf{better-extract-method.str}
+file, provides an easier to understand solution, as well as more elegant
+and efficient. However, is not as complete as the first implementation,
+as explained before.
+
+After similar ``preparation'' using Dryad, the bulk of this second
+approach is contained in a main traversal which deals with all the
+aspects of the problem. Collection of information is simulated by
+making heavy use of dynamic rules and rewriting is done either
+directly where possible, or by applying a dynamic rule defined
+elsewhere than the place of application, where the information
+needed for the rewriting is present. Careful scoping takes care
+that the result is indeed the desired one.
+
+The main traversal has specialized behavior for:
+
+\begin{enumerate}
+
+\item Class declaration: if the class contains the fragment, then
+a new method will have to be added. This will be done by applying
+the \textsf{RewriteClass} dynamic rule, defined in the handler
+for the block which contains the fragment to extract (since it is
+there where we have the information we need for creating this
+rule).
+
+\item Method declaration: this is only used to scope the \textsf{VarType}
+rule, since this is the scope for the types of the method parameters and
+the local variables defined inside the method.
+
+\item Block level: many rules have to be scoped at the block level,
+and if this block contains the code to extract then this is the
+point where we have the necessary information to generate the rule
+to rewrite the class. The block itself also has to be rewritten so that
+the fragment of code to extract is replaced with a call to the new method.
+This is done by using the dynamic rule \textsf{RewriteExtract},
+mentioned below, when discussing the specialized behavior for
+the fragment to extract.
+
+\item Fragment to extract: here we define a rule to store the
+fragment in. This will allow us to retrieve it later, when we need
+to create the new method. A dynamic rule to rewrite the fragment
+to a call to the extracted method (possibly preceded by the list of
+declarations of those variables in the third category described in
+section \ref{vars}) is then defined. This rule will be applied at
+the level of the block containing the fragment.
+
+\item Variable declaration, use or assignment: here a variable is
+``added'' to the appropriate dynamic rule, depending on its category,
+as defined in section \ref{vars}.
+
+\item Control flow: if control flow instructions are found in the
+fragment to extract, extraction will stop.
+
+\end{enumerate}
+
+\section{General remarks}
+
+\subsubsection*{Scope for variables}
+
+Why does moving the declarations of the third kind of variables
+(that is, variables declared in the fragment to extract and used after it)
+before the fragment work, you might wonder. The answer lies in the
+way scoping in defined in Java. We are going to consider the cases here:
+
+\begin{itemize}
+
+\item the variable is at the top level (i.e., not within an additional
+block) in the fragment to extract, which makes it visible in the
+rest of the fragment, as well as after it. In this case, moving the
+declaration before the fragment will ensure a slightly larger
+visibility scope. We have these cases:
+
+\begin{itemize}
+
+\item the variable name is not used between the beginning of the
+fragment and the declaration. Then, moving its declaration up
+is harmless.
+
+\item the variable name is used between the beginning of the
+fragment and the declaration (obviously, referring to another
+variable). In this case, simply moving the declaration up would
+render a different semantics, since the use would now refer to
+the moved up declaration. However, this can easily be solved.
+We know that the variable's use cannot refer to another local
+declaration or even parameter name, since Java doesn't allow
+redeclaration of variable names. Then, the variable must either
+refer to a field name, may it be static or non-static or to a static
+variable of another class (since Java 1.5, a class can be
+statically imported, thus making it possible to refer to a
+public/protected static variable of that class without prefixing
+it with the class name). In order to solve this case, we simply
+have to prefix the field name with \textsf{this.} (if it is a
+non-static field) or with the class name followed by a `.' (if
+it is a static field). We are currently not doing this, since Dryad
+doesn't yet offer support for distinguishing field names from
+local parameters or variables. But it can easily be done, once
+support is available.
+
+\end{itemize}
+
+\item the variable declaration is nested in an extra block within
+the fragment. In this case, we can be sure that it won't be
+used after the fragment since the fragment can only be
+extracted as a new method if all blocks therein are fully contained
+inside it and since the scope of a variable declared in a block
+is limited to that block.
+
+\end{itemize}
+
+\subsubsection*{How clear is the code?}
+
+We have gone at great length to make our code as clear as
+possible, by commenting it quite thoroughly, by laying it out
+in a readable fashion, by separating things into strategies
+as much as possible, by using meaningful names, by refactoring
+things which we realized could be done easier and by various
+other techniques. Last, but not least, the fact that we have
+created a brand new extra implementation should stand as
+proof for our drive to make the code clearer.
+
+The only thing which might make it less clear is the heavy
+use of dynamic rules (in our second implementation), but
+given the complexity of the refactoring, there is hardly anything
+we could do about this.
+
+And, agreed, the first solution might be made a bit more difficult
+to understand by the combination of a more imperative style of
+programming with the classic Stratego style, hence the reason
+for creating our second implementation.
+
+\subsubsection*{Is Stratego appropriate for the transformation?}
+
+This issue can be regarded in two ways. On one hand, Stratego is
+the perfect tool for implementing such a refactoring, considering
+the amount of tools which it offers. Not only is parsing and
+pretty-printing fully covered by java-front, but it also provides a
+very useful toolset through the Dryad package, that came in extremely
+handy. We are sure that without such a supporting platform, the
+work involved by this type of refactoring is a very tedious task, to
+say the least.
+
+On the other hand, the lack of support for more elaborate debugging
+combined with lengthy times for compilation of Stratego code to C
+makes working with Stratego on a project of this scale a living hell.
+We honestly believe we have spent towards half of the working
+hours adding \textsf{say} or \textsf{debug} statements and
+recompiling the code.
+
+But, to end on a positive note, we are fully convinced that
+the advantages of Stratego clearly surpass its disadvantages, especially
+since the latter are mostly due to its current state of development, more
+than to structural faults.
+
+\begin{thebibliography}{99}
+
+\bibitem{dryad} M. Bravenboer. \textbf{Dryad --- The Tree Nymph}
+Available from
+http://catamaran.labs.cs.uu.nl/twiki/pt/bin/view/Stratego/TheDryad
+
+\bibitem{refactoring} M. Fowler, et al. \textbf{Refactoring: Improving the Design of Existing Code
+(Hardcover).} Addison-Wesley Professional, 1999.
+
+\bibitem{stratego} E. Visser. \textbf{Program Transformation with Stratego/XT:
+Rules, Strategies, Tools, and Systems in StrategoXT-0.9.} In C.
+Lengauer et al., editors, Domain-Specific Program Generation, volume
+3016 of Lecture Notes in Computer Science, pages 216--238.
+Spinger-Verlag, June 2004.
+
+\end{thebibliography}
+
+\begin{appendix}
+
+\section{File \textsf{extract-method.str}}
+\lstinputlisting[basicstyle=\tiny,breaklines=true,frame=single]{../extract-method.str}
+
+\section{File \textsf{better-extract-method.str}}
+\lstinputlisting[basicstyle=\tiny,breaklines=true,frame=single]{../better-extract-method.str}
+
+\end{appendix}
+
+\end{document}

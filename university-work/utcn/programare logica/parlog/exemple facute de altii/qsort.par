@@ -1,0 +1,25 @@
+/*
+  PARLOG example: Quicksort.
+
+  qsort(List,Sorted): Sorted is List ordered.
+*/
+
+mode qsort(list?,sorted_list^).
+qsort([N|Rest],Sorted) <-
+  partition(N,Rest,LessN,MoreN),
+  qsort(LessN,SortedLess),
+  qsort(MoreN,SortedMore),
+  append(SortedLess,[N|SortedMore],Sorted).
+qsort([],[]).
+
+mode partition(pivot?,list?,less^,more^).
+partition(Pivot,[T|List],[T|Less],More) <- T < Pivot :
+  partition(Pivot,List,Less,More).
+partition(Pivot,[T|List],Less,[T|More]) <- T >= Pivot :
+  partition(Pivot,List,Less,More).
+partition(Pivot,[],[],[]).
+
+mode append(?,?,^).
+append([],Y,Y).
+append([U|X],Y,[U|Z]) <-
+  append(X,Y,Z).

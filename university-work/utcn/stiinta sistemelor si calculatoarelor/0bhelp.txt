@@ -1,0 +1,14 @@
+ - Functia DOS 0bh -
+
+Functie:
+    Verificare disponibilitate caracter(e).
+
+Asteapta:
+    ah: 0bh
+
+Intoarce:
+    al: ffh daca exista caractere disponibile spre citire.
+        00h daca nu exista caractere disponibile spre citire.
+
+Descriere:
+    Functia verifica starea intrarii standard.

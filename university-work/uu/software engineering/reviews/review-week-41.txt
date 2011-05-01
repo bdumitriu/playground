@@ -1,0 +1,99 @@
+The paper (actually, the work described therein)
+[[http://findbugs.sourceforge.net/publications.html][Finding Bugs is Easy]]
+address one of the most common problem of software engineering: bugs in source code.
+=FindBugs= (the described tool) tries to provide a way to automatically detect
+certain types of bugs (currently only in Java code). Perhaps this is a bit of an overstatement,
+though, since the tool is actually limited to notifying the user about _potential_ bugs
+in his/her code, leaving the user him/herself decide which of these potential bugs are
+real and which are not. The technique used is quite a simple (but nevertheless effective)
+one, namely to look for =bug patterns=, i.e. certain pieces of code with high
+similarity (in terms of structure) to some predefined erroneous code template.
+
+Bug pattern detection is based on static analysis of the Java byte code (as opposed
+to finding bugs by testing, for example, which is based on dynamic analysis). For various
+kinds of bug patterns, the tool implements a wide range of analyzers, which can be as
+simple as =class structure and inheritance hierarchy analyzers= or as complicated as
+=control and dataflow analyzers=. Still, most of the analyzers for the (roughly) 50 bug
+patterns advertised by the authors as being implemented are said to be quite basic and
+easy to write, ranging from some tens to some hundreds of lines of code. The tool tries
+to mitigate the relatively low penetration of bug detection software in common developer
+use by providing numerous ways of using its results (various GUIs, Eclipse plugin, XML
+reports etc.)
+
+The types of bugs for which patterns are discussed and implemented mostly stem from wrong or
+insufficient understanding of the Java API, which leads to erroneous use thereof. As such,
+detectors exist for bugs like not handling exceptions, not overriding the =hashCode= method
+in all the classes that overwrite the =equals= one, advertising a class as =Serializable=,
+but not really ensuring that it actually is and so on. Other types of bugs cross the language
+boundary and thus bear no relation to the Java API. Examples of such bugs are using
+synchronization in the wrong way, opening streams, but then forgetting to close them or
+null pointer dereference (naturally, the cases which can be detected by static analysis).
+All in all, the tool provides detectors for such a variety of bugs, that virtually no
+developer can honestly say that he hasn't produced instances of at least some of them.
+
+The evaluation of the =FindBugs= tool for various widely used software (such as Eclipse or
+Sun's implementation of the Java API) shows that for most types of bugs, the reported potential
+bugs turn out to be real bugs, with percentages well over 50%. In some cases, percentages
+stay below 50%, but even then it is remarkable that the total number of possible bugs stays
+quite low, which means that it is feasible to think that a developer could investigate them
+all. And since overall the bugs are quite accurately reported, the authors suggest that using
+such a tool is well worth while. This conclusion is also backed up by reports of companies
+using =FindBugs= for medium-sized applications (hundreds of KLOC), which indicate fruitful
+use in detecting both obvious and more subtle bugs, which would otherwise get overlooked.
+
+The other article of the week,
+[[http://www.stickyminds.com/sitewide.asp?ObjectId=7331&Function=DETAILBROWSE&ObjectType=COL][Things That Find Bugs in the Night]],
+suggests a better use of the idle time of computers by making them run random tests overnight
+(or, naturally, at any other time of day when they're not in use). The basic idea is that
+people-crafted tests usually test conventional input (and perhaps some boundary input), but
+seldom or never random input. So why not integrate a random test generator with a automatic
+testing tool in order to test our code with thousands or even millions of random test cases.
+Random numbers and strings are, of course, the prime candidates for this type of testing.
+The author mentions some anecdotal personal experience with the approach which has helped him
+find some otherwise hard to detect bugs, which only showed when running the program with some
+very strange input (which would have never been typed in manually). Of course, the main goal
+is not to protect against program crashes due to unlikely input, but rather to identify potential
+security threats or perhaps bugs which might manifest themselves also with more "normal" input.
+
+The =FindBugs= tool falls into a very specific area of software engineering, namely implementation
+of software. It could be argued that perhaps it should be placed into the testing part of
+software engineering, but since it actually differs from testing, given that it relies on
+source (well, byte-) code analysis, I find it more appropriate to relate it to code development
+rather than code testing. Regardless of area, however, it is clear that the use of such a tool
+should normally be a mandatory part of writing quality code. Unfortunately, this is not yet
+the case in reality.
+
+=FindBugs= is a useful aid for following a part of the famous (at least in our course) Boehm's
+first law (=errors are the more expensive the later they are removed=), since it can help in
+finding bugs even as we type them. At least this is the case if we use a development environment
+=FindBugs= plugin. Of course, one could argue that bugs as the ones detected by =FindBugs=
+do not really comply to this law, since they are unlikely to cause any need for massive rewriting
+of code or design changes. However, it is still the case that should they manifest themselves during
+the running of the program, it will take man-hours to find them (if =FindBugs= isn't used), which
+translates to increased costs. We can thus conclude that even the most innocent-looking bugs still
+follow Boehm's first law.
+
+Even though we find this hypothesis in the chapter about =Testing or dynamic verification=, I still believe
+that Hamlet's hypothesis (=suspicion-based testing can be more effective than most other approaches=)
+bears a strong relation with any bug-detecting tool. We can view such a tool as a way to
+create "suspicion". In other words, the potential bugs identified by =FindBugs= can point us to
+a piece of code which we have reason to believe might contain some errors. This, in turn, according
+to the hypothesis, makes the approach more effective than most other approaches.
+
+Since we can also see automatic detection of bugs as automatic inspection, we can also easily relate
+the article to a law in the chapter it naturally belongs to, namely the one about =Validation and static verification=.
+The law in discussion is Fagan's law (=inspections significantly increase performance, quality, and project stability=).
+As a automatic inspector, =FindBugs= can again help developers achieve all these positive effects the
+law mentions.
+
+My own opinion, I suppose, is in line with any other honest opinion about a tool such as =FindBugs=.
+I believe that its high percentage of true bugs reported recommends it as a have-to-use tool for
+any developer who cares about the quality of his/her code. What I find slightly surprising about the
+experience the authors describe in the article is the high number of bugs in widely-used software. I say this not
+necessarily because I expect widely-used software to be developed by super-developers who cannot make
+mistakes, but rather because I would expect that a tool with such a large user base (as Eclipse clearly
+is, for example) would have received numerous reports about malfunction due to bugs and would have
+detected and corrected them. It appears, though, that this isn't the case, which only emphasizes once
+again the real need for the use of bug detection tools in common development practice.
+
+Back to the [[PaperReviews][paper reviews index]].

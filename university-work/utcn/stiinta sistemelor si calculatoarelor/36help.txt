@@ -1,0 +1,24 @@
+ - Functia DOS 36h -
+
+Functie:
+    Aflarea spatiului disponibil pe un drive.
+
+Asteapta:
+    ah: 36h
+    dl: numarul drive-ului (0 = default, 1 = A, etc.).
+
+Intoarce:
+    ax: ffffh daca dl a fost un numar invalid de drive.
+        numarul de sectoare/cluster daca nu a aparut nici o eroare.
+    bx: numarul de clusteri disponibili.
+    cx: octeti/sector (de obicei 512).
+    dx: numarul total de clusteri de pe disc.
+
+Descriere:
+    Intoarce informatii  utile pentru calculul spatiului  total si disponi-
+    bil de pe disc.
+    
+    Daca ax contine ffffh, s-a introdus un numar invalid de drive in dl.
+    
+    Altfel, spatiul liber in octeti = (ax * cx * bx)
+            spatiul total in octeti = (ax * cx * dx)

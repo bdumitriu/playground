@@ -1,0 +1,462 @@
+\documentclass[fleqn,oneside]{article}
+
+\usepackage{a4}
+\usepackage{latexsym}
+\usepackage{pncproofmacros}
+
+\title{Solution For Assignment 3}
+\author{Bogdan Dumitriu}
+
+\begin{document}
+
+\maketitle
+
+\noindent{}\bf The proof plan:\\
+\\
+\indent\EXPR{ALL(READ\ b:\ bool[],\ READ\ n:\ int,\ OUT\ r:\ bool)} \\
+
+\EXPR{i,\ j:\ int;}\\
+
+\COND{n\geq 0,\ see\ PROOF\ Init}\\
+
+\EXPR{\{}
+
+\EXPR{\indent{}i:=0;\ j:=n;\ r:=T;}\\
+
+\indent\indent\COND{I,\ see\ PROOFs\ PTC1,\ PTC2,\ PEC,\ PIC.\ Termination\ metric:\ j-i}\\
+
+\EXPR{\indent{}while\ i < j\wedge r\ do}
+
+\EXPR{\indent\{}
+
+\EXPR{\indent\indent{}j:=j-1;}
+
+\EXPR{\indent\indent{}r:=b[i]\wedge b[j];}
+
+\EXPR{\indent\indent{}i:=i+1}
+
+\EXPR{\indent\}}
+
+\EXPR{\}}\\
+
+\COND{r=(\forall k:0\leq k<n:b[k])}\\
+
+\EXPR{ASSUMING}\\
+
+\EXPR{I = (r=(\forall k:(0\leq k<i)\vee(j\leq k<n):b[k]))\wedge(0\leq i\leq n)\wedge(0\leq j\leq n)}\\
+
+\noindent{}\bf The proof:\\
+\\
+\indent\begin{PROOF}{Init}
+
+\ASSUME{A1}{n\geq 0}
+
+\DEF{D1}{Q=wp\ (i:=0;\ j:=n;\ r:=T)\ I}
+
+\GOAL{G1}{Q}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite D1 with definition of I and definition of wp}
+
+\EXPR{Q=(T=(\forall k:(0\leq k<0)\vee(n\leq k<n):b[k]))\wedge(0\leq 0\leq n)\wedge(0\leq 0\leq n)}
+
+\item[2] \HINT{Trivial, from 1, using A1 and 0 $\leq$ 0}
+
+\EXPR{Q=(T=(\forall k:(0\leq k<0)\vee(n\leq k<n):b[k]))\wedge T\wedge T}
+
+\item[3] \HINT{Basic equalities of boolean connectors on 2}
+
+\EXPR{Q=(T=(\forall k:(0\leq k<0)\vee(n\leq k<n):b[k]))}
+
+\item[4] \HINT{Empty domain conversion on 3}
+
+\EXPR{Q=(T=(\forall k:F\vee F:b[k]))}
+
+\item[5] \HINT{Basic equalities of boolean connectors on 4}
+
+\EXPR{Q=(T=(\forall k:F:b[k]))}
+
+\item[6] \HINT{Quantification over empty domain on 5}
+
+\EXPR{Q=(T=T)}
+
+\item[7] \HINT{Trivial, from 6}
+
+\EXPR{Q=T}
+
+\item[8] \HINT{True consequence on 7}
+
+\EXPR{Q}
+
+\end{BODY}
+
+\end{PROOF}
+
+\ \\
+
+\begin{PROOF}{PTC1}
+
+\ASSUME{A1}{I}
+
+\ASSUME{A2}{i<j\wedge r}
+
+\DEF{D1}{Q=wp\ (C:=j-i;\ j:=j-1;\ r:=b[i]\wedge b[j];\ i:=i+1)\ (j-i<C)}
+
+\GOAL{G1}{Q}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite D1 with definition of wp}
+
+\EXPR{Q=j-1-i-1<j-i}
+
+\item[2] \HINT{Trivial, from 1}
+
+\EXPR{Q=-2<0}
+
+\item[3] \HINT{Trivial, from 2}
+
+\EXPR{Q=T}
+
+\item[4] \HINT{True consequence on 3}
+
+\EXPR{Q}
+
+\end{BODY}
+
+\end{PROOF}
+
+\ \\
+
+\begin{PROOF}{PTC2}
+
+\ASSUME{A1}{I}
+
+\ASSUME{A2}{i<j\wedge r}
+
+\GOAL{G1}{j-i>0}
+
+\begin{BODY}
+
+\item[1] \HINT{$\wedge$-Elimination on A2}
+
+\EXPR{i<j}
+
+\item[2] \HINT{Trivial, from 1}
+
+\EXPR{j-i>0}
+
+\end{BODY}
+
+\end{PROOF}
+
+\ \\
+
+\begin{PROOF}{PEC}
+
+\ASSUME{A1}{I}
+
+\ASSUME{A2}{j\leq i\vee \neg r}
+
+\GOAL{G1}{r=(\forall k:0\leq k<n:b[k])}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite A1 with definition of I}
+
+\EXPR{(r=(\forall k:(0\leq k<i)\vee(j\leq k<n):b[k]))\wedge(0\leq i\leq n)\wedge(0\leq j\leq n)}
+
+\item[2] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{r=(\forall k:(0\leq k<i)\vee(j\leq k<n):b[k])}
+
+\item[3] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{0\leq i\leq n}
+
+\item[4] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{0\leq j\leq n}
+
+\item[5] \HINT{See subproof sp1}
+
+\EXPR{j\leq i\Rightarrow (r=(\forall k:0\leq k<n:b[k]))}
+
+\begin{PROOF}{sp1}
+
+\ASSUME{A1}{j\leq i}
+
+\GOAL{G1}{r=(\forall k:0\leq k<n:b[k])}
+
+\begin{BODY}
+
+\item[1] \HINT{Domain merging on PEC.2, using 0 $\leq$ j (from PEC.4) and A1}
+
+\EXPR{r=(\forall k:(0\leq k<j)\vee(j\leq k<i)\vee(j\leq k<n):b[k])}
+
+\item[2] \HINT{From 1, using the fact that i $\leq$ n (from PEC.3) implies that $\tt [j, i)$ is included in $\tt [j, n)$}
+
+\EXPR{r=(\forall k:(0\leq k<j)\vee(j\leq k<n):b[k])}
+
+\item[3] \HINT{Domain merging on 2, using PEC.4}
+
+\EXPR{r=(\forall k:0\leq k<n:b[k])}
+
+\end{BODY}
+
+\end{PROOF}
+
+\item[6] \HINT{See subproof sp2}
+
+\EXPR{\neg r\Rightarrow (r=(\forall k:0\leq k<n:b[k]))}
+
+\begin{PROOF}{sp2}
+
+\ASSUME{A1}{\neg r}
+
+\GOAL{G1}{r=(\forall k:0\leq k<n:b[k])}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite A1 with PEC.2}
+
+\EXPR{\neg(\forall k:(0\leq k<i)\vee(j\leq k<n):b[k])}
+
+\item[2] \HINT{Negate $\forall$ on 1}
+
+\EXPR{(\exists k:(0\leq k<i)\vee(j\leq k<n):\neg b[k])}
+
+\item[3] \HINT{$\exists$-Elimination on 2}
+
+\tt [SOME k]
+
+\EXPR{((0\leq k<i)\vee(j\leq k<n)) \wedge \neg b[k]}
+
+\item[4] \HINT{$\wedge$-Elimination on 3}
+
+\EXPR{(0\leq k<i)\vee(j\leq k<n)}
+
+\item[5] \HINT{$\wedge$-Elimination on 3}
+
+\EXPR{\neg b[k]}
+
+\item[6] \HINT{Trivial, from PEC.3}
+
+\EXPR{0\leq k<i\Rightarrow 0\leq k<n}
+
+\item[7] \HINT{Trivial, from PEC.4}
+
+\EXPR{j\leq k<n\Rightarrow 0\leq k<n}
+
+\item[8] \HINT{Case split on 4, 6 and 7}
+
+\EXPR{0\leq k<n}
+
+\item[9] \HINT{$\exists$-Introduction on 8 and 5}
+
+\EXPR{(\exists k:0\leq k<n:\neg b[k])}
+
+\item[10] \HINT{Negate $\forall$ on 9}
+
+\EXPR{\neg(\forall k:0\leq k<n:b[k])}
+
+\item[11] \HINT{False consequence (see proof at the end of the document) on\nolinebreak\ 10}
+
+\EXPR{(\forall k:0\leq k<n:b[k])=F}
+
+\item[12] \HINT{False consequence (see proof at the end of the document) on\nolinebreak\ A1}
+
+\EXPR{r=F}
+
+\item[13] \HINT{Rewrite 12 with 11}
+
+\EXPR{r=(\forall k:0\leq k<n:b[k])}
+ 
+\end{BODY}
+
+\end{PROOF}
+
+\item[7] {Case split on A2, 5 and 6}
+
+\EXPR{r=(\forall k:0\leq k<n:b[k])}
+
+\end{BODY}
+
+\end{PROOF}
+
+\ \\
+
+\begin{PROOF}{PIC}
+
+\ASSUME{A1}{I}
+
+\ASSUME{A2}{i<j\wedge r}
+
+\DEF{D1}{Q=wp\ (j:=j-1;\ r:=b[i]\wedge b[j];\ i:=i+1)\ I}
+
+\GOAL{G1}{Q}
+
+\begin{BODY}
+
+\item[1] \HINT{Rewrite A1 with definition of I}
+
+\EXPR{(r=(\forall k:(0\leq k<i)\vee(j\leq k<n):b[k]))\wedge(0\leq i\leq n)\wedge(0\leq j\leq n)}
+
+\item[2] \HINT{Rewrite D1 with definition of I and definition of wp}
+
+\EXPR{Q=(b[i]\wedge b[j-1]=(\forall k:(0\leq k<i+1)\vee(j-1\leq k<n):b[k]))\\
+\wedge(0\leq i+1\leq n)\wedge(0\leq j-1\leq n)}
+
+\item[3] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{r=(\forall k:(0\leq k<i)\vee(j\leq k<n):b[k])}
+
+\item[4] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{0\leq i\leq n}
+
+\item[5] \HINT{$\wedge$-Elimination on 1}
+
+\EXPR{0\leq j\leq n}
+
+\item[6] \HINT{$\wedge$-Elimination on A2}
+
+\EXPR{i<j}
+
+\item[7] \HINT{$\wedge$-Elimination on A2}
+
+\EXPR{r}
+
+\item[8] \HINT{Trivial, from 6 and j $\leq$ n (from 5)}
+
+\EXPR{i < n}
+
+\item[9] \HINT{Trivial, from 8}
+
+\EXPR{i+1\leq n}
+
+\item[10] \HINT{Trivial, from 0 $\leq$ i (from 4)}
+
+\EXPR{0\leq i+1}
+
+\item[11] \HINT{Conjunction on 9 and 10}
+
+\EXPR{0\leq i+1\leq n}
+
+\item[12] \HINT{Trivial, from 6 and 0 $\leq$ i (from 4)}
+
+\EXPR{0 < j}
+
+\item[13] \HINT{Trivial, from 12}
+
+\EXPR{0\leq j-1}
+
+\item[14] \HINT{Trivial, from j $\leq$ n (from 5)}
+
+\EXPR{j-1\leq n}
+
+\item[15] \HINT{Conjunction on 13 and 14}
+
+\EXPR{0\leq j-1\leq n}
+
+\item[16] \HINT{See subproof eq}
+
+\EXPR{b[i]\wedge b[j-1]=(\forall k:(0\leq k<i+1)\vee(j-1\leq k<n):b[k])}
+
+\begin{EQPROOF}{eqq}
+
+\item[] \EXPR{(\forall k:(0\leq k<i+1)\vee(j-1\leq k<n):b[k])}
+
+\item[] $=$ \HINT{By domain merging, justified by 0 $\leq$ i (from PIC.4)}
+
+\item[] \EXPR{(\forall k:(0\leq k<i)\vee(k=i)\vee(j-1\leq k<n):b[k])}
+
+\item[] $=$ \HINT{By domain merging, justified by j-1 $\leq$ j and j $\leq$ n (from PIC.5)}
+
+\item[] \EXPR{(\forall k:(0\leq k<i)\vee(k=i)\vee(j-1\leq k<j)\vee(j\leq k<n):b[k])}
+
+\item[] $=$ \HINT{Trivial: $\tt j-1\leq k<j = (k=j-1)$}
+
+\item[] \EXPR{(\forall k:(0\leq k<i)\vee(k=i)\vee(k=j-1)\vee(j\leq k<n):b[k])}
+
+\item[] $=$ \HINT{By domain split}
+
+\item[] \EXPR{(\forall k:0\leq k<i:b[k])\wedge(\forall k:k=i:b[k])\wedge(\forall k:k=j-1:b[k])\\
+\wedge(\forall k:j\leq k<n:b[k])}
+
+\item[] $=$ \HINT{By quantification over singleton domain}
+
+\item[] \EXPR{(\forall k:0\leq k<i:b[k])\wedge b[i]\wedge b[j-1]\wedge(\forall k:j\leq k<n:b[k])}
+
+\item[] $=$ \HINT{By domain split}
+
+\item[] \EXPR{b[i]\wedge b[j-1]\wedge(\forall k:(0\leq k<i)\vee(j\leq k<n):b[k])}
+
+\item[] $=$ \HINT{By rewriting using PIC.3}
+
+\item[] \EXPR{b[i]\wedge b[j-1]\wedge r}
+
+\item[] $=$ \HINT{By rewriting using true consequence on PIC.7}
+
+\item[] \EXPR{b[i]\wedge b[j-1]\wedge T}
+
+\item[] $=$ \HINT{By basic equalities of boolean connectors}
+
+\item[] \EXPR{b[i]\wedge b[j-1]}
+
+\end{EQPROOF}
+
+\item[17] \HINT{Conjunction on 16, 11 and 15}
+
+\EXPR{(b[i]\wedge b[j-1]=(\forall k:(0\leq k<i+1)\vee(j-1\leq k<n):b[k]))\\
+\wedge(0\leq i+1\leq n)\wedge(0\leq j-1\leq n)}
+
+\item[18] \HINT{Rewrite 17 with 2}
+
+\EXPR{Q}
+
+\end{BODY}
+
+\end{PROOF}
+\ \\
+\ \\
+\noindent\normalfont{}Finally, the proof of the "false consequence" rule used in subproof sp2 of proof PEC:\\
+\\
+\indent\begin{PROOF}{FalseConsequence}
+
+\ASSUME{A1}{\neg P}
+
+\GOAL{G1}{P=F}
+
+\begin{BODY}
+
+\item[1] \HINT{See subproof by contradiction spc}
+
+\EXPR{P=F}
+
+\begin{PROOF}{spc}
+
+\ASSUME{A1}{P=T}
+
+\GOAL{G1}{F}
+
+\begin{BODY}
+
+\item[1] \HINT{True consequence on A1}
+
+\EXPR{P}
+
+\item[2] \HINT{Contradiction on FalseConsequence.A1 and 1}
+
+\EXPR{F}
+
+\end{BODY}
+
+\end{PROOF}
+
+\end{BODY}
+
+\end{PROOF}
+
+\end{document}

@@ -1,0 +1,100 @@
+-- Exercise 1
+
+When running Mmain with argument words.in, merge is called 4 times with
+both list arguments of length 1, 2 times with both list arguments of
+length 2 and 1 time with both list arguments of length 4.
+
+-- Exercise 2
+
+There are 10 levels of recursion in pairwise (pairwise calls itself 10 times).
+All of the equations are necessary, at least if this idea of implementation is
+to be kept.
+
+-- Exercise 3
+
+It takes (n-1) calls to merge to sort any list of n elements, regardless of
+its initial state.
+It takes n comparisons to sort any list of n elements, regardless of its
+initial state.
+
+-- Exercise 4
+
+We have added a collect to all our properties, so the test coverage can be
+seen from the results printed by quick check. In order to make sure we
+don't have a lot of trivial test cases, we have added some constraints
+to the lengths of the random generated lists. However, since using the default
+quickCheck functions to run the tests usually doesn't ensure the generation
+of enough ordered lists with larger lengths, we have provided our own
+check function (called myCheck), which tries 20,000 test cases instead of
+1,000 (which is the default tried by quickCheck). This way, we believe the
+test coverage is quite good.
+
+All our code for this exercise can be found in Sorting/Exercise4.hs.
+
+-- Exercise 5
+
+Running the prop_msort test we created for exercise 4, quick check easily
+discovers this test case for which the property doesn't hold:
+
+*Main> myCheck prop_msort
+Falsifiable, after 3 tests:
+[4,0]
+
+(i.e., for the list [4,0]). We have found the error to be in the line 26
+of the Nsort.hs file (namely "([_],_) -> ascends (>=) xs") and we have
+replaced this with "([_],_) -> let (x,y) = ascends (>=) xs in (reverse x,y)".
+Once we've made this change, all our properties hold once again.
+
+All our code for this exercise can be found in Sorting/Exercise5.hs.
+
+-- Exercise 6
+
+Now, it takes (n-1) comparisons & no calls to merge in order to sort an
+already sorted list.
+
+-- Exercise 7
+
+We have added the property the function ascending should have in the file
+Sorting/Exercise5.hs (see prop_ascending).
+
+The function ascends is not lazy. This is due to the fact that prec x y
+has to be evaluated, since it is part of a guard and the guard must be
+evaluated in order to decide which code to execute. And prec x y will
+always force x & y to be evaluated. Hence, if we would say
+
+        take 2 (fst (ascends (<=) <some-list>))
+
+and if we assume that the first element in the pair returned by ascends
+has more than two elements, it is true that elements from the 3rd on would
+also be evaluated, even though we are only requesting the first two. This
+can of course be a problem sometimes.
+
+We have tried to rewrite the function in various ways, but no matter what
+we tried, we weren't able to get rid of the necessity of evaluating prec x y
+and still keep the same semantics of the ascends function. Perhaps it can,
+perhaps it can't be done, but we at least haven't managed to.
+
+
+-- A short opinion on hat and quickCheck:
+
+Our opinion about hat is not very good, since we've tried compiling
+it several times and something would always fail: in Windows, the
+procedure seems quite a hard task, but even in Linux things are not
+that easy, since hat first requires hmake, and both require the
+Readline module to be installed, which is not the case with the
+Linux installation on the department. Furthermore, even when we
+succeeded in compiling it on another machine, something would go
+wrong when using it, for some package issues that we couldn't solve.
+On the other hand, quickCheck is very easy to use since it already
+comes with the actual distribution of GHC. Its contribution to
+functional programming is considerable, and since the functional
+style allows for the development of a large program consisting of
+smaller functions, it can perfectly be used on a large application,
+provided that the application has been correctly modularized.
+QuickCheck seems to work as described on the paper,
+apart from a strange issue that we came across: if we
+include the condition (length x > 2), quickCheck fails to generate
+any valid list, but if we restrict it to (length x > 1) and collect
+all the lengths we find many lists bigger than 2. Furthermore, the
+module should have haddock documentation, as most other modules in
+the GHC Hierarchical Libraries.

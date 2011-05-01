@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <name>foo2</name>
+  <base-ref>foobase</base-ref>
+  <formvalues>
+    <formentry index="base">
+      <txt1 />
+      <txt2>Foo</txt2>
+      <pass />
+      <hidd />
+      <fil />
+      <ch1 />
+      <ch2>checked</ch2>
+      <rad>opt2</rad>
+      <txtar />
+      <txtar2>Foobar</txtar2>
+      <sel>op2</sel>
+      <sel2>op2</sel2>
+    </formentry>
+  </formvalues>
+</root>
+

@@ -1,0 +1,49 @@
+/* A program to solve the 8-queens problem */
+
+let
+    var N := 8
+    var solutions := 0
+
+    type intArray = array of int
+
+    var row := intArray [ N ] of 0
+    var col := intArray [ N ] of 0
+    var diag1 := intArray [N+N-1] of 0
+    var diag2 := intArray [N+N-1] of 0
+
+    function printboard() =
+       (for i := 0 to N-1
+	 do (for j := 0 to N-1 
+	      do print(if col[i]=j then " O" else " .");
+	     print("\n"));
+         print("\n"))
+
+    function printboardnum() =
+       (for i := 0 to N-1
+	 do (for j := 0 to N-1 
+	      do (print(" "); printint(col[i]=j));
+	     print("\n"));
+        print("\n");
+	print("row:   "); for r := 0 to N-1 do (print(" "); printint(row[r])); print("\n");
+	print("col:   "); for c := 0 to N-1 do (print(" "); printint(col[c])); print("\n");
+	print("diag1: "); for i := 0 to N+N-2 do (print(" "); printint(diag1[i])); print("\n");
+	print("diag2: "); for j := 0 to N+N-2 do (printint(j); print(" "); printint(diag2[j])); print("\n")
+	)
+        
+    function try(c:int) = 
+    ( //print("try("); printint(c); print(")\n"); printboardnum();
+      if c=N
+      then (solutions := solutions + 1; printboard())
+      else for r := 0 to N-1
+ 	    do (//print("r = "); printint(r); print("\n");
+               if row[r]=0 & diag1[r+c]=0 & diag2[r+7-c]=0
+	       then (row[r]:=1; diag1[r+c]:=1; diag2[r+7-c]:=1;
+		     col[c]:=r;
+	             try(c+1);
+		     row[r]:=0; diag1[r+c]:=0; diag2[r+7-c]:=0)
+	       )
+     )
+ in try(0);
+    print("number of solutions: "); printint(solutions); print("\n\n")
+end
+	

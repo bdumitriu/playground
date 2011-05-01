@@ -1,0 +1,301 @@
+
+  LDR	MP	; load the add function on
+  LDC	L0	; the stack as a variable
+  BRA	L1
+
+L0:
+  LDR	MP	; save the current MP
+  LDRR	MP SP	; change MP so that it can be used to address the actual parameters of the function
+
+  LDL	-3
+  LDL	-4
+  ADD
+
+  STL	-4	; copy result in the right place
+  LDRR	SP MP	; adjust the SP so that any (possible) local varibles (not the case here, but anyway) are discarded
+  STR	MP	; restore the old MP
+  STS	-2	; copy the RET address right after the result
+  ADJ	-1	; adjust SP so that it points to the result
+  RET
+
+L1:
+  LDC	4
+  LDC	3
+  LDML	1 2	; copy of function add
+  JSR		; jump to code of add
+  STS	-2	; replace the first location of the let global variables with the result...
+  ADJ	-1	; ...and adjust the SP so that it points to it (to the result)
+  TRAP	0
+  HALT
+
+Stack dynamics:
+
+---
+
+            <- SP, MP
++---------+
+
+---
+
+            <- MP
++---------+
+| SLadd   | <- SP
++---------+
+
+---
+
+            <- MP
++---------+
+| SLadd   |
++---------+
+| ADadd   | <- SP
++---------+
+
+---
+
+            <- MP
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 4       | <- SP
++---------+
+
+---
+
+            <- MP
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 4       |
++---------+
+| 3       | <- SP
++---------+
+
+---
+
+            <- MP
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 4       |
++---------+
+| 3       |
++---------+
+| SLadd   |
++---------+
+| ADadd   | <- SP
++---------+
+
+---
+
+            <- MP
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 4       |
++---------+
+| 3       |
++---------+
+| SLadd   |
++---------+
+| RA      | <- SP
++---------+
+
+---
+
+            <- MP
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 4       |
++---------+
+| 3       |
++---------+
+| SLadd   |
++---------+
+| RA      |
++---------+
+| OldMP   | <- SP
++---------+
+
+---
+
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 4       |
++---------+
+| 3       |
++---------+
+| SLadd   |
++---------+
+| RA      |
++---------+
+| OldMP   | <- MP, SP
++---------+
+
+---
+
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 4       |
++---------+
+| 3       |
++---------+
+| SLadd   |
++---------+
+| RA      |
++---------+
+| OldMP   | <- MP
++---------+
+| 3       | <- SP
++---------+
+
+---
+
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 4       |
++---------+
+| 3       |
++---------+
+| SLadd   |
++---------+
+| RA      |
++---------+
+| OldMP   | <- MP
++---------+
+| 3       |
++---------+
+| 4       | <- SP
++---------+
+
+---
+
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 4       |
++---------+
+| 3       |
++---------+
+| SLadd   |
++---------+
+| RA      |
++---------+
+| OldMP   | <- MP
++---------+
+| 7       | <- SP
++---------+
+
+---
+
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 7       |
++---------+
+| 3       |
++---------+
+| SLadd   |
++---------+
+| RA      |
++---------+
+| OldMP   | <- SP, MP
++---------+
+
+---
+
+            <- MP
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 7       |
++---------+
+| 3       |
++---------+
+| SLadd   |
++---------+
+| RA      | <- SP
++---------+
+
+---
+
+            <- MP
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 7       |
++---------+
+| RA      |
++---------+
+| SLadd   | <- SP
++---------+
+
+---
+
+            <- MP
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 7       |
++---------+
+| RA      | <- SP
++---------+
+
+---
+
+            <- MP
++---------+
+| SLadd   |
++---------+
+| ADadd   |
++---------+
+| 7       | <- SP
++---------+
+
+---
+
+            <- MP
++---------+
+| 7       |
++---------+
+| ADadd   | <- SP
++---------+
+
+---
+
+            <- MP
++---------+
+| 7       | <- SP
++---------+
+
+---

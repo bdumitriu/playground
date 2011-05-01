@@ -1,0 +1,454 @@
+\documentclass[a4paper,10pt]{article}
+
+%\usepackage{graphicx}
+
+\title{Design Description}
+\author{Laurence \textsc{Cabenda}\\Bogdan \textsc{Dumitriu}\\Richard \textsc{Nieuwenhuis}\\Huanwen \textsc{Qu}}
+
+\begin{document}
+
+\maketitle
+
+\section{Requirements}
+
+The requirements for the system at hand can be found on the course's web site \cite{desc}.
+Additional and detailed information about our understanding of these requirements can be found
+in the description of the use cases (included separately with this documentation). The following
+sections describe the design of the application which will be built to tackle these requirements,
+so if you are not familiar with them, it might be a good idea to have a look at the mentioned
+sources at this point.
+
+We have chosen to design the calendar and the email modules of the groupware system. So far, we
+have only covered the minimal requirements listed on the web site, but we shall, if time allows,
+take extra functionality into consideration once we have the basics covered.
+
+In this description, we first give a short overview of the general design of our system.
+Then we go on to describing the remote objects in the system and the interfaces that define
+their behaviour as remote objects. Further on, we discuss the security requirements relevant
+to this system and explain how our design tackles these issues. We end by running through a
+few scenarios which cover an extended part of our system, by this providing, in our opinion,
+a guide to the design.
+
+\section{General design}
+
+Our system is organized according to a classical three tier architecture, with the following
+components:
+
+\begin{itemize}
+\item \textbf{the client(s) tier}, which includes the presentation layer and some limited business
+logic, mostly targeted towards reducing the amount of network traffic by doing consistency checks.
+\item \textbf{the business logic tier}, which consists of a number of remote and local business
+objects, running on a server and handling client requests. Access control is also done in this tier.
+\item \textbf{the database tier}, which contains the persistent data needed in the application.
+\end{itemize}
+ 
+We have structured our design is such a way that most work will be done on the server so that,
+on one hand, only small amounts of data (strictly what is necessary) will be transferred through
+the network and, on the other hand, the consistency of updates can be ensured without the need
+of complicated protocols/algorithms.
+
+We have also included a notification process, by which clients will be made aware of changes
+(legally) made by other users to their data as soon as these changes are operated (in particular,
+this is the case with group appointments and receiving messages).
+
+The technology that we shall use in order to implement our system will be Java's RMI. Therefore,
+all the interfaces that we describe in the following section will eventually be coded as Java
+interfaces extending java.rmi.Remote and all the remote objects in the system will be Java
+objects. Both the client and the server will consequently be developed using Java technologies,
+while the database management system which we shall use is PostgreSQL. As RMI is fully integrated
+into the Java technology, no extra middleware will be necessary for running our application.
+The only additional software that has to be used is a RMI Registry for binding remote objects
+to symbolic names so that clients can have a point to start from.
+
+In what the interoperability part of the project is concerned, we have not made a final decision
+yet, but most likely we shall be using CORBA for this purpose.
+
+\section{Remote objects}
+
+In order to understand the system, it is best to start by listing the remote objects which form
+its core and explain the purpose thereof. As you can also see in our class diagrams, there are
+quite a number of remote objects with which the clients interact in order to perform all the
+functions which the system offers.
+
+Here is, then, the list of interfaces that define the remote objects used in the system. First of all,
+there are two interfaces which are common to both the calendar and the email module. They
+can be easily identified since they appear in both class diagrams\footnote{However, it should
+be clear that they are defined just once. The fact that they appear in both class diagrams does
+not mean that there will be two pairs of identical interfaces.}. Actually, these two interfaces
+define objects which would be used more or less in all modules of a groupware system.
+
+\subsubsection*{The \emph{GroupwareManagement} interface}
+
+This interface represents the entry point into the system (from the point of view of the clients).
+There will be only one remote object defined by this interface in the system at any given time.
+Moreover, this object will be the only object bound to a symbolic name in the naming server. Any
+other remote object running on the server can be created on demand and obtained by clients
+only by calling methods on the GroupwareManagement instance.
+
+Besides being an entry point into the system, this interface also provides a few basic functions.
+These are as follows:
+
+\begin{itemize}
+
+\item \textbf{user management}: using this interface users can register a new account with the
+system, get authenticated, log in, be accepted as valid users by the system during their session,
+and finally log out. User accounts are deleted also by using this interface.
+
+\item \textbf{group retrieval}: this functionality is particular to the Calendar module. When users
+need to create (or later change/delete) a group appointment, there has to be a way in which the
+group of users involved in the appointment is created (or retrieved). The GroupwareManagement
+interface provides this way.
+
+\item \textbf{sending of messages}: this functionality is particular to the Email module. Since a
+user cannot (and should not) access another user's mail box directly, there has to be a way in
+which user can send messages to other users (including the case when the recipient is actually
+a mailing list). This is also provided by the GroupwareManagement interface.
+
+\item \textbf{access to information}: a user (for various purposes) has to be able to get a list of the
+other users in the system. The same holds for mailing lists. It is again the GroupwareManagement
+interface that provides this kind of access.
+
+\end{itemize}
+
+The actual way in which the interface methods are used will become clear later on, when we shall
+explain some use case scenarios. This holds for the following interfaces as well.
+
+\subsubsection*{The \emph{User} interface}
+
+The second ``general'' interface is the User interface. This interface, as its name suggests, is
+designed to handle a single user. Thus, there will be a remote object, instance of this interface,
+for every \emph{active} user in the system at a given time. Such an object is created by the
+GroupwareManagement instance when authentication is successful\footnote{Since the security
+aspect, including authentication and user management, will be discussed in the security aspect,
+will be silently ignored here.} and is returned to the client (as a remote reference). The object
+gets deleted when the user logs off or after a reasonable amount of inactivity of the user.
+
+Basic functions provided by the user interface are what you would normally expect from such
+an interface, i.e., changing of password, changing of various preferences (for example, the
+granularity of the meetings from the calendar), accessing of own calendar, address book and
+mail account as well as accessing of own authentication token (see section \ref{sec:security}).
+
+Any other remote object pertaining to a user (such as his calendar or address book) can only be
+obtained by means of calls to this remote object.\\
+\\
+We carry on now by describing the interfaces that pertain to the Calendar module.
+
+\subsubsection*{The \emph{Calendar} interface}
+
+This interface actually provides most of the access to functionality concerning calendar
+management. Just as with the User interface, there will be a remote object, instance of
+the Calendar interface, for each \emph{active} user of the system. Users can obtain their
+respective Calendar remote objects by means of the User interface. These objects will disappear
+together with the User objects they are associated with.
+
+The functions available through this interface are \emph{single} appointment management
+(\emph{group} appointment management is accessible through the Group interface), including
+addition, modification and deletion of appointments, as well as various types of appoitment
+retrieval (per month, per week, etc.).
+
+\subsubsection*{The \emph{Group} interface}
+
+The Group interface is more or less the equivalent of the Calendar interface \emph{in terms of
+functionality}, with the distinction that this interface deals with group appointments, not single
+appointments. However, it is not similar to the Calendar interface \emph{in terms of manipulation
+and life span}. In other words, a user will not have an associated remote object instance of the
+Group interface, as it is the case with the calendar, since this would make no sense. Instead,
+a Group object is created ``on the fly'' by making a call to the GroupwareManagement instance
+and is only used for an amout of time limited to the creation, deletion or modification of a group
+appointment. This means that as soon as the creation, deletion or modification is performed, the
+Group object can and should be, at least theoretically speaking, destroyed. This is achieved by
+coding the client in such a way that it releases any reference it has to the object once the group
+appointment is created, deleted or modified and, by this, indirectly causes the distributed garbage
+collector to delete it (since nobody references it anymore).
+
+In addition to allowing for the management of group appointments, the Group interface also provides
+a method which comes up with some suggestions for possible times when an group appointment
+can be organized (i.e., checks the calendars of all the users involved in the appointment and finds
+some common free spots. This can (and probably should) be used by the client in order to decide
+a time slot for the group appointment.\\
+\\
+Next we describe the interfaces that define the Email module as a remotly accessible system.
+
+\subsubsection*{The \emph{AddressBook} interface}
+
+The AddressBook is a simple interface, which allows the user to manage his\ldots\ address book.
+Remote objects, instances of this interface, have a similar life span as those which are instances
+of the Calendar interface, i.e., there is one such remote object in the system for every \emph{active}
+user at any time and they get destroyed together with the User object they are associated with.
+The client gets his AddressBook object by making a call to the User object.
+
+The functions provided by the interface are no surprise: adding, deleting and retriving contacts.
+Such contacts can be either users or mailing lists. A distinction between the two is made by
+providing a contact type parameter when creating a contact. While users can be added to the
+address book only if they already exist in the system, mailing lists can be created and added
+to the address book at will. In order to create a mailing list, a user will have to use the
+GroupwareManagement interface and then he will be able to add it to his address book.
+
+\subsubsection*{The \emph{MailAccount} interface}
+
+Just like the AddressBook (and Calendar), remote objects of this interface will fit into the same
+life span and access pattern, so it will not be repeated here.
+
+A MailAccount object not only allows the user to manage his mail boxes (add, delete or rename
+them) and retrieve them, but also allows him to move messages from one mail box to another.
+Methods are offered to retrieve some ``special'' mail boxes, such as the \emph{default} mail
+box (where all incoming messages go to) or the \emph{sent mail} mail box.
+
+\subsubsection*{The \emph{MailBox} interface}
+
+Finally, the MailBox interface comes to provide an abstraction over an user's mail box. Since
+a user can have more than one mail box, the number of mail box remote objects per \emph{active}
+user depends on the actual numer of mail boxes the user has. Naturally, there will be one
+mail box object per mail box. These objects are obtained by means of the MailAccount interface.
+Since such objects can contain quite an amount of data, it might very well be the case
+that in the implementation they will only be created on demand (i.e., not loaded together
+with the MailAccount object). They will die at the latest when the user logs off (i.e., together
+with the User remote object).
+
+The functionality provided by a mail box consists of retrieving of messages, deleting them
+and marking them as read. Messages can only be added to a mail box by using a method
+which is \emph{not} part of the interface, because a user should not be able to add messages
+directly to his own mail box. Messages will be put into a mail box either by means of sending
+them through the GroupwareManagement instance or by moving them from another mail
+box by means of the MailAccount instance.\\
+\\
+The only interface defining remote objects that is still to be defined is the callback interface.
+
+\subsubsection*{The \emph{ClientObserver} interface}
+
+This interface defines the remote objects that will be running on the \emph{clients} (all
+the other remote objects mentioned until now run on the server). This interface is very
+reduced in size, and it only provides methods for notification of changes. The idea is that
+when a group appointment is created, deleted or changed or when a new message arrives,
+the client should be notified of this (if he is active). Such a notification is done through
+this interface\footnote{Indeed, we have another slip up in our class diagrams, since we
+have only described the notification mechanism for appointments, and not for emails.
+The idea, however, is exactly the same in both cases.}.
+
+Normally, each client will instantiate a single remote object, instance of this interface,
+when it begins execution and delete it when it ends execution. In order to make the object
+available to the server, it will be registered with the Calendar and the default MailBox
+instances belonging to this user. Once it is registered, every time something changes
+in the Calendar or the default MailBox, the client will be notified by a remote method
+invocation.\\
+\\
+We have another cateogory of objects in our system which will be exchanged between clients
+and server, but they will not be used remotely. Instead, copies of them will be marshalled,
+sent through the network and unmarshalled at the destination. These objects server the
+purpose of data containers. Most of their methods are getters and setters and, as we
+mentioned, these methods will be called locally by both sides. Notable examples of such
+classes of objects are the Appointment and the Message classes. Except for these, there
+is also a number of other ``smaller'' classes, which are too irrelevant for the big picture
+in order to be mentioned here.
+
+\section{Security}
+\label{sec:security}
+
+We continue our description of the design by addressing now another important issue,
+namely the security of the system. In terms of security, we are mainly interested in two
+aspects:
+
+\begin{itemize}
+
+\item only users with proper credentials should be granted access to the system.
+
+\item authenticated users should not be allowed to access (i.e., see or change) any data
+which does not belong to them. There are, however, two exceptions to this: group
+appointments and sending of messages.
+
+\end{itemize}
+
+The first issue is addressed by including a so called authentication token for all the
+methods of the groupware management system. This token is checked against the list
+of valid tokens which exist at a certain moment in the system. If the token is invalid,
+then no method can be called (except for the login and the create account methods).
+In this way, access to the system is not allowed for unauthorized users.
+
+A user can get authorized by logging in. At this point, the GroupwareManagement instance
+will check his credentials and, if valid, will generate an unique token which will be sent
+to the user and which will also be stored in the list of valid tokens. Once the user has
+this token, it can send it every time it needs to call a method of the GroupwareManagement
+instance. A token will be destroyed when the user logs off or after a certain predefined
+time of inactivity. The user can access the system again only after he relogs in.
+
+The second issue is addressed by simply not providing any way for a user to get a hold
+of another user's remote objects. There is no way for a user to get a reference to a remote
+object he is not allowed to. The only way remote objects providing access to user data
+can be retrieved is by using a User remote object. But a User remote object can only be
+retrieved using proper authentication. Otherwise, access is not possible.
+
+Group appointments and sending of messages, the two exceptions we were mentioning
+above, can be done by means of the GroupwareManagement instance. However, the processes
+involved does not, at any time, reveal the remote objects belonging to other users. In this
+way, it is ensured that access control is strictly enforced.
+
+\section{Sample scenarios}
+
+In order to completely grasp the remaining details of the system, we think it is best to run
+through a couple of use cases and show how they can be achieved by using the proposed
+design. In all of the following scenarios, we assume the user is already properly logged in.
+
+\subsubsection*{The Add Contact use case}
+
+We're going to start with one of the ``easier'' use cases, namely the addition of a contact to
+the address book. For following through, it is helpful to use the matching sequence diagram,
+attached to this documentation.
+
+Once a user expresses, through the GUI, his desire to add a contact to his address book, this
+is what happens:
+
+\begin{enumerate}
+
+\item the GUI will make a RMI to the GroupwareManagement instance and ask it for the
+list of all users in the system (naturally, providing the authentication token in order to be
+allowed to call the method\footnote{This will be done in all calls to the GroupwareManagement
+instance which we are going to describe further on, but we will not mention it every time.
+It should be considered implicit.}).
+
+\item the GroupwareManagement instance will retrieve this list from the database (not
+shown in the diagram) and return it to the client's GUI.
+
+\item the same process goes on in order to retrieve the list of mailing lists that exist in
+the system.
+
+\item once this information is available, it is displayed to the user so that he can choose
+the contacts (either users or mailing lists) he wants to add to his address book.
+
+\item after the selection is done, the GUI will make a RMI to the User instance belonging
+to this user in order to get the AddressBook instance belonging to this user.
+
+\item a RMI is then made to the previously obtained AddressBook instance for each contact
+which has to be added to the address book, requesting the AddressBook instance to add
+the contact to the address book.
+
+\item the AddressBook instance will insert the data into the database as well as store it in
+its in-memory structures.
+
+\item the GUI notifies the user if the action has been performed successfully.
+
+\end{enumerate}
+
+\subsubsection*{The Create Group Appointment use case}
+
+The following use case is a bit more involved, which is why we have specifically chosen it as
+an example. Running this will get us through a lot of the classes of the Calendar module so
+that you can see how they all work together. Again, please use the associated sequence
+diagram as a visual guide.
+
+As soon as the user initiates action, this is what happens:
+
+\begin{enumerate}
+
+\item the GUI will make a RMI to the GroupwareManagement instance and ask it for the
+list of all users in the system.
+
+\item the GroupwareManagement instance will retrieve this list from the database (not
+shown in the diagram) and return it to the client's GUI.
+
+\item the GUI displays the list of users of the system to the user.
+
+\item the user will select the other users he wants to have a group appointment with from
+the list.
+
+\item the GUI will make another RMI to the GroupwareManagement instance at this point
+and ask it to create a Group remote object with the members specified by the user (including
+himself).
+
+\item the GroupwareManagement instance creates this group and returns a reference to it
+to the GUI.
+
+\item the user is then prompted to specify some details about the appointment (location, duration
+and the like) as well as some constraints (for example, that he wants the appointment to be
+scheduled no sooner than the following day, but no later than the following week).
+
+\item with this information available, the GUI will now make a call to the Group remote
+object it has obtained earlier and ask it to compute the possible time slots when the appointment
+could be scheduled.
+
+\item in order to do this, the group object will look into the database at the calendars of
+all the users in the group and find all the available time slots (not shown in the diagram).
+Once these time slots are computed, a list of them is returned to the GUI.
+
+\item the GUI will display this list to the user and prompt him to choose the time slot that is
+most convenient for him.
+
+\item once the user does that, the GUI creates a new Appointment object (locally, as the appointment
+is not used as a remote object) and fills it with the data specified by the user (including the selected
+time slot).
+
+\item next, the GUI does another RMI to the group object, this time asking it to create a new appointment.
+It sends the previously created Appointment object as a parameter.
+
+\item the Group instance will, in a transactional manner, check if the time slot is still valid for
+all the users involved in the appointment and, if so, add this appointment to all of the users'
+calendars. In order to do this, the Group instance will use the calendar object associated with
+each of the users in the group. These objects either exist already in memory (if the users they
+belong to are currently active) or have to be instantiated. When the add appointment method
+on each calendar is called, if the calendar has a registered observer (this will be the case with
+calendar objects belonging to users that are currently active), that observer will be notified so
+that that user's GUI can be updated.
+
+\item once all this is done, the GUI will notify the user if the action completed successfully.
+
+\end{enumerate}
+
+\subsubsection*{The Send Email use case}
+
+Another rather involved scenario which we are going to use as an example is the Send Email
+one. This will, just as the previous example, take us to a lot of classes. However, these will be
+mostly other classes than in the previous example, part of the Email module. Consulting the
+associated sequence diagram along with this explanation is again recommended.
+
+After the user goes to the proper screen for sending emails, this is what happens:
+
+\begin{enumerate}
+
+\item first, the user will type in the message he wants to send.
+
+\item once this is done, the GUI will make a RMI to the User remote object handling this user
+and ask it for the address book of this user.
+
+\item the address book remote reference obtained in the previous step is used next to make
+a RMI to the AddressBook remote object and ask it for the list of contacts of this user.
+
+\item the address book object will either serve this data from its in-memory structures, if
+it is already available there or get it from the database and then return it.
+
+\item the GUI will then allow the user to select the recepient of his message from the list
+of contacts provided by the address book object (either a user or a mailing list).
+
+\item next, a new Message object is created locally (since Message, the same as Appointment,
+is not used as a remote object) and filled with all the relevant data.
+
+\item the GUI makes a RMI call to the GroupwareManagement remote object and asks it
+to deliver the message. Naturally, the message created in the previous step is given as a
+parameter.
+
+\item the GroupwareManagement instance will first check if the recepient of the message
+is a mailing list and, if so, it will get the names of the users that belong to that mailing list
+(the exact way in which this is done can be seen in the sequence diagram).
+
+\item once the recepient(s) are available as real users of the system the GroupwareManagement
+instance will iterate over the list of users (which could consist of only one element) and, for
+each of them, get (if the user is currently active) or instantiate the User object representing
+the user, use it to get the mail account of that user and use the mail account to get the default
+mail box of the user (where all incoming messages have to be delivered). The message is then
+added to the default mail box.
+
+\item finally, the GUI notifies the user if this process has completed successfully.
+
+\end{enumerate}
+
+In our view, these three use case descriptions, together with the explanations from the previous
+sections, should have given you enough of a grasp of the system so that you can, in order to complete
+your understanding, on your own go through the rest of the (18!) sequence diagrams and examine
+how each of the specific functionality of the system is achieved using our design.
+
+\begin{thebibliography}{99}
+
+\bibitem{desc} Project description, online.\\
+\textit{http://catamaran.labs.cs.uu.nl/twiki/st/bin/view/Dos/CourseAssignments}, March 2005.
+
+\end{thebibliography}
+
+\end{document}

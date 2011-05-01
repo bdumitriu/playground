@@ -1,0 +1,30 @@
+#!/bin/bash
+# Author:		Bogdan DUMITRIU
+#
+# Date:			28.01.2001
+#
+# Function:		Changes the names of all the files in the current 
+#			directory to 01.mp3, 02.mp3, ..., n.mp3 and makes
+#			them unexecutable
+#
+# Is working:		yes
+#
+# Yet to be done:	add all sorts of filters
+
+j=0
+we_are_called=`echo $0 | tr -d [\.\/]`
+
+# get all the files in current directory, except ourselves,
+# replace all spaces with %-s and rename all the files
+for i in `ls -1 | grep -v $we_are_called | sed y/\ /\%/` ; do
+    name=`echo $i | sed y/\%/\ /`
+
+    chmod a-x "$name"    
+    ((j++))
+    if ((j-9<1)); then
+        mv "$name" "0$j.mp3"
+    else
+
+        mv "$name" "$j.mp3"
+    fi
+done

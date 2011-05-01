@@ -1,0 +1,8 @@
+"ellipse(200,200,250,250)"
+"rectangle(100,100,130,130)"
+"shiftdown"
+"click(210,210)"
+"shiftup"
+"group"
+"click(230,230)"
+"changeposition(-100,0)"

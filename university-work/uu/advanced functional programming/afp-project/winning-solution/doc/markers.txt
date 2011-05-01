@@ -1,0 +1,29 @@
+
+We use markers to mark a direction home and, when one is known, a
+direction to food.
+
+The mapping is as follows:
+
+Direction              Marker
+                   2     1     0
+----------------------------------
+0 (right)      |  set  unset  set
+1 (down right) |  set   set  unset
+2 (down left)  | unset  set   set
+3 (left)       | unset  set  unset
+4 (up left)    | unset unset  set
+5 (up right)   |  set  unset unset
+
+(with food markers using 5,4,3 rather than 2,1,0)
+
+Note that this means that during the startup phase (startup.txt) all of
+the ants are laying down arrows such that they point into the keeper
+structure. Whenever we move into a hex without a home marker we leave
+one pointing the way we came.
+
+As an optimisation, if we want to say direction 3, say, rather than
+read 0, read 1, read 2, write 1
+we can do
+read 0, read 2, write 1
+as rewriting mark 1 won't matter.
+

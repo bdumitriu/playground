@@ -1,0 +1,36 @@
+<!--
+	The elements in this file are the following:
+
+	- main container
+		<vu-conf>...</vu-conf>
+
+	- The eror page tag, which defines the relative path of the error page
+		<error-page>path_to_the_jsp_error_page</error-page>
+
+	- The email server fully qualified name
+		<email-server-name>email.server.name.domain(or IP)</email-server-name>
+
+	- The email server port
+		<email-server-port>port_number</email-server-port>
+
+	- The chat server fully qualified name
+		<chat-server-name>chat.server.name.domain(or IP)</chat-server-name>
+
+	- The chat server port
+		<chat-server-port>port_number</chat-server-port>
+
+-->
+
+<vu-conf>
+
+	<error-page>/jsp/error/ErrorPage.jsp</error-page>
+
+	<email-server-name>193.226.5.35</email-server-name>
+
+	<email-server-port>25</email-server-port>
+
+	<chat-server-name>localhost</chat-server-name>
+
+	<chat-server-port>1099</chat-server-port>
+
+</vu-conf>

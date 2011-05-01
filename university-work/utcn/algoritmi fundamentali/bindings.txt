@@ -1,0 +1,20 @@
++------------+
+¦ algorithms ¦
++------------+
+Caut_bin.cpp	Algoritmul de cautare binara a unui element intr-un sir.
+Nr_inv.cpp	Algoritmul de numarare a inversiunilor dintr-un sir.
+
++------+
+¦ lab1 ¦
++------+
+Lab1_01a.cpp	Algortimul de sortare prin insertie directa.
+Lab1_02a.cpp	Algortimul de sortare prin insertie binara.
+Lab1_03a.cpp	Algortimul de sortare prin selectie.
+Lab1_04a.cpp	Algortimul de sortare rapida (Quicksort).
+Lab1_05a.cpp	Algortimul de sortare prin interclasare (Mergesort).
+Lab1_06a.cpp	Algortimul de sortare cu bule (Bubblesort).
+Lab1_07a.cpp	Algoritmul de sortare folosind un heap (Heapsort).
+
++------+
+¦ lab2 ¦
++------+

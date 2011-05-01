@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties version="1.0">
+
+	<!-- the IP or hostname of the machine running the RMI server runs on -->
+	<entry key="rmi.server">localhost</entry>
+
+	<!-- the port on which the RMI server runs -->
+	<entry key="rmi.port">1099</entry>
+
+	<!-- the IP or hostname of the machine running the database server -->
+	<entry key="db.server">localhost</entry>
+
+	<!-- the port on which the database server runs -->
+	<entry key="db.port">5432</entry>
+
+	<!-- the username to use in order to connect to the database server -->
+	<entry key="db.user">dosuser</entry>
+
+	<!-- the password to use in order to connect to the database server -->
+	<entry key="db.pass">dospassword</entry>
+
+	<!-- the database to use -->
+	<entry key="db.database">dosdb</entry>
+
+</properties>

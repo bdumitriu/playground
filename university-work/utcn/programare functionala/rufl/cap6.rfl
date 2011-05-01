@@ -1,0 +1,97 @@
+import Library;
+
+dec writeIntLists::[[Int]]->[Int]
+def writeIntLists [] = []
+    writeIntLists (x:xs) = seq
+	writeInts x
+	nl
+	writeIntLists xs
+
+dec unu::[Int]
+def unu = 1:unu
+
+dec sita::[Int]->[Int]
+def sita (p:ns) = p:sita [n | n <- ns, n%p > 0]
+
+dec prime::[Int]
+def prime = sita [2..]
+
+dec ok::Int->[Int]->Int->Bool
+def ok i lis n = ok_ i lis n (n+1)
+	where
+		ok_ i [] _ _ = True
+		ok_ i1 (i2:xs) j1 j2 =
+			i1 != i2 &&
+			abs (i1-i2) != abs (j1-j2) &&
+			ok_ i1 xs j1 (j2+1)
+
+dec dame::Int->[[Int]]
+def dame 0 = [[]]
+    dame n = [d:t | t <- dame (n-1) | d <- [1..8], ok d t (9-n)]
+
+dec intregi::[Int]
+def intregi = 1:map ((+) 1) intregi
+
+-- incrementarea fiecarui element dintr-o lista cu elemntul minim
+-- din lista intr-o singura trecere
+
+dec incmin::[Int]->[Int]
+def incmin [] = []
+    incmin xs =
+	let
+		(vmin, lista) = oTrecere xs
+		oTrecere [y] = (y, [y+vmin])
+		oTrecere (y:ys) = (if y < z then y else z, (y+vmin):zs)
+			where
+				(z, zs) = oTrecere ys
+	in
+		lista
+
+-- toate numerele prime
+
+--def main =
+--	let
+--		prime_tot = 2:prime_imp 3
+--		prime_imp n = n:prime_imp (n+2),	if e_prim n prime_tot
+--			    = prime_imp (n+2),		otherwise
+--		e_prim n (x:xs) = True,			if n < x*x
+--				= False,		if n%x == 0
+--				= e_prim n xs,		otherwise
+--	in
+--		writeInts(take 10 prime_tot)
+
+-- generarea numerele Hamming definte astfel:
+--  a) 1 e nr. Hamming
+--  b) 2*x, 3*x, 5*x e nr. Hamming daca x e nr. Hamming
+--  c) nici un alt nr. nu e nr. Hamming
+
+dec intercl3::[Int]->[Int]->[Int]->[Int]
+def intercl3 x y z = intercl x (intercl y z)
+	where
+		intercl [] lis = lis
+		intercl lis [] = lis
+		intercl (x:xs) (y:ys) = x:intercl xs (y:ys),	if x < y
+				      = y:intercl (x:xs) ys,	if x > y
+				      = x:intercl xs ys,	if x == y
+
+--def main =
+--	let
+--		hamming = 1:intercl3 [2*x | x <- hamming]
+--				     [3*x | x <- hamming]
+--				     [5*x | x <- hamming]
+--	in
+--		writeInts(take 20 hamming)
+
+
+
+dec fib::[Int]
+def fib = f1
+	where
+		f1 = 1:f2
+		f2 = 1:f3
+		f3 = adlista f1 f2
+		adlista (x:xs) (y:ys) = (x+y):adlista xs ys
+
+
+def main = seq
+	writeInt(take 10 fib)

@@ -1,0 +1,1129 @@
+
+/*	-----------------------------------------------------------
+	STYLE
+	Appearance: margins, fonts, colors
+	-----------------------------------------------------------	*/
+
+/*	-----------------------------------------------------------
+	General elements
+	-----------------------------------------------------------	*/
+	
+/* HTML elements */
+html body {
+  font-family: verdana, lucida, helvetica, sans-serif;
+  font-size: medium;
+  background-image: url("cgn4.jpg");
+  background-repeat: no-repeat;
+  background-color: rgb(246, 246, 246);
+  margin:0;
+  padding:0;
+}
+
+/* be kind to netscape 4 that doesn't understand inheritance */
+body, p, li, ul, ol, dl, dt, dd, acronym, h1, h2, h3, h4, h5, h6 {
+  background-color:transparent;
+}
+
+p {
+  margin:1em 0 0 0;
+}
+
+table {
+  border-collapse:separate;
+}
+
+strong, b {
+  font-weight:bold;
+}
+
+hr {
+  color:#9E9E70;
+  background-color:#9E9E70;
+  height:1px;
+  border:none;
+}
+
+pre, code, tt {
+  font-size:100%;
+  line-height:1.4em;
+  color : #600000;
+}
+
+pre {
+  border: 1px solid #6185a0;
+  padding: 6px 6px;
+  margin-top    : 1em;
+  margin-bottom : 1em;
+  margin-left   : 3em;
+  margin-right  : 3em; 
+  background    : #eeeeee;
+  color : #600000;
+  font-family: monospace;
+}
+
+/* Text */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: verdana, lucida, helvetica, sans-serif;
+  line-height:104%;
+  padding:0;
+  margin:1em 0 0.1em 0;
+}
+
+h1 {
+  font-size:210%;
+  color: #005aa0;
+  margin:0 0 0.1em 0;
+}
+
+h2 {
+  font-size:145%;
+  display:block;
+  background-color: #d9e3ea;
+  color: #005aa0;
+  padding:0.2em 0.7em;
+  margin:1em -0.7em 0.15em -0.7em;
+  height:auto;
+}
+h3 { font-size:140%; color: #005aa0;}
+h4 { font-size:125%; color: #005aa0;}
+h5 { font-size:110%; color: #005aa0;}
+h6 { font-size:95%; color: #005aa0;}
+
+/* Links */
+
+:link:focus,
+:visited:focus,
+:link,
+:visited,
+:link:active,
+:visited:active {
+  text-decoration:none;
+  color: #0049b2;
+  background-color:transparent;
+}
+:link:hover,
+:visited:hover {
+  text-decoration:underline;
+  color: #0049b2;
+}
+a:link img,
+a:visited img,
+a:hover img,
+a:active img {
+  background-color:transparent;
+}
+th a:link,
+th a:visited {
+  font-weight:bold;
+}
+
+/* Forms */
+
+form { 
+	display:inline;
+	margin:0;
+	padding:0;
+}
+textarea {
+	font-family:monospace;
+	font-size:100%;
+	margin:0.25em 0;
+}
+input, select {
+	font-family:verdana,arial,sans-serif;
+	padding:1px;
+	/*background-color:#E8F1F9;*/
+}
+select {
+	padding:0;
+	font-size:100%;
+}
+fieldset {
+	border:1px solid #22638c;
+	padding-left:1em;
+}
+legend {
+	padding: 0.2em 1em;
+	color:#8490A1; /* .gwGrayText value */
+	font-size:95%;
+	border:1px solid #8490A1; /* .gwGrayText value */
+	background-color:#f8f8f8;
+}
+label {
+	margin-left:0.5em;
+	font-size:95%;
+	line-height:125%;
+}
+
+/**
+ * Newsbar
+ */
+.newsbar {
+  width: 19em;
+  float: right;
+  overflow : hidden;
+  font-size : x-small;
+  margin-top : 0em;
+  margin-right : 0em;
+  margin-left : 0.5em;
+  margin-bottom : 0.5em;
+  padding : 0.5em;
+  border:1px solid #999;
+  background-color: #d9e3ea;
+}
+
+/*	-----------------------------------------------------------
+	gw specific elements
+	-----------------------------------------------------------	*/
+
+/* Left bar */
+
+.gwLeftBar {
+  background-color: white;
+  border:1px solid #999;
+  overflow:hidden;
+  margin  : 0;
+  padding : 1em 0 1.7em 1em;
+  width   : auto;
+  color: #005aa0;
+  font-size : small;
+}
+
+.gwLeftBar a {
+  color: black;
+}
+
+.gwLeftBar strong a,
+.gwLeftBar strong {
+  color: #005aa0;
+}
+
+.gwLeftBar ul {
+	padding:0;
+	margin:0;
+}
+.gwLeftBar strong a:link,
+.gwLeftBar strong a:visited {
+	font-weight:bold;
+}
+.gwLeftBar li {
+	display:block;
+	list-style:none;
+	width:100%;
+}
+.gwLeftBar li a {
+	display:block;
+	width:98%;
+	padding-right:2%;
+}
+html>body .gwLeftBar li a {
+	width:auto;
+}
+.gwLeftBar hr {
+	color:#ccc;
+	background-color:#ccc;
+	height:1px;
+	border:none;
+}
+
+/* Topic text */
+
+.gwTopic {
+  padding : 2em 1em 2.5em 2em;
+  background-color:white;
+  border:1px solid #999;
+  font-size: small;
+}
+
+.gwTopic table {
+	width:auto;
+}
+.gwTopic table th a:link,
+.gwTopic table th a:visited {
+	text-decoration:none;
+}
+.gwTopic ul {
+  margin-top:0;
+}
+.gwTopic a:link {
+  text-decoration: none;
+}
+
+.gwTopic a:visited {
+  text-decoration: none;
+}
+
+.gwTopic a:hover {
+  text-decoration: underline;
+}
+.gwTopic h1 a:link,
+.gwTopic h1 a:visited,
+.gwTopic h2 a:link,
+.gwTopic h2 a:visited {
+	text-decoration:none;
+	color:#1559B3;
+	border:none;
+	font-weight:bold;
+}
+.gwTopic a:hover {
+  color:#1559B3;
+}
+
+/**	----------------------------------
+*	Attachments table, form
+*	---------------------------------- */
+
+.gwAttachments,
+.gwForm {
+	margin:2em 0;
+}
+.gwAttachments table,
+.gwForm table {
+	border-collapse:collapse;
+	padding:0px;
+	border-spacing:0px;
+	empty-cells:show;
+	border:0px;
+	font-size:90%;
+	color:#888e9c;
+	background-color:white;
+	border-top:1px solid #ccc;
+	border-right:1px solid #ccc;
+	border-left:1px solid #ccc;
+}
+.gwAttachments table {
+	background-color:white;
+	line-height:1.4em;
+	width:auto;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:100%;
+}
+.gwAttachments th,
+.gwForm th,
+.gwAttachments th,
+.gwForm th {
+	padding:0.2em 0.6em;
+	height:2.5em;
+	border-color:#ccc;
+	border-left:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+	background-color:white;
+	vertical-align:middle;
+}
+.gwAttachments th.gwFirstCol,
+.gwForm th.gwFirstCol {
+	border-left:none;
+	width:0px;
+}
+/* don't show any of those ugly sort icons */
+.gwAttachments th img,
+.gwAttachments th a:link img,
+.gwAttachments th a:visited img {
+	display:none;
+}
+.gwAttachments td,
+.gwForm td {
+	border:0px;
+	border-bottom:1px solid #ccc;
+	padding:0.2em 0.6em;
+	background-color:white;
+	height:1.4em;
+	text-align:left;
+	vertical-align:top;
+}
+.gwAttachments td.gwFirstCol,
+.gwForm td.gwFirstCol {
+	border-left:none;
+}
+.gwAttachments p,
+.gwForm p {
+	display:none;
+}
+.gwAttachments th a:link,
+.gwAttachments th a:visited,
+.gwForm th a:link,
+.gwForm th a:visited {
+	color:#1559B3;
+	border-color:#345;
+	text-decoration:none;
+}
+.gwAttachments th font,
+.gwForm th font {
+	color:#1559B3;
+}
+.gwAttachments th a:hover,
+.gwForm th a:hover {
+	text-decoration:underline;
+	background-color:transparent;
+	border-color:#345;
+}
+.gwAttachments td a:link,
+.gwAttachments td a:visited,
+.gwForm td a:link,
+.gwForm td a:visited {
+	font-weight: normal;
+}
+.gwAttachments th.gwSortedAscendingCol,
+.gwAttachments th.gwSortedDescendingCol {
+	background-color:#DADADA;
+}
+.gwAttachments th.gwSortedAscendingCol a:link,
+.gwAttachments th.gwSortedAscendingCol a:visited,
+.gwAttachments th.gwSortedDescendingCol a:link,
+.gwAttachments th.gwSortedDescendingCol a:visited {
+	color:#345;
+}
+.gwAttachments th.gwSortedAscendingCol a:hover,
+.gwAttachments th.gwSortedDescendingCol a:hover {
+	text-decoration:none;
+	background-color:transparent;
+}
+
+/* gwTopicAction: actions buttons at bottom of page */
+
+/* If someone has enough insight or time to spare, please
+create a div based solution instead of tables */
+
+.gwTopicAction {
+	margin:2em 0 3em 0;
+	background-color: #f8f8f8; /* #22638c for Explorer 5.x so the whole row is blue */
+}
+.gwTopicAction table,
+table.gwTopicAction {
+	padding:0px;
+	border-spacing:0px;
+	border-collapse:collapse;
+	empty-cells:show;
+	border:0px;
+	font-size:95%;
+	color:white;
+	width:inherit;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:100%;
+}
+.gwTopicAction a:link,
+.gwTopicAction a:visited {
+	color:white;
+	border-bottom:1px solid #698FA8;
+	text-decoration:none;
+	font-weight:bold;
+}
+.gwTopicAction a:hover {
+	color:#1559B3;
+	border-bottom:1px solid #b4d5ff;
+}
+.gwTopicAction tr {
+	background-color:#22638c;
+}
+.gwTopicAction th {
+	border:none;
+}
+.gwTopicAction td {
+	height:2em;
+	border:none;
+	padding:0.3em 1em;
+	vertical-align:middle;
+	text-align:left;
+}
+.gwTopicAction td.gwCancelCol {
+	text-align:left;
+	width:auto;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:20%;
+}
+.gwTopicAction td.gwSubmitCol {
+	text-align:center;
+	width:auto;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:40%;
+}
+.gwTopicAction .gwSubmitOptions {
+	background-color:#D4E6FC;
+	border:1px solid #B6C6D9;
+	margin:0.25em 0;
+}
+.gwTopicAction td.gwAddCol {
+	text-align:right;
+	width:auto;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:20%;
+}
+.gwTopicAction a:hover {
+	color:#1559B3;
+	border-bottom:1px solid #b4d5ff;
+}
+.gwTopicActionSecondary {
+	padding:0.15em 0.5em 0.15em 1em;
+	background-color:white;
+}
+.gwTopicActionHelp,
+.gwTopicAction .gwTopicActionHelp {
+	background-color:white;
+	padding:0;
+}
+.gwTopicActionSecondary,
+.gwTopicAction .gwTopicActionSecondary {
+	background-color:#DFEDFD;
+	color:#22638c;
+	border-top:1px solid #bbb;
+}
+.gwTopicActionSecondary td.gwSubmitCol {
+	text-align:left;
+}
+.gwTopicActionSecondary a:link,
+.gwTopicActionSecondary a:visited {
+	color:#1e5bbd;
+	border-bottom:1px solid #A3BCF1;
+	text-decoration:none;
+}
+.gwTopicActionSecondary a:hover {
+	color:#1e5bbd;
+	border-bottom:1px solid #b4d5ff;
+}
+.gwTopicActionHelp a:link,
+.gwTopicActionHelp a:visited  {
+	border-bottom:0px;
+}
+.gwTopicAction .gwSeparator {
+	display:inline;
+	color:white;
+}
+.gwTopicAction input,
+.gwTopicAction label {
+	font-size:100%;
+}
+
+/**	----------------------------------
+*	TOC
+*	---------------------------------- */
+
+.gwToc {
+	display:block;
+	font-size:95%;
+	line-height:1.6em;
+	margin:1em 0 2em 0;
+	padding:0.3em 0 0.6em 0;
+	border-top:1px solid;
+	border-bottom:1px solid;
+	border-color:#ddd;
+}
+
+.gwToc ul {
+	list-style:outside;
+	padding:0 0 0 0.5em;
+	margin:0;
+}
+.gwToc li {
+	margin-left:2em;
+}
+.gwToc .gwTocTitle {
+	margin:0;
+	padding:0;
+	font-weight:bold;
+	color:#666;
+}
+.gwToc a:link,
+.gwToc a:visited {
+	text-decoration:none;
+	color:#1e5bbd;
+	border:0;
+}
+.gwToc a:hover {
+	text-decoration:underline;
+}
+.gwToc li a {
+	display:block;	
+	width:100%;
+}
+html>body .gwToc li a {
+	width:auto;
+}
+
+/* Topic info */
+
+.gwTopicInfo {
+	margin:0.5em 0 0 0;
+}
+
+/* Revision info */
+
+.gwRevInfo {
+	display:block;
+	font-size:95%;
+}
+.gwRevInfo em,
+.gwRevInfo i {
+	font-style:normal;
+}
+
+/* Footer */
+
+.gwTopicFooter {
+	display:block;
+	margin-top:1em;
+	padding-bottom:2em;
+}
+
+/* Homepath */
+
+.gwHomePath {
+	font-size:90%;
+}
+.gwHomePath a:hover {
+	text-decoration:underline;
+}
+
+/* page nav:top to, to bottom */
+
+.gwPageNav {
+	font-size:95%;
+	font-weight:bold;
+	margin-left:1em;
+	margin-bottom:1em;
+}
+
+/* search box */
+
+.gwSearchBox {
+	color:#8490A1; /* .gwGrayText value */
+}
+.gwSearchBox td {
+	height:50px;
+	vertical-align:middle;
+	background-color:transparent;
+	text-align:right;
+}
+.gwSearchBox input {
+	border:1px solid #ccc;
+}
+
+/* table used in various places */
+
+.gwVersatileTable table {
+	width:auto;
+	padding:0px;
+	border-spacing:0px;
+	border-collapse:collapse;
+	empty-cells:show;
+	border:0px;
+	border:1px solid #ccc;
+	margin-top:1em;
+	font-size:95%;
+}
+.gwVersatileTable th,
+.gwVersatileTable td {
+	vertical-align:top;
+	border:0px;
+	border-top:1px solid #ccc;
+}
+.gwVersatileTable td {
+	padding:0.2em 0.5em;
+	background-color:#F5F7FD;
+}
+.gwVersatileTable th {
+	padding:0.5em 0.5em;
+	vertical-align:top;
+	font-weight:bold;
+	background-color:#E0E9F7;
+}
+.gwVersatileTable .gwTopicCol {
+	background-color:white;
+}
+.gwVersatileTable .gwOldCol {
+	background-color:#E9E9E9;
+}
+.gwVersatileTable input {
+	background-color:white;
+}
+.gwVersatileTable input.gwCheckbox {
+	background-color:transparent;
+}
+
+/*	-----------------------------------------------------------
+	Other styles
+	-----------------------------------------------------------	*/
+
+.gwSeparator {
+	font-family:Arial,sans-serif;
+}
+.gwHelp ul {
+	margin-top:0;
+	margin-bottom:0;
+}
+.gwSubmit,
+.gwButton {
+	font-size:90%;
+	font-weight:normal;
+	padding:0;
+	margin:0 0.15em;
+}
+.gwSubmit {
+	color:#041D3A;
+	background-color:#f2f2f2;
+	border-top:1px solid #fff;
+	border-right:1px solid #333;
+	border-bottom:1px solid #333;
+	border-left:1px solid #fff;
+}
+.gwButton {
+	color:#05264D;
+	background-color:#f2f2f2;
+	border:1px solid #aaa;
+}
+.gwCheckbox,
+.gwRadioButton {
+	border:none;
+	background-color:transparent;
+}
+.gwSecondary { }
+.gwTertiary {
+	background-color:#B9D6FA;
+}
+.gwCancel { /* cancel button */
+	background-color:#eee;
+}
+.gwBroadcastMessage {
+	background-color:#ff0;
+	color:black;
+	padding:0.2em 0.7em;
+	margin:0 -0.7em 0.5em -0.7em;
+}
+.gwBroadcastMessage b,
+.gwBroadcastMessage strong {
+	color:#f00;
+}
+.gwAlert {
+	color:#f00;
+}
+.gwError {
+	color: #FF3333;
+	font-weight: bold;
+}
+.gwGrayText,
+.gwHelpCol {
+	color:#8490A1;
+}
+.gwGrayText a:link,
+.gwGrayText a:visited,
+.gwHelpCol a:link,
+.gwHelpCol a:visited {
+	color:#8490A1; /* .gwGrayText value */
+	text-decoration:underline;
+}
+.gwGrayText a:hover,
+.gwHelpCol a:hover {
+	color:#1559B3;
+}
+.gwSmall {
+	font-size:85%;
+}
+.gwNew { }
+.gwSummary {
+	font-size:85%;
+	line-height:1.3em;
+}
+.gwNewLink {
+	background-color:transparent;
+}
+
+/*	-----------------------------------------------------------
+	Search results
+	styles and overridden styles used in search.pattern.tmpl
+	-----------------------------------------------------------	*/
+	
+.gwSearchResults {}
+.gwSearchResultsHeader,
+.gwSearchString {
+	padding:0.2em 0.7em 0.2em 0.7em;
+	margin:0.15em -0.7em 0.25em -0.7em;
+	font-weight:bold;
+	background-color:#F3EDE7;
+	border-bottom:1px solid #ccc;
+}
+.gwSearchString {
+	background-color:transparent;
+	margin-bottom:1em;
+	border-bottom:0px;
+}
+.gwSearchResults table {
+	width:auto;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:100%;
+}
+.gwSearchResults .gwTopRow {
+	padding-top:0.2em;
+}
+.gwSearchResults .gwBottomRow {
+	padding-bottom:0.25em;
+	border-bottom:1px solid #ddd;
+}
+.gwSearchResults .gwAlert {
+	color:#f00;
+	font-weight:bold;
+}
+.gwSearchResults .gwSummary .gwAlert {
+	color:#900;
+	font-weight:normal;
+}
+.gwSearchResults .gwNew b {
+	font-weight:normal;
+}
+.gwSearchResultCount {
+	margin:0.5em 0 2em 0;
+	font-size:95%;
+}
+/* Search results in book view format */
+
+.gwBookViewList .gwSearchResultsHeader {
+	margin-bottom:1em;
+}
+.gwBookViewList .gwTopRow {
+	padding:0.2em 0.7em 0.2em 0.7em;
+	margin:2.5em -0.7em 0.15em -0.7em;
+	background-color:#22638c;
+	color:#ccc;
+}
+.gwBookViewList .gwTopRow a:link, 
+.gwBookViewList .gwTopRow a:visited {
+	color:white;
+}
+.gwBookViewList .gwTopRow a:hover {
+	color:#1e5bbd;
+}
+.gwBookViewList .gwBottomRow {
+	font-size:100%;
+	padding:1em 0;
+	border-color:#ddd;
+}
+.gwBookViewList .gwBottomRow {
+	width:auto;
+}
+.gwBookViewList .gwSearchResultCount {
+	color:#22638c;
+}
+
+
+/*	-----------------------------------------------------------
+	View
+	styles and overridden styles used in gw.pattern.tmpl and view.pattern.tmpl
+	-----------------------------------------------------------	*/
+
+.gwPreviewPage .gwAttachments,
+.gwPreviewPage .gwForm {
+	background-color:#f1f1f1;
+	padding:2em;
+	border-top:1px solid #bbb;
+	margin-top:0;
+	margin-bottom:0em;
+}
+.gwDiffPage .gwTopicAction {
+  margin:0 0 1.5em 0;
+  padding:0.5em 2em 0.6em 2em;
+  border : 1px solid #ddd;
+  font-size:95%;
+  line-height:1.5em;
+  color: #98A2B0;
+  font-weight:normal;
+  background-color: #e8e8e8;
+}
+.gwDiffPage .gwTopicAction a:hover {
+  text-decoration: underline;
+	/* border-bottom:1px solid #b4d5ff; */
+	/* color:#1559B3; */
+}
+.gwDiffPage .gwTopicAction a:active {
+	color:white;
+}
+
+.gwDiffPage .gwTopicAction .gwSeparator {
+	color: #98A2B0;
+}
+
+/*	-----------------------------------------------------------
+	Edit
+	styles and overridden styles used in edit.pattern.tmpl
+	-----------------------------------------------------------	*/
+
+.gwEditPage .gwFormHolder { /* constrains the width of the textarea */
+	width:auto;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:100%;
+}
+.gwEditPage textarea {
+	background-color:#FCFAF7;
+	width:auto;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:100%;
+}
+.gwEditPage .gwHelp {
+	margin-top:2em;
+	border-top:1px solid #ccc;
+}
+.gwEditPage .gwHelp code {
+	color:#900;
+}
+.gwEditPage table.gwChangeFormButtonHolder {
+	margin-bottom:0.5em;
+	width:auto;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:100%;
+}
+.gwChangeFormButton {
+	padding:0;
+	margin:0;
+	color:#888;
+	font-size:90%;
+	background-color:transparent;
+	border:none;
+}
+.gwEditPage .gwEditForm {
+	margin-top:1.5em;
+}
+.gwEditPage .gwEditForm table {
+	width:auto;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:100%;
+}
+.gwEditPage .gwEditForm th {
+	border-left:none;
+	background-color:#E0E9F7; /*#EFEDEA;*/
+	padding-left:1em;
+	color:black;
+}
+.gwEditPage .gwEditForm td {
+	border-left:1px solid #ddd;
+	padding-right:1em;
+	padding-left:0.5em;
+	background-color:#F5F7FD; /*#E8F1F9;*/
+	vertical-align:middle;
+}
+.gwEditPage .gwEditForm input,
+.gwEditPage .gwEditForm select {
+	font-size:100%;
+}
+.gwEditPage .gwEditFormTextField {
+	width:auto;
+}
+.gwEditPage .gwSig {
+	margin:0.5em 0;
+}
+.gwEditPage .gwSig input {
+	background-color:#EFEDEA;
+	border:1px solid #ddd;
+	padding:2px;
+	width:25em;
+	font-family:monospace;
+	font-size:100%;
+}
+.gwEditPage .gwTopicAction {
+	margin-top:0;
+}
+
+/*	-----------------------------------------------------------
+	Preview
+	styles and overridden styles used in preview.pattern.tmpl
+	-----------------------------------------------------------	*/
+	
+.gwPreviewPage .gwPreviewArea {
+	background-color:white;
+	border:1px solid #22638c;
+	margin:1em -2em 0 -2em;
+	padding:0 2em 1em 2em;
+}
+.gwPreviewPage .gwHelp ul {
+	margin-top:0;
+}
+	
+/*	-----------------------------------------------------------
+	Attach
+	styles and overridden styles used in attach.pattern.tmpl
+	-----------------------------------------------------------	*/
+
+.gwAttachPage .gwVersatileTable table {
+	width:auto;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:100%;	
+}
+.gwAttachPage .gwVersatileTable th,
+.gwAttachPage .gwVersatileTable td {
+	padding:0.7em 1em 0.7em 1.25em;
+}
+.gwAttachPage .gwVersatileTable th {
+	text-align:left;
+	width:12em;
+	padding-left:1em;
+}
+.gwAttachPage .gwVersatileTable td.gwHelpCol {
+	width:17em;
+}
+.gwAttachPage .gwTopicAction {
+	margin:2em 0 1em 0;
+}
+.gwAttachPage .gwHelp {
+	margin:2em 0 3em 0;
+}
+.gwAttachPage .gwHelp ul {
+	padding:0;
+	margin:1em 0 0 0;
+}
+.gwAttachPage .gwHelp ul li {
+	list-style:none;
+	line-height:150%;
+}
+.gwAttachPage .gwPrevious .gwAttachments table {
+	width:auto;
+	color:black;
+}
+
+/*	-----------------------------------------------------------
+	ChangeForm
+	styles and overridden styles used in attach.pattern.tmpl
+	-----------------------------------------------------------	*/
+
+.gwChangeFormPage .gwVersatileTable table {
+	width:auto;
+}
+.gwChangeFormPage .gwVersatileTable th {
+	text-align:left;
+	padding:0.25em 1em;
+}
+.gwChangeFormPage .gwVersatileTable td {
+	padding:1em;
+}
+.gwChangeFormPage .gwVersatileTable ul {
+	margin:0;
+	padding:0;
+}
+.gwChangeFormPage .gwVersatileTable li {
+	list-style:inside;
+	margin:0;
+	padding:0;
+}
+
+/*	-----------------------------------------------------------
+	Rename
+	styles and overridden styles used in rename.pattern.tmpl
+	-----------------------------------------------------------	*/
+	
+.gwRenamePage .gwVersatileTable {
+	margin-bottom:3em;
+}
+.gwRenamePage .gwVersatileTable table {
+	width:auto;
+	voice-family: "\"}\""; /* hide the following for Explorer 5.x */
+	voice-family:inherit;
+	width:100%;	
+}
+.gwRenamePage .gwVersatileTable th {
+	text-align:right;
+	padding-left:2em;
+}
+.gwRenamePage .gwVersatileTable td {
+	padding:0.5em 0.5em;
+}
+.gwRenamePage .gwVersatileTable .gwHelpCol {
+	width:22em;
+}
+.gwRenamePage .gwVersatileTable th.lastRow,
+.gwRenamePage .gwVersatileTable td.lastRow {
+	border-top:none;
+}
+.gwRenamePage .gwHelp {
+	margin:1em 0 1em 0;
+	padding:0.25em 0 0.5em 0;
+}
+.gwRenamePage .gwTopicActionSecondary {
+	margin:1.5em 0;
+}
+
+/*	-----------------------------------------------------------
+	Diff
+	styles and overridden styles used in rdiff.pattern.tmpl
+	-----------------------------------------------------------	*/
+
+.gwDiffPage table {
+	width:auto;
+}
+.gwDiffPage .gwSearchResultsHeader {
+	border-bottom:0;
+}
+.gwDiffPage .gwSearchResults {
+	padding-bottom:3em;
+}
+.gwDiffPage .gwDiffTable th,
+.gwDiffPage .gwDiffTable td {
+	padding:0.1em;
+}
+
+/* Deleted */
+
+.gwDiffPage .gwDiffDeletedHeader {
+	background-color:#FF3000;
+	color:white;
+	padding-left:1em;
+}
+.gwDiffPage .gwDiffDeletedMarker {
+	background-color:#FF3000;
+}
+.gwDiffPage .gwDiffDeletedText {
+	background-color:#FFEAE5;
+}
+
+/* Added */
+
+.gwDiffPage .gwDiffAddedHeader {
+	background-color:#3DB234;
+	color:white;
+	padding-left:1em;
+}
+.gwDiffPage .gwDiffAddedMarker {
+	background-color:#3DB234;
+}
+.gwDiffPage .gwDiffAddedText {
+	background-color:#EBF7EA;
+}
+
+/* Changed */
+
+.gwDiffPage th.gwDiffChangedHeader,
+.gwDiffPage td.gwDiffChangedHeader {
+	background-color:#98A2B0;
+	color:white;
+	padding-left:1em;
+	text-align:center;
+}
+.gwDiffPage .gwDiffChangedText {}
+
+/* Unchanged */
+
+.gwDiffPage .gwDiffUnchangedText {}
+.gwDiffPage .gwDiffUnchangedTextContents { }
+.gwDiffPage .gwDiffLineNumberHeader {
+	margin:2em 0;
+	background-color:#ddd;
+}
+
+/*	-----------------------------------------------------------
+	Print
+	styles and overridden styles used in print.pattern.tmpl
+	-----------------------------------------------------------	*/
+	
+.gwPrintPage h2 {
+	border-bottom:1px solid #900;
+}
+.gwPrintPage .gwAttachments,
+.gwPrintPage .gwForm {
+	background-color:#ddd;
+}

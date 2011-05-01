@@ -1,0 +1,481 @@
+<HTML>
+<HEAD>
+<TITLE>Source: so/include/driver/Inode.h</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>Source: so/include/driver/Inode.h</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1"></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<pre>
+/*
+ * Project:		File System Simulator
+ * Author:		Bogdan DUMITRIU
+ * E-mail:		bdumitriu@bdumitriu.ro
+ * Date:		Tue Nov 5 2002
+ * Description:		This is the interface of the Inode class.
+ */
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#ifndef _INODE_H
+#define _INODE_H
+
+#include <stdlib.h>
+#include <string.h>
+#include <iostream.h>
+#include "../defs.h"
+#include "HDD.h"
+#include "../utils/Utils.h"
+#include "../utils/Date.h"
+#include "../exceptions/ArrayIndexOutOfBoundsException.h"
+#include "../exceptions/HardDiskNotInitializedException.h"
+#include "../exceptions/InvalidBlockNumberException.h"
+#include "../exceptions/InvalidDateException.h"
+#include "../exceptions/IOException.h"
+#include "../exceptions/NullPointerException.h"
+
+/**
+ * This class represents an interface to any of the hard disk's inodes.
+ * Thus it allows read/write access to the various inode elements.
+ * Here's the configuration of the inode which this class assumes:
+ *
+ * <table border="1" align="center">
+ * <caption>Inode configuration</caption>
+ * <tr>
+ * <td align="center" bgcolor="cyan">1 <u>bit</u></td>
+ * <td align="center" bgcolor="cyan">7 <u>bits</u></td>
+ * <td align="center" bgcolor="cyan">16 bytes</td>
+ * <td align="center" bgcolor="cyan">4 bytes</td>
+ * <td align="center" bgcolor="cyan">4 bytes</td>
+ * <td align="center" bgcolor="cyan">1 byte</td>
+ * <td align="center" bgcolor="cyan">14 bytes</td>
+ * </tr>
+ * <tr>
+ * <td align="center" bgcolor="lightblue">inode valid/invalid</td>
+ * <td align="center" bgcolor="lightblue">file type</td>
+ * <td align="center" bgcolor="lightblue">checksum</td>
+ * <td align="center" bgcolor="lightblue">size of file<br />(in bytes)</td>
+ * <td align="center" bgcolor="lightblue">nr. of blocks<br />occupied by file</td>
+ * <td align="center" bgcolor="lightblue">size of file name</td>
+ * <td align="center" bgcolor="lightblue">reserved</td>
+ * </tr>
+ * </table>
+ *
+ * <table border="1" align="center">
+ * <caption>Inode configuration (cont'd)</caption>
+ * <tr>
+ * <td align="center" bgcolor="cyan">4 bytes</td>
+ * <td align="center" bgcolor="cyan">4 bytes</td>
+ * <td align="center" bgcolor="cyan">4 bytes</td>
+ * <td align="center" bgcolor="cyan">128 bytes</td>
+ * <td align="center" bgcolor="cyan">60 bytes</td>
+ * <td align="center" bgcolor="cyan">rest up to include/defs.h::BLOCK_DIM</td>
+ * </tr>
+ * <tr>
+ * <td align="center" bgcolor="lightblue">creation date</td>
+ * <td align="center" bgcolor="lightblue">last access date</td>
+ * <td align="center" bgcolor="lightblue">last update date</td>
+ * <td align="center" bgcolor="lightblue">file name</td>
+ * <td align="center" bgcolor="lightblue">15 direct block addresses</td>
+ * <td align="center" bgcolor="lightblue">nr. of left bytes/4 indirect block addresses</td>
+ * </tr>
+ * </table>
+ *
+ * @short Represents an interface to any of the hard disk's inodes.
+ * @author Bogdan DUMITRIU
+ * @version 0.1
+ */
+
+/*
+ * The inode configuration is:
+ *
+ * +----------+-----------+----------+-----------+---------------+------------------->
+ * | 1 *bit*  | 7 *bits*  | 16 bytes | 4 bytes   | 4 bytes       | 1 byte            |
+ * +----------+-----------+----------+-----------+---------------+------------------->
+ * | validity | file type | checksum | file size | nr. of blocks | size of file name |
+ * +----------+-----------+----------+-----------+---------------+------------------->
+ *
+ * <----------+---------------+------------------+------------------+----------->
+ * | 14 bytes | 4 bytes       | 4 bytes          | 4 bytes          | 128 bytes |
+ * <----------+---------------+------------------+------------------+----------->
+ * | reserved | creation date | last access date | last update date | file name |
+ * <----------+---------------+------------------+------------------+----------->
+ *
+ * <---------------------------+----------------------------------------------+
+ * | 60 bytes                  | rest up to include/defs.h::BLOCK_DIM         |
+ * <---------------------------+----------------------------------------------+
+ * | 15 direct block addresses | nr. of left bytes/4 indirect block addresses |
+ * <---------------------------+----------------------------------------------+
+ *
+ */
+class Inode
+{
+public:
+	/**
+	 * Creates a new Inode and initializes all its members with 0 or
+	 * arrays of 0. The members of type Date* will be initialized with
+	 * the current date.
+	 */
+	Inode();
+
+	/**
+	 * The destructor of the class.
+	 */
+	~Inode();
+
+	/**
+	 * Returns true if the information conatined in the inode is valid and
+	 * false otherwise.
+	 *
+	 * @return true if the information conatined in the inode is valid and
+	 *	false otherwise.
+	 */
+	bool isValid();
+
+	/**
+	 * Returns the value of the fileType data member.
+	 *
+	 * @return the value of the fileType data member.
+	 */
+	unsigned char getFileType();
+
+	/**
+	 * Returns the value of the checksum data member.
+	 *
+	 * @return the value of the checksum data member.
+	 */
+	unsigned char* getChecksum();
+	
+	/**
+	 * Returns the value of the fileSizeInBytes data member.
+	 *
+	 * @return the value of the fileSizeInBytes data member.
+	 */
+	unsigned long getFileSizeInBytes();
+
+	/**
+	 * Returns the value of the fileSizeInBlocks data member.
+	 *
+	 * @return the value of the fileSizeInBlocks data member.
+	 */
+	unsigned long getFileSizeInBlocks();
+
+	/**
+	 * Returns the value of the fileNameSize data member.
+	 *
+	 * @return the value of the fileNameSize data member.
+	 */
+	unsigned char getFileNameSize();
+
+	/**
+	 * Returns the value of the creationDate data member.
+	 *
+	 * @return the value of the creationDate data member.
+	 */
+	Date* getCreationDate();
+
+	/**
+	 * Returns the value of the lastAccessDate data member.
+	 *
+	 * @return the value of the lastAccessDate data member.
+	 */
+	Date* getLastAccessDate();
+
+	/**
+	 * Returns the value of the lastUpdateDate data member.
+	 *
+	 * @return the value of the lastUpdateDate data member.
+	 */
+	Date* getLastUpdateDate();
+
+	/**
+	 * Returns the value of the fileName data member.
+	 *
+	 * @return the value of the fileName data member.
+	 */
+	char* getFileName();
+
+	/**
+	 * Returns the <code>index</code>th entry of the directBlockAddress
+	 * data member.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which is
+	 *	rather hard, since it's an unsigned long) or greater than or equal
+	 *	to include/defs.h::DIRECT_BLOCKADDR_ENTRIES.</li>
+	 * </ul>
+	 *
+	 * @param index the index in the array of direct block addresses.
+	 * @return the <code>index</code>th entry of the directBlockAddress
+	 *	data member.
+	 */
+	unsigned long getDirectBlockAddress(unsigned long index)
+		throw(ArrayIndexOutOfBoundsException*);
+
+	/**
+	 * Returns the <code>index</code>th entry of the indirectBlockAddress
+	 * data member.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which is
+	 *	rather hard, since it's an unsigned long) or greater than or equal
+	 *	to (include/defs.h-180-(include/defs.h::DIRECT_BLOCKADDR_ENTRIES*4))/4.
+	 *	</li>
+	 * </ul>
+	 *
+	 * @param index the index in the array of indirect block addresses.
+	 * @return the <code>index</code>th entry of the indirectBlockAddress
+	 *	data member.
+	 */
+	unsigned long getIndirectBlockAddress(unsigned long index)
+		throw(ArrayIndexOutOfBoundsException*);	
+
+	/**
+	 * Sets the valid data member to <code>valid</code>.
+	 *
+	 * @param valid the new value of the valid data member.
+	 */
+	void setValid(bool valid);
+
+	/**
+	 * Sets the fileType data member to <code>fileType</code>.
+	 *
+	 * @param fileType the new value of the fileType data member.
+	 */
+	void setFileType(unsigned char fileType);
+
+	/**
+	 * Sets the checksum data member to <code>checksum</code>.
+	 *
+	 * @param checksum the new value of the checksum data member.
+	 */
+	void setChecksum(unsigned char* checksum);
+	
+	/**
+	 * Sets the fileSizeInBytes data member to <code>fileSizeInBytes</code>.
+	 *
+	 * @param fileSizeInBytes the new value of the fileSizeInBytes data member.
+	 */
+	void setFileSizeInBytes(unsigned long fileSizeInBytes);
+
+	/**
+	 * Sets the fileSizeInBlocks data member to <code>fileSizeInBlocks</code>.
+	 *
+	 * @param fileSizeInBlocks the new value of the fileSizeInBlocks data member.
+	 */
+	void setFileSizeInBlocks(unsigned long fileSizeInBlocks);
+
+	/**
+	 * Sets the fileNameSize data member to <code>fileNameSize</code>. If
+	 * the parameter's value is greater than 128, the date member will be
+	 * set to 128.
+	 *
+	 * @param fileNameSize the new value of the fileNameSize data member.
+	 */
+	void setFileNameSize(unsigned char fileNameSize);
+
+	/**
+	 * Sets the creationDate data member to <code>creationDate</code>.
+	 *
+	 * @param creationDate the new value of the creationDate data member.
+	 */
+	void setCreationDate(Date* creationDate);
+
+	/**
+	 * Sets the lastAccessDate data member to <code>lastAccessDate</code>.
+	 *
+	 * @param lastAccessDate the new value of the lastAccessDate data member.
+	 */
+	void setLastAccessDate(Date* lastAccessDate);
+
+	/**
+	 * Sets the lastUpdateDate data member to <code>lastUpdateDate</code>.
+	 *
+	 * @param lastUpdateDate the new value of the lastUpdateDate data member.
+	 */
+	void setLastUpdateDate(Date* lastUpdateDate);
+
+	/**
+	 * Sets the first <code>fileNameSize</code> bytes of the fileName data
+	 * member to the first fileNameSize bytes of <code>fileName</code>. If
+	 * fileNameSize is greater than 128 (the maximum file name size) only
+	 * the first 128 bytes will be copied. This method does not modify the
+	 * fileNameSize data member in any way. Consistency is supposed to be
+	 * ensured from the outside.
+	 *
+	 * @param fileName the new value of the fileName data member.
+	 * @param fileNameSize the number of bytes to copy from <code>fileName</code>.
+	 */
+	void setFileName(const char* fileName, unsigned long fileNameSize);
+
+	/**
+	 * Sets the <code>index</code>th entry of the directBlockAddress
+	 * data member to <code>address</code>.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which is
+	 *	rather hard, since it's an unsigned long) or greater than or equal
+	 *	to include/defs.h::DIRECT_BLOCKADDR_ENTRIES.</li>
+	 * </ul>
+	 *
+	 * @param index the index in the array of direct block addresses.
+	 * @param address the value to set the direct block address to.
+	 */
+	void setDirectBlockAddress(unsigned long index, unsigned long address)
+		throw(ArrayIndexOutOfBoundsException*);
+
+	/**
+	 * Sets the <code>index</code>th entry of the indirectBlockAddress
+	 * data member to <code>address</code>.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> ArrayIndexOutOfBoundsException* if index is less than 0 (which is
+	 *	rather hard, since it's an unsigned long) or greater than or equal
+	 *	to (include/defs.h-180-(include/defs.h::DIRECT_BLOCKADDR_ENTRIES*4))/4.
+	 *	</li>
+	 * </ul>
+	 *
+	 * @param index the index in the array of indirect block addresses.
+	 * @param address the value to set the indirect block address to.
+	 */
+	void setIndirectBlockAddress(unsigned long index, unsigned long address)
+		throw(ArrayIndexOutOfBoundsException*);	
+
+	/**
+	 * This method reads the inode from block number <code>blockNo</code>
+	 * of the <code>hdd</code> hard disk and initializes all of the class'
+	 * data members according to the inode configuration scheme
+	 * presented above. Beware that if isValid() returns false after a
+	 * read it means that all the rest of the data is just garbage. Do
+	 * not use it without previously checking whether the inode is valid
+	 * or not.
+	 *
+	 * If valid is true and either one of creation date, last access date or
+	 * last update date is an invalid date an InvalidDateException is thrown,
+	 * but all the data members are properly initialized. The invalid date(s)
+	 * will be initialized with the current date. If such a behavior is not what you
+	 * want, you can take whichever action you desire in the exception handling
+	 * code.
+	 *
+	 * If the size of the file name on disk is greater than 128, the internal
+	 * data member will be set to 128.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+	 * <li> IOException* forwarded from <code>hdd</code>.</li>
+	 * <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+	 * <li> InvalidDateException* if valid is true and either one of creation date,
+	 *	last access date or last update date is an invalid date.</li>
+	 * </ul>
+	 *
+	 * @param hdd the hard disk where to read the inode from.
+	 * @param blockNo the number of the hard disk block to read.
+	 */
+	void readFromHardDisk(HDD* hdd, unsigned long blockNo) throw(
+		HardDiskNotInitializedException*,
+		IOException*,
+		InvalidBlockNumberException*,
+		InvalidDateException*);
+	
+	/**
+	 * This method writes the inode as the <code>blockNo</code>th block
+	 * of the <code>hdd</code> hard disk with its data member values
+	 * according to the inode configuration scheme presented
+	 * above.
+	 *
+	 * If any of the array data members is NULL, zero (0) characters will
+	 * be written for the entire length of the array. If any of the dates
+	 * is NULL, the current date will be used.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+	 * <li> IOException* forwarded from <code>hdd</code>.</li>
+	 * <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+	 * </ul>
+	 *
+	 * @param hdd the hard disk to write the inode to.
+	 * @param blockNo the number of the hard disk block to write.
+	 */
+	void writeToHardDisk(HDD* hdd, unsigned long blockNo)
+ 		throw(HardDiskNotInitializedException*, IOException*, InvalidBlockNumberException*);
+
+	/**
+	 * This method returns the inode in the exact same manner as it is
+	 * stored on the hard disk (as an array of include/defs.h::BLOCK_DIM
+	 * unsigned chars).
+	 *
+	 * If any of the array data members is NULL, zero (0) characters will
+	 * be written for the entire length of the array. If any of the dates
+	 * is NULL, the current date will be used.
+	 *
+	 * @return the inode as it is stored on the hard disk.
+	 */
+	unsigned char* getAsBytes();
+
+private:
+	bool valid;			/* 0 = inode is invalid, 1 = inode is valid */
+	unsigned char fileType;		/* the file type (see & use include/defs.h for consistency */
+	unsigned char* checksum;	/* the checksum */
+	unsigned long fileSize;		/* the file size in bytes */
+	unsigned long nrBlocks;		/* the total number of blocks occupied by the file */
+	unsigned char fnSize;		/* the size (in bytes) of the file name */
+	Date* crDate;			/* the creation date */
+	Date* laDate;			/* the last access date */
+	Date* luDate;			/* the last update date */
+	char* fileName;			/* the name of the file */
+	unsigned long* dirBlocks;	/* array of direct block addresses */
+	unsigned long* indirBlocks;	/* array of indirect block addresses */
+
+	/**
+	 * This method returns a serialized representation of the inode (as it's
+	 * supposed to appear on the hard disk).
+	 *
+	 * If any of the array data members is NULL, zero (0) characters will
+	 * be written for the entire length of the array. If any of the dates
+	 * is NULL, the current date will be used.
+	 *
+	 * @return a include/defs.h::BLOCK_DIM byte representation of the inode.
+	 */
+	unsigned char* serialize();
+};
+
+#endif
+</pre>
+<HR>
+	<table>
+	<tr><td><small>Generated by: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</small></td></tr>
+	</table>
+</BODY>
+</HTML>

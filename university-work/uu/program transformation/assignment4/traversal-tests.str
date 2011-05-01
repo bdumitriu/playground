@@ -1,0 +1,133 @@
+module traversal-tests
+imports
+  Tiger
+  sunit
+  integers
+
+strategies
+
+cong1-test1(s) =
+	apply-test(!"Congruence.1 test 1",
+		s,
+		!Plus(Var("x"),Times(Times(Int("5"),Var("x")),Int("6"))),
+		!Plus(Int("3"),Times(Times(Int("5"),Int("3")),Int("6")))
+	)
+
+cong1-test2(s) =
+	apply-test(!"Congruence.1 test 2",
+		s,
+		!Plus(Var("x"),Times(Times(Int("5"),Var("y")),Int("6"))),
+		!Plus(Int("3"),Times(Times(Int("5"),Var("y")),Int("6")))
+	)
+
+cong2-test1(s) =
+	apply-test(!"Congruence.2 test 1",
+		s,
+		!Plus(Var("x"),Times(Times(Int("5"),Var("x")),Int("6"))),
+		!Plus(Int("6"),Times(Times(Int("5"),Int("6")),Int("6")))
+	)
+
+cong2-test2(s) =
+	apply-test(!"Congruence.2 test 2",
+		s,
+		!Plus(Var("x"),Times(Times(Int("5"),Var("y")),Int("6"))),
+		!Plus(Int("5"),Times(Times(Int("5"),Var("y")),Int("6")))
+	)
+
+cong3-test1(s) =
+	apply-test(!"Congruence.3 test 1",
+		s,
+		!Plus(Plus(Times(Int("2"),Var("x")),Times(Int("3"),Int("2"))),Times(Times(Int("2"),Int("7")),Var("x"))),
+		!Plus(Plus(Plus(Var("x"),Var("x")),Plus(Int("3"),Int("3"))),Times(Plus(Int("7"),Int("7")),Var("x")))
+	)
+
+cong3-test2(s) =
+	apply-test(!"Congruence.3 test 2",
+		s,
+		!Times(Int("2"),Times(Int("2"),Int("5"))),
+		!Plus(Plus(Int("5"),Int("5")),Plus(Int("5"),Int("5")))
+	)
+
+cong4-test1(s) =
+	apply-test(!"Congruence.4 test 1",
+		s,
+		!Times(Plus(Plus(Int("1"),Int("2")),Int("3")),Times(Plus(Int("4"),Int("5")),Int("6"))),
+		!Times(Times(Plus(Int("1"),Int("2")),Int("3")),Times(Times(Int("4"),Int("5")),Int("6")))
+	)
+
+cong4-test2(s) =
+	apply-test(!"Congruence.4 test 2",
+		s,
+		!Plus(Plus(Int("2"),Int("1")),Plus(Plus(Int("4"),Int("5")),Int("3"))),
+		!Times(Plus(Int("2"),Int("1")),Plus(Plus(Int("4"),Int("5")),Int("3")))
+	)
+
+cong4-test3(s) =
+	apply-test(!"Congruence.4 test 3",
+		s,
+		!Times(Plus(Plus(Int("4"),Var("x")),Times(Plus(Var("y"),Var("y")),Int("5"))),Times(Plus(Plus(Times(Int("3"),Int("7")),Var("x")),Int("3")),Plus(Int("4"),Int("1")))),
+		!Times(Times(Plus(Int("4"),Var("x")),Times(Plus(Var("y"),Var("y")),Int("5"))),Times(Times(Plus(Times(Int("3"),Int("7")),Var("x")),Int("3")),Times(Int("4"),Int("1"))))
+	)
+
+cong5-test1(s) =
+	apply-test(!"Congruence.5 test 1",
+		s,
+		!Plus(Plus(Int("2"),Int("1")),Plus(Plus(Int("4"),Int("5")),Int("3"))),
+		!Plus(Times(Int("2"),Int("1")),Plus(Times(Int("4"),Int("5")),Int("3")))
+	)
+
+cong5-test2(s) =
+	apply-test(!"Congruence.5 test 2",
+		s,
+		!Times(Plus(Times(Int("2"),Int("3")),Int("1")),Times(Plus(Plus(Int("1"),Plus(Int("2"),Int("3"))),Plus(Int("1"),Int("5"))),Times(Plus(Int("2"),Int("4")),Int("1")))),
+		!Times(Times(Times(Int("2"),Int("3")),Int("1")),Times(Plus(Plus(Int("1"),Times(Int("2"),Int("3"))),Times(Int("1"),Int("5"))),Times(Times(Int("2"),Int("4")),Int("1"))))
+	)
+
+generic1-test1(s) =
+	apply-test(!"Generic.1 test 1",
+		s,
+		!Let([VarDec("x",Tp(Tid("integer")),Int("5")),VarDec("y",NoTp,Int("6"))],[Seq([Minus(Plus(Minus(Plus(Var("x"),Var("x")),Times(Var("x"),Var("x"))),Var("y")),Int("7"))])]),
+		!Let([VarDec("x",Tp(Tid("integer")),Int("5")),VarDec("y",NoTp,Int("6"))],[Seq([Minus(Plus(Minus(Plus(Int("3"),Int("3")),Times(Int("3"),Int("3"))),Var("y")),Int("7"))])])
+	)
+
+generic2-test1(s) =
+	apply-test(!"Generic.2 test 1",
+		s,
+		!Let([VarDec("x",Tp(Tid("integer")),Int("5")),VarDec("y",NoTp,Int("6"))],[Seq([Minus(Plus(Minus(Plus(Var("x"),Var("x")),Times(Var("x"),Var("x"))),Var("y")),Int("7"))])]),
+		!Let([VarDec("x",Tp(Tid("integer")),Int("5")),VarDec("y",NoTp,Int("6"))],[Seq([Minus(Plus(Minus(Plus(Int("5"),Int("5")),Times(Int("5"),Int("5"))),Var("y")),Int("7"))])])
+	)
+
+generic2-test2(s) =
+	apply-test(!"Generic.2 test 2",
+		s,
+		!Let([VarDec("x",Tp(Tid("integer")),Int("5")),VarDec("y",NoTp,Int("6"))],[Seq([Minus(Plus(Minus(Plus(Var("x"),Var("x")),Times(Var("x"),Var("x"))),Var("y")),Int("7"))])]),
+		!Let([VarDec("x",Tp(Tid("integer")),Int("5")),VarDec("y",NoTp,Int("6"))],[Seq([Minus(Plus(Minus(Plus(Int("7"),Int("7")),Times(Int("7"),Int("7"))),Var("y")),Int("7"))])])
+	)
+
+generic3-test1(s) =
+	apply-test(!"Generic.3 test 1",
+		s,
+		!Let([VarDec("x",Tp(Tid("integer")),Int("5")),FunDecs([FunDec("y",[],Tp(Tid("integer")),Times(Int("6"),Int("2")))])],[Times(Int("2"),Seq([Plus(Minus(Times(Int("2"),Call(Var("y"),[])),Times(Call(Var("y"),[]),Int("2"))),Var("x"))]))]),
+		!Let([VarDec("x",Tp(Tid("integer")),Int("5")),FunDecs([FunDec("y",[],Tp(Tid("integer")),Plus(Int("6"),Int("6")))])],[Plus(Seq([Plus(Minus(Plus(Call(Var("y"),[]),Call(Var("y"),[])),Plus(Call(Var("y"),[]),Call(Var("y"),[]))),Var("x"))]),Seq([Plus(Minus(Plus(Call(Var("y"),[]),Call(Var("y"),[])),Plus(Call(Var("y"),[]),Call(Var("y"),[]))),Var("x"))]))])
+	)
+
+generic4-test1(s) =
+	apply-test(!"Generic.4 test 1",
+		s,
+		!Let([FunDecs([FunDec("f",[],Tp(Tid("integer")),Divide(Seq([Plus(Plus(Int("2"),Int("4")),Int("6"))]),Seq([Times(Seq([Plus(Int("1"),Int("3"))]),Int("5"))])))])],[Plus(Int("1"),Call(Var("f"),[]))]),
+		!Let([FunDecs([FunDec("f",[],Tp(Tid("integer")),Divide(Seq([Times(Plus(Int("2"),Int("4")),Int("6"))]),Seq([Times(Seq([Times(Int("1"),Int("3"))]),Int("5"))])))])],[Times(Int("1"),Call(Var("f"),[]))])
+	)
+
+generic5-test1(s) =
+	apply-test(!"Generic.5 test 1",
+		s,
+		!Let([FunDecs([FunDec("f",[],Tp(Tid("integer")),Divide(Seq([Plus(Plus(Int("2"),Int("4")),Int("6"))]),Seq([Times(Seq([Plus(Int("1"),Int("3"))]),Int("5"))])))])],[Plus(Int("1"),Call(Var("f"),[]))]),
+		!Let([FunDecs([FunDec("f",[],Tp(Tid("integer")),Divide(Seq([Plus(Times(Int("2"),Int("4")),Int("6"))]),Seq([Times(Seq([Times(Int("1"),Int("3"))]),Int("5"))])))])],[Times(Int("1"),Call(Var("f"),[]))])
+	)
+
+generic5-test2(s) =
+	apply-test(!"Generic.5 test 2",
+		s,
+		!Let([FunDecs([FunDec("f",[],Tp(Tid("integer")),Times(Divide(Seq([Plus(Seq([Plus(Int("2"),Int("4"))]),Seq([Plus(Int("6"),Int("7"))]))]),Int("1")),Int("2")))])],[Plus(Plus(Int("1"),Int("2")),Call(Var("f"),[]))]),
+		!Let([FunDecs([FunDec("f",[],Tp(Tid("integer")),Times(Divide(Seq([Plus(Seq([Times(Int("2"),Int("4"))]),Seq([Times(Int("6"),Int("7"))]))]),Int("1")),Int("2")))])],[Plus(Times(Int("1"),Int("2")),Call(Var("f"),[]))])
+	)

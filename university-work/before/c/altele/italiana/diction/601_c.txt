@@ -1,0 +1,41 @@
+cerul                      - il cielo
+soarele                    - il sole
+senin                      - sereno
+scurt                      - breve
+frig, rece                 - freddo
+din spate                  - addosso
+visul                      - il sogno
+vreun                      - alcuno
+spre, catre                - verso
+saptamana                  - la settimana
+bronzul                    - la tintarella
+superb                     - meraviglioso
+campia, tara               - la campagna
+bunicul                    - il nono
+de tot, deloc              - affatto
+seara                      - la sera
+varul                      - il cugino
+plimbarea                  - la passegiata
+filmul                     - il film
+impreuna                   - insieme
+culme                      - la cima
+munte                      - il monte
+amintirea                  - il ricordo
+surpriza                   - la sorpresa
+clopotul                   - il campanello
+valea                      - la valle
+a se bronza (cu prendere)  - prendere il sole
+a lua zborul (cu prendere) - prendere il volo
+a lua loc (cu prendere)    - prendere posto
+a face baie (cu prendere)  - prendere il bagno
+campia                     - la piasura
+podisul                    - l'altopiano
+avionul                    - l'aereo
+cu exceptia                - tranne
+pictorul                   - il pittore
+desenul                    - il disegno
+in timp ce                 - mentre
+plaja                      - la spiaggia
+iata                       - ecco
+excursie                   - la gita
+                           

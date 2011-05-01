@@ -1,0 +1,8 @@
+I have implemented all three features. You will, however, only
+be able to view in what I've submitted the most advanced one
+(the one in which only those static links which are accessed at
+least twice are precomputed).
+
+All modifications are in the SLCodeGen.ag and SLCodeGenEnv.ag
+files. Please see comments in these two files for further
+explanations.

@@ -1,0 +1,33 @@
+module part1
+strategies
+
+tiger-bin =
+	?Plus(_, _) <+
+	?Minus(_, _) <+
+	?Times(_, _) <+
+	?Divide(_, _) <+
+	fail
+
+tiger-call =
+	?Call(_, [Assign(_, _), _]) <+
+	?Call(_, [_, Assign(_, _)]) <+
+	fail
+
+tiger-first-arg =
+	?Call(_, [<id>|_])
+
+tiger-tail-args =
+	?Call(_, [_|<id>])
+
+last-term =
+	\ [x] -> x \ <+ \ [_|xs] -> <last-term>xs \
+
+remove-from-start(s) =
+	?[] <+ (?[x|xs] < if <s>x then <remove-from-start(s)>xs else ![x|xs] end + id)
+
+apply-first(s) =
+	?[] < fail + ?[x|xs] < if <s>x then ![<s>x|xs] else ![x|<apply-first(s)>xs] end + id
+
+transform-to-seq :
+	Call(f, args) -> Seq([t,Call(f, newargs)])
+		where <apply-first(?Assign(x, _) ; ?t ; !x)>args => newargs

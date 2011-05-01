@@ -1,0 +1,246 @@
+/*
+ * Project:		File System Simulator
+ * Author:		Bogdan DUMITRIU
+ * E-mail:		bdumitriu@bdumitriu.ro
+ * Date:		Sat Nov 9 2002
+ * Description:		This is the interface of the FileInputStream class.
+ */
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#ifndef _FILE_INPUT_STREAM_H
+#define _FILE_INPUT_STREAM_H
+
+#include <iostream.h>
+#include <string.h>
+#include <stdlib.h>
+#include "../defs.h"
+#include "../utils/Utils.h"
+#include "HDD.h"
+#include "Inode.h"
+#include "../exceptions/HardDiskNotInitializedException.h"
+#include "../exceptions/InvalidBlockNumberException.h"
+#include "../exceptions/InvalidDateException.h"
+#include "../exceptions/IOException.h"
+
+/**
+ * This class provides a simple means of reading bytes from a file.
+ * It offers high level methods of access to the bytes of a file.
+ *
+ * @short Provides a simple means of reading bytes from a file.
+ * @author Bogdan DUMITRIU
+ * @version 0.1
+ */
+class FileInputStream
+{
+public:
+	/**
+	 * Creates a new FileInputStream. <code>hdd</code> will be used to
+	 * perform read operations when the class' methods are called.
+	 * <code>inode</code> represents the inode associated to the file
+	 * which this FileInputStream reads. Beware that none of the methods
+	 * check whether the inode is valid or not. They all simply assume that
+	 * it is. If it is not valid or if its direct block addresses &
+	 * indirect block addresses are improperly set, errors will take place.
+	 * Therefore you should make sure that the inode structure does contain
+	 * correct date before passing it to this constructor.
+	 *
+	 * Also be warned that this class does not make a copy of the inode,
+	 * it simply stores a reference to it, therefore any changes made on
+	 * the outside will also be visible on the inside.
+	 *
+	 * By default, buffering is disabled.
+	 *
+	 * @param hdd the hard disk which will be used for write operations.
+	 * @param inode the inode holding information about the file to be written.
+	 */
+	FileInputStream(HDD* hdd, Inode* inode);
+
+	/**
+	 * The destructor of the class. This destructor does not free either
+	 * the <code>hdd</code> or the <code>inode</code> received as parameters
+	 * in the constructor.
+	 */
+	~FileInputStream();
+
+	/**
+	 * Returns the number of available bytes to read. This value is computed
+	 * as the difference between the file size in bytes and the current position
+	 * of the file pointer.
+	 *
+	 * @return the number of available bytes to read.
+	 */
+	unsigned long available();
+
+	/**
+	 * Reads one byte of data from the file (the byte at the file pointer position).
+	 * If the file pointer position is at the end of the file, 0 will be returned.
+	 * Since 0 is also a legal unsigned character you cannot tell the difference
+	 * between an actual 0 read from file and the 0 returned if the end of file has
+	 * been reached. Therefore you should always check the return of the available()
+	 * method before calling this one. Normally, if available() returns 0, then this
+	 * method will also return 0.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+	 * <li> IOException* forwarded from <code>hdd</code>.</li>
+	 * <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+	 * <li> ArrayIndexOutOfBoundsException* forwarded form <code>inode</code>.</li>
+	 * </ul>
+	 *
+	 * The method updates the file pointer in order to point to the next unread
+	 * byte after this operation.
+	 *
+	 * @return the read byte or 0 if the end of file has been reached.
+	 */
+	unsigned char read() throw(
+		IOException*,
+		InvalidBlockNumberException*,
+		HardDiskNotInitializedException*,
+		ArrayIndexOutOfBoundsException*);
+
+	/**
+	 * Reads <code>length</code> bytes of data from the file, starting from the
+	 * current position of the file pointer into <code>buffer</code>. Therefore
+	 * buffer should have enough space allocated in order to hold <code>length</code>
+	 * bytes of data. For various reasons, the method might end up reading less
+	 * than <code>length</code> bytes. The number of actual bytes read is returned.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+	 * <li> IOException* forwarded from <code>hdd</code>.</li>
+	 * <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+	 * <li> ArrayIndexOutOfBoundsException* forwarded form <code>inode</code>.</li>
+	 * </ul>
+	 *
+	 * The method updates the file pointer in order to point to the next unread
+	 * byte after this operation.
+	 *
+	 * @param buffer the buffer in which the data will be read.
+	 * @param length the number of bytes to read.
+	 * @return the actual number of bytes read.
+	 */
+	unsigned long read(unsigned char* buffer, unsigned long length) throw(
+		IOException*,
+		InvalidBlockNumberException*,
+		HardDiskNotInitializedException*,
+		ArrayIndexOutOfBoundsException*);
+
+	/**
+	 * Increases the file pointer with <code>n</code>. However, if <code>n</code>
+	 * is greater than the number of bytes left to read, the file pointer will be
+	 * set on the end of file. The method returns the actual number of skipped bytes.
+	 *
+	 * @param n the number of bytes to skip.
+	 * @return the actual number of skipped bytes.
+	 */
+	unsigned long skip(unsigned long n);
+
+	/**
+	 * Sets the file pointer to value <code>n</code>. If n is greater than the file
+	 * size in bytes, then the file pointer will be set on the end of file position.
+	 *
+	 * @param n the value the file pointer should be set to.
+	 * @return the new value of the file pointer.
+	 */
+	unsigned long setPointer(unsigned long n);
+
+	/**
+	 * Returns the value of the filePointer data member.
+	 *
+	 * @return the value of the filePointer data member.
+	 */
+	unsigned long getPointer();
+
+	/**
+	 * Allows object to use buffering. Buffering should only be enabled
+	 * when you have exclusive control of the file data which is read
+	 * through this buffer and, whenever the file changes, you call
+	 * the invalidateBuffer() method. Should there be a change in the
+	 * file data and the invalidateBuffer() is not called, you might
+	 * end up reading invalid data or even reading data belonging to
+	 * other files.
+	 *
+	 * Bottom line: in order to enable buffering, you have to know when
+	 * the data in the file changes and, every time this happens, you
+	 * have to call the invalidateBuffer() method.
+	 */
+	void enableBuffering();
+
+	/**
+	 * Causes the object to stop buffering the data it reads.
+	 */
+	void disableBuffering();
+
+	/**
+	 * Returns true if buffering is enabled and false otherwise.
+	 *
+	 * @return true if buffering is enabled and false otherwise.
+	 */
+	bool bufferingEnabled();
+
+	/**
+	 * Invalidates the buffered data. Read description for the
+	 * enableBuffering() method to find out when to use this method.
+	 */
+	void invalidateBuffer();
+
+private:
+	HDD* hdd;			/* the hard disk used for reading */
+	Inode* inode;			/* the inode of the file */
+	unsigned long fp;		/* the file pointer */
+	unsigned char* buffer;		/* a BLOCK_DIM bytes buffer for data */
+	unsigned long blockNo;		/* the hard disk's block currently in <buffer> */
+	bool bufferValid;		/* does the <buffer> contain valid data? */
+	unsigned long* address;		/* a BLOCK_DIM/4 block addresses buffer */
+	unsigned long addrNo;		/* the hard disk's block currently in <address> */
+	bool addressValid;		/* does the <address> contain valid data? */
+	bool buffering;			/* buffering on/off */
+
+	/**
+	 * Reads bytes from a single block of data. The functionality is as follows:
+	 *
+	 * <ul>
+	 * <li> if length bytes are read before the end of the physical block
+	 *	is reached, then reading stops and the method returns.</li>
+	 * <li> if the end of the physical block is reached before reading
+	 *	length bytes, the reading stops and the method returns.</li>
+	 * <li> if the end of the file is reached in either case, reading
+	 *	stops and the method returns.</li>
+	 * </ul>
+	 *
+	 * The buffer should have enough space to hold (fp is file pointer)
+	 * min(length, BLOCK_DIM*(fp/BLOCK_DIM+1)-fp) bytes.
+	 *
+	 * In either of the three cases, the method returns the actual number of
+	 * bytes read (at most, BLOCK_DIM bytes).
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+	 * <li> IOException* forwarded from <code>hdd</code>.</li>
+	 * <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+	 * <li> ArrayIndexOutOfBoundsException* forwarded form <code>inode</code>.</li>
+	 * </ul>
+	 *
+	 * @param buffer the buffer in which the data will be read.
+	 * @param length the maximum number of bytes to read.
+	 * @return the actual number of bytes read.
+	 */
+	unsigned long readFromSingleBlock(unsigned char* buffer, unsigned long length) throw(
+		IOException*,
+		InvalidBlockNumberException*,
+		HardDiskNotInitializedException*,
+		ArrayIndexOutOfBoundsException*);
+};
+
+#endif

@@ -1,0 +1,208 @@
+<HTML>
+<HEAD>
+<TITLE>Source: so/include/utils/Date.h</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>Source: so/include/utils/Date.h</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1"></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<pre>
+/*
+ * Project:		File System Simulator
+ * Author:		Bogdan DUMITRIU
+ * E-mail:		bdumitriu@bdumitriu.ro
+ * Date:		Tue Nov 5 2002
+ * Description:		This is the interface of the Date class.
+ */
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#ifndef _DATE_H
+#define _DATE_H
+
+#include <time.h>
+#include <string.h>
+#include <iostream.h>
+#include <stdlib.h>
+#include "Utils.h"
+#include "../exceptions/InvalidDateException.h"
+
+/**
+ * This class represents a simple calendaristic date (day, month, year).
+ *
+ * @short Represents a simple calendaristic date (day, month, year).
+ * @author Bogdan DUMITRIU
+ * @version 0.1
+ */
+class Date
+{
+
+public:
+	/**
+	 * Creates a new Date and initializes it with the current
+	 * system date.
+	 */
+	Date();
+
+	/**
+	 * Creates a new Date and initializes it using the received
+	 * parameters. If the date is invalid, the date is set to
+	 * the current system date and an InvalidDateException is
+	 * thrown.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> InvalidDateException* if the date is invalid.</li>
+	 * </ul>
+	 *
+	 * @param day the day of the date.
+	 * @param month the month of the date.
+	 * @param year the year of the date.
+	 */
+	Date(unsigned char day, unsigned char month, unsigned short year)
+		throw(InvalidDateException*);
+
+	/**
+	 * Returns the value of the day data member.
+	 *
+	 * @return the value of the day data member.
+	 */
+	unsigned char getDay();
+
+	/**
+	 * Returns the value of the month data member.
+	 *
+	 * @return the value of the month data member.
+	 */
+	unsigned char getMonth();
+
+	/**
+	 * Returns the value of the year data member.
+	 *
+	 * @return the value of the year data member.
+	 */
+	unsigned short getYear();
+
+	/**
+	 * Sets the day data member to <code>day</code>. If the
+	 * date would become invalid by setting the data member
+	 * to the requested value, an InvalidDateException is
+	 * thrown and the data member's value is left unchanged.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> InvalidDateException* if the date would become invalid
+	 *	by setting the data member to the requested value.</li>
+	 * </ul>
+	 *
+	 * @param day the new value of the day data member.
+	 */
+	void setDay(unsigned char day) throw(InvalidDateException*);
+
+	/**
+	 * Sets the month data member to <code>month</code>. If the
+	 * date would become invalid by setting the data member
+	 * to the requested value, an InvalidDateException is
+	 * thrown and the data member's value is left unchanged.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> InvalidDateException* if the date would become invalid
+	 *	by setting the data member to the requested value.</li>
+	 * </ul>
+	 *
+	 * @param month the new value of the month data member.
+	 */
+	void setMonth(unsigned char month) throw(InvalidDateException*);
+
+	/**
+	 * Sets the year data member to <code>year</code>. If the
+	 * date would become invalid by setting the data member
+	 * to the requested value, an InvalidDateException is
+	 * thrown and the data member's value is left unchanged.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> InvalidDateException* if the date would become invalid
+	 *	by setting the data member to the requested value.</li>
+	 * </ul>
+	 *
+	 * @param year the new value of the year data member.
+	 */
+	void setYear(unsigned short year) throw(InvalidDateException*);
+
+	/**
+	 * Returns the date as a 4 byte array, with the first byte
+	 * representing the day, the second byte representing the
+	 * month and the last two bytes representing the year.
+	 *
+	 * @return the date as a 4 byte array.
+	 */
+	unsigned char* getAsBytes();
+
+	/**
+	 * Sets all the date's data members using the 4 byte representation
+	 * received as parameter. The 4 byte array is interpreted as follows:
+	 * the first byte is thought to represent the day, the second byte
+	 * is thought to represent the month and the last two bytes are
+	 * thought to represent the year. If an invalid date results from
+	 * the conversion, an InvalidDateException is thrown and all of the
+	 * data members are left unchanged.
+	 *
+	 * The method throws:
+	 * <ul>
+	 * <li> InvalidDateException* if the converted date is invalid.</li>
+	 * </ul>
+	 *
+	 * @param bytes a 4 byte array containing the date in the format
+	 *	described above.
+	 */
+	void setFromBytes(unsigned char* bytes) throw(InvalidDateException*);
+
+	/**
+	 * Returns a string representation of this date as D/M/Y.
+	 *
+	 * @return a string representation of this date as D/M/Y.
+	 */
+	char* toString();
+
+private:
+	unsigned short year;
+	unsigned char month;
+	unsigned char day;
+};
+
+#endif
+</pre>
+<HR>
+	<table>
+	<tr><td><small>Generated by: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</small></td></tr>
+	</table>
+</BODY>
+</HTML>

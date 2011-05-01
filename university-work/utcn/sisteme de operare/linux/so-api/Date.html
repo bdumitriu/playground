@@ -1,0 +1,202 @@
+<HTML>
+<HEAD>
+<TITLE>class Date</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>class Date</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1">Represents a simple calendaristic date (day, month, year).
+ <small><A HREF="#longdesc">More...</A></small></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="so___include___utils___Date_h.html">so/include/utils/Date.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-Date.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Methods</h4><ul><LI>&nbsp;<b><A HREF="#ref1">Date</A></b> () 
+</LI>
+<LI>&nbsp;<b><A HREF="#ref2">Date</A></b> (unsigned char day, unsigned char month, unsigned short year) 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref3">getDay</A></b> () 
+</LI>
+<LI>unsigned char &nbsp;<b><A HREF="#ref4">getMonth</A></b> () 
+</LI>
+<LI>unsigned short &nbsp;<b><A HREF="#ref5">getYear</A></b> () 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref6">setDay</A></b> (unsigned char day) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref7">setMonth</A></b> (unsigned char month) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref8">setYear</A></b> (unsigned short year) 
+</LI>
+<LI>unsigned char* &nbsp;<b><A HREF="#ref9">getAsBytes</A></b> () 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref10">setFromBytes</A></b> (unsigned char* bytes) 
+</LI>
+<LI>char* &nbsp;<b><A HREF="#ref11">toString</A></b> () 
+</LI>
+</ul><h4>Private Members</h4><ul><LI>unsigned short <b><A HREF="#ref12">year</A></b></LI>
+<LI>unsigned char <b><A HREF="#ref13">month</A></b></LI>
+<LI>unsigned char <b><A HREF="#ref14">day</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><p>
+ This class represents a simple calendaristic date (day, month, year).
+</p>
+<p></p>
+<A NAME="Date"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>Date</strong> ()
+<br></td><td align="right"><h3><strong>Date</strong></h3></td></tr></table><p></p><p>
+ Creates a new Date and initializes it with the current
+ system date.
+	 </p>
+<A NAME="Date"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>Date</strong> (unsigned char day, unsigned char month, unsigned short year)
+<br>throw(<A HREF="InvalidDateException.html">InvalidDateException</A>*)</td><td align="right"><h3><strong>Date</strong></h3></td></tr></table><p></p><p>
+ Creates a new Date and initializes it using the received
+ parameters. If the date is invalid, the date is set to
+ the current system date and an InvalidDateException is
+ thrown.
+</p>
+<p> The method throws:
+ <ul>
+ <li> InvalidDateException* if the date is invalid.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>day</i></TD><TD align="left" valign="top">the day of the date.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>month</i></TD><TD align="left" valign="top">the month of the date.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>year</i></TD><TD align="left" valign="top">the year of the date.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="getDay"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>getDay</strong> ()
+<br></td><td align="right"><h3><strong>getDay</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the day data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the day data member.
+	 </p>
+<A NAME="getMonth"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char &nbsp;<strong>getMonth</strong> ()
+<br></td><td align="right"><h3><strong>getMonth</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the month data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the month data member.
+	 </p>
+<A NAME="getYear"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned short &nbsp;<strong>getYear</strong> ()
+<br></td><td align="right"><h3><strong>getYear</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the year data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the year data member.
+	 </p>
+<A NAME="setDay"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setDay</strong> (unsigned char day)
+<br>throw(<A HREF="InvalidDateException.html">InvalidDateException</A>*)</td><td align="right"><h3><strong>setDay</strong></h3></td></tr></table><p></p><p>
+ Sets the day data member to <code>day</code>. If the
+ date would become invalid by setting the data member
+ to the requested value, an InvalidDateException is
+ thrown and the data member's value is left unchanged.
+</p>
+<p> The method throws:
+ <ul>
+ <li> InvalidDateException* if the date would become invalid
+	by setting the data member to the requested value.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>day</i></TD><TD align="left" valign="top">the new value of the day data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setMonth"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setMonth</strong> (unsigned char month)
+<br>throw(<A HREF="InvalidDateException.html">InvalidDateException</A>*)</td><td align="right"><h3><strong>setMonth</strong></h3></td></tr></table><p></p><p>
+ Sets the month data member to <code>month</code>. If the
+ date would become invalid by setting the data member
+ to the requested value, an InvalidDateException is
+ thrown and the data member's value is left unchanged.
+</p>
+<p> The method throws:
+ <ul>
+ <li> InvalidDateException* if the date would become invalid
+	by setting the data member to the requested value.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>month</i></TD><TD align="left" valign="top">the new value of the month data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setYear"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setYear</strong> (unsigned short year)
+<br>throw(<A HREF="InvalidDateException.html">InvalidDateException</A>*)</td><td align="right"><h3><strong>setYear</strong></h3></td></tr></table><p></p><p>
+ Sets the year data member to <code>year</code>. If the
+ date would become invalid by setting the data member
+ to the requested value, an InvalidDateException is
+ thrown and the data member's value is left unchanged.
+</p>
+<p> The method throws:
+ <ul>
+ <li> InvalidDateException* if the date would become invalid
+	by setting the data member to the requested value.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>year</i></TD><TD align="left" valign="top">the new value of the year data member.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="getAsBytes"></A><A NAME="ref9"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char* &nbsp;<strong>getAsBytes</strong> ()
+<br></td><td align="right"><h3><strong>getAsBytes</strong></h3></td></tr></table><p></p><p>
+ Returns the date as a 4 byte array, with the first byte
+ representing the day, the second byte representing the
+ month and the last two bytes representing the year.
+</p>
+<p></p>
+<p><b>Returns</b>: the date as a 4 byte array.
+	 </p>
+<A NAME="setFromBytes"></A><A NAME="ref10"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setFromBytes</strong> (unsigned char* bytes)
+<br>throw(<A HREF="InvalidDateException.html">InvalidDateException</A>*)</td><td align="right"><h3><strong>setFromBytes</strong></h3></td></tr></table><p></p><p>
+ Sets all the date's data members using the 4 byte representation
+ received as parameter. The 4 byte array is interpreted as follows:
+ the first byte is thought to represent the day, the second byte
+ is thought to represent the month and the last two bytes are
+ thought to represent the year. If an invalid date results from
+ the conversion, an InvalidDateException is thrown and all of the
+ data members are left unchanged.
+</p>
+<p> The method throws:
+ <ul>
+ <li> InvalidDateException* if the converted date is invalid.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>bytes</i></TD><TD align="left" valign="top">a 4 byte array containing the date in the format
+	described above.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="toString"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td>char* &nbsp;<strong>toString</strong> ()
+<br></td><td align="right"><h3><strong>toString</strong></h3></td></tr></table><p></p><p>
+ Returns a string representation of this date as D/M/Y.
+</p>
+<p></p>
+<p><b>Returns</b>: a string representation of this date as D/M/Y.
+	 </p>
+<A NAME="year"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned short  <strong>year</strong>
+</td><td align="right"><h3><strong>year</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="month"></A><A NAME="ref13"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char  <strong>month</strong>
+</td><td align="right"><h3><strong>month</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="day"></A><A NAME="ref14"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char  <strong>day</strong>
+</td><td align="right"><h3><strong>day</strong></h3></td></tr></table><p> <small>[private]</small></p><HR><UL><LI><i>Version</i>: 0.1
+ </LI><LI><i>Author</i>: Bogdan DUMITRIU
+</LI><LI><i>Generated</i>: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</LI></UL></BODY></HTML>

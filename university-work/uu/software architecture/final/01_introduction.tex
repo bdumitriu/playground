@@ -1,0 +1,186 @@
+\chapter{Background information}
+
+\section{Scope of this document}
+In June 2004 two famous Dutch insurance companies (Zeker \& Vast
+and ForSure) merged into SureThing. As a consequence of this merging,
+the two companies needed to integrate both their hardware and
+software into a single, unified, system which could serve for running the
+business of the new SureThing. This document comes to describe the
+architecture which we propose as a support for this hardware/software
+integration.
+
+The Zeker \& Vast Company had quite a different company strategy
+than the ForSure Company. Zeker \& Vast has cooperated with some
+hundreds of intermediaries for offering proposals and taking care
+of claim handling for various amounts of customers. The intermediaries
+communicated with the company through its Call-Center. The target
+of this company was the middle class society. The ForSure Company did
+not have a Call-Center, but had five account managers providing a single
+point of contact to each of their wealthy customers, with each account
+manager managing about 100 customers. The company's target was the
+upper class society.
+
+While Zeker \& Vast already comes with quite an advanced IT system,
+ForSure has a rather rudimentary one, based mostly on the use of various
+Microsoft Office tools by each account manager separately, with no standards
+and no integration. Both of these systems are described to a certain
+extent in the Request for Architecture which we have been presented
+with and which can be made available separately. Some of the current
+situation (especially the one at Zeker \& Vast) will also be discussed
+in this document as a starting point for our changes.
+
+After the merging, the SureThing Company operates at five different
+locations in The Netherlands: three former locations of Zeker \&
+Vast, one location of ForSure and the new headquarters. The
+management desires that the new system provides a fully shared IT
+application landscape that can be used by every employee
+regardless of the location at which the employee resides. Most of
+the hardware will be running at the old Zeker \& Vast headquarters in
+Amsterdam, which is connected to each of the other locations by  2 Mbps
+lines.
+
+The management of the newly created SureThing Company has a few goals
+which guided the developing the architecture presented in this document:
+
+\begin{itemize}
+\item they would like to ensure an increase in profit and future growth
+of the market share of SureThing, as well as make the customer handling
+process more efficient and less costly, by serving Zeker \& Vast's customers
+directly, besides dealing with the intermediaries (e.g. by providing web access
+to insurance proposal requests).
+\item they would like to provide real-time proposal calculation, as opposed
+to the current situation where requests for proposal calculations are honoured
+only one day after they are made.
+\item they would like to have an information system which allows them
+more flexibility in defining the company's products.
+\item they would like the new system to use a so-called Generic Output Component
+which Zeker \& Vast currently has in development for all paper communication.
+\item they would also desire a preferred supplier strategy for hardware (and
+software).
+\item since they are concerned about the social and cultural consequences that the
+changes in the IT situation will trigger, they decided to adopt an incremental strategy
+for developing and moving onto the new system.
+\end{itemize}
+
+\section{Assumptions}
+
+The architecture presented in this document is based on a number of assumptions
+which we have made (note: in real life these would have been clear facts which
+we would've found out during the process of requirements elicitation). They are stated
+below.
+
+\begin{enumerate}
+
+\item Currently, Zeker \& Vast only works with intermediaries. We make this assumption
+in order to be able to limit the number of stakeholders which we consider.
+
+\item We assume that management's "incremental strategy" translates to a desire
+for an architecture which involves several transformation steps to reach the final goal.
+This is a vital assumption for our architecture, as based on it we introduced several
+phases for changing the current system, striving to ensure that in each of these
+phases the system is fully operational and behaving correctly.
+
+\item We assume that CHIPS \& BuRP do not use the Oracle database directly in order
+to get / store their information, but rather use UCIS as an intermediary. We assume
+this since one of the points from the Desired Situation section in our assignment description
+read: ``CHIPS and BuRP will need to be upgraded to be able to interface with the new
+UCIS''. Consequently, we believe that if CHIPS/BuRP had been using the database directly,
+they would no longer have had to interface with UCIS (either the old or the new one).
+
+\item On the other hand, we assume that STIFF accesses the Oracle database directly
+(i.e., not through the UCIS system). Since the phrase ``Information from UCIS's Oracle
+database is read directly [by STIFF]'' can be interpreted in either way, we simply chose to
+give this interpretation.
+
+\item Also regarding STIFF, we assume that it is started indirectly by UCIS, by placing
+certain information in the Oracle database. This assumption was made because the
+way in which communication takes place between UCIS, STIFF and the Oracle database
+was not clearly mentioned in the description. In connection with this assumption, we
+also assume there is some kind of cron daemon (see \cite{cron}) which starts STIFF
+every night (since we are being told that ``STIFF is a batch-oriented system that runs
+nightly'').
+
+\item We assume that the information about clients and proposals of the ForSure
+Company is still available even if the account managers have left the company. We
+make this assumption since it is unlikely that company policy would've allowed
+the account managers to take this information with them, supposedly leaving the
+company without some of the records regarding its business.
+
+\item As a worst case scenario, we assume that STIFF is written in Cobol, running on
+quite old hardware, which would make it difficult to change in order to accept direct
+requests for proposal calculation, leaving us with the only option of rewriting it
+completely. We need STIFF to accept direct requests because that's the only way we
+can make it compute proposals in real time (see also next assumptions).
+
+\item We assume that STIFF in its current (Cobol) form can be run on new hardware
+as well. As nothing was mentioned about the internals of the STIFF component in the
+assignment description, we had to assume this in order to be able to provide solutions
+for making STIFF run in real time.
+
+\item We assume that the old STIFF software is not multithreaded. This assumption
+is used in the physical view in order to justify the type of hardware that needs to be
+bought.
+
+\item We assume that computation of a single proposal by STIFF can be done in terms
+of a few seconds on new hardware (and thus allow for a real time response to the customer).
+We need this assumption because otherwise we cannot ensure real-time proposal calculation.
+
+\item We assume that the SureThing company wants different access rights for different
+groups of employees.
+
+\item We assume that the current hardware configuration is as follows: most of the IT system
+(including UCIS, STIFF and the Oracle database) will continue to run in the old headquarters from
+Amsterdam (where it was running before the merging) and that 2 Mbps lines connect this IT
+center to the other four locations of the SureThing Company. We had to assume this as there
+is no information about how the system will be run after the merging and this was the most
+reasonable assumption, since it involved the smallest amount of reorganization.
+
+\item We assume SureThing does not own a spare rack mount cabinet at the moment. Clearly,
+no mention of this appears in the description, and we need the assumption for cost computation.
+
+\end{enumerate}
+
+\section{Estimations}
+
+\subsubsection{Number of requests for proposal}
+
+One of the main aspects the system has to be designed for, is being able
+to sustain a certain number of requests for proposals.
+
+Measurements over the past year, as mentioned in the Request for
+Architecture document, have indicated that about 140,000 proposals
+were issued as a result of a request made to Zeker \& Vast. The document
+also indicates that this number represents about 30\% of the total
+number of calls made by customers to the Call-Center. This leads to the
+conclusion that about 470,000 customers have contacted the company
+during a year. Since we can expect quite an increase in the number of
+requests for proposals once the company provides the possibility of requests
+being issued also directly, through the Internet, we estimate that probably
+the percentage of issued proposals will increase from 30\% to about 60\%.
+We assume this because it is a known fact that customers, once no longer being
+faced with a human being at the other end of the line, will tend to request
+proposal calculations even without any intent whatsoever of purchasing
+an insurance. The number of requests is thus expected to increase to 280,000.
+If we add to this the number of customers the company will gain simply
+by offering another means of contact - the Internet - in addition to the Call-Center,
+we expect somewhere around 350,000 customers which will request proposals
+to be computed. Since the number of customers ForSure currently has is about
+500 (5 account managers x about 100 customers each), we can safely go
+with the 350,000 figure as the final estimation (since the 500 extra will make
+no difference).
+
+This number of customers implies an average customer load of 1,000 customers
+a day, which (as we assume they are more or less all in the same time zone) will
+all be accessing the system probably during daytime, i.e., 10 to 12 hours. This
+yields an average load of about 1 or 2 customers / second, and a maximum load
+of probably somewhere around 10 to 20 customers / second.
+
+\subsubsection{Number of developers needed}
+
+We do have quite a large system to deal with, on one hand, but most of the
+components are already available, on the other, which means that the development
+work involved will not be extremely high. We have therefore created this architecture
+on the estimation of having about 8 to 10 developers available for the duration
+of the implementation. We believe that this number is sufficient to ensure the
+development, deployment and initial testing (with possible corrections) of the
+system in the 11 months which are available until the end of 2005.

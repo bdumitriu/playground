@@ -1,0 +1,30 @@
+module StockObjects
+{
+	struct Quote
+	{
+		string symbol;
+		long at_time;
+		double price;
+		long volume;
+	};
+
+	exception Unknown{};
+
+	interface Stock
+	{
+		// Returns the current stock quote.
+		Quote get_quote() raises(Unknown);
+
+		// Sets the current stock quote.
+		void set_quote(in Quote stock_quote);
+
+		// Provides the stock description,
+		// e.g. company name.
+		readonly attribute string description;
+	};
+
+	interface StockFactory
+	{
+		Stock create_stock(in string symbol, in string description);
+	};
+};

@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<TITLE>class HDDDriverCache</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>class HDDDriverCache</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1">This class provides caching for a HDDDriver object.
+ <small><A HREF="#longdesc">More...</A></small></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="so___include___driver___HDDDriverCache_h.html">so/include/driver/HDDDriverCache.h</A>&gt;</code></TD></TR>
+<TR><TH>Inherits</TH><TD><i><A HREF="HDD.html">HDD</A></i> <small>[public ]</small></TD></TR>
+<TR><TH><A HREF="full-list-HDDDriverCache.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Methods</h4><ul><LI>&nbsp;<b><A HREF="#ref1">HDDDriverCache</A></b> (<A HREF="HDDDriver.html">HDDDriver</A>* hdd) 
+</LI>
+<LI>virtual  &nbsp;<b><A HREF="#ref2">~HDDDriverCache</A></b> () 
+</LI>
+<LI>virtual  void &nbsp;<b><A HREF="#ref3">readHDDBlock</A></b> (unsigned long blockNo, unsigned char* data) 
+</LI>
+<LI>virtual  void &nbsp;<b><A HREF="#ref4">writeHDDBlock</A></b> (unsigned long blockNo, unsigned char* data) 
+</LI>
+</ul><h4>Private Members</h4><ul><LI>HDDDriver* <b><A HREF="#ref5">hdd</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><p>
+ This class provides caching for a HDDDriver hard disk. The current
+ implementation provides no cache functionality whatsoever, it simply
+ forwards all requests to the hard disk. It is meant to be implemented
+ later in the development process.
+</p>
+<p></p>
+<A NAME="HDDDriverCache"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>HDDDriverCache</strong> (<A HREF="HDDDriver.html">HDDDriver</A>* hdd)
+<br></td><td align="right"><h3><strong>HDDDriverCache</strong></h3></td></tr></table><p></p><p>
+ Creates a new HDDDriverCache for hard disk <code>hdd</code>.
+	 </p>
+<A NAME="~HDDDriverCache"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td> &nbsp;<strong>~HDDDriverCache</strong> ()
+<br></td><td align="right"><h3><strong>~HDDDriverCache</strong></h3></td></tr></table><p> <small>[virtual]</small></p><p>
+ The destructor of the class.
+	 </p>
+<A NAME="readHDDBlock"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td> void &nbsp;<strong>readHDDBlock</strong> (unsigned long blockNo, unsigned char* data)
+<br>throw(<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*, <A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*, <A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>readHDDBlock</strong></h3></td></tr></table><p> <small>[virtual]</small></p><p>
+ Reads a block of data from cache. The <code>data</code>
+ parameter has to have enough space allocated to store
+ include/defs.h::BLOCK_DIM bytes. If block exists in cache, then
+ it is served directly from there, otherwise, the block is read
+ from the hard disk, stored into cache and served.
+</p>
+<p></p>
+<p> The method throws:
+ <ul>
+ <li>	InvalidBlockNumberException* if <code>blockNo</code> is
+ less than 0 (which is rather impossible since blockNo is an
+ unsigned long, but anyway...) or <code>blockNo</code> is greater
+ than or equal to include/defs.h::NR_OF_BLOCKS.</li>
+ <li> HardDiskNotInitializedException* either if initializeHDD()
+ hasn't been called yet or if it has been called but it has not
+ ended successfully (i.e. without exceptions).</li>
+ <li> IOException* if the read operation fails.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>blockNo</i></TD><TD align="left" valign="top">the number of the block to be read (counting starts
+	from 0).
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">the place where to store the read bytes.
+	 </TD></TR>
+</TABLE></P>
+<p>Reimplemented from <A HREF="HDD.html#readHDDBlock">HDD</A>.</p>
+<A NAME="writeHDDBlock"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td> void &nbsp;<strong>writeHDDBlock</strong> (unsigned long blockNo, unsigned char* data)
+<br>throw(<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*, <A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*, <A HREF="IOException.html">IOException</A>*)</td><td align="right"><h3><strong>writeHDDBlock</strong></h3></td></tr></table><p> <small>[virtual]</small></p><p>
+ Writes a block of data to the harddisk. include/defs.h::BLOCK_DIM
+ bytes will be written from the <code>data</code> parameter, therefore
+ at least its first include/defs.h::BLOCK_DIM bytes should be valid.
+ Normally, it just writes the block in cache, making sure that it will
+ eventually be updated on the hard disk as well.
+</p>
+<p> The method throws:
+ <ul>
+ <li>	InvalidBlockNumberException* if <code>blockNo</code> is
+ less than 0 (which is rather impossible since blockNo is an
+ unsigned long, but anyway...) or <code>blockNo</code> is greater
+ than or equal to include/defs.h::NR_OF_BLOCKS.</li>
+ <li> HardDiskNotInitializedException* either if initializeHDD()
+ hasn't been called yet or if it has been called but it has not
+ ended successfully (i.e. without exceptions).</li>
+ <li> IOException* if the write operation fails.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>blockNo</i></TD><TD align="left" valign="top">the number of the block to be written (counting starts
+	from 0).
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">the data to be written.
+	 </TD></TR>
+</TABLE></P>
+<p>Reimplemented from <A HREF="HDD.html#writeHDDBlock">HDD</A>.</p>
+<A NAME="hdd"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="HDDDriver.html">HDDDriver</A>*  <strong>hdd</strong>
+</td><td align="right"><h3><strong>hdd</strong></h3></td></tr></table><p> <small>[private]</small></p><HR><UL><LI><i>Version</i>: 0.1
+ </LI><LI><i>Author</i>: Bogdan DUMITRIU
+</LI><LI><i>Generated</i>: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</LI></UL></BODY></HTML>

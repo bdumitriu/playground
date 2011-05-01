@@ -1,0 +1,13 @@
+module elim-Seq
+imports
+  Tiger
+  options
+  simple-traversal
+
+strategies
+
+main =
+	io-wrap(ElimSeq)
+
+ElimSeq =
+	bottomup(try(\Seq([x]) -> x\))

@@ -1,0 +1,718 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+
+  \setbeamercovered{transparent}
+}
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{hyperref}
+\usepackage{listings}
+%\usepackage{pgf,pgfarrows}
+
+\lstset{% general command to set parameter(s)
+        %frame=single, % frame code fragments
+        breaklines=true, % break long lines
+        basicstyle=\tt\small % print whole listing small
+        %keywordstyle=\color{black}\bfseries\underbar, % underlined bold black keywords
+        %identifierstyle=, % nothing happens
+        %commentstyle=\color{white}, % white comments
+        %stringstyle=\ttfamily % typewriter type for strings
+        %showstringspaces=false % no special string spaces
+       }
+
+\title{The Interceptor Pattern}
+
+\author{Bogdan Dumitriu}
+
+\institute
+{
+  Department of Computer Science\\
+  University of Utrecht
+}
+
+\date{\today}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+%\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Preliminaries}
+
+\subsection{Problem Description}
+
+\begin{frame}
+  \frametitle{The Problem in a Nutshell}
+
+  Given a system, how do we
+  \begin{itemize}
+  \item allow others to monitor what goes on inside it
+  \pause
+  \item and (optionally) change/extend some of its behaviour
+  \pause
+  \item without making them understand our code
+  \pause
+  \item and without making them change our code
+  \pause
+  \item and without affecting the system?
+  \end{itemize}
+  \pause
+  Naturally, by using the \alert{Interceptor Pattern}!
+
+\end{frame}
+
+\subsection{Running Example}
+
+\begin{frame}
+  \frametitle{Instant Messenger}
+
+  Design an IM system with:
+  \begin{itemize}
+  \item basic IM functionality
+  \item logging of activity (history)
+  \item encryption of messages
+  \item auto response
+  \item text replacement
+  \item \ldots what not?
+  \end{itemize}
+
+  \begin{flushright}
+  \pgfdeclareimage[interpolate=true,height=3.5cm]{im}{img/im}
+  \pgfuseimage{im}
+  \end{flushright}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solution (BAD)}
+
+  We could do it like this:
+
+  \begin{center}
+  \pgfdeclareimage[interpolate=true,height=5cm]{im-hell}{img/im-hell}
+  \pgfuseimage{im-hell}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solution (GOOD)}
+
+  Or like this:
+
+  \begin{center}
+  \pgfdeclareimage[interpolate=true,height=5cm]{im-heaven}{img/im-heaven}
+  \pgfuseimage{im-heaven}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solution (in words)}
+
+  \begin{itemize}
+  \item build core with basic IM functionality
+  \item allow services to register with the core
+  \item make sure core triggers these services
+  \item let others do the hard work
+  \end{itemize}
+
+\end{frame}
+
+\subsection{Interceptor Pattern}
+
+\begin{frame}
+  \frametitle{Participants}
+
+  \begin{itemize}
+  \item Framework (or core system)
+  \item Dispatcher(s)
+  \item Context Object(s)
+  \item Interceptor Interface(s)
+  \item Concrete Interceptor(s)
+  \item Application (using the Concrete Interceptor(s))
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solution (class diagram)}
+
+  \begin{center}
+  \pgfdeclareimage[interpolate=true,height=6cm]{im-class-diag}{img/im-class-diag}
+  \pgfuseimage{im-class-diag}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solution (class diagram)}
+
+  \begin{center}
+  \pgfdeclareimage[interpolate=true,height=6cm]{im-seq-diag}{img/im-seq-diag}
+  \pgfuseimage{im-seq-diag}
+  \end{center}
+
+\end{frame}
+
+\section{The Interceptor Pattern at Use}
+
+\subsection{IM Implementation}
+
+\begin{frame}
+  \frametitle{Back to our example}
+
+  How do we go about the Instant Messenger implementation?
+
+  \begin{itemize}
+  \item draw state diagram of system
+  \item identify and group about interception points
+  \item define dispatcher-interceptor-context object triplets
+  \item make sure the core calls the dispatchers
+  \item (leave to others) write interceptors to provide services
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{State diagram}
+
+  \begin{center}
+  \pgfdeclareimage[interpolate=true,height=6cm]{im-state-diag}{img/im-state-diag}
+  \pgfuseimage{im-state-diag}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Identify interception points}
+
+  \begin{center}
+  \pgfdeclareimage[interpolate=true,height=6cm]{im-state-diag-mod}{img/im-state-diag-mod}
+  \pgfuseimage{im-state-diag-mod}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Group interception points}
+
+  Loging in/Loging out Group:
+  \begin{itemize}
+  \item pre-login and post-login events
+  \item pre-logout and post-logout events
+  \end{itemize}
+  All these are read-only.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Group interception points}
+
+  Friend-Related Group:
+  \begin{itemize}
+  \item friend added event
+  \item friend removed event
+  \item friend logged in event
+  \item friend logged out event
+  \item friends list received event
+  \end{itemize}
+  All these are read-only.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Group interception points}
+
+  Message Exchange-Related Group:
+  \begin{itemize}
+  \item pre message send event
+  \item post message received event
+  \end{itemize}
+  These are both read/write.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Define triplets}
+
+  For each group of interception points we define:
+  \begin{itemize}
+  \item a Dispatcher
+  \item an Interceptor Interface
+  \item a Context Object
+  \end{itemize}
+
+\end{frame}
+
+\frame[all:1] {
+\begin{block}{Friend-Related Group Interceptor Interface}
+\begin{lstlisting}
+public interface FriendInterceptor
+{
+  public void friendAdded(FriendContext ctx);
+
+  public void friendRemoved(FriendContext ctx);
+
+  public void wentOnline(FriendContext ctx);
+
+  public void wentOffline(FriendContext ctx);
+
+  public void receivedFriendsList(FriendListContext ctx);
+}
+\end{lstlisting}
+\end{block}
+}
+
+\frame[all:1] {
+\begin{block}{Friend-Related Group Context Object}
+\begin{lstlisting}
+public enum Outcome {NONE, SUCCESSFUL, FAILED}
+public class FriendContext
+{
+  public Outcome getOutcome()
+  { return outcome; }
+
+  public String getUserName()
+  { return userName; }
+
+  public String getFriendName()
+  { return friendName; }
+
+  ...
+}
+\end{lstlisting}
+\end{block}
+}
+
+\frame[all:1] {
+\begin{block}{Friend-Related Group Dispatcher}
+\begin{lstlisting}
+public class FriendDispatcher implements FriendInterceptor
+{
+  public void friendAdded(FriendContext ctx)
+  { invokeAll("friendAdded", ctx); }
+
+  public void friendRemoved(FriendContext ctx)
+  { invokeAll("friendRemoved", ctx); }
+
+  public void wentOnline(FriendContext ctx)
+  { invokeAll("wentOnline", ctx); }
+
+  public void wentOffline(FriendContext ctx)
+  { invokeAll("wentOffline", ctx); }
+
+  ...
+\end{lstlisting}
+\end{block}
+}
+
+\frame[all:1] {
+\begin{block}{Friend-Related Group Dispatcher}
+\begin{lstlisting}
+  private void invokeAll(String methodName, FriendContext ctx)
+  {
+    Method method = FriendInterceptor.class.
+      getMethod(methodName,
+        FriendContext.class);
+    for (FriendInterceptor interceptor : interceptors.values())
+    {
+      method.invoke(interceptor, ctx);
+    }
+  }
+
+  private Map<Integer, FriendInterceptor> interceptors;
+}
+\end{lstlisting}
+\end{block}
+}
+
+\frame[all:1] {
+\begin{block}{Message Exchange-Related Group Dispatcher}
+\begin{lstlisting}
+public class MessageDispatcher implements MessageInterceptor
+{
+  public void addMessageInterceptor(
+    MessageInterceptor interceptor,
+    int priority)
+  { interceptors.put(priority, interceptor); }
+
+  public void preMessageSend(MessageContext ctx)
+  {
+    ArrayList<MessageInterceptor> values =
+      new ArrayList<MessageInterceptor>(
+      interceptors.values());
+    for (int i = values.size() - 1; i >= 0; i--)
+    { values.get(i).preMessageSend(ctx); }
+  }
+\end{lstlisting}
+\end{block}
+}
+
+\frame[all:1] {
+\begin{block}{Message Exchange-Related Group Dispatcher}
+\begin{lstlisting}
+  public void postMessageReceive(
+    MessageContext ctx)
+  {
+    for (MessageInterceptor interceptor : interceptors.values())
+    { interceptor.postMessageReceived(ctx) }
+  }
+
+  private Map<Integer, MessageInterceptor> interceptors;
+}
+\end{lstlisting}
+\end{block}
+}
+
+\subsection{Discussion}
+
+\begin{frame}
+  \frametitle{Design Decisions}
+
+  A few variability points:
+  \begin{itemize}
+  \item Context objects: single vs. multiple interfaces
+  \pause
+  \item Context objects: per-registration vs. per-event
+  \pause
+  \item Dispatcher callback: sequential vs. multi-threaded
+  \pause
+  \item Dispatcher callback policy
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Observations}
+
+  My observations after implementing the IM:
+  \begin{itemize}
+  \item priority mechanism can be tricky to implement
+  \item don't forget to call the dispatchers
+  \item context objects can be difficult to fill in
+  \item once the ``hooks'' are there, adding functionality is easy
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{IM Interceptors}
+
+  Interceptors implemented for the IM:
+  \begin{itemize}
+  \item the GUI of the application itself
+  \item a logger
+  \item a very stupid translator (knows 4 words)
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{IM Interceptors}
+
+  Interceptors possible to be implemented for the IM:
+  \begin{itemize}
+  \item a message modifier (e.g. bad words remover)
+  \item an encrypter
+  \item a spell checker
+  \item an auto replier
+  \item ... many more
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Related Design Patters}
+
+  Related to Interceptor Pattern are:
+
+  \begin{block}{The Chain of Responsability Pattern}
+  A variant of the Interceptor Pattern where processing can stop along the way.
+  \end{block}
+
+  \begin{block}{The Template Method Pattern}
+  A lightweight variant of the Interceptor Pattern, with a single "interceptor".
+  \end{block}
+
+  \begin{block}{The Observer Pattern}
+  Interceptor is a much improved Observer.
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Used Design Patters}
+
+  Patterns that can be used together with the Interceptor Pattern are:
+
+  \begin{block}{The Observer Pattern}
+  Dispatcher callback is based on the Observer pattern.
+  \end{block}
+
+  \begin{block}{The Strategy Pattern}
+  Can be used by Dispatchers for supporting more callback policies.
+  \end{block}
+
+  \begin{block}{The Singleton Pattern}
+  Usually used to implement Dispatchers.
+  \end{block}
+
+  \begin{block}{The Proxy Pattern}
+  Can be used to implement the Interceptor Proxy variant.
+  \end{block}
+
+\end{frame}
+
+\subsection{Examples}
+
+\begin{frame}
+  \frametitle{Interceptors with EJBs}
+
+  \begin{block}{Definition}
+  An \alert{interceptor} is a method that intercepts a business method invocation.
+  \end{block}
+
+  \pause
+
+  Possible locations:
+  \begin{itemize}
+  \item Enterprise Bean class
+  \item separate Interceptor class
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Specifying Interceptors for EJBs}
+
+  An Interceptor can be specified by:
+
+  \begin{block}{Annotation (in Bean class)}
+  \tt\alert{@AroundInvoke} \\
+  public Object myInterceptor(InvocationContext ctx) \\
+  \ \ throws Exception \{...\}
+  \end{block}
+
+  \begin{block}{Annotation (in separate class)}
+  \tt\alert{@Interceptor(ProfilingInterceptor.class)} \\
+  public class ProfilingInterceptor \{ \\
+  \ \ \alert{@AroundInvoke} \\
+  \ \ public Object profile(InvocationContext ctx) \\
+  \ \ \ \ throws Exception \{...\} \\
+  \}
+  \end{block}
+
+\end{frame}
+
+\frame[all:1] {
+\begin{block}{Deployment Descriptor}
+\begin{lstlisting}
+<session>
+  <ejb-name>HelloEJB</ejb-name>
+  <remote>mypackage.Hello</remote>
+  <ejb-class>mypackage.HelloBean</ejb-class>
+  ...
+  <interceptor>
+    <class>ProfilingInterceptor</class>
+    <method-name>profile</method-name>
+  </interceptor>
+  <interceptor>
+    <method-name>myInterceptor</method-name>
+  </interceptor>
+</session>
+\end{lstlisting}
+\end{block}
+}
+
+\begin{frame}
+  \frametitle{Possible uses}
+
+  Interceptors can be used to:
+  \begin{itemize}
+  \item modify parameters before they're passed to the bean
+  \item modify the value returned from the bean
+  \item catch and handle method exceptions
+  \item interrupt the call completely
+  \item provide method profiling
+  \item many more
+  \end{itemize}
+\end{frame}
+
+\frame[all:1] {
+\begin{block}{InvocationContext Interface}
+\begin{lstlisting}
+public interface InvocationContext
+{
+  public Object getBean();
+  public Method getMethod();
+  public Object[] getParameters();
+  public void setParameters(Object[]);
+  public EJBContext getEJBContext();
+  public java.util.Map getContextData();
+  public Object proceed() throws Exception;
+}
+\end{lstlisting}
+\end{block}
+}
+
+\begin{frame}
+  \frametitle{Interceptors in JBoss}
+
+  Interceptors are used in JBoss to provide various services such as:
+  \begin{itemize}
+  \item security
+  \item transaction management
+  \item logging
+  \item persistence
+  \item thread safety
+  \item more on next slide
+  \end{itemize}
+
+\end{frame}
+
+\frame[all:1] {
+\begin{block}{Interceptors in JBoss}
+\begin{lstlisting}
+<container-interceptors>
+  <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
+  <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
+  <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+  <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+  <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
+  <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
+  <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
+  ...
+</container-interceptors>
+\end{lstlisting}
+\end{block}
+}
+
+\begin{frame}
+  \frametitle{Other Examples}
+
+  And the list goes on...
+  \begin{itemize}
+  \item Component-Based Application Servers (the Interceptor Proxy variant)
+  \item CORBA implementations
+  \item Web browsers
+  \item Web servers
+  \item Generally, all systems that support plugins
+  \end{itemize}
+
+\end{frame}
+
+\section{Wrapping Up}
+
+\subsection{Pattern Evaluation}
+
+\begin{frame}
+  \frametitle{Pro's}
+
+  Advantages of Interceptor Pattern:
+  \begin{itemize}
+  \item Extensibility and flexibility
+  \item Separation of concerns
+  \item Allows monitoring and control of systems
+  \item Promotes reusability
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Con's}
+
+  Disadvantages of Interceptor Pattern:
+  \begin{itemize}
+  \item Difficult design decision
+  \item Security and stability issues
+  \item Possiblity for infinite invocation
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusions}
+
+  \begin{block}{The Interceptor Pattern is helpful if:}
+  \begin{itemize}
+  \item you need to design extensible frameworks
+  \item you want people to keep out of the core code
+  \end{itemize}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Using the pattern will imply:}
+  \begin{itemize}
+  \item increased complexity of your application
+  \item opening the door to possible problems
+  \end{itemize}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Questions}
+
+  \begin{center}
+  ???
+  \end{center}
+
+\end{frame}
+
+\subsection{Demo}
+
+\begin{frame}
+  \frametitle{Demo}
+
+  Instant Messenger Demo...
+\end{frame}
+
+\subsection{Your Evaluation}
+
+\begin{frame}
+  \frametitle{15' Exercise}
+
+  Assume you're designing the kernel of an operating system. \\
+  These would be some of its components:
+  \begin{itemize}
+  \item Process/Thread Manager/Scheduler
+  \item (Virtual) File System
+  \item Virtual Memory Manager
+  \item Device Drivers
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{15' Exercise}
+
+  Choose any one of these (or some other kernel component not on the
+  list) and discuss the following issues, related to your chosen component:
+  \begin{itemize}
+  \item if the component implemented the Interceptor Pattern, how would
+            it be useful to the system (name one or two possible uses)?
+  \item what would you gain by making the component provide the Interceptor
+            Pattern?
+  \item what are the problems that this would create?
+  \item do you think, then, that using the Interceptor Pattern for this would
+            be a good idea? Why or why not?
+  \end{itemize}
+
+\end{frame}
+
+\end{document}

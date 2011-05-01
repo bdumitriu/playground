@@ -1,0 +1,43 @@
+module Common
+{
+	interface UserData;	// forward declaration
+	interface User;		// forward declaration
+
+	typedef sequence<User> UserSet;
+
+	interface User
+	{
+		readonly attribute string loginName;
+		attribute string name;
+		attribute long granularity;
+		readonly attribute string authToken;
+		readonly attribute Calendar::Calendar calendar;
+		readonly attribute Email::AddressBook addressBook;
+		readonly attribute Email::MailAccount mailAccount;
+
+		boolean setPassword(in string oldPassword, in string newPassword);
+	};
+
+	interface GroupwareManagement inherit
+	{
+		User authenticate(in string username, in string password);
+		void logOff(in string authToken);
+		UserSet getAllUsers(in string authToken);
+		boolean createAccount(in UserData details, in string password);
+		void deleteAccount(in string authToken);
+		Calendar::Group createGroup(in string authToken, in UserSet users);
+		Calendar::Group getGroupForAppointment(in string authToken, in long appointmentId);
+		boolean sendMessage(in string authToken, in Email::Message message);
+		ContactSet getAllMailingLists(in string authToken);
+		boolean createMailingList(in string authToken, in string name, in UserSet users, in string description);
+	};
+
+	// This will not be a remote object. It will only be copied over the
+	// network (i.e. used as data container). It is only defined here in
+	// order to be used as a IDL type.
+	interface UserData
+	{
+		attribute string loginName;
+		attribute string userName;
+	};
+};

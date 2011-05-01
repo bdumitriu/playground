@@ -1,0 +1,744 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+
+  \setbeamercovered{transparent}
+}
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{hyperref}
+\usepackage{listings}
+%\usepackage{pgf,pgfarrows}
+
+\lstset{% general command to set parameter(s)
+        %frame=single, % frame code fragments
+        breaklines=true, % break long lines
+        basicstyle=\tt\small % print whole listing small
+        %keywordstyle=\color{black}\bfseries\underbar, % underlined bold black keywords
+        %identifierstyle=, % nothing happens
+        %commentstyle=\color{white}, % white comments
+        %stringstyle=\ttfamily % typewriter type for strings
+        %showstringspaces=false % no special string spaces
+       }
+
+\title{Thread-Specific Storage}
+
+\author{Bogdan Dumitriu}
+
+\institute
+{
+  Department of Computer Science\\
+  University of Utrecht
+}
+
+\date{\today}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+%\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Thread-Safe Storage in Java}
+
+\subsection{Sample Application}
+
+\begin{frame}
+  \frametitle{Imagine that...}
+
+Context:
+\begin{itemize}
+\item multi-threaded application using version control
+\item originally, anonymous access was allowed
+\item then, the admin changed his/her mind
+\item code has to be changed to support authentication
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Class used to access the repository}
+
+\begin{block}{class RepositoryOps}
+\begin{verbatim}
+public void checkOut() {
+  System.out.println("checking out...");
+}
+
+public void update() {
+  System.out.println("updating...");
+}
+
+public void commit() {
+  System.out.println("committing...");
+}
+
+// ...
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Application uses multiple MyThread threads}
+
+\begin{block}{class MyThread extends Thread}
+\begin{verbatim}
+private RepositoryOps repoOps;
+
+public MyThread(RepositoryOps repoOps) {
+  this.repoOps = repoOps;
+}
+
+public void run() {
+  String threadId = "Thread " + getId();
+  System.out.println(threadId + " checking out...");
+  repoOps.checkOut();
+  System.out.println(threadId + " working...");
+  System.out.println(threadId + " updating...");
+  repoOps.update();
+  System.out.println(threadId + " committing...");
+  repoOps.commit();
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The application}
+
+\begin{block}{Main class}
+\begin{verbatim}
+public static void main(String args[]) {
+  RepositoryOps repoOps = new RepositoryOps();
+
+  new MyThread(repoOps).start();
+  new MyThread(repoOps).start();
+  new MyThread(repoOps).start();
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Adding authentication (1)}
+
+\begin{itemize}
+\item Now, let's add authentication
+\pause
+\item First step: create the User object
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Data about a user}
+
+\begin{block}{User class}
+\begin{verbatim}
+static public final User ANONYMOUS_USER =
+  new User("anonymous");
+
+private String name;
+
+public User(String name) {
+  this.name = name;
+}
+
+public void setName(String name) {
+  this.name = name;
+}
+
+public String getName() {
+  return name;
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{User rights}
+
+\begin{block}{User class}
+\begin{verbatim}
+public boolean canCommit() {
+  if (name.equals(ANONYMOUS_USER_NAME)) {
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
+public boolean canUpdate() {
+  return canCommit();
+}
+
+public boolean canCheckOut() {
+  return canCommit();
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Basic solution}
+
+\begin{itemize}
+\item Immediate solution: add user field to MyThread
+\end{itemize}
+
+\pause
+
+\begin{block}{class MyThread extends Thread}
+\begin{verbatim}
+private User user;
+
+public void setUser(User user) {
+  this.user = user;
+}
+\end{verbatim}
+\end{block}
+
+\pause
+
+\begin{itemize}
+\item But what if MyThread cannot be changed for whatever reason?
+\end{itemize}
+
+\end{frame}
+
+\subsection{Discussing ThreadLocal}
+
+\begin{frame}
+  \frametitle{Adding authentication (2)}
+
+\begin{itemize}
+\item Second step: intorducing the \tt{ThreadLocal<T>}\normalfont{ class}
+\end{itemize}
+
+\begin{center}
+\pgfdeclareimage[interpolate=true,height=3.5cm]{tlc}{img/threadLocalClass}
+\pgfuseimage{tlc}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Getting thread local values}
+
+\begin{block}{ThreadLocal class}
+\begin{verbatim}
+public T get() {
+  Thread t = Thread.currentThread();
+  ThreadLocalMap map = t.threadLocals;
+  if (map != null)
+    return (T) map.get(this);
+
+  T value = initialValue();
+  t.threadLocals =
+    new ThreadLocalMap(this, firstValue);
+  return value;
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Setting thread local values}
+
+\begin{block}{ThreadLocal class}
+\begin{verbatim}
+public void set(T value) {
+  Thread t = Thread.currentThread();
+  ThreadLocalMap map = t.threadLocals;
+  if (map != null)
+    map.set(this, value);
+  else
+    t.threadLocals =
+      new ThreadLocalMap(this, firstValue);
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\subsection{Using ThreadLocal}
+
+\begin{frame}
+  \frametitle{Adding authentication (3)}
+
+\begin{itemize}
+\item Third step: change RepositoryOps to use authentication
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Adding thread local variable to RepositoryOps}
+
+\begin{block}{class RepositoryOps}
+\begin{verbatim}
+private static ThreadLocal<User> user =
+  new ThreadLocal<User>();
+\end{verbatim}
+\end{block}
+
+\pause
+
+\begin{block}{class RepositoryOps}
+\begin{semiverbatim}
+private static ThreadLocal<User> user =
+  new ThreadLocal<User>() \{
+    \alert{@Override}
+    \alert{protected User initialValue() \{}
+      \alert{return User.ANONYMOUS_USER;}
+    \alert{\}}
+  \};
+\end{semiverbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Adding thread local variable to RepositoryOps}
+
+\begin{block}{class RepositoryOps}
+\begin{semiverbatim}
+private static ThreadLocal<User> user =
+  new ThreadLocal<User>() \{
+    @Override
+    protected User initialValue() \{
+      \alert{int threadId = Thread.currentThread();}
+      \alert{// lookup User based on threadId -> user}
+      \alert{return user;}
+    \}
+  \};
+\end{semiverbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Adding security to RepositoryOps}
+
+\begin{block}{class RepositoryOps}
+\begin{semiverbatim}
+public void checkOut() \{
+  \alert{if (user.get().canCheckOut()) \{}
+    System.out.println("checking out...");
+  \alert{\}}
+\}
+public void update() \{
+  \alert{if (user.get().canUpdate()) \{}
+    System.out.println("updating...");
+  \alert{\}}
+\}
+public void commit() \{
+  \alert{if (user.get().canCommit()) \{}
+    System.out.println("committing...");
+  \alert{\}}
+\}
+\end{semiverbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Adding authentication (4)}
+
+\begin{itemize}
+\item However, it is unpleasant to use \tt{}user.get()\normalfont{} all the time
+\pause
+\item Fourth step: introduce a proxy...
+\item ... and refactor RepositoryOps to use it
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Use a proxy to access the thread local object}
+
+\begin{block}{class UserProxy}
+\begin{verbatim}
+private static ThreadLocal<User> user =
+  new ThreadLocal<User>() {
+    // ...
+  };
+
+public boolean canCommit() {
+  return user.get().canCommit();
+}
+
+public boolean canUpdate() {
+  return user.get().canUpdate();
+}
+
+public boolean canCheckOut() {
+  return user.get().canCheckOut();
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Refactoring RepositoryOps}
+
+\begin{block}{class RepositoryOps}
+\begin{semiverbatim}
+\alert{private UserProxy userProxy = new UserProxy();}
+
+public void checkOut() \{
+  if (\alert{userProxy.canCheckOut()}) \{
+    System.out.println("checking out...");
+  \}
+\}
+
+public void update() \{
+  if (\alert{userProxy.canUpdate()}) \{
+    System.out.println("updating...");
+  \}
+\}
+
+// ...
+\end{semiverbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Summing up}
+
+So what have we learned about thread specific storage?
+\begin{itemize}
+\item similar to defining a field in each thread class, but actually you don't have to define it
+\item single logical variable that has independent values in each separate thread
+\item in Java, all you have to use is the ThreadLocal class
+\end{itemize}
+
+\end{frame}
+
+\section{Discussion}
+
+\subsection{Participants}
+
+\begin{frame}
+  \frametitle{Participants}
+
+What about all the participants in the book?
+\begin{itemize}
+\item Thread Specific Object: \uncover<2->{\alert{User}}
+\item Key: \uncover<3->{\alert{threadLocalHashCode in ThreadLocal}}
+\item Key Factory: \uncover<4->{\alert{ThreadLocal.nextHashCode()}}
+\item Thread Specific Object Set: \uncover<5->{\alert{threadLocals in Thread}}
+\item Thread Specific Object Proxy: \uncover<6->{\alert{UserProxy}}
+\item Application Thread: \uncover<7->{\alert{MyThread}}
+\end{itemize}
+
+\end{frame}
+
+\subsection{When to use?}
+
+\begin{frame}
+  \frametitle{Issues with ThreadLocal}
+
+Why use ThreadLocal when...
+\begin{itemize}
+\item we can just add a field to our thread class
+\item we don't need to understand how ThreadLocal works
+\item we don't need to write proxies/more code
+\item we don't need to worry that the objects are garbage collected too late
+\end{itemize}
+
+\pause
+
+\begin{block}{Tom Hawtin}
+In general, if you have control of Thread construction, adding a field will be faster and possibly less buggy than using ThreadLocal.
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Still...}
+
+However:
+\begin{itemize}
+\item sometimes we can't add fields to our thread class
+\pause
+\item using ThreadLocal makes it easier to associate a thread with its per-thread data
+\begin{itemize}
+\item e.g. for passing per-thread context information
+\end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+\subsection{Some examples}
+
+\begin{frame}
+  \frametitle{Nice uses}
+
+In \textit{Exploiting ThreadLocal to enhance scalability}, Brian Goetz explains
+possible uses.\\
+\vspace*{0.5cm}
+Per-thread Singleton:
+\begin{itemize}
+\item process-wide Singletons vs. thread-wide ones
+\item e.g. a JDBC Connection is not thread safe
+\item a Connection pool is the customary solution
+\item alternative: use ThreadLocal in the Singleton
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Per-thread Singleton}
+
+\begin{block}{class ConnectionDispenser}
+\begin{verbatim}
+private ThreadLocal<Connection> conn =
+  new ThreadLocal<Connection>() {
+    @Override
+    protected Connection initialValue() {
+      return DriverManager.getConnection(<url>);
+    }
+  };
+
+public static Connection getConnection() {
+  return (Connection) conn.get();
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nice uses}
+
+Debugging multi-threaded applications:
+\begin{itemize}
+\item more generally, applications which collect per-thread info
+\item debugging a multi-threaded app is cumbersome
+\item instead of println's, use a per-thread logger
+\item use DebugLogger.put() during run
+\item retrieve saved info with DebugLogger.get() at the end
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Per-thread Singleton}
+
+\begin{block}{class DebugLogger}
+\begin{verbatim}
+private ThreadLocal<List> list =
+  new ThreadLocal<List>() {
+    @Override
+    public List initialValue() {
+      return new ArrayList();
+    }
+  };
+
+public static void put(String text) {
+  list.get().add(text);
+}
+
+public String[] get() {
+  return list.get().toArray(new String[0]);
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nice uses}
+
+Servlet-based applications:
+\begin{itemize}
+\item use ThreadLocal variables to store per-request info
+\item only use when unit of work is one request!
+\item otherwise, context will get mixed up
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Nice uses}
+
+Based on another article by Brian Goetz, \textit{Can ThreadLocal solve the double-checked locking problem?}\\
+\vspace*{0.5cm}
+Remember the DCL (double-checked locking) problem?
+
+\begin{block}{class DoubleCheck}
+\begin{verbatim}
+private static Resource resource = null;
+
+public static Resource getResource() {
+  if (resource == null) {
+    synchronized {
+      if (resource == null) 
+        resource = new Resource();
+    }
+  }
+  return resource;
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Double-Checked Locking}
+
+\begin{itemize}
+\item idea is to replace the check that the resource is null
+\item instead, check if thread has executed the synchronized block
+\item use ThreadLocal to do this
+\item can you suggest how?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Nice uses}
+
+\begin{block}{class ThreadLocalDCL}
+\begin{verbatim}
+private static ThreadLocal<Boolean> initHolder
+  = new ThreadLocal<Boolean>();
+private static Resource resource = null;
+
+public Resource getResource() {
+  if (initHolder.get() == null) {
+    synchronized {
+      if (resource == null)
+        resource = new Resource();
+      initHolder.set(true);
+    }
+  }
+  return resource;
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{ThreadLocal performance is an issue!}
+
+\begin{itemize}
+\item DCL was designed to help with performance
+\item does ThreadLocal beat synchronized lazy initialization?
+\pause
+\item \alert{in JDK 1.2 ThreadLocal uses synchronized WeakHashMap with Thread as key}
+\pause
+\item \alert{in JDK 1.3 Thread has threadLocals field, but Thread.currentThread() is bottleneck}
+\pause
+\item \textcolor{green}{ThreadLocal and Thread.currentThread() rewritten in JDK 1.4 $\rightarrow$ finally faster}
+\end{itemize}
+
+\end{frame}
+
+\section{Summary}
+
+\subsection{Benefits/Drawbacks}
+
+\begin{frame}
+  \frametitle{Advantages}
+
+Thread specific storage is good when you want to:
+\begin{itemize}
+\item avoid synchronization $\rightarrow$ scalability
+\item make thread unsafe objects easily usable by threads
+\item add context to your threads but:
+\begin{itemize}
+\item you can't/won't change your thread classes
+\item you don't want to pass objects around (per-thread Singleton)
+\end{itemize}
+\item document a variable as being thread safe
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Liabilities}
+
+You should think twice before using thread specific storage when:
+\begin{itemize}
+\item your application will run in a web application server
+\item more generally, when using thread pools
+\item memory is more important than synch time
+\end{itemize}
+
+\end{frame}
+
+\subsection{Questions}
+
+\begin{frame}
+  \frametitle{Questions}
+
+  \begin{center}
+  ???
+  \end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Question 1}
+
+Assume SUN wants to add syntax support for thread specific storage.
+
+\begin{block}{Proposal}
+\begin{semiverbatim}
+\alert{threadlocal} <type> <variable-name>
+\end{semiverbatim}
+\end{block}
+
+Explain how this would be handled ``behind the scenes''. Discuss (some of)
+the following issues:
+\begin{itemize}
+\item what would such a declaration be internally translated to?
+\item what is the semantics of assigning to such a variable?
+\item what is the semantics of reading such a variable?
+\item garbage collection of such a variable?
+\item whatever else you think is relevant...
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Question 2}
+
+If you don't like question 1, you can choose this one instead. You are not required
+(or expected) to answer both questions.\\
+\vspace*{0.5cm}
+Identify and explain one or two significant differences between the pthread
+model (discussed in the book) and the ThreadLocal model
+(discussed during the lecture).\\
+\vspace*{0.5cm}
+For each identified difference, discuss why one version or the other is preferable.
+Or if you think both have advantages/disadvantages, discuss those.
+
+\end{frame}
+
+\end{document}

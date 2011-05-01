@@ -1,0 +1,16 @@
+/*
+   PARLOG example: Naive Reverse.
+
+   nrev(X,Z): list Z is list X in reverse order.
+*/
+
+mode nrev(list?,reversed_list^).
+nrev([U|X],Z) <-
+  nrev(X,Y),
+  append(Y,[U],Z).
+nrev([],[]).
+
+mode append(list1?,list2?,joined_list^).
+append([U|X],Y,[U|Z]) <-
+  append(X,Y,Z).
+append([],Y,Y).

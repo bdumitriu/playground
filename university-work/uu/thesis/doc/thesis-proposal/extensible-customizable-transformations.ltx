@@ -1,0 +1,528 @@
+\section{Extending and Composing Transformations}
+\label{sec:extend-comp-transf}
+
+This section describes the third layer of our proposed work, extending
+and composing transformations. The work involved in this phase is
+rather experimental and thus its scope will be only loosely defined
+here. The discussion focuses on the general setup within which this
+experimentation is conducted and on a few research ideas.
+
+\subsection{Overview}
+
+There are two main tracks that we intend to explore for this part of
+the thesis and they are already identified by the title of this
+section. We have named \emph{extending} and \emph{customizing}
+transformations. The former is part of the more general setup of an
+ongoing project called Transformations for Abstractions, lead by Eelco
+Visser. The latter comes from our observation that an essential
+feature of open compilers is the ability to involve the user in the
+compilation process and particularly in the optimization process.
+
+\paragraph{Extensible transformations}
+
+Transformations for Abstractions is a recent project proposal of Eelco
+Visser, which aims to investigate a number of issues related to how
+transformations written for general purpose programming languages can
+be (preferably automatically) extended to cover domain specific
+abstractions introduced by domain specific languages. The project will
+also be conducted within the confines of the Stratego platform and
+will build on the efforts concerning MetaBorg \cite{bravo04metaborg}
+(also see section \ref{sec:motivation} for a short presentation).
+While MetaBorg focuses on the extension of the \emph{syntax} of
+general purpose languages with domain specific ones, it does not
+propose any methods for doing the same with the \emph{transformations}
+already defined for the general purpose language. The approach taken
+by Transformations for Abstractions will be guided by existing results
+that either tried to parameterize transformations so that the same
+generic transformation can be specialized to obtain various concrete
+transformations \cite{karina05dynrules} or tried to reuse basic
+rewrite rules to recreate the higher level transformation in a version
+that covers the abstractions as well.
+
+A number of aspects will be investigated throughout the project on
+Transformations for Abstractions, as defined in the project proposal:
+definition of domain abstractions, open extensibility of
+transformations, design of open transformations, independent
+extensibility of transformations and automatic derivation of
+transformation extensions. These are goals of a project that will span
+over three years, so we by no means propose to address them within
+this thesis. However, we intend to take some steps in their direction.
+
+It is common practice nowadays to only loosely integrate domain
+specific abstractions with their host language. This practice has its
+roots in the lack of technologies that allow the extension of the
+syntax and compiler of a language. While extending libraries is easy
+enough for even the most unexperienced of programmers to be able to do
+it with their eyes closed, extending the syntax (and, implicitly, the
+compiler) of a language implies the creation of a team which makes
+this its full time job. Because of this, most domain specific
+abstractions are encoded as libraries, while only a small number of
+them actually take the form of a DSL.
+
+The poor integration of even this small number of DSLs with their host
+language leads to various problems, ranging from missing optimization
+opportunities to difficult interaction (in both directions) between
+the code written in the DSL and the rest of code.  If we are to change
+this state of affairs, we need to work towards allowing easier
+extension of a language's syntax and compiler. In fact, we need to
+design compilers that will allow seamless integration with independent
+modules containing new syntax constructs and compiler extensions. It
+is in this direction that our efforts in the field extending
+transformations are directed.
+
+\paragraph{Customizable transformations}
+
+Customizable transformations are also about allowing users to extend
+transformations, but in a somewhat different way than with extensible
+transformations. In fact, the users are not really changing the
+transformations (as it was the case with the extensible ones), but
+they are feeding them with information which otherwise would have to
+be inferred or, even worse, assumed unknown and usually handled in a
+conservative manner. This information that the users are feeding the
+transformation with is especially useful with optimizing
+transformations, as discussed in the introductory section of this
+thesis proposal.
+
+Our coming research into customizable transformations is inspired from
+work on typestates \cite{strom86typestate} and active libraries
+(especially in their Broadway incarnation \cite{guyer99annotation,
+  guyer-broadway}), both of which bear close resemblance to our
+intentions. The idea behind \emph{typestates} is to allow the
+implementation of transformations that can check and even impose
+various semantic properties at compile time. The paper we discuss in
+the related work section focuses on three such properties: not using a
+variable that has not been initialized, not dereferencing a pointer
+which has not been assigned a memory location yet and not exiting a
+program (on any path) without deallocating all allocated memory. The
+analysis that allows this requires knowledge about the so-called
+typestate of each variable, so that it can verify whether or not
+certain preconditions involving these typestates are met. It also
+needs information about how to propagate and change the typestates
+along the examined paths of the program. Broadway adopts a similar
+approach, albeit following a different purpose. Its purpose is to
+allow for user-customized optimizations which are based on properties
+about the program that can be computed at compile time. The properties
+and the typestates are similar concepts. Both typestates and Broadway
+will be discussed at length in the following section.
+
+We intend to follow a similar track in our work, by analyzing the type
+of information that would be needed to aid our transformations. We
+find the concept of typestates and Broadway appealing and we plan to
+experiment with a similar setup for the Stratego platform. The general
+idea is to let the user annotate library functions with custom
+information in the form of properties. There are two types of
+customization which the user will have to provide: how properties are
+supposed to be propagated across method calls and how they are to be
+used for home grown optimizations (such as rewriting code to use a
+library more efficiently). Our generic transformation will have to be
+able to propagate these properties to all the program points
+\emph{and} to apply the user-specified transformations when certain
+conditions are met.
+
+We also plan to experiment with how well-established data-flow
+transformations can be aided by user annotations. When, during a
+random data-flow transformation, we analyze method calls, we sometimes
+find ourselves in an impossibility of analyzing the contents of the
+method that is called (e.g., because it is a native method in
+Java). If we want to be able to avoid making conservative assumptions
+about what happens to the parameters of the method, we need some basic
+information regarding which of them are only read and which are also
+changed within the body of the method. Such information is an ideal
+candidate for our experiment with customizable transformation. We can
+choose a transformation like dead code elimination and try to find out
+how it could benefit from information regarding, say, redefinitions of
+a variable in the body of a method.
+
+\subsection{Related Work}
+
+We discuss related work regarding \emph{extensible transformations} in
+the section on Transformations for Abstractions and related work
+regarding \emph{customizable transformations} in the sections on
+typestate and active libraries.
+
+\subsubsection{Transformations for Abstractions}
+
+An experiment in the direction of Transformations for Abstractions
+using Stratego has been documented in \cite{viser05tfa}. A tiny core
+language, consisting only of variable assignments, function calls and
+blocks of statements is considered for extension with a number of
+modules introducing various features in the language, like integer
+arithmetic, expression blocks or regular expressions. Each of these
+implies a syntax extension of the core language \emph{and} extensions
+of the various transformations defined for the core language. The
+paper concentrates on the latter of the two, which it illustrates with
+a number of different transformations: local to local, local to global
+and global to local transformations, context sensitive
+transformations, data-flow transformations and combinations thereof.
+
+Desugaring of user-friendly syntactic constructs to basic constructs
+of the language is a simple local to local transformation which can be
+\emph{extended} by simply defining new cases for a rewrite rule which
+is applied by a fix point strategy. A local to global transformation
+like assimilation of the embedded language of regular expressions can
+be \emph{extended} using dynamic rewrite rules for collecting
+transformations and application of the dynamic rewrite rules for
+making the global changes.  \emph{Extension} of context-sensitive
+transformations like bound variable renaming is also achieved with the
+aid of dynamic rewrite rules, but used in a different way than in the
+previous case, i.e. to propagate context throughout the
+transformation. Further transformations like evaluation, constant
+propagation and function specialization similarly employ interacting
+strategies and dynamic rewrite rules in order to achieve
+\emph{extension}. Usually, the core language defines a basic strategy
+which first invokes a specialized strategy and, if that fails, falls
+back to generic handling. Extensions \emph{extend} the definition of
+the specialized strategy in order for their customized behavior to be
+included in the overall transformation.
+
+In essence, Visser collects in \cite{viser05tfa} a number of models
+for modularizing transformations and presents them from the novel
+perspective of extending a base transformation with special cases
+introduced by language extension. This work provides valuable
+experience and sufficient validation in order to use it as a starting
+point in our own experiments.
+
+\subsubsection{Typestate}
+\label{sec:typestate}
+
+\emph{Typestate} was first mentioned as a proposed programming
+language concept in a paper from 1986 by Strom
+\cite{strom86typestate}. It is presented as a mechanism complementary
+to that of type checking, meant to ensure better ``security'' of
+programs at compile time. The idea of typestates is to help prevent
+so-called \emph{nonsensical} sequences of statements in a program
+(i.e., those sequences that are syntactically well-formed and type
+correct, but semantically undefined). The examples of such sequences
+in the paper are limited to the use of uninitialized variables or
+pointers, but generally speaking the concept is useful for tracking
+other properties as well (such as whether objects are locked and
+unlocked properly).
+
+As described in \cite{strom86typestate}, a set of typestates is
+defined for each type in a language, with the elements in the set
+forming a lower semilattice. An example of such a semilattice is one
+containing the values $\bot$ and $I$ (initialized), with $\bot \prec
+I$, that can be used to track whether a variable has been initialized
+or not.  Typestates are associated with variables of a program, the
+typestate of each variable being drawn from the set of types that is
+defined for the type of the variable. Each set of typestates contains
+the typestate $\bot$, which is the initial value for all variables of
+the program.
+
+Each program operation that involves variables may determine a change
+in the typestate of those variables. These changes are specified
+through preconditions and postconditions for all of an operation's
+variables (e.g., the \icode{Thread.start} operation in Java changes
+the typestate of a thread variable from ``not started'' to
+``started'') . Operations refer to both predefined operators and
+library functions. As such, we can annotate all the functions in a
+library module with preconditions and postconditions, so that
+typestate information can be propagated over calls to such functions
+as well. In addition to pre- and postconditions, we also have to be
+able to specify (either as part of the language that supports
+typestates itself or as user-defined information) how any typestate
+can be coerced to the one immediately below it in the lattice. In this
+way, the compiler can try to add such statements wherever it would be
+correct and necessary to do so in order to ensure typestate
+correctness (e.g., if an operation requires that one of its operands
+is not allocated, but the operand's typestate indicates that it is,
+then a coercion from $I$ to $\bot$ could be automatically introduced).
+
+After all variables are initialized to $\bot$, a typestate propagation
+algorithm can be applied in order to compute the values of variables'
+typestates at each program point. An analysis is carried out along
+with the propagation process in order to determine if the entire
+program is typestate correct or at least typestate consistent. A
+typestate correct program is one in which the preconditions of all the
+program statements can be met across all control flow paths \emph{and}
+all variables are in the typestate $\bot$ at the end of the program.
+The notion of typestate consistency refers to a program which can be
+converted to a typestate correct one by introducing additional code to
+lower the typestate of variables at certain points. By lowering the
+typestate of a variable we are essentially deallocating resources, so
+a typestate lowering from $I$ to $\bot$ in our example lattice could
+be achieved by releasing the memory held by the variable (using a
+\icode{free x} in C++, for example). In order for the analysis to be
+able to perform this coercion, it is required that information about
+how this can be done for each type is available, as explained earlier.
+
+This notion of typestate is a bit restricted, since it is always
+associated with a concrete program variable. We will see this same
+notion extended in Broadway to more generic properties with which
+library functions can be annotated.
+
+\subsubsection{Active Libraries}
+
+The concept of active libraries was introduced in
+\cite{Czarnecki:GP:2000} as a manifestation of generative programming.
+Generative programming is a new paradigm of creating particular
+software systems through a process of specification, derivation and
+composition which draws from a common set of elementary components
+forming a software family. The idea is to shift the system developer's
+work from an environment defined by general-purpose programming
+languages and traditional APIs to one of high level specifications
+expressed in domain-specific concepts. Such specifications define how
+(already existing) components of a software family should be modified
+and composed in order to yield a unique end-system.  All the steps
+leading from specification to realization are to be conducted
+automatically, by a generative programming engine. This novel way of
+creating software, although promising, is still a long way from being
+a practical reality, since developing the infrastructure for achieving
+even part of the goal is quite an endeavor.
+
+And this brings us back to the relation with the active libraries. As
+discussed, generative programming requires a natural way for a user to
+specify domain-specific concepts. Resorting to (multiple)
+domain-specific languages is one possible answer, while turning to
+active libraries is the other. Combinations of the two are also
+possible. Quoting \cite{Czarnecki:GP:2000}, active libraries can be
+used to cover a lot of ground through the capabilities they provide:
+
+\begin{quote}
+  They may generate components, specialize algorithms, optimize code,
+  automatically configure and tune themselves for a target machine,
+  check source code for correctness, and report compile-time,
+  domain-specific errors and warnings. They may also describe
+  themselves to tools such as profilers and debuggers in an
+  intelligible way or provide domain-specific debugging, profiling,
+  and testing code themselves. Finally, they may contain code for
+  rendering domain-specific textual and non-textual program
+  representations and for interacting with such representations.
+\end{quote}
+
+Of the three types of active libraries discussed in
+\cite{Czarnecki:GP:2000} (those that extend a compiler, those that
+extend some sort of integrated development environment with
+domain-specific support and those which act as meta programs) and
+summarized in the quote above, we are particularly interested in the
+first type. Active libraries integrated with Stratego are most likely
+to fit the paradigm of a compiler extension rather than any of the
+other two. Additionally, Stratego already has extended support for
+inspection and transformation of the analyzed source code, thus
+providing a solid base for extension in the aforementioned direction.
+Even more, Stratego already addresses one of the issues of the
+article, namely the difficulty in manipulating the abstract
+representation of the source code of modern programming languages. The
+possibility to specify such changes to the source code as concrete
+syntax is a valuable asset and we expect to benefit from it during our
+preliminary attempts of using active library-like information in
+data-flow transformations.
+
+\paragraph{Broadway}
+
+Our extended presentation of Broadway from this section is meant to
+provide the reader with a concrete example which illustrates both the
+concept of active libraries and the customizability aspect which we
+pursue with the experiments of this thesis. The two are actually quite
+related, since eventually we intend to have Stratego's data-flow
+transformations customizable in a fashion similar to Broadway's
+impersonation of active libraries.
+
+Broadway is a project developed by Samuel Z. Guyer and Calvin Lin at
+the University of Texas at Austin. Broadway consists of an optimizing
+compiler and an annotation language which support a novel technique
+for optimizing software libraries.  This technique is validated
+experimentally by applying it to the (production-quality) PLAPACK
+parallel linear algebra library. The authors claim that the observed
+performance increase of 26\% for large matrices and 195\% for small
+ones was made possible by having the compiler use the additional
+information given through annotations. Both the technique and the
+results are discussed at length in \cite{guyer99annotation,
+  guyer-broadway}.
+
+The Broadway system is geared towards to the user who is in no way a
+professional compiler writer, but rather a regular library developer
+and in the same time domain expert. This type of user commonly has a
+thorough understanding of how a certain library is best used in
+various circumstances and would like to be able to put this knowledge
+to \emph{systematic} use. To this end, Broadway offers a number of
+features through its annotation language.
+
+Compilers have a hard time performing many of the traditional
+optimizations (constant propagation, dead-code elimination and the
+like) when library calls are involved. One reason for this is that
+often the library's source code is not available for inspection. In
+such cases, optimization algorithms have to ``assume the worst'' in
+order to ensure the soundness of the optimization process. Such
+conservative assumptions lead inevitably to missing opportunities for
+optimization.  And even when source code is available, it can be the
+case that code from other (unavailable for inspection) libraries is
+called from the library functions. Another hindrance to compilers is
+that analysis of source code is not always enough for making certain
+decisions. And sometimes it can be the sheer cost (in terms of
+performance) for getting all the information needed for an
+optimization that makes it infeasible. Broadway's annotations allow
+the user to aid this optimization processes by letting her specify
+dependence information for each library function. The compiler can
+then incorporate this information in its data-flow and pointer
+analysis and use it to make more aggressive optimizations.
+
+The dependency information is expressed in a simple language. The
+pointer structure is specified using the \icode{on\_entry} and
+\icode{on\_exit} annotations, where the ``\icode{-->}'' can be used to
+represent the ``points-to'' relation between input objects and
+internal library structures. Two additional annotations,
+\icode{access} and \icode{modify} allow the library developer to
+specify the ``uses'' and the ``defs'' of the library routine. The
+values listed in the \icode{access} set are those which are only read
+by the routine, while the ones listed in \icode{modify} are those
+whose value is also changed by the routine. With this extra
+information, the compiler's analysis will usually yield a larger
+amount of optimization opportunities.
+
+The second type of improvement that Broadway proposes is the truly
+domain specific one. Libraries are used by different categories of
+users, ranging from beginners to experts. Most, if not all, libraries
+have their own quirks in terms how how they should be best used, which
+the user has to be aware of if she is to achieve both performance and
+safety in usage.  But since users are so diverse, it is unlikely that
+they will all manage to gain full understanding of how to utilize the
+library. Therefore, it is preferable that a mechanism exist to smooth
+away this potential lack of expertise. What Broadway does is propose
+such a mechanism.
+
+Concretely, the annotation language provides a means to specify and
+track any number of \emph{properties} across library calls. A property
+is created using the \icode{property} keyword, and all its possible
+values are specified. For example, the following could be used to
+track whether or not an array is sorted (including information about
+how it is sorted, ascendingly or descendingly):
+
+\begin{code}
+  property Sorted : { Yes { Asc, Desc }, No }
+\end{code}
+
+Once such a property definition is established, its value for any
+particular input object and/or object an input object points to
+(either directly or indirectly) can be maintained based on a set of
+user-defined rules. For this purpose, the \icode{analyze} annotation
+has been introduced. An analysis allows non-conditional or conditional
+assignment of values.  If we were to write an annotation for a
+hypothetical array\_reverse routine, here is how it would look like
+(the name of the argument to the routine is assumed to be
+\icode{array}):
+
+\begin{code}
+  analyze Sorted {
+    if (Sorted : array is-exactly Asc) { array <- Desc }
+    if (Sorted : array is-exactly Desc) { array <- Asc }
+    default { array <- No }
+  }
+\end{code}
+
+Finally, maintaining these properties is useless if they are not part
+of the optimization process. The way Broadway achieves this is through
+the annotations for actions. There are three actions which can be
+specified by the user: code replacement, inlining and reporting. These
+actions can be guarded with conditions based on the property values
+which result from the analysis process. The conditions are evaluated
+at each call site of a library routine, and it is the particular call
+to the routine that either gets replaced or inlined. The compiler
+ensures the syntactic correctness of the expanded code. To illustrate,
+assume that we have two routines, \icode{array\_print} and
+\icode{array\_print\_sorted} which print an array as is and print an
+array after first sorting it, respectively. Then, the annotation for
+the \icode{array\_print\_sorted} routine would look as such:
+
+\begin{code}
+  when (Sorted : array is-exactly Ascending) replace-with
+  %{ array_print(array); }%
+
+  when (Sorted : array is-exactly Descending) replace-with
+  %{
+    array_reverse(array);
+    array_print(array);
+  }%
+\end{code}
+
+Based on all these annotations, the Broadway compiler takes an input
+program, performs a data-flow and pointer analysis, using all the
+extra information and eventually runs a number of traditional
+optimizers as well as all the user-specified transformations and
+reporting.
+
+\subsection{Proposed Work}
+\label{sec:ec-proposed-work}
+
+We use this section to summarize the ideas of experiments with
+customizable and extensible transformations that we can materialize at
+this point, but unlike the proposed work sections on extending the
+dynamic rules library and implementing pointer analysis, the current
+one is in a more \emph{tentative} state. We can not yet fully
+appreciate to what extent we will proceed with these experiments and
+what we expect to achieve in the end, other than some results to guide
+further research.  Also, the order in which we list our proposals here
+will not necessarily be maintained in practice.
+
+\paragraph{Typestate}
+
+We plan to apply the concept of typestates to perform a number of
+semantic checks for the Java language, such as disallowing the use of
+uninitialized variables and/or null pointers or imposing proper use of
+lock/unlock. We plan to focus on experimenting with associating
+specific information with method definitions (which presumably would
+be doable by user annotations) and see how we can integrate this
+information in the semantic checks we mentioned. For example, passing
+an uninitialized pointer to a method which expects it to be
+initialized could be detected and notified. The same holds for
+synchronization aspects as well (e.g., a method can specify that it
+expects an already locked object). We expect to discover what kind of
+information we need for each of these analyses and identify if the
+mechanism needs any unusual implementation model in order to deal with
+such information.
+
+\paragraph{User-defined properties}
+
+Once we have experimented with specific transformations based on the
+typestate idea, we also want to try to extend this to user-defined
+properties, similar to the ones in Broadway. We propose to come up
+with a transformation which could propagate these properties and
+perform user-defined actions (probably in the form of strategies)
+based on predicates that use the properties. Within this experiment we
+will analyze a series of issues:
+
+\begin{itemize}
+\item how do we associate properties with methods?
+\item what is the form of these properties?
+\item how does the user get access to the abstract syntax tree under
+  analysis in order to specify changes for it?
+\item how do we interpret and propagate the properties?
+\item what mechanism do we have to have in place in order to
+  incorporate the user actions into our transformation?
+\item what kind of transformations would benefit from such a
+  properties-propagation mechanism?
+\end{itemize}
+
+\paragraph{Extensible transformations}
+
+In order to experiment with extensible transformations, we plan to
+choose a relatively simple DSL which we will integrate in a language
+(e.g., Java) using the MetaBorg method and then try to see how we can
+extend a data-flow transformation like constant propagation to include
+the new constructs introduced by the DSL. Our interest lies with how
+we can make the core transformation as independent as possible of the
+extensions. It is clear that the writer of a core language cannot
+anticipate all embeddings of DSLs in that language, so she cannot
+provide extremely special support for them. Under these circumstances,
+it is interesting to find out how fit Stratego is to allow for good
+integration with minimal provision of support for the extensions.
+
+\paragraph{Generalized symbolic merge operation}
+
+The dynamic rules library only includes abstractions for writing
+strategies which combine the dynamic rules defined by various branches
+with intersection or union. In the case of typestates (and many other
+types of analyses) this is not sufficient. The reason is that we
+usually need a common denominator of two (or more) values and this
+cannot be achieved by either union or intersection. To clarify, assume
+that in one branch of an if-then-else we define a dynamic rule that
+indicates that variable \icode{x} is initialized, while in the other
+we define one that indicates that the same variable is uninitialized.
+We need to combine these two by concluding that following the
+if-then-else, the variable \icode{x} is uninitialized. However,
+neither intersection nor union achieves that. Instead, we need to be
+able to define our own merging operation and feed it to a symbolic
+merge operator. Currently, this can only be achieved by using the low
+level API of the dynamic rules library, which is not particularly
+attractive for the regular user of Stratego. Hence, we find it useful
+to analyze how such an abstraction could be formulated.

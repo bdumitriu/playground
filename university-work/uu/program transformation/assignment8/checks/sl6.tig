@@ -1,0 +1,21 @@
+let var x := 5
+    var y := 6
+    var z := 7
+
+    function f(a: int, b: int): int =
+      let function g1(): int =
+            y
+
+          function g2(c: int, d: int, e: int): int =
+            let function h(x1: int, y1: int): int =
+                  let function i(m : int): int = x + a + c + x1 + m + g1()
+                   in i(2)
+                  end
+             in h(a, b) + d
+            end
+       in g2(x, y, z)
+      end
+
+ in x := f(1, 2)
+  ; printint(x)
+end

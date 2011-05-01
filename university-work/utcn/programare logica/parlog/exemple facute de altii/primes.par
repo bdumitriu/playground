@@ -1,0 +1,28 @@
+/*
+  PARLOG example: Primes Sieve (Sieve of Eratosthenes).
+
+  primes(P): P is an ordered list of all prime numbers.
+*/
+
+mode primes(primes^).
+primes(Primes) <-
+  integers_from(2,Ints),
+  sift(Ints,Primes).
+
+mode integers_from(integer?,integer_list^).
+integers_from(Int,[Int|Int_list]) <-
+  Intplus is Int + 1,
+  integers_from(Intplus,Int_list).
+
+mode sift(list?,sifted_list^).
+sift([Num|Rem_list],[Num|Shifted_rem_list]) <-
+  filter(Num,Rem_list,Filtered_list),
+  sift(Filtered_list,Shifted_rem_list).
+
+mode filter(prime?,list?,filtered_list^).
+filter(Filter_num,[Num|List1],[Num|List2]) <-
+  0 =\= Num mod Filter_num :
+  filter(Filter_num,List1,List2).
+filter(Filter_num,[Num|List1],List2) <-
+  0 =:= Num mod Filter_num :
+  filter(Filter_num,List1,List2).

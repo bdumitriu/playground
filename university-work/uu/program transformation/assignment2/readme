@@ -1,0 +1,24 @@
+As you told me in the email:
+
+> Please include a note about your observation in the source file: you'll
+> get credits for that.
+
+here is a copy of my message:
+
+The problem is that by specifying this kind of priorities the system
+doesn't want to parse the expression "not exists a : a" (even thought
+it does parse "not (exists a : a)"). The error is "stdin: character ' '
+unexpected at line 1, column 11".
+
+If I drop the line containing "not"-production from the priority list,
+then the expression "not exists a : a" is parsed correctly. However,
+then the expression "not a /\ not b" becomes ambigous, which is normal.
+
+The conclusion is that whichever solution I adopt, there is a problem.
+What I don't understand is why in the first case the system decides to
+use the priorities, since in my opinion there is no ambiguity when
+parsing "not exists a : a" (since there is no other way to parse this
+expression than Not(Exists("a",Prop("a")))).
+
+You can also see this in the test called "see README" from the test
+suite.

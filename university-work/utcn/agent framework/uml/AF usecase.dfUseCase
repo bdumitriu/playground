@@ -1,0 +1,261 @@
+package id1hrztdeu1xkakdeu25yhh;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node1:oiref><oihard>
+@__modelType reference 
+*/
+class reference2 {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node3:oiref><oihard>
+@__modelType reference 
+*/
+class reference4 {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node5:oiref><oihard>
+@__modelType reference 
+*/
+class reference6 {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node7:oiref><oihard>
+@__modelType reference 
+*/
+class reference8 {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node9:oiref><oihard>
+@__modelType reference 
+*/
+class reference10 {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node11:oiref><oihard>
+@__modelType reference 
+*/
+class reference12 {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node13:oiref><oihard>
+@__modelType reference 
+*/
+class reference14 {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node15:oiref><oihard>
+@__modelType reference 
+*/
+class reference16 {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node17:oiref><oihard>
+@__modelType reference 
+*/
+class reference18 {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node19:oiref><oihard>
+@__modelType reference 
+*/
+class reference20 {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node21:oiref><oihard>
+@__modelType reference 
+*/
+class reference22 {
+}/**
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node23:oiref><oihard>
+@__modelType reference 
+*/
+class reference24 {
+}}/**
+
+@__tags
+@shapeType UseCaseDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node.link30:oiref>=348,257,310,380,246,380:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node.link26:oiref>=440,230,530,240:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node.link29:oiref>=356,257,410,460,520,457:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node21:oiref>=60,270,119,27,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node15:oiref>=10,70,231,27,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node13:oiref>=520,440,226,27,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node11:oiref>=540,350,183,27,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node3.link:oiref>=510,137,450,140,415,180:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node9:oiref>=530,290,187,27,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node7:oiref>=530,230,188,27,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node5:oiref>=520,180,201,27,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node.link33:oiref>=340,195,270,140,218,140:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node.link31:oiref>=340,242,260,280,179,280:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node.link27:oiref>=406,257,530,300:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node.link34:oiref>=365,180,340,80,241,80:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node.link:oiref>=390,180,430,50,520,47:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node.link25:oiref>=440,210,520,197:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node:oiref>=340,180,100,77,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node19:oiref>=60,213,119,27,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node23:oiref>=20,350,226,50,0:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node17:oiref>=20,130,198,27,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node3:oiref>=510,120,208,27,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node1:oiref>=520,30,200,27,1:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node.link28:oiref>=373,257,490,360,540,360:oigroup>
+<oigroup:<oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node.link32:oiref>=340,226,179,226:oigroup>
+*/
+class __positions {
+}/**
+@shapeType Actor
+@__modelType node
+@name Framework User 
+*/
+class node {
+/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node1:oiref><oihard> 
+*/
+class link {
+}/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node5:oiref><oihard> 
+*/
+class link25 {
+}/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node7:oiref><oihard> 
+*/
+class link26 {
+}/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node9:oiref><oihard> 
+*/
+class link27 {
+}/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node11:oiref><oihard> 
+*/
+class link28 {
+}/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node13:oiref><oihard> 
+*/
+class link29 {
+}/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node23:oiref><oihard> 
+*/
+class link30 {
+}/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node21:oiref><oihard> 
+*/
+class link31 {
+}/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node19:oiref><oihard> 
+*/
+class link32 {
+}/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node17:oiref><oihard> 
+*/
+class link33 {
+}/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node15:oiref><oihard> 
+*/
+class link34 {
+}}/**
+@shapeType UseCase
+@__modelType node
+@name extend framework agent 
+*/
+class node1 {
+}/**
+@shapeType UseCase
+@__modelType node
+@name create Observer behavior 
+*/
+class node3 {
+/**
+@shapeType CommunicatesLink
+@__modelType link
+@__ref <oiref:design#Class#id1hrztdeu1xkakdeu25yhh.node:oiref><oihard> 
+*/
+class link {
+}}/**
+@shapeType UseCase
+@__modelType node
+@name create Listener behavior 
+*/
+class node5 {
+}/**
+@shapeType UseCase
+@__modelType node
+@name create Mobile behavior 
+*/
+class node7 {
+}/**
+@shapeType UseCase
+@__modelType node
+@name create Server behavior 
+*/
+class node9 {
+}/**
+@shapeType UseCase
+@__modelType node
+@name create Client behavior 
+*/
+class node11 {
+}/**
+@shapeType UseCase
+@__modelType node
+@name compose simple behaviors 
+*/
+class node13 {
+}/**
+@shapeType UseCase
+@__modelType node
+@name remove behavior from agent 
+*/
+class node15 {
+}/**
+@shapeType UseCase
+@__modelType node
+@name attach behavior to agent 
+*/
+class node17 {
+}/**
+@shapeType UseCase
+@__modelType node
+@name start behavior 
+*/
+class node19 {
+}/**
+@shapeType UseCase
+@__modelType node
+@name stop behavior 
+*/
+class node21 {
+}/**
+@shapeType UseCase
+@__modelType node
+@name transparently use various agent platforms 
+*/
+class node23 {
+}

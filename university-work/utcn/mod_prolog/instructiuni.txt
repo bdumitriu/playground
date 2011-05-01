@@ -1,0 +1,34 @@
+1) Se compileaza mod_prolog.c cu:
+
+        /cale/spre/apache/bin/apxs -c /cale/mod_prolog.c
+
+2) Se copiaza fisierul mod_prolog.so obtinut in urma executiei (cu succes)
+a pasului anterior in /cale/spre/apache/libexec
+
+3) Se adauga in httpd.conf:
+
+fie:
+
+LoadModule prolog_module libexec/mod_prolog.so
+AddModule mod_prolog.c
+<IfModule mod_prolog.c>
+	<Location /o/locatie/oarecare>
+        	SetHandler prolog
+	</Location>
+</IfModule>
+
+fie:
+
+LoadModule prolog_module libexec/mod_prolog.so
+AddModule mod_prolog.c
+<IfModule mod_prolog.c>
+	AddHandler prolog .plg
+</IfModule>
+
+In primul caz, toate fisierle din ApacheDocumentRoot/o/locatie/oarecare/ vor
+fi preluate de modul.
+
+In al doilea caz acest lucru se va intampla cu toate fisierele cu extensia
+plg, indiferent unde se afla ele in ApacheDocumentRoot.
+
+4) Se reporneste Apache-ul.

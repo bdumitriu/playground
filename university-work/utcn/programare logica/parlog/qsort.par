@@ -1,0 +1,31 @@
+/*
+ * Predicatul qsort realizeaza algoritmul de sortare rapida
+ * pe elementele unei liste.
+ */
+
+mode swritelist(list?).
+swritelist([])<-
+	nl.
+swritelist([H|T])<-
+	data(H): write(H) & write(' ') & swritelist(T).
+
+mode append(lista1?,lista2?,rezultat^).
+append([],L,L).
+append([H|T],L,[H|R])<-
+	append(T,L,R).
+
+mode partitie(pivot?,lista?,listamaimici^,listamaimari^).
+partitie(E,[],[],[]).
+partitie(E,[H|T],[H|L1],L2)<-
+	H < E: partitie(E,T,L1,L2).
+partitie(E,[H|T],L1,[H|L2])<-
+	H >= E: partitie(E,T,L1,L2).
+
+mode qsort(lista?,rezultat^).
+qsort([],[]).
+qsort([H|T],R)<-
+	partitie(H,T,L1,L2),
+	qsort(L1,R1),
+	qsort(L2,R2),
+	append(R1,[H|R2],R).
+

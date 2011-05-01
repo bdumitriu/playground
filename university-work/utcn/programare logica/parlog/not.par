@@ -1,0 +1,4 @@
+mode myNot(?).
+
+myNot(X) <- call(X): false;
+myNot(X) <- true.

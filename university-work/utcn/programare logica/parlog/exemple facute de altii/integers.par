@@ -1,0 +1,13 @@
+/*
+  PARLOG example: Integers.
+
+  From 'Hands on Parlog for Windows'.
+*/
+
+mode integers(from?,to?,intlist^) .
+integers(N,N,[N]) .
+integers(N1,N2,[N1|Rest]) <- N1 < N2 :
+  Next is N1 + 1,
+  integers(Next,N2,Rest) .
+
+

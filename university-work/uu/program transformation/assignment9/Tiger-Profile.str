@@ -1,0 +1,92 @@
+module Tiger-Profile
+imports libstrategolib Tiger
+strategies
+
+  main = 
+    io-wrap(tiger-profile)
+
+strategies
+
+  tiger-profile =
+    enclose-in-top
+    ; annotate-functions
+    ; declare-primitive-instrument-calls
+    ; traversal
+    ; manage-variables
+    ; remove-top
+
+  enclose-in-top =
+    \ |[ e ]| -> |[ function top() = e ]| \
+
+  remove-top =
+    \ |[ function top() = e ]| -> |[ e ]| \
+
+  annotate-functions =
+    topdown(try(FuncAnnotate))
+
+  primitive-functions =
+    !["print", "printint", "not"]
+
+  declare-primitive-instrument-calls =
+    where ( <primitive-functions>()
+            ; map(\ f -> |[ function f() = () ]| { f } \)
+            ; map(declare-instrument-call)
+          )
+
+  declare-instrument-call =
+    ?|[ function f(x*) ta = e ]| { ann }
+    ; rules ( InstrumentCall(trav) : |[ f(a*) ]| -> |[ (x := x + 1; f(~*<trav>a*)) ]| where <concat-strings>[<CurrentFun>(), "_", ann] => x )
+
+  traversal =
+       ?|[ let fd* in e* end ]|
+       ; {| InstrumentCall:
+             where (<map(declare-instrument-call)>fd*)
+             ; |[ let <fd*:map({| CurrentFun: traversal |})> in <*traversal> end ]|
+         |}
+
+    <+ ?|[ function f(x*) ta = e ]| { ann }
+       ; rules ( CurrentFun : _ -> ann )
+       ; all(traversal)
+
+    <+ ?|[ f(a*) ]|
+       ; InstrumentCall(traversal)
+
+    <+ all(traversal)
+
+  manage-variables =
+    where (collect-used-function-pairs => pairs)
+    ; declare-variables(|pairs)
+    ; create-print-instructions(|pairs)
+
+  declare-variables(|pairs) =
+    \ |[ function top() = e ]| { ann } -> |[ function top() = let d* in e end ]| { ann }
+          where <map(![<Fst>, "_", <Snd>]; concat-strings; !|[ var <id> := 0 ]|)>pairs => d*
+    \
+  create-print-instructions(|pairs) =
+    \ |[ function top() = let d* in e end ]| -> |[ function top() = let d* in (e; e*) end ]|
+          where <map(PrintPair); concat>pairs => e*
+    \
+
+  collect-used-function-pairs =
+    where (collect-annotations => anns)
+    ; where (<conc>(anns, <primitive-functions>()) => extendedAnns)
+    ; where (<cart(id)>(extendedAnns, extendedAnns) => pairs)
+    ; collect-all({x, e, y: (?|[ x := e  ]|; <filter(where (<eq>(<concat-strings>[<Fst>, "_", <Snd>], x)))>pairs; ?[y]; !y)})
+
+  collect-annotations =
+    collect-all(\ |[ function f(x*) ta = e ]| { ann } -> ann \)
+
+rules
+
+  FuncAnnotate :
+    |[ function f(x*) ta = e ]| -> |[ function f(x*) ta = e ]| { ann }
+    where <not(eq)>(f, "top")
+        ; <newname>f => ann
+
+  FuncAnnotate :
+    |[ function top(x*) ta = e ]| -> |[ function top(x*) ta = e ]| { "top" }
+
+  PrintPair :
+    (f1, f2) -> [ |[ print(~*String(x)) ]|, |[ printint(y) ]| ]
+    where <concat-strings>["\\n", f1, " to ", f2, ": "] => x
+        ; <concat-strings>[f1, "_", f2] => y

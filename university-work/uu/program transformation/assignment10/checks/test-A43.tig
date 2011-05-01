@@ -1,0 +1,15 @@
+let type intarray = array of int
+    var xs : intarray := array [10] of 0
+    var sum : int := 0
+ in xs[0] := 1
+
+  ; for i := 1 to 9 do
+      xs[i] := xs[i -1] * 2
+
+  ; printint(xs[9])
+
+  ; for i := 0 to 10 do
+      sum := sum + xs[i]
+
+  ; printint(sum)
+end

@@ -1,0 +1,91 @@
+% use courier as default fixed sized font
+% because the default one does not have a
+% bold version
+%\renewcommand{\ttdefault}{pcr}
+
+% define some colors
+\definecolor{darkblue}{rgb}{0,0,0.5}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{olive}{rgb}{0.5,0.5,0}
+\definecolor{brown}{rgb}{0.64,0.16,0.16}
+
+% define lstlisting defaults
+\lstset{basicstyle=\scriptsize\ttfamily}
+\lstset{tabsize=4}
+\lstset{emptylines=1} % maximum 1 empty line allowed
+\lstset{captionpos=b} % caption at bottom of listing
+\lstset{breaklines=true}
+\lstset{showspaces=false}
+\lstset{showstringspaces=false}
+
+\lstdefinelanguage{stratego}{
+% This is commented out because it sometimes breaks code,
+% when one of these symbols would start a new LaTeX page.
+%  otherkeywords={=,<+,/,\\*,->,>,\{,\},;,:},
+  keywords=[2]{module,imports,signature,constructors,strategies,
+               rules,where,if,then,else,end,let,in},
+  keywords=[3]{id,fail,try,all,some,one},
+  sensitive=true,
+  string=[b]",
+  comment=[l]//,
+  morecomment=[s]{/*}{*/}
+}[keywords,comments,strings]
+
+\lstnewenvironment{javacode}
+{
+  \lstset{language=java}
+}
+{}
+
+\lstnewenvironment{javacodenr}
+{
+  \lstset{language=java,numbers=left,numberstyle=\tiny}
+}
+{}
+
+\lstnewenvironment{strategocode}
+{
+  \lstset{
+    keywordstyle=[2]\color{darkblue},
+    keywordstyle=[3]\textit,
+    stringstyle=\color{darkgreen},
+    commentstyle=\color{olive},
+    language=stratego
+  }
+}
+{
+  \lstset{
+    keywordstyle={},
+    stringstyle={},
+    commentstyle={}
+  }
+}
+
+\lstnewenvironment{strategocodenr}
+{
+  \lstset{
+    keywordstyle=[2]\color{darkblue},
+    keywordstyle=[3]\textit,
+    stringstyle=\color{darkgreen},
+    commentstyle=\color{olive},
+    numbers=left,
+    numberstyle=\tiny,
+    language=stratego
+  }
+}
+{
+  \lstset{
+    keywordstyle={},
+    stringstyle={},
+    commentstyle={}
+  }
+}
+
+\lstnewenvironment{code}
+{
+  \lstset{language={}}
+}
+{}
+
+\newcommand{\icode}[1]{\texttt{#1}}
+\newcommand{\bs}{\char92}

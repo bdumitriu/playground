@@ -1,0 +1,2832 @@
+<?xml version="1.0" encoding="UTF-8"?><entries>
+	<entry>
+		<dutch-word>aan</dutch-word>
+		<romanian-word>la</romanian-word>
+		<english-word>to; at</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Geef het boek aan mij.
+Ik zit aan de tafel.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>aanwijzen</dutch-word>
+		<romanian-word>a ar'ata; a indica</romanian-word>
+		<english-word>to show; to point out</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>medium</frequency>
+		<extra-info>wees aan, wezen aan, heeft aangewezen</extra-info>
+		<sample-expression>Ik wijs de pen aan.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>achter</dutch-word>
+		<romanian-word>dup'a; 'in spatele</romanian-word>
+		<english-word>behind</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>De vrouw staat achter de tafel.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>basis</dutch-word>
+		<romanian-word>baz'a</romanian-word>
+		<english-word>basis</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>bij</dutch-word>
+		<romanian-word>l^anga; cu; la</romanian-word>
+		<english-word>to; with; at</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Schrijf de letter bij het goede plaatje.
+Ze woont bij haar vader en moeder.
+Bij het kruispunt gaat u linksaf.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>bladzijde</dutch-word>
+		<romanian-word>pagin'a</romanian-word>
+		<english-word>page</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>boek</dutch-word>
+		<romanian-word>carte</romanian-word>
+		<english-word>book</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>boos</dutch-word>
+		<romanian-word>nervos</romanian-word>
+		<english-word>angry</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>bord</dutch-word>
+		<romanian-word>tabl'a</romanian-word>
+		<english-word>blackboard</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>cassette</dutch-word>
+		<romanian-word>caset'a</romanian-word>
+		<english-word>cassette; tape</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>dan</dutch-word>
+		<romanian-word>atunci</romanian-word>
+		<english-word>then</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>dat</dutch-word>
+		<romanian-word>aceea; acela</romanian-word>
+		<english-word>that</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>de</dutch-word>
+		<romanian-word>articol hot'ar^at</romanian-word>
+		<english-word>the</english-word>
+		<type>article</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>deur</dutch-word>
+		<romanian-word>u's'a</romanian-word>
+		<english-word>door</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>dicht</dutch-word>
+		<romanian-word>'inchis</romanian-word>
+		<english-word>closed; shut</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Doe de deur dicht.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>dit</dutch-word>
+		<romanian-word>acesta; aceasta</romanian-word>
+		<english-word>this</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>docent</dutch-word>
+		<romanian-word>profesor</romanian-word>
+		<english-word>teacher</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>doen</dutch-word>
+		<romanian-word>a face</romanian-word>
+		<english-word>to do</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>deed, deden, heeft gedaan</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>een (as article)</dutch-word>
+		<romanian-word>un; o</romanian-word>
+		<english-word>a</english-word>
+		<type>article</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>een (as numeral)</dutch-word>
+		<romanian-word>unu</romanian-word>
+		<english-word>one</english-word>
+		<type>numeral</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>elk(e)</dutch-word>
+		<romanian-word>fiecare</romanian-word>
+		<english-word>every; each</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>gaan</dutch-word>
+		<romanian-word>a merge</romanian-word>
+		<english-word>to go</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>ging, gingen, is gegaan</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>geven</dutch-word>
+		<romanian-word>a da</romanian-word>
+		<english-word>to give</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>gaf, gaven, heeft gegeven</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>goed(e)</dutch-word>
+		<romanian-word>bun</romanian-word>
+		<english-word>good; well</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>haar</dutch-word>
+		<romanian-word>al ei</romanian-word>
+		<english-word>her</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>hand</dutch-word>
+		<romanian-word>m^an'a</romanian-word>
+		<english-word>hand</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>het</dutch-word>
+		<romanian-word>articol hot'ar^at</romanian-word>
+		<english-word>the</english-word>
+		<type>article</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>hier</dutch-word>
+		<romanian-word>aici</romanian-word>
+		<english-word>here</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>hij</dutch-word>
+		<romanian-word>el</romanian-word>
+		<english-word>he</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>hoed</dutch-word>
+		<romanian-word>c'aciul'a</romanian-word>
+		<english-word>hat</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>horen</dutch-word>
+		<romanian-word>a auzi</romanian-word>
+		<english-word>hear</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>ik</dutch-word>
+		<romanian-word>eu</romanian-word>
+		<english-word>I</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>in</dutch-word>
+		<romanian-word>'in</romanian-word>
+		<english-word>in; into</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>invullen</dutch-word>
+		<romanian-word>a completa</romanian-word>
+		<english-word>to fill in</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>ja</dutch-word>
+		<romanian-word>da</romanian-word>
+		<english-word>yes</english-word>
+		<type>interjection</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>nee</dutch-word>
+		<romanian-word>nu</romanian-word>
+		<english-word>no</english-word>
+		<type>interjection</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>jongen</dutch-word>
+		<romanian-word>b'aiat</romanian-word>
+		<english-word>boy</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>kamer</dutch-word>
+		<romanian-word>camer'a</romanian-word>
+		<english-word>room</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>keer</dutch-word>
+		<romanian-word>dat'a</romanian-word>
+		<english-word>time</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Pak het boek nog een keer.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>kijken</dutch-word>
+		<romanian-word>a privi; a se uita (la)</romanian-word>
+		<english-word>to look; to watch</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>keek, keken, heeft gekeken</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>kind</dutch-word>
+		<romanian-word>copil</romanian-word>
+		<english-word>child</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>kolom</dutch-word>
+		<romanian-word>coloan'a</romanian-word>
+		<english-word>column</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>leggen</dutch-word>
+		<romanian-word>a a'seza</romanian-word>
+		<english-word>to lay (down)</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>letter</dutch-word>
+		<romanian-word>liter'a</romanian-word>
+		<english-word>letter (of the alphabet)</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>liggen</dutch-word>
+		<romanian-word>a se a'seza</romanian-word>
+		<english-word>to lie (down)</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>lag, lagen, heeft gelegen</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>lopen</dutch-word>
+		<romanian-word>a merge</romanian-word>
+		<english-word>to walk</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>liep, liepen, heeft gelopen</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>maar (as adverb)</dutch-word>
+		<romanian-word>doar</romanian-word>
+		<english-word>just</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Ga maar zitten.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>man</dutch-word>
+		<romanian-word>b'arbat</romanian-word>
+		<english-word>man</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>me</dutch-word>
+		<romanian-word>mie</romanian-word>
+		<english-word>me</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>meisje</dutch-word>
+		<romanian-word>fat'a</romanian-word>
+		<english-word>girl</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>meneer</dutch-word>
+		<romanian-word>domn</romanian-word>
+		<english-word>mister; sir</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>mij</dutch-word>
+		<romanian-word>mie</romanian-word>
+		<english-word>me</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>mijn</dutch-word>
+		<romanian-word>meu; mea</romanian-word>
+		<english-word>my</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>naam</dutch-word>
+		<romanian-word>nume</romanian-word>
+		<english-word>name</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>naar</dutch-word>
+		<romanian-word>la; c'atre; spre</romanian-word>
+		<english-word>to</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Loop naar de deur.
+Luister naar de docent.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>naast</dutch-word>
+		<romanian-word>l^ang'a</romanian-word>
+		<english-word>next to</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>nazeggen</dutch-word>
+		<romanian-word>a repeta (dup'a)</romanian-word>
+		<english-word>to repeat aloud</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>medium</frequency>
+		<extra-info>zei na, zeiden na, heeft nagezegd</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>niet</dutch-word>
+		<romanian-word>nu</romanian-word>
+		<english-word>not</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>nog</dutch-word>
+		<romanian-word>'inc'a</romanian-word>
+		<english-word>another; still</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Nog een keer.
+Ze woont nog bij haar ouders.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>nu</dutch-word>
+		<romanian-word>acum</romanian-word>
+		<english-word>now</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>nummer</dutch-word>
+		<romanian-word>num'ar</romanian-word>
+		<english-word>number</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>oefening</dutch-word>
+		<romanian-word>exerci'tiu</romanian-word>
+		<english-word>exercise</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>onder</dutch-word>
+		<romanian-word>sub</romanian-word>
+		<english-word>under</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>ook</dutch-word>
+		<romanian-word>'si</romanian-word>
+		<english-word>also; too</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>op</dutch-word>
+		<romanian-word>pe</romanian-word>
+		<english-word>on</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>open</dutch-word>
+		<romanian-word>deschis</romanian-word>
+		<english-word>open</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>opendoen</dutch-word>
+		<romanian-word>a deschide</romanian-word>
+		<english-word>to open</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>deed open, deden open, heeft opengedaan</extra-info>
+		<sample-expression>Doe het boek open.
+Ik doe de deur open.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>opscrijven</dutch-word>
+		<romanian-word>a scrie</romanian-word>
+		<english-word>to write down</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>schreef op, schreven op, heeft opgescreven</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>opstaan</dutch-word>
+		<romanian-word>a se ridica</romanian-word>
+		<english-word>to get up</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>stond op, stonden op, is opgestaan</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>pakken</dutch-word>
+		<romanian-word>a lua; a ridica</romanian-word>
+		<english-word>to take; to pick up</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>pen</dutch-word>
+		<romanian-word>stilou</romanian-word>
+		<english-word>pen</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>pet</dutch-word>
+		<romanian-word>'sapc'a</romanian-word>
+		<english-word>cap</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>plaatje</dutch-word>
+		<romanian-word>imagine; poz'a</romanian-word>
+		<english-word>picture</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>plukken</dutch-word>
+		<romanian-word>a culege</romanian-word>
+		<english-word>to pick</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Pluk een roos.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>postcode</dutch-word>
+		<romanian-word>cod po'stal</romanian-word>
+		<english-word>postal code</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>praten</dutch-word>
+		<romanian-word>a vorbi</romanian-word>
+		<english-word>to talk</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>raam</dutch-word>
+		<romanian-word>fereastr'a</romanian-word>
+		<english-word>window</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>ritme</dutch-word>
+		<romanian-word>ritm</romanian-word>
+		<english-word>rhythm</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>roos</dutch-word>
+		<romanian-word>trandafir</romanian-word>
+		<english-word>rose</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>schema</dutch-word>
+		<romanian-word>schem'a</romanian-word>
+		<english-word>scheme; pattern</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>schrijven</dutch-word>
+		<romanian-word>a scrie</romanian-word>
+		<english-word>to write</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>schreef, schreven, heeft geschreven</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>staan</dutch-word>
+		<romanian-word>a sta ('in picioare)</romanian-word>
+		<english-word>to stand</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>stond, stonden, heeft gestaan</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>stoel</dutch-word>
+		<romanian-word>scaun</romanian-word>
+		<english-word>chair</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>tafel</dutch-word>
+		<romanian-word>mas'a</romanian-word>
+		<english-word>table</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>tas</dutch-word>
+		<romanian-word>geant'a</romanian-word>
+		<english-word>bag</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>tekst</dutch-word>
+		<romanian-word>text</romanian-word>
+		<english-word>text</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>telefoonnummer</dutch-word>
+		<romanian-word>num'ar de telefon</romanian-word>
+		<english-word>telephone number</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>u</dutch-word>
+		<romanian-word>dvs.</romanian-word>
+		<english-word>you</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>uit</dutch-word>
+		<romanian-word>afar'a din; din</romanian-word>
+		<english-word>out of; from</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Pak de pen uit de tas.
+Ik kom uit Italie.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>uw</dutch-word>
+		<romanian-word>dvs.</romanian-word>
+		<english-word>your</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>voor</dutch-word>
+		<romanian-word>pentru; 'in fa'ta; 'inainte</romanian-word>
+		<english-word>for; in front of; before</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Hij moet voor zijn werk naar Parijs.
+De vrouw zit voor de tafel.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>voorbeeld</dutch-word>
+		<romanian-word>exemplu</romanian-word>
+		<english-word>example</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>vrouw</dutch-word>
+		<romanian-word>femeie</romanian-word>
+		<english-word>woman</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>wonen</dutch-word>
+		<romanian-word>a locui</romanian-word>
+		<english-word>to live</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>ze</dutch-word>
+		<romanian-word>ea; ei</romanian-word>
+		<english-word>she; they</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>zeggen</dutch-word>
+		<romanian-word>a spune</romanian-word>
+		<english-word>to say</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>zei, zeiden, heeft gezegd</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>zetten</dutch-word>
+		<romanian-word>a pune</romanian-word>
+		<english-word>to put</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression>Zet de letters onder de plaatjes.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>zien</dutch-word>
+		<romanian-word>a vedea</romanian-word>
+		<english-word>to see</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>zag, zagen, heeft gezien</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>zij</dutch-word>
+		<romanian-word>ea; ei</romanian-word>
+		<english-word>she; they</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>zijn (as verb)</dutch-word>
+		<romanian-word>a fi</romanian-word>
+		<english-word>to be</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>was, waren, is geweest</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>zin</dutch-word>
+		<romanian-word>propozi'tie</romanian-word>
+		<english-word>sentence</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>zitten</dutch-word>
+		<romanian-word>a sta</romanian-word>
+		<english-word>to sit</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>zat, zaten, heeft gezeten</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>achternaam</dutch-word>
+		<romanian-word>nume</romanian-word>
+		<english-word>surname; last name</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>al</dutch-word>
+		<romanian-word>deja</romanian-word>
+		<english-word>already</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>als</dutch-word>
+		<romanian-word>c^and; dac'a</romanian-word>
+		<english-word>when; if</english-word>
+		<type>conjunction</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>andere</dutch-word>
+		<romanian-word>cel'alalt; cealalt'a</romanian-word>
+		<english-word>other</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>antwoord</dutch-word>
+		<romanian-word>r'aspuns</romanian-word>
+		<english-word>answer</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>bank</dutch-word>
+		<romanian-word>banc'a</romanian-word>
+		<english-word>bank</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Hij is directeur van een bank.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>beetje</dutch-word>
+		<romanian-word>pu'tin</romanian-word>
+		<english-word>(a) little</english-word>
+		<type>noun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>begrijpen</dutch-word>
+		<romanian-word>a 'in'telege</romanian-word>
+		<english-word>to understand</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>begreep, begrepen, heeft begrepen</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>beroep</dutch-word>
+		<romanian-word>meserie</romanian-word>
+		<english-word>profession</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>biologie</dutch-word>
+		<romanian-word>biologie</romanian-word>
+		<english-word>biology</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>broer</dutch-word>
+		<romanian-word>frate</romanian-word>
+		<english-word>brother</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>buitenlands</dutch-word>
+		<romanian-word>str'ain</romanian-word>
+		<english-word>foreign</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>combinatie</dutch-word>
+		<romanian-word>combina'tie</romanian-word>
+		<english-word>combination</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>compleet</dutch-word>
+		<romanian-word>complet</romanian-word>
+		<english-word>complete</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>complete</dutch-word>
+		<romanian-word>complet</romanian-word>
+		<english-word>complete</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>congres</dutch-word>
+		<romanian-word>conferin't'a</romanian-word>
+		<english-word>conference</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>cursist</dutch-word>
+		<romanian-word>cursant</romanian-word>
+		<english-word>student (of a course)</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>cursus</dutch-word>
+		<romanian-word>curs</romanian-word>
+		<english-word>course</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>dialoog</dutch-word>
+		<romanian-word>dialog</romanian-word>
+		<english-word>dialogue</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>directeur</dutch-word>
+		<romanian-word>director</romanian-word>
+		<english-word>manager; managing director</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>dus</dutch-word>
+		<romanian-word>deci</romanian-word>
+		<english-word>so</english-word>
+		<type>conjunction</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>eerste</dutch-word>
+		<romanian-word>primul; prima</romanian-word>
+		<english-word>first</english-word>
+		<type>numeral</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>eigen</dutch-word>
+		<romanian-word>propriu</romanian-word>
+		<english-word>own</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>elkaar</dutch-word>
+		<romanian-word>'impreun'a</romanian-word>
+		<english-word>together</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Wat hoort bij elkaar?</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>Engeland</dutch-word>
+		<romanian-word>Anglia</romanian-word>
+		<english-word>England</english-word>
+		<type>noun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>familie</dutch-word>
+		<romanian-word>familie</romanian-word>
+		<english-word>family</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>feestje</dutch-word>
+		<romanian-word>petrecere</romanian-word>
+		<english-word>party</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>fabriek</dutch-word>
+		<romanian-word>fabric'a</romanian-word>
+		<english-word>factory</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>formeel</dutch-word>
+		<romanian-word>formal</romanian-word>
+		<english-word>formal</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>formele</dutch-word>
+		<romanian-word>formal</romanian-word>
+		<english-word>formal</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>Frankrijk</dutch-word>
+		<romanian-word>Fran'ta</romanian-word>
+		<english-word>France</english-word>
+		<type>noun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>geboortedatum</dutch-word>
+		<romanian-word>data na'sterii</romanian-word>
+		<english-word>date of birth</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info>pl: geboortedata</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>gebruiken</dutch-word>
+		<romanian-word>a folosi</romanian-word>
+		<english-word>to use</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>geen</dutch-word>
+		<romanian-word>nici (un, o)</romanian-word>
+		<english-word>no</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>geslacht</dutch-word>
+		<romanian-word>sex; gen</romanian-word>
+		<english-word>sex; gender</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>half</dutch-word>
+		<romanian-word>jum'atate</romanian-word>
+		<english-word>half</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>halve</dutch-word>
+		<romanian-word>jum'atate</romanian-word>
+		<english-word>half</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>hallo</dutch-word>
+		<romanian-word>servus; bun'a</romanian-word>
+		<english-word>hello; hi</english-word>
+		<type>interjection</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>hebben</dutch-word>
+		<romanian-word>a avea</romanian-word>
+		<english-word>to have</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>had, hadden, heeft gehad</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>helpen</dutch-word>
+		<romanian-word>a ajuta</romanian-word>
+		<english-word>to help</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>hielp, hielpen, heeft geholpen</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>herkomst</dutch-word>
+		<romanian-word>origine</romanian-word>
+		<english-word>origin</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>heten</dutch-word>
+		<romanian-word>a se numi</romanian-word>
+		<english-word>to be called</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmasig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>hoe</dutch-word>
+		<romanian-word>cum</romanian-word>
+		<english-word>how</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Hoe heet je?</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>informeel</dutch-word>
+		<romanian-word>informal</romanian-word>
+		<english-word>informal</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>informele</dutch-word>
+		<romanian-word>informal</romanian-word>
+		<english-word>informal</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>interessant(e)</dutch-word>
+		<romanian-word>interesant</romanian-word>
+		<english-word>interesting</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>boze</dutch-word>
+		<romanian-word>nervos</romanian-word>
+		<english-word>angry</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>introductie</dutch-word>
+		<romanian-word>introducere</romanian-word>
+		<english-word>introduction</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>Italiaan</dutch-word>
+		<romanian-word>italian</romanian-word>
+		<english-word>Italian (man)</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>Italie</dutch-word>
+		<romanian-word>Italia</romanian-word>
+		<english-word>Italy</english-word>
+		<type>noun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>je</dutch-word>
+		<romanian-word>tu</romanian-word>
+		<english-word>you</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>jij</dutch-word>
+		<romanian-word>tu</romanian-word>
+		<english-word>you</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>jullie</dutch-word>
+		<romanian-word>voi</romanian-word>
+		<english-word>you</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>kantine</dutch-word>
+		<romanian-word>cantin'a</romanian-word>
+		<english-word>canteen</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>kennismaken</dutch-word>
+		<romanian-word>a face cuno'stin't'a</romanian-word>
+		<english-word>to get acquainted</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>komen</dutch-word>
+		<romanian-word>a veni</romanian-word>
+		<english-word>to come</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>kwam, kwamen, is gekomen</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>kunnen</dutch-word>
+		<romanian-word>a putea; a fi 'in stare</romanian-word>
+		<english-word>can; to be able to</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>kon, konden, heeft gekund</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>land</dutch-word>
+		<romanian-word>'tar'a</romanian-word>
+		<english-word>country</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>lang(e)</dutch-word>
+		<romanian-word>lung</romanian-word>
+		<english-word>long</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>leraar</dutch-word>
+		<romanian-word>profesor</romanian-word>
+		<english-word>teacher</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>les</dutch-word>
+		<romanian-word>lec'tie</romanian-word>
+		<english-word>lesson</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>lezen</dutch-word>
+		<romanian-word>a citi</romanian-word>
+		<english-word>to read</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>las, lazen, heeft gelezen</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>maar (as conjunction)</dutch-word>
+		<romanian-word>dar</romanian-word>
+		<english-word>but</english-word>
+		<type>conjunction</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>maken</dutch-word>
+		<romanian-word>a face</romanian-word>
+		<english-word>to make</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>Marokko</dutch-word>
+		<romanian-word>Maroc</romanian-word>
+		<english-word>Morocco</english-word>
+		<type>noun</type>
+		<article/>
+		<frequency>low</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>met</dutch-word>
+		<romanian-word>cu</romanian-word>
+		<english-word>with; by</english-word>
+		<type>preposition</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression>Hij spreekt met de leraar.
+Ik ga met de fiets of met de auto.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>moeder</dutch-word>
+		<romanian-word>mam'a</romanian-word>
+		<english-word>mother</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>moeten</dutch-word>
+		<romanian-word>a trebui</romanian-word>
+		<english-word>must; to have to</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>moest, moesten, heeft gemoeten</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>mogelijk(e)</dutch-word>
+		<romanian-word>posibil</romanian-word>
+		<english-word>possible</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>nationaliteit</dutch-word>
+		<romanian-word>na'tionalitate</romanian-word>
+		<english-word>nationality</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>Nederland</dutch-word>
+		<romanian-word>Olanda</romanian-word>
+		<english-word>the Netherlands</english-word>
+		<type>noun</type>
+		<article/>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>Nederlands(e)</dutch-word>
+		<romanian-word>olandez; olandez'a</romanian-word>
+		<english-word>Dutch</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>of</dutch-word>
+		<romanian-word>sau</romanian-word>
+		<english-word>or</english-word>
+		<type>conjunction</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>ontbreken</dutch-word>
+		<romanian-word>a fi absent; a lipsi</romanian-word>
+		<english-word>to be absent/missing</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>medium</frequency>
+		<extra-info>ontbrak, ontbraken, heeft ontbroken</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>ontmoeten</dutch-word>
+		<romanian-word>a 'int^alni</romanian-word>
+		<english-word>to meet</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>opletten</dutch-word>
+		<romanian-word>a avea grij'a; a fi atent (la)</romanian-word>
+		<english-word>to take care; to pay attention</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>medium</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>over</dutch-word>
+		<romanian-word>despre</romanian-word>
+		<english-word>about</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Ik vertel iets over...</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>paar</dutch-word>
+		<romanian-word>c^a'tiva; c^ateva</romanian-word>
+		<english-word>a few</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Een paar uur.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>pauze</dutch-word>
+		<romanian-word>pauz'a</romanian-word>
+		<english-word>break; interval</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>per</dutch-word>
+		<romanian-word>pe</romanian-word>
+		<english-word>per</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Een paar uur per week.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>persoon</dutch-word>
+		<romanian-word>persoan'a</romanian-word>
+		<english-word>person</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>reizen</dutch-word>
+		<romanian-word>a c'al'atori</romanian-word>
+		<english-word>to travel</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>relatie</dutch-word>
+		<romanian-word>rela'tie; contact</romanian-word>
+		<english-word>relation; contact</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>roepnaam</dutch-word>
+		<romanian-word>prenume</romanian-word>
+		<english-word>first name</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>situatie</dutch-word>
+		<romanian-word>situa'tie</romanian-word>
+		<english-word>situation</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>slecht(e)</dutch-word>
+		<romanian-word>r'au</romanian-word>
+		<english-word>bad</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>Spaans</dutch-word>
+		<romanian-word>spaniol</romanian-word>
+		<english-word>Spanish</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>spreken</dutch-word>
+		<romanian-word>a vorbi</romanian-word>
+		<english-word>to speak</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>sprak, spraken, heeft gesproken</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>student</dutch-word>
+		<romanian-word>student</romanian-word>
+		<english-word>student</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>succes</dutch-word>
+		<romanian-word>succes</romanian-word>
+		<english-word>success</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>taal</dutch-word>
+		<romanian-word>limb'a</romanian-word>
+		<english-word>language</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>telefoniste</dutch-word>
+		<romanian-word>telefonist'a</romanian-word>
+		<english-word>telephone operator (fem.)</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>tussen</dutch-word>
+		<romanian-word>'intre</romanian-word>
+		<english-word>between</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>universiteit</dutch-word>
+		<romanian-word>universitate</romanian-word>
+		<english-word>university</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>uur</dutch-word>
+		<romanian-word>or'a</romanian-word>
+		<english-word>hour</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>vader</dutch-word>
+		<romanian-word>tat'a</romanian-word>
+		<english-word>father</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>van</dutch-word>
+		<romanian-word>a; al; ai; ale</romanian-word>
+		<english-word>of</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>De kantine van de universiteit.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>vandaag</dutch-word>
+		<romanian-word>ast'azi</romanian-word>
+		<english-word>today</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>vandaan</dutch-word>
+		<romanian-word>de</romanian-word>
+		<english-word>from</english-word>
+		<type>preposition</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Waar kom je vandaan?</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>veel</dutch-word>
+		<romanian-word>mult</romanian-word>
+		<english-word>much; many</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>veranderen</dutch-word>
+		<romanian-word>a (se) schimba</romanian-word>
+		<english-word>to change</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>verdieping</dutch-word>
+		<romanian-word>etaj</romanian-word>
+		<english-word>floor</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>verschil</dutch-word>
+		<romanian-word>diferen't'a</romanian-word>
+		<english-word>difference</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>vertellen</dutch-word>
+		<romanian-word>a povesti</romanian-word>
+		<english-word>to tell</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>vlakbij</dutch-word>
+		<romanian-word>aproape (de)</romanian-word>
+		<english-word>nearby; close to</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>volgen</dutch-word>
+		<romanian-word>a urma</romanian-word>
+		<english-word>to follow</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>voornaam</dutch-word>
+		<romanian-word>prenume</romanian-word>
+		<english-word>first name</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>vorm</dutch-word>
+		<romanian-word>formular</romanian-word>
+		<english-word>form</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>vraag</dutch-word>
+		<romanian-word>'intrebare</romanian-word>
+		<english-word>question</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>vragen</dutch-word>
+		<romanian-word>a 'intreba</romanian-word>
+		<english-word>to ask</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>vroeg, vroegen, heeft gevraagd</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>vrij</dutch-word>
+		<romanian-word>liber</romanian-word>
+		<english-word>free</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Is deze stoel vrij?</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>waar</dutch-word>
+		<romanian-word>unde; adev'arat</romanian-word>
+		<english-word>where; true</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression>Waar ben je?
+Waar of niet waar?</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>waarom</dutch-word>
+		<romanian-word>de ce</romanian-word>
+		<english-word>why</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>wat</dutch-word>
+		<romanian-word>ce</romanian-word>
+		<english-word>what</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>we</dutch-word>
+		<romanian-word>noi</romanian-word>
+		<english-word>we</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>week</dutch-word>
+		<romanian-word>s'apt'am^an'a</romanian-word>
+		<english-word>week</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>welk(e)</dutch-word>
+		<romanian-word>care</romanian-word>
+		<english-word>which</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>werk</dutch-word>
+		<romanian-word>lucru; slujb'a</romanian-word>
+		<english-word>work; job</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>werken</dutch-word>
+		<romanian-word>a munci; a lucra</romanian-word>
+		<english-word>to work</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>wie</dutch-word>
+		<romanian-word>cine</romanian-word>
+		<english-word>who</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>wij</dutch-word>
+		<romanian-word>noi</romanian-word>
+		<english-word>we</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>woonplaats</dutch-word>
+		<romanian-word>locuin't'a</romanian-word>
+		<english-word>place of</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>woord</dutch-word>
+		<romanian-word>cuv^ant</romanian-word>
+		<english-word>word</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>zijn</dutch-word>
+		<romanian-word>lui</romanian-word>
+		<english-word>his</english-word>
+		<type>pronoun</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>zoeken</dutch-word>
+		<romanian-word>a c'auta</romanian-word>
+		<english-word>to look for; to search</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>zocht, zochten, heeft gezocht</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>aanspreken</dutch-word>
+		<romanian-word>a se adresa (cuiva); a vorbi (cuiva)</romanian-word>
+		<english-word>to address; to speak to</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>medium</frequency>
+		<extra-info>sprak aan, spraken aan, heeft aangesproken</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>anders</dutch-word>
+		<romanian-word>diferit; altfel</romanian-word>
+		<english-word>different; otherwise</english-word>
+		<type>adverb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>auto</dutch-word>
+		<romanian-word>ma'sin'a</romanian-word>
+		<english-word>car</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>basisschool</dutch-word>
+		<romanian-word>'scoal'a primar'a</romanian-word>
+		<english-word>primary school</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>bedanken</dutch-word>
+		<romanian-word>a mul'tumi</romanian-word>
+		<english-word>to thank</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>bedankt</dutch-word>
+		<romanian-word>mul'tumesc</romanian-word>
+		<english-word>thank you</english-word>
+		<type>interjection</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>beginned</dutch-word>
+		<romanian-word>a 'incepe</romanian-word>
+		<english-word>to start</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>begon, begonnen, is begonnen</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>Belg</dutch-word>
+		<romanian-word>belgian</romanian-word>
+		<english-word>Belgian</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>boot</dutch-word>
+		<romanian-word>barc'a</romanian-word>
+		<english-word>boat</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>brengen</dutch-word>
+		<romanian-word>a aduce</romanian-word>
+		<english-word>to bring</english-word>
+		<type>verb</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info>bracht, brachten, heeft gebracht</extra-info>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>brommer</dutch-word>
+		<romanian-word>scuter</romanian-word>
+		<english-word>moped</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>brug</dutch-word>
+		<romanian-word>pod</romanian-word>
+		<english-word>bridge</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>buitenlander</dutch-word>
+		<romanian-word>str'ain</romanian-word>
+		<english-word>foreigner</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>bus</dutch-word>
+		<romanian-word>autobuz</romanian-word>
+		<english-word>bus</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>bushalte</dutch-word>
+		<romanian-word>sta'tie de autobuz</romanian-word>
+		<english-word>bus stop</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>buurt</dutch-word>
+		<romanian-word>cartier</romanian-word>
+		<english-word>neighbourhood</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>centraal</dutch-word>
+		<romanian-word>central</romanian-word>
+		<english-word>central</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>centrale</dutch-word>
+		<romanian-word>central</romanian-word>
+		<english-word>central</english-word>
+		<type>adjective</type>
+		<article/>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>concert</dutch-word>
+		<romanian-word>concert</romanian-word>
+		<english-word>concert</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>conducteur</dutch-word>
+		<romanian-word>conductor (de locomotiv'a)</romanian-word>
+		<english-word>conductor (in a train)</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>dag</dutch-word>
+		<romanian-word>servus; salut; pa</romanian-word>
+		<english-word>hello; goodbye</english-word>
+		<type>interjection</type>
+		<article/>
+		<frequency>high</frequency>
+		<extra-info/>
+		<sample-expression/>
+	</entry>
+	<entry>
+		<dutch-word>duren</dutch-word>
+		<romanian-word>a dura</romanian-word>
+		<english-word>to last; to go on</english-word>
+		<type>verb</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression>Het concert duurt tot tien uur.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>eens</dutch-word>
+		<romanian-word>dat'a</romanian-word>
+		<english-word>once</english-word>
+		<type>adverb</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression>Zeg dat nog eens.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>fiets</dutch-word>
+		<romanian-word>biciclet'a</romanian-word>
+		<english-word>bicycle</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>even</dutch-word>
+		<romanian-word>moment</romanian-word>
+		<english-word>a moment; a while</english-word>
+		<type>adverb</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression>Wacht even.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>gesprek</dutch-word>
+		<romanian-word>conversa'tie</romanian-word>
+		<english-word>talk; conversation</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>graag</dutch-word>
+		<romanian-word>cu placere</romanian-word>
+		<english-word>with pleasure</english-word>
+		<type>adverb</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression>Graag gedaan.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>groep</dutch-word>
+		<romanian-word>grup</romanian-word>
+		<english-word>group</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>herhaling</dutch-word>
+		<romanian-word>repeti'tie</romanian-word>
+		<english-word>repetition</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>hoor</dutch-word>
+		<romanian-word>nici o problem'a</romanian-word>
+		<english-word>no problem</english-word>
+		<type>interjection</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression>Ja, hoor!</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>huis</dutch-word>
+		<romanian-word>cas'a</romanian-word>
+		<english-word>house</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>iemand</dutch-word>
+		<romanian-word>cineva</romanian-word>
+		<english-word>somebody; someone</english-word>
+		<type>adverb</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>informatie</dutch-word>
+		<romanian-word>informa'tie</romanian-word>
+		<english-word>information</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>kapot(te)</dutch-word>
+		<romanian-word>stricat</romanian-word>
+		<english-word>broken; damaged</english-word>
+		<type>adjective</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>kennen</dutch-word>
+		<romanian-word>a 'sti; a cunoa'ste</romanian-word>
+		<english-word>to know</english-word>
+		<type>verb</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info>regelmatig</extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>kiezen</dutch-word>
+		<romanian-word>a alege</romanian-word>
+		<english-word>to choose; to select</english-word>
+		<type>verb</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info>koos, kozen, heeft gekozen</extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>kruispunt</dutch-word>
+		<romanian-word>intersec'tie</romanian-word>
+		<english-word>crossroads</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>laat</dutch-word>
+		<romanian-word>t^arziu</romanian-word>
+		<english-word>late</english-word>
+		<type>adjective</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>late</dutch-word>
+		<romanian-word>t^arziu</romanian-word>
+		<english-word>late</english-word>
+		<type>adjective</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>lijn</dutch-word>
+		<romanian-word>num'ar (de autobuz)</romanian-word>
+		<english-word>number (of a bus)</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>medium</frequency>
+		<extra-info></extra-info>
+		<sample-expression>U moet (bus)lijn 9 nemen.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>linkerhand</dutch-word>
+		<romanian-word>parte st^ang'a</romanian-word>
+		<english-word>left hand</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression>Aan uw linkerhand.</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>links(e)</dutch-word>
+		<romanian-word>st^anga</romanian-word>
+		<english-word>left</english-word>
+		<type>adjective</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>linksaf</dutch-word>
+		<romanian-word>la st^anga</romanian-word>
+		<english-word>to the left; turn left</english-word>
+		<type>adverb</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>lopend</dutch-word>
+		<romanian-word>pe jos</romanian-word>
+		<english-word>walking; on foot</english-word>
+		<type>adverb</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>markt</dutch-word>
+		<romanian-word>pia't'a</romanian-word>
+		<english-word>market</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>meeste</dutch-word>
+		<romanian-word>cel mai mult</romanian-word>
+		<english-word>most</english-word>
+		<type>adjective</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>mens</dutch-word>
+		<romanian-word>persoan'a</romanian-word>
+		<english-word>person; human being</english-word>
+		<type>noun</type>
+		<article>de</article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>mevrouw</dutch-word>
+		<romanian-word>doamn'a</romanian-word>
+		<english-word>mistress (mrs); lady</english-word>
+		<type>noun</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>middelbaar</dutch-word>
+		<romanian-word>secundar</romanian-word>
+		<english-word>secondary</english-word>
+		<type>adjective</type>
+		<article></article>
+		<frequency>medium</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>middelbare</dutch-word>
+		<romanian-word>secundar</romanian-word>
+		<english-word>secondary</english-word>
+		<type>adjective</type>
+		<article></article>
+		<frequency>medium</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>mijnheer</dutch-word>
+		<romanian-word>domn</romanian-word>
+		<english-word>mister (mr)</english-word>
+		<type>noun</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>mooi(e)</dutch-word>
+		<romanian-word>frumos</romanian-word>
+		<english-word>beautiful</english-word>
+		<type>adjective</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>museum</dutch-word>
+		<romanian-word>muzeu</romanian-word>
+		<english-word>museum</english-word>
+		<type>noun</type>
+		<article>het</article>
+		<frequency>medium</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>naartoe</dutch-word>
+		<romanian-word>la</romanian-word>
+		<english-word>to</english-word>
+		<type>preposition</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression>Waar gaat u naartoe?</sample-expression>
+	</entry>
+	<entry>
+		<dutch-word>natuurlijk</dutch-word>
+		<romanian-word>bine'in'teles</romanian-word>
+		<english-word>of course</english-word>
+		<type>interjection</type>
+		<article></article>
+		<frequency>high</frequency>
+		<extra-info></extra-info>
+		<sample-expression></sample-expression>
+	</entry>
+</entries>

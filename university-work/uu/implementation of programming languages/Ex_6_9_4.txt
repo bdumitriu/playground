@@ -1,0 +1,145 @@
+
+  LDC	5
+  LDR	MP
+  LDC	L0
+  LDR	MP
+  LDC	L1
+  LDR	MP
+  LDC	L2
+  BRA	L3
+
+L0:
+  LDR	MP
+  LDRR	MP SP
+
+  LDL	-3
+
+  STL	-3
+  LDRR	SP MP
+  STR	MP
+  STS	-1
+  RET
+
+L1:
+  LDR	MP
+  LDRR	MP SP
+
+  LDL	-3
+
+  STL	-4
+  LDRR	SP MP
+  STR	MP
+  STS	-2
+  ADJ	-1
+  RET
+
+L2:
+  LDR	MP
+  LDRR	MP SP
+  
+  LDR	MP
+  LDC	L4
+  BRA	L5
+
+L4:
+  LDR	MP
+  LDRR	MP SP
+
+  LDL	-2
+  LDA	-2
+  LDA	1
+  LDL	-2
+  LDA	-2
+  LDMA	2 2
+  JSR
+  LDL	-3
+  LDL	-4
+  LDL	-2
+  LDA	-2
+  LDMA	4 2
+  JSR
+  MUL
+  LDL	-2
+  LDA	-3
+  ADD
+
+  STL	-4
+  LDRR	SP MP
+  STR	MP
+  STS	-2
+  ADJ	-1
+  RET
+
+L5:
+  LDC	4
+  LDC	3
+  LDML	1 2
+  JSR
+  STS	-2
+  ADJ	-1
+
+  STL	-3
+  LDRR	SP MP
+  STR	MP
+  STS	-1
+  RET
+
+L3:
+  LDC	7
+  LDML	6 2
+  JSR
+  STS	-7
+  ADJ	-6
+
+  TRAP	0
+  HALT
+
+Stack layout before const q p is called:
+
++---------+
+| 5       |
++---------+
+| SLid    |
++---------+
+| ADid    |
++---------+
+| SLconst |
++---------+
+| ADconst |
++---------+
+| SLf     |
++---------+
+| ADf     |
++---------+
+| 7       |
++---------+
+| SLf     |
++---------+
+| RA      |
++---------+
+| OldMP   |
++---------+
+| SLg     |
++---------+
+| ADg     |
++---------+
+| 4       |
++---------+
+| 3       |
++---------+
+| SLg     |
++---------+
+| RA      |
++---------+
+| OldMP   | <- MP
++---------+
+| 5       |
++---------+
+| 3       |
++---------+
+| 4       |
++---------+
+| SLconst |
++---------+
+| ADconst | <- SP
++---------+

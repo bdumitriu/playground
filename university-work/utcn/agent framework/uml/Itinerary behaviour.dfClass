@@ -1,0 +1,51 @@
+package id4rjewdfgqnoz6dfgqqzv4;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#ItineraryBehaviour:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#Objective:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference42 {
+}/**
+@__ref <oiref:java#Class#ObjectiveMissedBehaviour:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference61 {
+}/**
+@__ref <oiref:java#Class#AFBehaviour:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference63 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options option.detail = Implementation 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#ItineraryBehaviour:oiref>=40,110,360,140,0:oigroup>
+<oigroup:<oiref:java#Class#AFBehaviour:oiref>=440,30,182,197,1:oigroup>
+<oigroup:<oiref:java#Member#AFBehaviour#SetAgent#(#AFAgent#)#:oiref>=450,300,176,16,1:oigroup>
+<oigroup:<oiref:java#Class#Objective:oiref>=40,280,330,150,0:oigroup>
+<oigroup:<oiref:java#Extends#ObjectiveMissedBehaviour#AFBehaviour:oiref>=538,290,538,227:oigroup>
+<oigroup:<oiref:java#Class#ObjectiveMissedBehaviour:oiref>=460,290,156,82,1:oigroup>
+*/
+class __positions {
+}

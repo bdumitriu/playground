@@ -1,0 +1,260 @@
+<vu>
+	<sql-data>
+		<id>login</id>
+		<data-cont>ro.utcluj.vu.login.LoginData</data-cont>
+		<st-proc>ro.utcluj.vu.login.LoginProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>login</id>
+		<action-bean>ro.utcluj.vu.login.LoginAction</action-bean>
+		<view-jsp>/jsp/login/Login.jsp</view-jsp>
+		<sql-data-id>login</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>classChoice</id>
+		<data-cont>ro.utcluj.vu.login.ClassChoiceData</data-cont>
+		<st-proc>ro.utcluj.vu.login.ClassChoiceProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>classChoice</id>
+		<action-bean>ro.utcluj.vu.login.ClassChoiceAction</action-bean>
+		<view-jsp>/jsp/login/ClassChoice.jsp</view-jsp>
+		<sql-data-id>classChoice</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>displayMenu</id>
+		<action-bean>ro.utcluj.vu.login.DisplayMenuAction</action-bean>
+		<view-jsp>/jsp/login/DisplayMenu.jsp</view-jsp>
+	</action-mapping>
+
+	<sql-data>
+		<id>ann</id>
+		<data-cont>ro.utcluj.vu.announcements.AnnouncementData</data-cont>
+		<st-proc>ro.utcluj.vu.announcements.AnnouncementProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>addAnn</id>
+		<action-bean>ro.utcluj.vu.announcements.AddAnnouncementAction</action-bean>
+		<view-jsp>/jsp/announcements/AddAnnouncement.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>listAnn1</id>
+		<action-bean>ro.utcluj.vu.announcements.ListAnnouncementAction</action-bean>
+		<view-jsp>/jsp/announcements/ListAnnouncement.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>listAnn2</id>
+		<action-bean>ro.utcluj.vu.announcements.ListAllAnnouncementsAction</action-bean>
+		<view-jsp>/jsp/announcements/ListAllAnnouncements.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editAnn1</id>
+		<action-bean>ro.utcluj.vu.announcements.DisplayAnnouncementAction</action-bean>
+		<view-jsp>/jsp/announcements/DisplayAnnouncement.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editAnn2</id>
+		<action-bean>ro.utcluj.vu.announcements.EditAnnouncementAction</action-bean>
+		<view-jsp>/jsp/announcements/EditAnnouncement.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>delAnn</id>
+		<action-bean>ro.utcluj.vu.announcements.DeleteAnnouncementAction</action-bean>
+		<view-jsp>/jsp/announcements/DeleteAnnouncement.jsp</view-jsp>
+		<sql-data-id>ann</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>conf</id>
+		<data-cont>ro.utcluj.vu.conferences.ConferenceData</data-cont>
+		<st-proc>ro.utcluj.vu.conferences.ConferenceProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>addConf</id>
+		<action-bean>ro.utcluj.vu.conferences.AddConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/AddConference.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>listConf</id>
+		<action-bean>ro.utcluj.vu.conferences.ListConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/ListConferences.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editConf1</id>
+		<action-bean>ro.utcluj.vu.conferences.DisplayConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/DisplayConference.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editConf2</id>
+		<action-bean>ro.utcluj.vu.conferences.EditConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/EditConference.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>delConf</id>
+		<action-bean>ro.utcluj.vu.conferences.DeleteConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/DeleteConference.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>reorderConf1</id>
+		<action-bean>ro.utcluj.vu.conferences.ListConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/Reorder.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>reorderConf2</id>
+		<action-bean>ro.utcluj.vu.conferences.ReorderConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/ReorderConferences.jsp</view-jsp>
+		<sql-data-id>conf</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>mess</id>
+		<data-cont>ro.utcluj.vu.conferences.MessageData</data-cont>
+		<st-proc>ro.utcluj.vu.conferences.MessageProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>listMess1</id>
+		<action-bean>ro.utcluj.vu.conferences.ListOfConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/ListOfConferences.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>listMess2</id>
+		<action-bean>ro.utcluj.vu.conferences.ListTopicsAction</action-bean>
+		<view-jsp>/jsp/conferences/ListMainTopics.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>displayConf</id>
+		<action-bean>ro.utcluj.vu.conferences.DisplayConferenceAction</action-bean>
+		<view-jsp>/jsp/conferences/ShowConference.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>displayMess</id>
+		<action-bean>ro.utcluj.vu.conferences.DisplayMessageAction</action-bean>
+		<view-jsp>/jsp/conferences/ShowMessage.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>showMainTopic</id>
+		<action-bean>ro.utcluj.vu.conferences.ListMessagesAction</action-bean>
+		<view-jsp>/jsp/conferences/ListMessages.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>showMess</id>
+		<action-bean>ro.utcluj.vu.conferences.ListMessagesAction</action-bean>
+		<view-jsp>/jsp/conferences/ListMessages.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>addMess</id>
+		<action-bean>ro.utcluj.vu.conferences.AddMessageAction</action-bean>
+		<view-jsp>/jsp/conferences/AddMessage.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editMess1</id>
+		<action-bean>ro.utcluj.vu.conferences.DisplayMessageAction</action-bean>
+		<view-jsp>/jsp/conferences/DisplayMessage.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>editMess2</id>
+		<action-bean>ro.utcluj.vu.conferences.EditMessageAction</action-bean>
+		<view-jsp>/jsp/conferences/EditMessage.jsp</view-jsp>
+		<sql-data-id>mess</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>chat</id>
+		<data-cont>ro.utcluj.vu.chat.ChatData</data-cont>
+		<st-proc>ro.utcluj.vu.chat.ChatProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>chat</id>
+		<action-bean>ro.utcluj.vu.chat.ChatAction</action-bean>
+		<view-jsp>/jsp/chat/Chat.jsp</view-jsp>
+		<sql-data-id>chat</sql-data-id>
+	</action-mapping>
+
+	<sql-data>
+		<id>email</id>
+		<data-cont>ro.utcluj.vu.email.EmailData</data-cont>
+		<st-proc>ro.utcluj.vu.email.EmailProcessor</st-proc>
+	</sql-data>
+
+	<action-mapping>
+		<id>singleEmail</id>
+		<action-bean>ro.utcluj.vu.email.SingleEmailAction</action-bean>
+		<view-jsp>/jsp/email/SingleEmail.jsp</view-jsp>
+		<sql-data-id>email</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>multipleEmails</id>
+		<action-bean>ro.utcluj.vu.email.MultipleEmailsAction</action-bean>
+		<view-jsp>/jsp/email/MultipleEmails.jsp</view-jsp>
+		<sql-data-id>email</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>sendEmail</id>
+		<action-bean>ro.utcluj.vu.email.SendEmailAction</action-bean>
+		<view-jsp>/jsp/email/SendEmail.jsp</view-jsp>
+		<sql-data-id>email</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>multipleEmailsSelect</id>
+		<action-bean>ro.utcluj.vu.email.MultipleEmailsSelectAction</action-bean>
+		<view-jsp>/jsp/email/EditEmails.jsp</view-jsp>
+		<sql-data-id>email</sql-data-id>
+	</action-mapping>
+
+	<action-mapping>
+		<id>sendMultipleEmails</id>
+		<action-bean>ro.utcluj.vu.email.SendMultipleEmailsAction</action-bean>
+		<view-jsp>/jsp/email/SendMultipleEmails.jsp</view-jsp>
+		<sql-data-id>email</sql-data-id>
+	</action-mapping>
+
+</vu>

@@ -1,0 +1,27 @@
+/*
+  PARLOG example: Hamming's Problem.
+
+  hamming(X): X is an ordered list of all the positive integers that have
+              2, 3, or 5 as factors.
+*/
+
+mode hamming(mults^).
+hamming([1|X]) <-
+  timeslist(2,[1|X],X2),
+  timeslist(3,[1|X],X3),
+  timeslist(5,[1|X],X5),
+  amerge(X2,X3,X23),
+  amerge(X23,X5,X).
+
+mode timeslist(number?,number_list?,multiple_list^).
+timeslist(U,[V|X],[W|Y]) <-
+  W is U*V,
+  timeslist(U,X,Y).
+
+mode amerge(list1?,list2?,merged_list^).
+amerge([U|X],[U|Y],[U|Z]) <-
+  amerge(X,Y,Z).
+amerge([U|X],[V|Y],[U|Z]) <- U < V :
+  amerge(X,[V|Y],Z).
+amerge([U|X],[V|Y],[V|Z]) <- V < U :
+  amerge([U|X],Y,Z).

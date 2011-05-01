@@ -1,0 +1,374 @@
+options
+{
+	static = false;
+}
+
+PARSER_BEGIN(TokenParser)
+
+package editor.parser;
+
+import editor.Constants;
+import editor.PDKRootElement;
+import editor.PDKToken;
+
+public class TokenParser
+{
+	private int stOffset;
+}
+
+PARSER_END(TokenParser)
+
+void tokenList(PDKRootElement root, int startOffset):
+{
+	Token tok;
+	PDKToken token;
+	int length;
+
+	stOffset = startOffset;
+}
+{
+	(
+		tok = <WHITESPACE>
+		{
+			stOffset += tok.image.length();
+		}
+		| tok = <OPERATOR>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.OPERATOR_ELEMENT_NAME,
+				Constants.OPERATOR_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <VARIABLE>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.VARIABLE_ELEMENT_NAME,
+				Constants.VARIABLE_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <WORD>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.WORD_ELEMENT_NAME,
+				Constants.WORD_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <OPEN_ROUND_BRACKET>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.OPEN_ROUND_BRACKET_ELEMENT_NAME,
+				Constants.OPEN_ROUND_BRACKET_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <CLOSED_ROUND_BRACKET>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.CLOSED_ROUND_BRACKET_ELEMENT_NAME,
+				Constants.CLOSED_ROUND_BRACKET_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <OPEN_SQUARE_BRACKET>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.OPEN_SQUARE_BRACKET_ELEMENT_NAME,
+				Constants.OPEN_SQUARE_BRACKET_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <CLOSED_SQUARE_BRACKET>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.CLOSED_SQUARE_BRACKET_ELEMENT_NAME,
+				Constants.CLOSED_SQUARE_BRACKET_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <OPEN_CURLY_BRACKET>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.OPEN_CURLY_BRACKET_ELEMENT_NAME,
+				Constants.OPEN_CURLY_BRACKET_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <CLOSED_CURLY_BRACKET>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.CLOSED_CURLY_BRACKET_ELEMENT_NAME,
+				Constants.CLOSED_CURLY_BRACKET_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <DOT>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.DOT_ELEMENT_NAME,
+				Constants.DOT_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <NUMBER>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.NUMBER_ELEMENT_NAME,
+				Constants.NUMBER_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <STRING>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.STRING_ELEMENT_NAME,
+				Constants.STRING_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <QUOTED_ITEM>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.QUOTED_ITEM_ELEMENT_NAME,
+				Constants.QUOTED_ITEM_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <SINGLE_LINE_COMMENT>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.SINGLE_LINE_COMMENT_ELEMENT_NAME,
+				Constants.SINGLE_LINE_COMMENT_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <MULTI_LINE_COMMENT>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.MULTI_LINE_COMMENT_ELEMENT_NAME,
+				Constants.MULTI_LINE_COMMENT_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <UNCLOSED_SINGLE_LINE_COMMENT>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.UNCLOSED_SINGLE_LINE_COMMENT_ELEMENT_NAME,
+				Constants.UNCLOSED_SINGLE_LINE_COMMENT_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <UNCLOSED_MULTI_LINE_COMMENT>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.UNCLOSED_MULTI_LINE_COMMENT_ELEMENT_NAME,
+				Constants.UNCLOSED_MULTI_LINE_COMMENT_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <UNCLOSED_STRING>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.UNCLOSED_STRING_ELEMENT_NAME,
+				Constants.UNCLOSED_STRING_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <UNCLOSED_QUOTED_ITEM>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.UNCLOSED_QUOTED_ITEM_ELEMENT_NAME,
+				Constants.UNCLOSED_QUOTED_ITEM_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+		| tok = <UNKNOWN_CHAR>
+		{
+			length = tok.image.length();
+			token = new PDKToken(root, Constants.UNKNOWN_CHAR_ELEMENT_NAME,
+				Constants.UNKNOWN_CHAR_ELEMENT_TYPE, stOffset, stOffset + length);
+			stOffset += length;
+			root.add(token);
+			
+			//System.out.println(token.toString());
+		}
+	)+
+}
+
+TOKEN:
+{
+	<WHITESPACE: ( " " | "\n" | "\r" | "\r\n" | "\t" )*>
+}
+
+TOKEN:
+{
+	<SINGLE_LINE_COMMENT: "%" (~["\n","\r"])* ( "\n" | "\r" | "\r\n" )>
+	| <UNCLOSED_SINGLE_LINE_COMMENT: "%" (~["\n","\r"])*>
+	| <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+	| <UNCLOSED_MULTI_LINE_COMMENT:	"/*" (~["*"])* ( "*" | "*" ("*" | ( ~["*","/"] ((~["*"])* | (~["*"])* "*")? ) )* )?>
+}
+
+TOKEN:
+{
+	<OPERATOR:
+	(
+		"?-"
+		| ":-"
+		| "!" /* this is not actually an operator, but since we color it as one, it might as well be here */
+		| "mode"
+		| "public"
+		| "dynamic"
+		| "volatile"
+		| "discontiguous"
+		| "multifile"
+		| "block"
+		| "meta_predicate"
+		| "initialization"
+		| "\\+"
+		| "spy"
+		| "nospy"
+		| "\\"
+		| "-->"
+		| "="
+		| "\\="
+		| "is"
+		| "=.."
+		| "=="
+		| "\\=="
+		| "@<"
+		| "@>"
+		| "@=<"
+		| "@>="
+		| "=:="
+		| "=\\="
+		| "<"
+		| ">"
+		| "=<"
+		| ">="
+		| "**"
+		| "mod"
+		| "+"
+		| "-"
+		| "#"
+		| "/\\"
+		| "\\/"
+		| "*"
+		| "/"
+		| "//"
+		| "rem"
+		| "<<"
+		| ">>"
+		| ";"
+		| "->"
+		| ","
+		| ":"
+		| "^"
+		| "?"	/* this is not an operator, it's merely a symbol */
+		| "~"	/* this is not an operator, it's merely a symbol */
+		| "@"	/* this is not an operator, it's merely a symbol */
+		| "$"	/* this is not an operator, it's merely a symbol */
+		| "&"	/* this is not an operator, it's merely a symbol */
+		| "|"	/* this is not an operator, it's merely a layout character */
+	)>
+}
+
+TOKEN:
+{
+	<VARIABLE: ( "_" | ["A"-"Z"] ) (<ALPHA>)*>
+}
+
+/* has to be completed... (integers, floats, bases, etc.) */
+TOKEN:
+{
+	<NUMBER: <DIGIT> (<DIGIT>)*>
+}
+
+TOKEN:
+{
+	<WORD: ["a"-"z"] (<ALPHA>)*>
+
+	/* This is the complete symbol list, but we don't use it. We put these at operators instead. */
+	/* | <SYMBOL: ["+","-","*","/","\\","^","<",">","=","~",":",".","?","@","#","$","&"]> */
+}
+
+TOKEN:
+{
+	<OPEN_ROUND_BRACKET: "(">
+	| <CLOSED_ROUND_BRACKET: ")">
+	| <OPEN_SQUARE_BRACKET: "[">
+	| <CLOSED_SQUARE_BRACKET: "]">
+	| <OPEN_CURLY_BRACKET: "{">
+	| <CLOSED_CURLY_BRACKET: "}">
+	| <DOT: ".">
+}
+
+TOKEN:
+{
+	<QUOTED_ITEM: "'" ( (~["'","\\","\n","\r"]) | ("\\" (~[])) | "''" )* "'">
+	| <UNCLOSED_QUOTED_ITEM: "'" ( (~["'","\\","\n","\r"]) | ("\\" (~[])) | "''" )* ("\n")?>
+	| <STRING:
+		"\""
+		(
+			(~["\"","\\","\n","\r"])
+        		| ("\\" (~[]))
+		)*
+		"\"">
+	| <UNCLOSED_STRING:
+		"\""
+		(
+			(~["\"","\\","\n","\r"])
+        		| ("\\" (~[]))
+		)*
+		("\n")?>
+}
+
+TOKEN:
+{
+	<UNKNOWN_CHAR: ~[]>
+}
+
+TOKEN:
+{
+	<#ALPHA: ["A"-"Z","a"-"z","0"-"9","_"]>
+	| <#DIGIT: ["0"-"9"]>
+}

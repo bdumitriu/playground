@@ -1,0 +1,83 @@
+The paper for this week,
+[[http://csdl.computer.org/comp/proceedings/icse/2003/1877/00/18770684abs.htm][Component Technology - What, Where, and How?]]
+is a (mostly non-technical) review of components as they are understood and used today. The
+central idea of the article is that components, even though already in wide-spread use (at
+least if we accept a very relaxed definition of the term =component=), are still an active area of
+research, since what we call components nowadays is actually quite far from what people in the field
+say it should be. The toughest challenge, as the author sees it, is how to specify a component
+(this includes unique identification, dependency specification, accurate component description
+and so on). Once a component could be completely specified, devising a means of composing components
+should follow quite immediately.
+
+At the current time, components are used as =source components= (code reuse in the form of modules, for
+example), =build-time components= (e.g., libraries) or =deployable components= (web applications deployed
+in a web application server, for instance). The goal, however, is to achieve =dynamic upgrade and extension=
+of installed systems based on components, which is still not possible, due to a lack of knowledge
+of how components can be safely composed in an automatic way. It is difficult or even impossible to predict
+with today's component descriptions what the outcome of replacing a component with a different one
+(different version, different vendor, etc.) will be. Problems range from correctness of composition
+to performance of the updated system.
+
+According to the article, a component is supposed to be a =unit of deployment= or, in other words
+the effort required to install a component should be minimal and should not require the presence of the
+developers of the component. Every aspect significant to the deployment should be captured in a so-called
+deployment descriptor. A component should also be a =unit of versioning and replacement=, which implies that
+all of a component's state should reside in the component itself, and not outside it. This is a prerequirement
+for it to be possible to safely and predictably replace the component. In addition, a component has to be
+fundamented in a "commonly accepted way of doing things" defined by the domain it is trying to model, so that
+"plug-and-play" (as opposed to "plug-and-pray") is feasible. Also, each component has to clearly extract its
+dependencies (may these be parametric - i.e., the things it expects as inputs and outputs - or static - i.e,
+the context it assumes) into interfaces with associated contracts and documentation artifacts, so that
+composition and use is facilitated. In addition to individual interface specifications, components should
+also properly specify the correlation among their various requires- and provides-interfaces, as an additional
+means of documenting component behavior.
+
+Returning to versioning, it is perhaps not so clear in common interpretation that the source code of a component
+is not (or, at least, should not be) the only thing that defines a component. Besides the source code itself,
+every single other aspect particular to the building of the component (compiler, environment, dependencies and
+so on) has to be included when defining the component. In relation to this, components should make it clear to
+their users whether or not they function correctly if used at the same time (=side-by-side=) with different
+versions of the same component. Care should be taken then that no two versions of a component that cannot be used
+side-by-side are actually run side by side, since this will probably lead to malfunction (at best) or even
+more serious problems (at worst).
+
+In contrast with components, services (such as web services) are already installed and running and are managed
+by a single, clearly identifiable organization that handles all configuration, correctness and availability
+issues. While a service is contracted in terms of performance and uptime, and possibly charged for in a per-use
+manner, a component is always a one-time sell, with clear details about its functional and non-functional aspects,
+_given its dependencies_.
+
+Systematic use of components covers virtually all aspects of software engineering. It is heavily involved
+in the analysis and design phases, as knowledge about reliable components which can be used to solve parts
+of the problem can decisively influence the architecture of the system. Source components come into play during
+implementation in the form of code reuse (one can think of APIs, frameworks and so on). The involvement of
+components in the deployment phase is twofold: first, the developed application itself can be packaged and
+deployed as a component, but can also be used together with other components to compose a larger system.
+As component technology evolves towards allowing automatic replaceability, components will also be involved
+in the maintenance of a system, as the basic means of changing it.
+
+Mcllroy's law from chapter 4 (=software reuse reduces cycle time and increases productivity and quality=)
+comes to support component technology, by providing compelling evidence as to why components should
+be used. Of course, advanced component technology implies mostly black-box reuse of the software packaged
+as a component, but besides that, white-box reuse can be employed during the implementation phase.
+Basili-Boehm's hypothesis in the same chapter (=COTS-based software does not eliminate the key development risks=),
+on the other hand, comes to suggest that organizations shouldn't allow themselves to be lured into thinking
+that by using external components they are magically shielded from risks. This is because the current state
+of the art in component technology guarantees (in a negative sense) that the glue code that has to be written in
+order to integrate an external component will likely exceed the cost of developing the component yourself.
+Another aspect is that components are constantly upgraded by their developers, and upgraded components
+usually don't "just work" where the old ones used to, so additional costs are incurred by the need to
+readapt one's software to the new version of the component. This gets worse, of course, with the number
+of external components used by a piece of software. All these aspects, however, should gradually disappear
+as component technology evolves towards more clear specifications of what components do and how they should
+be used. This is, unfortunately, still way ahead of us.
+
+In my opinion, this paper is a gentle, but rather useless introduction to components. I say this because
+of its generality level. After having read this paper, I stopped and asked myself whether I had learned
+anything out of it, and my answer was rather "no" than "yes". While the concepts that are introduced surely
+cover most of the basic areas of component technology, they are not developed to an extent where they actually
+convey any information. It's more like a list of terms with their definitions but with little, if any, connection
+to something concrete, which makes the reading rather abstract and non-interesting. A few things are
+explained in enough detail to be useful, but the general impression still remains the same.
+
+Back to the [[PaperReviews][paper reviews index]].

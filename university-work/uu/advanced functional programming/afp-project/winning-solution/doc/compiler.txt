@@ -1,0 +1,35 @@
+Programs are written in a monadic combinator library (the monad is to 
+generate fresh names); we then compile them with a series of passes.
+
+The structure built up by the combinator library is something like
+(Haskell syntax):
+
+data Fragment' = Fragment' { fmF :: FiniteMap Label Instr,
+                             startF :: Label }
+
+    (there can also be an end label in intermediate results but this
+     isn't valid in the final result to be passed to the compiler)
+
+an Instr is either a Command' Label, where Command' is the datatype defined in
+the problem with the state numbers replaced by a parameter, or a Goto Label,
+which does a goto. (There are also some comments to make it easier to debug
+things later).
+
+The first thing to do is to inline all the Gotos; next we go through a
+few optimization passes. The most important of these is common
+sub-expression elimination; we also collapse branches to identical
+states (except for Sense Foe Here which is used to explicitly waste
+time); do some very short peephole optimizations; and do some
+control-flow analysis to determine if we can eliminate any Sense
+commands or Mark/Unmark commands [this is now disabled because it didn't
+seem to be having any effect, either because of a bug in it or because
+of a bad choice of optimization orderings].
+
+Each optimization pass may produce more Gotos, so we re-inline them and
+iterate until nothing changes (stupidly inefficient but it doesn't matter
+that much for us).
+
+Now we just assign state numbers to the labels and produce the final
+output (with some comments). If we've included some dead code then it tells
+us about it but continues anyway. (Errors like jumping to non-existent labels
+are caught earlier on).

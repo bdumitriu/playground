@@ -1,0 +1,9 @@
+The exercise can be compiled as mentioned on the web page, namely:
+
+	ghc --make -fglasgow-exts -o Infer.exe Infer
+	
+Apart from all the required commands, we also accept :debug, to display
+whether debug is on or off.
+
+Jose Pedro Magalhaes, F031331
+Bogdan Dumitriu, 0402044

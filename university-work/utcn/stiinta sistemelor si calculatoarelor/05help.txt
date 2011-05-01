@@ -1,0 +1,15 @@
+ - Functia DOS 05h -
+
+Functie:
+    Trimiterea unui caracter catre imprimanta.
+
+Asteapta:
+    ah: 05h
+    dl: codul ascii al caracterului de tiparit.
+
+Intoarce:
+    nimic.
+
+Descriere:
+    In momentul in care se apeleaza, se  trimte catre imprimanta caracterul
+    al carui cod ascii se afla in dl.

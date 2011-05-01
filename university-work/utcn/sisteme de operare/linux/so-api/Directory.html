@@ -1,0 +1,188 @@
+<HTML>
+<HEAD>
+<TITLE>class Directory</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>class Directory</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1">This class allows easy reading/writing of a directory's contents.
+ <small><A HREF="#longdesc">More...</A></small></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="so___include___driver___Directory_h.html">so/include/driver/Directory.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-Directory.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Static Methods</h4><ul><LI>static  <A HREF="DirectoryListing.html">DirectoryListing</A>* &nbsp;<b><A HREF="#ref1">readDirectory</A></b> (<A HREF="HDD.html">HDD</A>* hdd, <A HREF="FileInputStream.html">FileInputStream</A>* fis) 
+</LI>
+<LI>static  void &nbsp;<b><A HREF="#ref2">writeDirectory</A></b> (<A HREF="FileOutputStream.html">FileOutputStream</A>* fos, <A HREF="DirectoryListing.html">DirectoryListing</A>* dirListing) 
+</LI>
+<LI>static  <A HREF="DirectoryListing.html">DirectoryListing</A>* &nbsp;<b><A HREF="#ref3">traversePathToFile</A></b> (<A HREF="HDD.html">HDD</A>* hdd, const char* path, char* fileName) 
+</LI>
+<LI>static  <A HREF="DirectoryListing.html">DirectoryListing</A>* &nbsp;<b><A HREF="#ref4">traversePathToDir</A></b> (<A HREF="HDD.html">HDD</A>* hdd, const char* path, char* dirName) 
+</LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><p>
+ This class allows the user to read/write a directory's contents.
+ Technically, it makes the directory encoding manner transparent.The
+ directory's contents can be obtained in the form of a DirectoryListing
+ object and can be written from an array of unsigned longs.
+</p>
+<p> This is the configuration of a directory this class assumes:
+ <ul>
+ <li> first 4 bytes - number of entries (unsigned long) including "." & "..".</li>
+ <li> next 4 bytes - "." directory absolute inode number (pointer
+	to own inode).</li>
+ <li> next 4 bytes - ".." directory absolute inode number (pointer
+	to parent directory inode).</li>
+ <li> 4 bytes - absolute inode number of each of the other entries.</li>
+ </ul>
+</p>
+<p></p>
+<A NAME="readDirectory"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td> <A HREF="DirectoryListing.html">DirectoryListing</A>* &nbsp;<strong>readDirectory</strong> (<A HREF="HDD.html">HDD</A>* hdd, <A HREF="FileInputStream.html">FileInputStream</A>* fis)
+<br>throw(
+		<A HREF="IOException.html">IOException</A>*,
+		<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*,
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>readDirectory</strong></h3></td></tr></table><p> <small>[static]</small></p><p>
+ Reads the directory from the disk and returns the directory
+ listing which encapsulates the directory's contents.
+</p>
+<p> The method throws:
+ <ul>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+ <li> ArrayIndexOutOfBoundsException* forwarded form <code>fis</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>hdd</i></TD><TD align="left" valign="top">the hard disk used for reading inodes.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>fis</i></TD><TD align="left" valign="top">the FileInputStream associated with the directory.
+	inode.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: directory listing which encapsulates the directory's contents.
+	 </p>
+<A NAME="writeDirectory"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td> void &nbsp;<strong>writeDirectory</strong> (<A HREF="FileOutputStream.html">FileOutputStream</A>* fos, <A HREF="DirectoryListing.html">DirectoryListing</A>* dirListing)
+<br>throw(
+		<A HREF="NotEnoughSpaceException.html">NotEnoughSpaceException</A>*,
+		<A HREF="FileSizeTooLargeException.html">FileSizeTooLargeException</A>*,
+		<A HREF="IOException.html">IOException</A>*,
+		<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*,
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>writeDirectory</strong></h3></td></tr></table><p> <small>[static]</small></p><p>
+ Writes <code>size</code> entries from the <code>contents</code> array to
+ the hard disk using the <code>fos</code> FileOutputStream - an output stream
+ opened using the directory's inode.
+</p>
+<p> The method throws:
+ <ul>
+ <li> NotEnoughSpaceException* forwarded from <code>fos</code>.</li>
+ <li> FileSizeTooLargeException* forwarded from <code>fos</code>.</li>
+ <li> HardDiskNotInitializedException* forwarded from <code>fos</code>.</li>
+ <li> IOException* forwarded from <code>fos</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>fos</code>.</li>
+ <li> ArrayIndexOutOfBoundsException* forwarded form <code>fos</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fos</i></TD><TD align="left" valign="top">the FileOutputStream associated with the directory.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>dirListing</i></TD><TD align="left" valign="top">a DirectoryListing object representing the diretory contents
+	to be written on disk (the first element should be "." and the second one
+	"..").
+	 </TD></TR>
+</TABLE></P>
+<A NAME="traversePathToFile"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td> <A HREF="DirectoryListing.html">DirectoryListing</A>* &nbsp;<strong>traversePathToFile</strong> (<A HREF="HDD.html">HDD</A>* hdd, const char* path, char* fileName)
+<br>throw(
+		<A HREF="IOException.html">IOException</A>*,
+		<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*,
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>traversePathToFile</strong></h3></td></tr></table><p> <small>[static]</small></p><p>
+ This method takes the absolute path <code>path</code> as parameter and
+ returns the diectory listing of the last directory in the path. <code>fileName</code>
+ is an output parameter and it will contain the name of the file from the path.
+ For example, if path is /usr/local/bin/opera then the directory listing will be
+ that of the /usr/local/bin directory and the file name will be opera.
+</p>
+<p> If, on the other hand, you provide the method with a path like /usr/local/bin/
+ it will return the directory listing of /usr/local/bin and fileName will be	
+ the empty string.
+</p>
+<p> If the path is invalid, the method returns NULL.
+</p>
+<p> The method throws:
+ <ul>
+ <li> HardDiskNotInitializedException* forwarded from <code>readDirectory</code>.</li>
+ <li> IOException* forwarded from <code>readDirectory</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>readDirectory</code>.</li>
+ <li> ArrayIndexOutOfBoundsException* forwarded form <code>readDirectory</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>hdd</i></TD><TD align="left" valign="top">the hard disk used for reading inodes.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>path</i></TD><TD align="left" valign="top">the path to traverse.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>fileName</i></TD><TD align="left" valign="top">output parameter in which the name of the file will be stored.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: the directory listing of the last directory in the path.
+	 </p>
+<A NAME="traversePathToDir"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td> <A HREF="DirectoryListing.html">DirectoryListing</A>* &nbsp;<strong>traversePathToDir</strong> (<A HREF="HDD.html">HDD</A>* hdd, const char* path, char* dirName)
+<br>throw(
+		<A HREF="IOException.html">IOException</A>*,
+		<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*,
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>traversePathToDir</strong></h3></td></tr></table><p> <small>[static]</small></p><p>
+ This method takes the absolute path <code>path</code> as parameter and
+ returns the diectory listing of the first to last directory in the path.
+ <code>dirName</code> is an output parameter and it will contain the name
+  of the last directory from the path. In order to see the difference between
+ this method and the traversePathToFile() method, here's an example for easy
+ understandig: in this case, both a path like /usr/local/bin and a path like
+ /usr/local/bin/ will cause the same result - the directory listing will be
+ that of the /usr/local directory and <code>dirName</code> will be bin.
+</p>
+<p> If the path is invalid, the method returns NULL.
+</p>
+<p> The method throws:
+ <ul>
+ <li> HardDiskNotInitializedException* forwarded from <code>readDirectory</code>.</li>
+ <li> IOException* forwarded from <code>readDirectory</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>readDirectory</code>.</li>
+ <li> ArrayIndexOutOfBoundsException* forwarded form <code>readDirectory</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>hdd</i></TD><TD align="left" valign="top">the hard disk used for reading inodes.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>path</i></TD><TD align="left" valign="top">the path to traverse.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>dirName</i></TD><TD align="left" valign="top">output parameter in which the name of the directory will be stored.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: the directory listing of the first last directory in the path.
+	 </p>
+<HR><UL><LI><i>Version</i>: 0.1
+ </LI><LI><i>Author</i>: Bogdan DUMITRIU
+</LI><LI><i>Generated</i>: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</LI></UL></BODY></HTML>

@@ -1,0 +1,55 @@
+{-# LINE 10 "SLProofTree.lag" #-}
+imports
+{
+import UU.Pretty
+}
+
+INCLUDE "SLFormat.ag"
+INCLUDE "SLPrettyprintTex.ag"
+INCLUDE "SLJudgements.ag"
+
+ATTR Root [  |  | proof : PP_Doc ]
+SEM Root
+  | Root  lhs.proof         =  header >-< 
+                               document (landscape (mathmode  @genproof >-< ppTexGammas  @gammas))
+          loc.genproof      =  case  @gentp of
+                                 (TForall _ _)  -> over "n" [@expr.tree] "GeneralizeText"  @judge
+                                 _              -> @expr.tree
+          loc.gentp         = abstract initgamma  @expr.tp
+
+ATTR Expr [  |  | tree : PP_Doc]
+SEM Expr          
+  | Unit          lhs.tree  =  over   @lhs.format [] "UnitText"  @judge
+  | Intexpr       lhs.tree  =  over   @lhs.format [] "IntegerText"  @judge 
+  | Boolexpr      lhs.tree  =  over   @lhs.format []          
+                                     (if  @bool then "TrueText" else "FalseText")  @judge 
+  | Ident         lhs.tree  =  if  @unq ==  @lhs.unique 
+                                 then  @tree
+                                 else over  @lhs.format [@tree] "SpecializeText"  @judgespec
+                  loc.tree  =  over   @format [inGamma  @judge] "AssumptionText"  @judge          
+  | Op            lhs.tree  =  over   @lhs.format [@le.tree, @re.tree] "OpText"  @judge 
+  | If            lhs.tree  =  over   @lhs.format [@cond.tree, @thenExpr.tree, @elseExpr.tree] 
+                                     "CondText"  @judge
+  | Let           lhs.tree  =  over   @lhs.format (@decls.trees ++ [@expr.tree])
+                                     "LetText"  @judge
+  | Assign        lhs.tree  =  over   @lhs.format [@vartree,@expr.tree] "AssignText"  @judge
+                  loc.vartree = over  @varformat [inGamma  @varjudge] "AssumptionText"  @varjudge
+  | Apply         lhs.tree  =  over   @lhs.format [@func.tree,  @arg.tree]
+                                     "ApplyText"  @judge
+  | Lamcall       lhs.tree  =  @call.tree
+  | Lam           lhs.tree  =  over   @lhs.format [@expr.tree]
+                                       "FuncIntroText"   @judge
+  | Seq           lhs.tree  =  over   @lhs.format @exprs.trees "SeqText"  @judge
+
+ATTR Decl [  |  | tree : PP_Doc]
+SEM Decl
+  | Decl      lhs.tree      =  @expr.tree
+
+ATTR Decls [  |  | trees : PP_Docs]
+SEM Decls
+  | Nil       lhs.trees     =  []
+  | Cons      lhs.trees     =  @hd.tree :  @tl.trees
+ATTR Exprs [  |  | trees : PP_Docs]
+SEM Exprs  
+  | Nil       lhs.trees     =  []
+  | Cons      lhs.trees     =  @hd.tree :  @tl.trees

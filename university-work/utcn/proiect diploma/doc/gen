@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo
+echo "*************************************************"
+echo
+
+latex ./diploma.tex
+
+echo
+echo "*************************************************"
+echo
+
+latex ./diploma.tex
+
+echo
+echo "*************************************************"
+echo
+
+latex ./diploma.tex

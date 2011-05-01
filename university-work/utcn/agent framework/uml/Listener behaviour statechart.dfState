@@ -1,0 +1,170 @@
+package id327irdj1havaudj1k3uli;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node66:oiref><oihard>
+@__modelType reference 
+*/
+class reference67 {
+}/**
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node68:oiref><oihard>
+@__modelType reference 
+*/
+class reference69 {
+}/**
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node71:oiref><oihard>
+@__modelType reference 
+*/
+class reference72 {
+}/**
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node73:oiref><oihard>
+@__modelType reference 
+*/
+class reference74 {
+}/**
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node75:oiref><oihard>
+@__modelType reference 
+*/
+class reference76 {
+}}/**
+
+@__tags
+@shapeType StateDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node:oiref>=290,40,12,12,1:oigroup>
+<oigroup:Composite#$transitionInplaceEditing#<oiref:design#Class#id327irdj1havaudj1k3uli.node66.link70:oiref>=130,210,200,34,1:oigroup>
+<oigroup:Composite#$transitionInplaceEditing#<oiref:design#Class#id327irdj1havaudj1k3uli.node75.link:oiref>=330,240,43,17,1:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node66.link77:oiref>=327,170,441,220:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node68:oiref>=210,270,150,60,0:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node75:oiref>=410,220,63,40,1:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node66:oiref>=230,110,130,60,0:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node.link:oiref>=296,52,296,110:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node71.link:oiref>=288,440,288,500:oigroup>
+<oigroup:Composite#$transitionInplaceEditing#<oiref:design#Class#id327irdj1havaudj1k3uli.node66.link77:oiref>=380,170,37,17,1:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node75.link:oiref>=410,230,320,230,311,170:oigroup>
+<oigroup:Composite#$transitionInplaceEditing#<oiref:design#Class#id327irdj1havaudj1k3uli.node66.link:oiref>=100,70,177,17,1:oigroup>
+<oigroup:Composite#$transitionInplaceEditing#<oiref:design#Class#id327irdj1havaudj1k3uli.node.link:oiref>=306,72,133,17,1:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node68.link:oiref>=285,330,285,400:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node66.link70:oiref>=285,170,285,270:oigroup>
+<oigroup:Composite#$transitionInplaceEditing#<oiref:design#Class#id327irdj1havaudj1k3uli.node71.link:oiref>=298,461,150,17,1:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node66.link:oiref>=230,158,160,158,160,90,250,90,250,110:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node73:oiref>=280,500,15,15,1:oigroup>
+<oigroup:<oiref:design#Class#id327irdj1havaudj1k3uli.node71:oiref>=260,400,50,40,1:oigroup>
+*/
+class __positions {
+}/**
+@shapeType StartState
+@__modelType node
+@name StartState1
+@backgroundColor 0,0,0 
+*/
+class node {
+/**
+@shapeType TransitionLink
+@__modelType link
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node66:oiref><oihard> 
+@event start listener behaviour
+*/
+class link {
+}}/**
+@shapeType State
+@__modelType node
+@name Listening*/
+class node66 {
+/**
+@shapeType InternalTransition
+@__modelType member
+@name do
+@action wait for message 
+*/
+class member {
+}/**
+@shapeType TransitionLink
+@__modelType link
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node66:oiref><oihard>
+@condition wrong message
+@event get message*/
+class link {
+}/**
+@shapeType TransitionLink
+@__modelType link
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node68:oiref><oihard>
+@event get message
+@condition appropriate message 
+*/
+class link70 {
+}/**
+@shapeType TransitionLink
+@__modelType link
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node75:oiref><oihard>
+@event block 
+*/
+class link77 {
+}}/**
+@shapeType State
+@__modelType node
+@name Notifying 
+*/
+class node68 {
+/**
+@shapeType TransitionLink
+@__modelType link
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node71:oiref><oihard> 
+*/
+class link {
+}/**
+@shapeType InternalTransition
+@__modelType member
+@name do
+@action call back listener 
+*/
+class member {
+}}/**
+@shapeType State
+@__modelType node
+@name Idle 
+*/
+class node71 {
+/**
+@shapeType TransitionLink
+@__modelType link
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node73:oiref><oihard>
+@event remove listener behaviour 
+*/
+class link {
+}}/**
+@shapeType EndState
+@__modelType node
+@name EndState1
+@backgroundColor 0,0,0 
+*/
+class node73 {
+}/**
+@shapeType State
+@__modelType node
+@name Blocked 
+*/
+class node75 {
+/**
+@shapeType TransitionLink
+@__modelType link
+@__ref <oiref:design#Class#id327irdj1havaudj1k3uli.node66:oiref><oihard>
+@event restart 
+*/
+class link {
+}}

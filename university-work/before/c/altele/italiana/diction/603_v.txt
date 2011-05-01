@@ -1,0 +1,22 @@
+a comanda       - comandare
+a intelege      - capire
+a se plimba     - passegiare
+a traduce       - tradurre
+a cobori        - scendere
+a cumpara       - comprare
+a descoperi     - scopri re
+a schimba       - cambiare
+a reuni         - riunire
+a arunca        - lanciare
+a insoti        - accompagnare
+a reusi         - riuscire
+a se casatori   - sposare
+a darui         - regalare
+a lua           - togliere
+a trai          - vivere
+a muri          - morire
+a se bucura     - godere
+a gazdui        - ospitare
+a (se) plictisi - annoiare
+a povesti       - raccontare
+a pedepsi       - punire

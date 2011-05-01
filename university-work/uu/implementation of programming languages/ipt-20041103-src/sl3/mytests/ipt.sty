@@ -1,0 +1,329 @@
+% IPT macro's
+
+% Requires
+\usepackage{ifthen}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
+
+% 'If' depending on file existence
+\newread\@tempread
+% IfInputExists( filename, exec-then, exec-else )
+\def\IfInputExists#1#2#3{%
+\immediate\openin\@tempread=#1
+\ifeof\@tempread\immediate\closein\@tempread\def\@tempa{#3}%
+\else\immediate\closein\@tempread\def\@tempa{#2}%
+\fi\@tempa}   
+
+% Input variants, with depth counter
+\newcounter{InputDepthCounter}
+% input with a config dependent note
+\newcommand{\@InputWithNote}[1]{%
+ \addtocounter{InputDepthCounter}{1}
+ \IfYes{\FlagShowInputFiles}{\marginpar{\raggedright\sf\tiny\em depth: \arabic{InputDepthCounter}, file: #1}}{}
+ \input{#1}
+ \addtocounter{InputDepthCounter}{-1}}
+% input plain
+\newcommand{\@InputWithoutNote}[1]{\input{#1}}
+% input if file exists, with additional prefix
+\newcommand{\InputPrefixby}[2]{\IfInputExists{#2}{#1\@InputWithNote{#2}}{}}
+% input if file exists, with additional prefix
+\newcommand{\InputPrefixbyWithoutNote}[2]{\IfInputExists{#2}{#1\@InputWithoutNote{#2}}{}}
+% input if file exists
+\newcommand{\Input}[1]{\InputPrefixby{}{#1}}
+% input if file exists
+\newcommand{\InputWithoutNote}[1]{\InputPrefixbyWithoutNote{}{#1}}
+
+% Yes, No, used for flagging
+\def\Yes{Yes}
+\def\No{No}
+
+% If Yes ( val, repl-yes, repl-no )
+\long\def\IfYes#1#2#3{\ifthenelse{\equal{#1}{\Yes}}{#2}{#3}}
+
+\IfYes{\FlagUseIPTStyleInBookStyle}{%
+% Environment abstract, just for compatibility with article
+ \newenvironment{abstract}{}{}
+}
+
+% Environment for local scope of definitions in a chapter
+\newenvironment{iptchap}{}{}
+
+% Input chapter from a file and place title above
+\newcommand{\IptChap}[2]{%
+ \chapter{#1}\label{#2}\begin{iptchap}\Input{Chapt-#2.tex}\end{iptchap}}
+
+% Alias to make renaming easier
+\newcommand{\Sec}[1]{\section{#1}}
+\newcommand{\SubSec}[1]{\subsection{#1}}
+\newcommand{\PractSec}[1]{\SubSec{#1}}
+\newcommand{\SubSubSec}[1]{\subsubsection{#1}}
+\newcommand{\PractSubSec}[1]{\SubSubSec{#1}}
+\newcommand{\Par}[1]{\paragraph{#1}}
+\newcommand{\PractPar}[1]{\Par{#1}}
+\newcommand{\SubPar}[1]{\subparagraph{#1}}
+\newcommand{\Ref}[1]{\ref{#1}{}}
+\newcommand{\Pageref}[1]{\pageref{#1}{}}
+\newcommand{\Cite}[1]{\cite{#1}{}}
+%\newcommand{\Url}[1]{\url{#1}}
+
+% Convenience macro's
+% Chapter reference
+\newcommand{\RefChapt}[1]{chapter~\Ref{#1}}
+% Section reference
+\newcommand{\RefSec}[1]{section~\Ref{#1}}
+% Appendix reference
+\newcommand{\RefApp}[1]{appendix~\Ref{#1}}
+% Figure reference
+\newcommand{\RefFig}[1]{figure~\Ref{#1}}
+% Exercise reference
+\newcommand{\RefExerc}[1]{exercise~\Ref{#1}}
+% Page reference
+\newcommand{\RefPage}[1]{page~\Pageref{#1}}
+% Section + Page reference
+\newcommand{\RefSecPage}[1]{\RefSec{#1}, \RefPage{#1}}
+
+% Index entries
+\newcommand{\Ix}[1]{\index{#1}}
+\newcommand{\IxNrAs}[2]{\index{#1|#2}}
+\newcommand{\IxNrAsEmph}[1]{\IxNrAs{#1}{emph}}
+\newcommand{\IxAs}[2]{\index{#1@#2}}
+\newcommand{\IxAsBold}[1]{\IxAs{#1}{\textbf{#1}}}
+\newcommand{\IxAsTT}[1]{\IxAs{#1}{\texttt{#1}}}
+\newcommand{\Ixx}[2]{\index{#1!#2}}
+\newcommand{\IxxAs}[3]{\index{#1!#2@#3}}
+\newcommand{\IxxAsBold}[2]{\IxxAs{#1}{#2}{\textbf{#2}}}
+\newcommand{\IxxAsTT}[2]{\IxxAs{#1}{#2}{\texttt{#2}}}
+\newcommand{\Ixxx}[3]{\index{#1!#2!#3}}
+
+% Introduction/usage of concepts + indexing
+\newcommand{\Introduce}[1]{{\emph{#1}}\IxNrAsEmph{#1}}
+\newcommand{\Use}[1]{{#1}\Ix{#1}}
+
+% Counter for exercise environment
+\IfYes{\FlagUseIPTStyleInBookStyle}{%
+ \newcounter{exercise}[chapter]
+ \renewcommand{\theexercise}{\thechapter-\arabic{exercise}}
+}
+
+% Environment for displaying something
+\newenvironment{display}{%
+ \begin{list}{}{%
+  \setlength{\itemindent}{0cm}\setlength{\labelwidth}{0cm}}
+  \item[]
+ }{%
+ \end{list}}
+
+
+% Environment for exercises
+\newenvironment{exercises}{
+ \begin{list}{{\it\theexercise}\hfill}{\usecounter{exercise}}}{%
+ \end{list}}
+
+% Exercise, takes ( origin, origina param, label/filename, title, answer suffix ), to be used in exercise environment
+\newcommand{\Exercise}[5]{%
+ \def\@tempa{#1}
+ \def\@tempb{#2}
+ \ifx\@tempa\empty\else\def\@tempa{ (from #1 #2)}\fi
+ \item {\bf #4\@tempa}\IfYes{\FlagIncludeAnswers}{ (answer at \RefPage{Answr:#1#2#3})}{}. \label{#1#2#3}\Input{Exerc-#1#2#3.tex}\WriteAnswerInclude{#1#2#3}{#4}{#5}
+ }
+
+% Environment for answers
+\newenvironment{answers}{\begin{description}}{\end{description}}
+
+% Automatic generation of inclusion of answers
+\newwrite\IPT@AnswersFile
+\newcommand{\MakeExerciseAnswers}{\immediate\openout\IPT@AnswersFile=\jobname.asr}
+\newcommand{\InputExerciseAnswers}{\immediate\closeout\IPT@AnswersFile\relax\Input{\jobname.asr}}
+\newcommand{\WriteAnswerInclude}[3]{\immediate\write\IPT@AnswersFile{\string\Answer#3{#1}{#2}}}
+
+% Input of annotated (literate progr) AG
+\newenvironment{attrgram}{}{}
+\newcommand{\AttrGram}[1]{\begin{attrgram}\Input{AttGr#1.ag}\end{attrgram}}
+
+% Answer, takes ( label/filename, dummy (title) ), to be used in answers environment
+\newcommand{\@AnswerWithExtension}[3]{{\InputPrefixby{\item[\Ref{#1}.]\label{Answr:#1} }{Answr-#1.#3}}}
+\newcommand{\Answer}[2]{{\small\@AnswerWithExtension{#1}{#2}{tex}}}
+\newcommand{\AnswerAG}[2]{\begin{attrgram}\@AnswerWithExtension{#1}{#2}{ag}\end{attrgram}}
+
+% Lab exercise, 'practicum', takes ( label/filename, title )
+\newcommand{\Practicum}[2]{\Sec{#2}\label{#1}\Input{Pract-#1.tex}}
+
+% Exam, takes ( date JJJJMMDD )
+\newcommand{\Exam}[1]{\Sec{Exam of #1}\label{exam-#1}\begingroup\Input{Exam-#1.tex}\endgroup}
+
+% Environment for figures, takes ( label, caption )
+\newenvironment{fig}[2]{%
+ \begin{figure}
+ \newcommand{\@TmpLabel}{#1}
+ \newcommand{\@TmpCaption}{#2}
+ \begin{center}}{%
+ \end{center}\caption{\@TmpCaption}\label{\@TmpLabel}\end{figure}}
+
+% Verbatim environments
+% For code
+\DefineVerbatimEnvironment%
+ {Code}{Verbatim}
+ {xleftmargin=7mm,fontsize=\small}
+
+% For Java (alike) code
+\DefineVerbatimEnvironment%
+ {Java}{Verbatim}
+ {xleftmargin=7mm,fontsize=\small}
+
+% For SL code
+\DefineVerbatimEnvironment%
+ {SL}{Verbatim}
+ {xleftmargin=7mm,fontsize=\small}
+
+% For AG code, in literate AG
+\DefineVerbatimEnvironment%
+ {AG}{Verbatim}
+ {xleftmargin=7mm,fontsize=\small,numbers=right,firstnumber=last,stepnumber=1}
+
+% For Haskell code, in literate AG
+\DefineVerbatimEnvironment%
+ {HS}{Verbatim}
+ {xleftmargin=7mm,fontsize=\small,numbers=right,firstnumber=last,stepnumber=1}
+
+% Reset literal AG/HS counting
+\newcommand{\SetupLiteralAG}{\setcounter{FancyVerbLine}{0}}
+
+% 'fig' Figure, takes (label, caption, filename)
+\newcommand{\FigXFig}[3]{\begin{fig}{#1}{#2}\InputWithoutNote{Drwng-#3.latex}\end{fig}}
+
+%%% BEGIN OF G&O BASED STUFF
+%%% The following set of macros is taken from go-macros.tex, in order to be able to
+%%% do the literate programming used by the UU_AG system.
+%%%
+
+\def\uncatcodespecials{\def\do##1{\catcode`##1=12 }\dospecials}
+
+\def\setupverbatim{%
+%  \vspace{\parskip}
+  \parskip=0pt
+  \par
+  \small
+  \tt
+%  \def\par{\leavevmode\endgraf}
+%  \let\par=\cr
+  \obeylines 
+  \uncatcodespecials 
+%  \catcode`\@=0
+%  \catcode`\{=1
+%  \catcode`\}=2
+  \parskip=0pt
+  \obeyspaces
+}
+{\obeyspaces\global\let =~}
+
+\def\setupverbatimu{%
+  \parskip=0pt
+  \par
+  \small
+  \tt
+  \obeylines 
+  \uncatcodespecials 
+  \catcode`\@=0
+  \catcode`\{=1
+  \catcode`\}=2
+  \parskip=0pt
+  \obeyspaces
+}
+{\obeyspaces\global\let =~}
+
+\def\uitvoer{\par\sloppy\begingroup\begin{list}{}{\leftmargin=1cm\parskip=0pt\topsep=6pt}\item\setupverbatimu\doverbatim}
+{\catcode`\|=0 \catcode`\\=12 %
+  |obeylines|gdef|doverbatim^^M#1\voeruit{#1|end{list}|vspace{-7pt}|endgroup}}
+
+\def\BC{\par\sloppy\begingroup\begin{list}{}{\small\leftmargin=0.4cm\parskip=0pt\topsep=2pt}\item\setupverbatim\doverbatimc}
+{\catcode`\|=0 \catcode`\\=12 %
+  |obeylines|gdef|doverbatimc^^M#1\EC{#1|end{list}|vspace{-0pt}|endgroup}}
+\def\BT{\par\sloppy\begingroup\begin{list}{}{\small\leftmargin=0.4cm\parskip=0pt\topsep=2pt}\item\setupverbatim\doverbatimp}
+{\catcode`\|=0 \catcode`\\=12 %
+  |obeylines|gdef|doverbatimp#1^^M#2\ET#3^^M{#2|end{list}|vspace{-0pt}|endgroup}}
+  
+%% Minder royale itemize
+
+\newenvironment{itize}{%
+\begin{list}{$\bullet$}{
+\parsep  = 0pt
+\parskip = 0pt
+\topsep  = 0pt
+\itemsep = 0pt
+}}{\end{list}}
+\newcounter{enumctr}
+\newenvironment{enumate}{%
+\begin{list}{\arabic{enumctr}}{
+\usecounter{enumctr}
+\parsep  = 0pt
+\parskip = 0pt
+\topsep  = 0pt
+\itemsep = 0pt
+}}{\end{list}}
+
+%% Listings
+
+\newcounter{listing}
+
+\newcommand{\@Listing}[4]{%
+   \VerbatimInput[numbers=right,stepnumber=5,frame=lines,fontsize=\footnotesize,numbersep=0pt]{Lstng-#2#3}
+   \refstepcounter{listing}
+}
+
+\newcommand{\Listing}[1]{%
+   \@Listing{}{#1}{}{#1}
+}
+
+\newcommand{\ListingHS}[1]{%
+   \@Listing{}{#1}{.hs}{#1}
+}
+
+\newcommand{\ListingAG}[1]{%
+   \@Listing{}{#1}{.ag}{#1}
+}
+
+\newcommand{\gof}[1]{\makebox{{\tt #1}}}
+\newcommand{\gofs}[1]{\gof{"#1"}}
+\newcommand{\goft}[1]{\gof{#1}}
+\newcommand{\obj}[1]{\makebox{{\sf #1}}}
+\newcommand{\dak}{{$\uparrow$}}
+
+%%% END OF G&O BASED STUFF
+
+% Macro's for type rules
+\newcommand\Judgement[3]{#1 \vdash \mathsf{#2} : #3}
+\newcommand\Function[2]{\lambda #1\rightarrow#2}
+\newcommand{\InGamma}[3]{(\mathsf{#1}:#2) \in #3}
+\newcommand{\TPText}[1]{\enskip\textsc{#1}}
+\newcommand{\FuncIntroText}{\TPText{Lambda}}
+\newcommand{\ApplyText}{\TPText{Apply}}
+\newcommand{\AssumptionText}{\TPText{Ident}}
+\newcommand{\GeneralizeText}{\TPText{Gen}}
+\newcommand{\SpecializeText}{\TPText{Spec}}
+\newcommand{\TrueText}{\TPText{True}}       %%% new
+\newcommand{\FalseText}{\TPText{False}}     %%% new
+\newcommand{\UnitText}{\TPText{Unit}}       %%% newer
+\newcommand{\OpText}{\TPText{Operator}}     %%% newer
+\newcommand{\AssignText}{\TPText{Assign}}      %%% newer
+\newcommand{\IntegerText}{\TPText{Integer}} %%% new
+\newcommand{\CondText}{\TPText{Cond}}       %%% new
+\newcommand{\LetText}{\TPText{Let}}         %%% new
+\newcommand{\SeqText}{\TPText{Seq}}         %%% newer
+\newcommand{\ProductText}{\TPText{Product}} %%% new
+\newcommand{\FuncIntro}{\rlap{\FuncIntroText}}
+\newcommand{\Apply}{\rlap{\ApplyText}}
+\newcommand{\Assumption}{\rlap{\AssumptionText}}
+\newcommand{\Generalize}{\rlap{\GeneralizeText}}
+\newcommand{\Specialize}{\rlap{\SpecializeText}}
+\newcommand{\Ruletype}[1]{\rlap{\TPText{#1}}}
+
+%\newenvironment{GammasEnvironment}{\begin{tabular}{lcl}}{\end{tabular}}
+%\newcommand{\GammasEntry}[2]{$\Gamma_{#1}$ & = & $#2$ \\ \\}
+
+\newcommand{\Unknown}{\ldots}
+
+\newenvironment{GammasEnvironment}{}{}
+\newcommand{\GammasEntry}[2]{\\ \vspace{0.3cm} $\Gamma_{#1} = #2$}
+
+\newenvironment{GammaEnvironment}{\left\{ \begin{array}{lcl}}{\end{array} \right.}
+\newcommand{\GammaEntry}[2]{\texttt{#1} & : & #2 \\}

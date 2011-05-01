@@ -1,0 +1,25 @@
+	Thu May 26 21:25 2005 Time and Allocation Profiling Report  (Final)
+
+	   main +RTS -p -RTS -w worlds/sample0.world -r ants/sample.ant -b ants/sample.ant
+
+	total time  =      133.68 secs   (6684 ticks @ 20 ms)
+	total alloc = 17,217,098,224 bytes  (excludes profiling overheads)
+
+COST CENTRE                    MODULE               %time %alloc
+
+step                           World                 22.7   11.1
+cellAt                         World                 20.2   27.4
+updateAntAt                    World                 11.2   16.3
+mainloop                       Main                   6.8    3.0
+getInstruction                 World                  5.8    2.0
+antIsAlive                     World                  5.3    7.6
+findAnt                        World                  4.4    7.6
+mkRng                          World                  3.8    2.9
+antAt                          World                  3.4    2.6
+getCode                        World                  3.2    3.0
+randomInt                      World                  2.7    4.0
+newWorldState                  World                  1.8    2.0
+adjacentAnts                   World                  1.4    1.0
+checkForSurroundedAnts         World                  1.3    0.8
+setState                       Ant                    0.8    4.6
+setResting                     Ant                    0.4    1.3

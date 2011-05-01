@@ -1,0 +1,100 @@
+<HTML>
+
+<HEAD>
+<TITLE>Bogdan DUMITRIU's Test Page</TITLE>
+</HEAD>
+
+<BODY>
+
+<HR NOSHADE>
+<CENTER>
+
+<FORM METHOD=get ACTION="/cgi-bin/print-environment-variables.cgi">
+
+<TABLE BORDER=5 WIDTH=60%>
+
+<CAPTION ALIGN=top><H3>Registration form</H3></CAPTION>
+
+<TH ALIGN=middle>First Name
+<TH ALIGN=middle COLSPAN=2>Last Name
+
+<TR>
+<TD ALIGN=middle><INPUT TYPE=text NAME="first" SIZE=10 MAXLENGTH=20>
+<TD ALIGN=middle COLSPAN=2><INPUT TYPE=text NAME="last" SIZE=20 MAXLENGTH=30>
+
+<TR>
+<TH ALIGN=middle COLSPAN=3>Street Address
+
+<TR>
+<TD ALIGN=middle COLSPAN=3><INPUT TYPE=text NAME="address" SIZE=60 MAXLENGTH=60>
+
+<TR>
+<TH ALIGN=middle>City
+<TH ALIGN=middle>Area
+<TH ALIGN=middle>Zip Code
+
+<TR>
+<TD ALIGN=middle><INPUT TYPE=text NAME="city" SIZE=20 MAXLENGH=30>
+<TD ALIGN=middle><INPUT TYPE=text NAME="area" SIZE=20 MAXLENGH=20>
+<TD ALIGN=middle><INPUT TYPE=text NAME="zip" SIZE=5 MAXLENGH=10>
+
+<TR>
+<TH ALIGN=middle COLSPAN=3>Phone Number
+
+<TR>
+<TD ALIGN=middle COLSPAN=3><INPUT TYPE=text NAME="tel" SIZE=15 MAXLENGTH=15>
+
+</TABLE>
+
+<BR><HR NOSHADE><BR>
+
+<TABLE>
+
+<CAPTION ALIGN=top>Type of computer</CAPTION>
+
+<TR>
+<TD ALIGN=right><INPUT TYPE=radio NAME=comp VALUE=p500 CHECKED>
+<TD ALIGN=left COLSPAN=2>Pentium 500 MHz
+
+<TR>
+<TD ALIGN=right><INPUT TYPE=radio NAME=comp VALUE=p550>
+<TD ALIGN=left COLSPAN=2>Pentium 550 MHz
+
+<TR>
+<TD ALIGN=right><INPUT TYPE=radio NAME=comp VALUE=p600>
+<TD ALIGN=left COLSPAN=2>Pentium 600 MHz
+
+</TABLE>
+
+<BR>
+
+<TABLE>
+
+<CAPTION ALIGN=top>Optional stuff</CAPTION>
+
+<TR>
+<TD ALIGN=right><INPUT TYPE=checkbox NAME=sound CHECKED>
+<TD ALIGN=left COLSPAN=2>Sound System
+
+<TR>
+<TD ALIGN=right><INPUT TYPE=checkbox NAME=modem CHECKED>
+<TD ALIGN=left COLSPAN=2>Modem Device
+
+</TABLE>
+
+<TABLE>
+
+<TR>
+<TD ALIGN=middle WIDTH=50%><INPUT TYPE=submit NAME="sb1" VALUE="give it to me">
+<TD ALIGN=middle WIDTH=50%><INPUT TYPE=reset VALUE="reset this stuff">
+
+</TABLE>
+
+</FORM>
+
+</CENTER>
+<HR NOSHADE>
+
+</BODY>
+
+</HTML>

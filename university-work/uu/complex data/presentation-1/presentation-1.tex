@@ -1,0 +1,510 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+
+  \setbeamercovered{transparent}
+}
+
+\usepackage[english]{babel}
+
+\usepackage[latin1]{inputenc}
+
+%\usepackage{times}
+%\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+\title{Sequence Alignment}
+
+\author{Bogdan Dumitriu}
+
+\institute
+{
+  Department of Computer Science\\
+  University of Utrecht
+}
+
+\date{\today}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+%\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents%[pausesections]
+\end{frame}
+
+\section{The Scoring Model}
+
+\subsection{Alignment Significance}
+
+\begin{frame}
+  \frametitle{Alignment Significance}
+  \framesubtitle{Problem formulation}
+
+  \begin{block}{Bram:}
+    What kind of statistical methods can be used to evaluate the
+    significance of an alignment score?
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Alignment Significance}
+  \framesubtitle{Explanation}
+
+  Obviously, a non-significant alignment:
+  \\
+  \vspace{0.5cm}
+  {\tt THESEALGRITHMARETR--YINGTFINDTHEBESTWAYTMATCHPTWSEQENCES}
+  {\tt TH\ S++\ +\ ++\ \ +++T\ \ \ Y\ \ \ \ FIND++\ \ \ \ \ \ \ YT\ \ +\ \ P\ +++\ \ \ \ \ \ }
+  {\tt THISDESNTMEANTHATTHEYWILLFINDAN-------YTHIN-GPRFND------}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Alignment Significance}
+  \framesubtitle{A solution}
+  
+  A common and simple test - a permutation test:
+  \begin{enumerate}
+    \item Randomly rearrange the order of one or both sequences.
+    \item Align the permuted sequences.
+    \item Record the score for this alignment.
+    \item Repeat steps 1-3 a large number of times.
+  \end{enumerate}
+
+  \vspace{0.5cm}
+  Then, compare the score with the obtained distribution.
+\end{frame}
+
+\subsection{Mutation Independence}
+
+\begin{frame}
+  \frametitle{Mutation Independence}
+  \framesubtitle{Problem formulation}
+
+  \begin{block}{Marjolijn:}
+    Since RNA is a copy of a part of the DNA, why does the independence
+    assumption regarding mutations hold for DNA, but not for RNA?
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mutation Independence}
+  \framesubtitle{Possible explanation}
+
+  Messenger RNA (mRNA) undergoes a few processing steps:
+  \begin{itemize}
+    \item a modified guanine is added at the ``front'' of the message
+    \item splicing: certain parts of non-coding sequences (introns) are removed
+    \item a sequence of adenine nucleotides are added at the ``end'' of the message
+  \end{itemize}
+
+  Also, some errors can occur when copying DNA to RNA.
+\end{frame}
+
+\subsection{Relative Entropy}
+
+\begin{frame}
+  \frametitle{Relative Entropy}
+  \framesubtitle{Problem formulation}
+
+  \begin{block}{Jacob:}
+    Why is \alert{$\displaystyle \sum_{a,b}q_a q_b \log \frac{q_a q_b}{p_{ab}}$}
+    equal to the relative entropy \alert{$H(q^2 || p)$} and furthermore,
+    what \emph{is} this entropy and what has it to do with this local
+    alignment algorithm?
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Relative Entropy}
+  \framesubtitle{What is information?}
+
+  \begin{definition}
+    \alert{Information} is a decrease in uncertainty.
+  \end{definition}
+  \begin{block}{Alternative definition}
+    \alert{Information} can be seen as a degree of surprise.
+  \end{block}
+
+  \pause
+
+  \begin{block}{Quantitative approach}
+    \alert{Information}: $H(p)=\log_{2} \frac{1}{p}$ or $H(p)=-\log_{2}{p}$
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Relative Entropy}
+  \framesubtitle{What is entropy?}
+
+  Flat frequency distribution of symbols:
+  \begin{itemize}
+    \item each symbol has probability $\frac{1}{n}$
+    \item each symbol has holds $\log_{2}{n}$ bits of information
+  \end{itemize}
+
+  Non-flat frequency distribution of symbols:
+  \begin{itemize}
+    \item each symbol has probability $p_i$
+    \item \alert{on average}, each symbol holds $-\displaystyle \sum_i^n p_i \log_2 p_i$ bits of information
+  \end{itemize}
+
+  \pause
+
+  \begin{definition}
+    \alert{Entropy} represents the average information per symbol.
+  \end{definition}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Relative Entropy}
+  \framesubtitle{What is relative entropy?}
+
+  Applying the entropy definition to scoring matrix:
+  
+  \begin{displaymath}
+    \begin{split}
+      H & = \sum_{i=1}^{20} \sum_{j=1}^i q_i q_j \log \frac{q_i q_j}{p_{ij}}\\
+        & = -\sum_{i=1}^{20} \sum_{j=1}^i q_i q_j \log \frac{p_{ij}}{q_i q_j}\\
+        & = -\sum_{i=1}^{20} \sum_{j=1}^i q_i q_j s(i,j)\\
+	& = -\sum_{a,b} q_a q_b s(a,b)
+    \end{split}
+  \end{displaymath}
+
+\end{frame}
+
+\section{Global Alignment}
+
+\subsection{Needleman-Wunsch Algorithm}
+
+\begin{frame}
+  \frametitle{Needleman-Wunsch Algorithm}
+  \framesubtitle{Problem formulation}
+
+  \begin{block}{Ingmar:}
+    How do you determine which steps backwards to take in the
+    matrix composed using dynamic programming by the Needleman-Wunsch
+    algorithm in order to create the best alignment and why?
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Needleman-Wunsch Algorithm}
+  \framesubtitle{In a nutshell}
+
+  \begin{itemize}
+    \item $F(i,j)$ - score of the best alignment between $x_1$$x_2$\ldots$x_i$
+          and $y_1$$y_2$\ldots$y_j$
+    \item $F(i,j)$ - built recursively based on $F(i-1,j-1)$, $F(i-1,j)$
+          and $F(i,j-1)$
+    \item \begin{displaymath}
+            F(i,j)=\max \begin{cases}
+                          F(i-1,j-1)+s(x_i,y_i),\\
+			  F(i-1,j)-d,\\
+			  F(i,j-1)-d.
+	                \end{cases}
+          \end{displaymath}
+    \item for each $F(i,j)$ \alert{we record the choice we make}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Needleman-Wunsch Algorithm}
+  \framesubtitle{How traceback works}
+
+  \begin{itemize}
+    \item we start at $F(n,m)$
+    \item $F(i,j)$ \alert{traces back} to one of $(i-1,j-1)$, $(i-1,j)$ or $(i,j-1)$
+    \item depending on the choice, we add $x_i$ / $y_i$ / `\_'
+    \item we stop at $F(0,0)$
+  \end{itemize}
+\end{frame}
+
+\section{Alignment Variations}
+
+\subsection{Multiple Sequence Alignments}
+
+\begin{frame}
+  \frametitle{Multiple Sequence Alignments}
+  \framesubtitle{Problem formulation}
+
+  \begin{block}{Adriano:}
+    What are the implications of extending the \alert{a pairwise} alignment
+    of sequences to \alert{multiple} sequence alignment?
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multiple Sequence Alignments}
+  \framesubtitle{Use Needleman-Wunch}
+
+  \begin{block}{Two sequences}<1->
+    Needleman-Wunch complexity for pairs: \alert{$O(n^2)$}.
+  \end{block}
+  \begin{block}{Multiple sequences}<1->
+    Needleman-Wunch complexity for multiple: \alert{$O(n^m)$}, where $m$ is the
+    number of sequences.
+  \end{block}
+  \begin{example}<2->
+    With the same 10,000,000,000 operations:
+    \begin{itemize}
+      \item align 2 sequences of 100,000 nucleotides each.
+      \item align 5 sequences of 100 nucleotides each.
+    \end{itemize}
+  \end{example}
+  \begin{block}{Problem}<3->
+    Needleman-Wunch doesn't scale well.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multiple Sequence Alignments}
+  \framesubtitle{Use pairwise algorithm repeatedly}
+
+  Another approach:
+  \begin{itemize}
+    \item align sequence 1 with sequence 2 $\Rightarrow$ trial consensus
+    \item align consensus with sequence 3 $\Rightarrow$ new consensus
+    \item carry on until global consensus is achieved
+  \end{itemize}
+
+  \pause
+
+  \begin{block}{Problem}
+    A different ordering of the sequences yields a different alignment.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multiple Sequence Alignments}
+  \framesubtitle{The CLUSTAL algorithm}
+
+  Steps of the CLUSTAL algorithm:
+  \begin{enumerate}
+    \item all pairs are aligned separately, result in distance matrix
+    \item a guide tree is calculated from the distance matrix
+    \item the sequences are progressively aligned based on guide tree
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multiple Sequence Alignments}
+  \framesubtitle{Example of running CLUSTAL (1)}
+
+  Say we have the set of proteins:
+  \begin{enumerate}
+    \item Hba\_Human: human $\alpha$-globin
+    \item Hba\_Horse: horse $\alpha$-globin
+    \item Hbb\_Human: human $\beta$-globin
+    \item Hbb\_Horse: horse $\beta$-globin
+    \item Myg\_Phyca: sperm whale myoglobin
+    \item Glb5\_Petma: lamprey cyanohaemoglobin
+    \item Lgb2\_Luplu: lupin leghaemoglobin
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multiple Sequence Alignments}
+  \framesubtitle{Example of running CLUSTAL (2)}
+
+  \alert{Step 1. The distance matrix / pairwise alignments}
+
+  \begin{center}
+    \begin{tabular}{lr|cccccc|}
+      \cline{3-8}
+      Hbb\_Human & 1 & -- &&&&& \\
+      Hbb\_Horse & 2 & .17 & -- &&&& \\
+      Hba\_Human & 3 & .59 & .60 & -- &&& \\
+      Hba\_Horse & 4 & .59 & .59 & .13 & -- && \\
+      Myg\_Phyca & 5 & .77 & .77 & .75 & .75 & -- & \\
+      Glb5\_Petma & 6 & .81 & .82 & .73 & .74 & .80 & -- \\
+      Lgb2\_Luplu & 7 & .87 & .86 & .86 & .88 & .93 & .90 \\
+      \cline{3-8}
+      &\multicolumn{1}{c}{} & 1 & 2 & 3 & 4 & 5 & \multicolumn{1}{c}{6} \\
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multiple Sequence Alignments}
+  \framesubtitle{Example of running CLUSTAL (3)}
+
+  \alert{Step 2. The guide tree}
+
+  \begin{center}
+    \setlength{\unitlength}{6cm}
+    \begin{picture}(2,0.57)
+      \put(0,0.2){\line(1,0){0.1}}
+      \put(0.1,0.1){\line(0,1){0.2}}
+      \put(0.1,0.1){\line(1,0){0.6}}
+      \put(0.45,0.11){\small .442}
+      \put(0.1,0.3){\line(1,0){0.1}}
+      \put(0.09,0.31){\small .062}
+      \put(0.2,0.2){\line(0,1){0.2}}
+      \put(0.2,0.2){\line(1,0){0.5}}
+      \put(0.45,0.21){\small .389}
+      \put(0.2,0.4){\line(1,0){0.1}}
+      \put(0.19,0.41){\small .015}
+      \put(0.3,0.3){\line(0,1){0.2}}
+      \put(0.3,0.3){\line(1,0){0.4}}
+      \put(0.45,0.31){\small .398}
+      \put(0.3,0.5){\line(1,0){0.1}}
+      \put(0.29,0.51){\small .061}
+      \put(0.4,0.42){\line(0,1){0.16}}
+      \put(0.4,0.42){\line(1,0){0.2}}
+      \put(0.45,0.43){\small .219}
+      \put(0.4,0.58){\line(1,0){0.2}}
+      \put(0.45,0.59){\small .226}
+      \put(0.6,0.38){\line(0,1){0.08}}
+      \put(0.6,0.38){\line(1,0){0.1}}
+      \put(0.6,0.39){\small .065}
+      \put(0.6,0.46){\line(1,0){0.1}}
+      \put(0.6,0.47){\small .055}
+      \put(0.6,0.54){\line(0,1){0.08}}
+      \put(0.6,0.54){\line(1,0){0.1}}
+      \put(0.6,0.55){\small .084}
+      \put(0.6,0.62){\line(1,0){0.1}}
+      \put(0.6,0.63){\small .081}
+
+      \put(0.8,0.08){Lgb2\_Luplu:}
+      \put(1.2,0.08){0.442}
+      \put(0.8,0.18){Glb5\_Petma:}
+      \put(1.2,0.18){0.398}
+      \put(0.8,0.28){Myg\_Phyca:}
+      \put(1.2,0.28){0.411}
+      \put(0.8,0.36){Hba\_Horse:}
+      \put(1.2,0.36){0.203}
+      \put(0.8,0.44){Hba\_Human:}
+      \put(1.2,0.44){0.194}
+      \put(0.8,0.52){Hbb\_Horse:}
+      \put(1.2,0.52){0.225}
+      \put(0.8,0.60){Hbb\_Human:}
+      \put(1.2,0.60){0.221}
+    \end{picture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multiple Sequence Alignments}
+  \framesubtitle{Example of running CLUSTAL (4)}
+
+  \alert{Step 3. Progressive alignment}
+
+  \begin{itemize}
+    \item order successive alignments based on guide tree
+    \item each step: align a pair of sequences or alignments
+    \item if aligning alignments, use weighed average
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multiple Sequence Alignments}
+  \framesubtitle{Improved version}
+
+  CLUSTAL-W: CLUSTAL with some improvements
+
+  \begin{itemize}
+    \item gap penalties varies with position/residue
+    \item scoring matrices varied with sequence pairs
+    \item the weight assigned to sequences
+  \end{itemize}
+
+  \pause
+
+  \begin{block}{More details:}
+    {\tiny http://www.pubmedcentral.nih.gov/picrender.fcgi?artid=308517\&blobtype=pdf}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Two more questions}
+
+  \begin{block}{Marjolijn}
+    Is it possible that you get the same alignment when using the
+    Needleman-Wunsch algorithm (global) and the Smith-Waterman algorithm
+    (local) to align two different sequences? If it is not, what are the
+    differences in alignment and score?
+  \end{block}
+  \begin{block}{Lee}
+    Exercise 2.9 gives you a little assignment to calculate the dynamic
+    programming matrix and an optimal alignment for two given DNA
+    sequences. It gives a linear gap penalty of d = 2 however. Shouldn't
+    penalties be negative? So I assume this is just a type mistake from the
+    authors?
+  \end{block}
+\end{frame}
+
+\subsection{Overlap Matches}
+
+\begin{frame}
+  \frametitle{Overlap Matches}
+  \framesubtitle{... in images (1)}
+
+  \begin{center}
+    \setlength{\unitlength}{3cm}
+    \begin{picture}(2,1.4)
+      \put(0.1,0.5){\line(1,0){1.8}}
+      \put(1.9,0.5){\line(0,1){1}}
+      \put(0.1,1.5){\line(1,0){1.8}}
+      \put(0.1,0.5){\line(0,1){1}}
+      \put(0.8,1.55){$x$}
+      \put(0,1){$y$}
+
+      \put(0.1,0.3){\line(1,0){1.8}}
+      \put(0.7,0.2){\line(1,0){1.4}}
+      \put(0.8,0.35){$x$}
+      \put(1.4,0.10){$y$}
+
+      \put(1.9,0.7){\line(-3,2){1.2}}
+    \end{picture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Overlap Matches}
+  \framesubtitle{... in images (2)}
+
+  \begin{center}
+    \setlength{\unitlength}{3cm}
+    \begin{picture}(2,1.4)
+      \put(0.1,0.5){\line(1,0){1.8}}
+      \put(1.9,0.5){\line(0,1){1}}
+      \put(0.1,1.5){\line(1,0){1.8}}
+      \put(0.1,0.5){\line(0,1){1}}
+      \put(0.8,1.55){$x$}
+      \put(0,1){$y$}
+
+      \put(0.1,0.3){\line(1,0){1.8}}
+      \put(0.2,0.2){\line(1,0){1.5}}
+      \put(0.8,0.35){$x$}
+      \put(1.1,0.10){$y$}
+
+      \put(1.7,0.5){\line(-3,2){1.5}}
+    \end{picture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Overlap Matches}
+  \framesubtitle{Idea}
+
+  \begin{itemize}
+    \item $F(0,0)$ turns into top or left border
+    \item $F(n,m)$ turns into bottom or right border
+    \item $F(i,0)$ becomes 0, $\forall i$
+    \item $F(0,j)$ becomes 0, $\forall j$
+    \item traceback starts at \emph{max} of bottom/right border
+  \end{itemize}
+\end{frame}
+
+\end{document}

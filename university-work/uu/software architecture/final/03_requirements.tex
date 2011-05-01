@@ -1,0 +1,127 @@
+\chapter{Requirements}
+
+As a result of our discussions with the stakeholders we have decided
+upon the requirements described in this chapter as the defining ones
+for our architecture.
+
+\section{Functional requirements}
+The functional requirements display the needs and expectations of
+the stakeholders in terms of software and hardware demands. We
+would like to point out that most of the functional requirements of
+the system are already met by the existing software and therefore
+we only list here those requirements which are new. It should be
+self-evident that the new system will include all the functionality
+of the old system (possibly providing a changed implementation for
+it). Here are then the extra requirements:
+\begin{itemize}
+\item Web access to customers: One of the major functional
+requirements is the requirement of web access for customers. The
+situation now only allows customers to call the Call-Center and get
+their information there. The new system needs to supply a web
+access for customers also. At this website there will be information
+about the company but also the possibility to make a request for a
+proposal calculation.
+\item Discount for customers requesting
+proposals via the web site: The company wants to have a kind of
+discount for the customers that make a request for a proposal
+calculation via the web site, to stimulate this kind of proposal
+requests instead of proposal requests through the Call-Center.
+\item Stability for web request for proposal: If a customer visits
+the web site and makes a request for a proposal calculation through
+the web site, it should be possible to freeze the prices and
+discounts of that moment until the time that the customer actually
+signs a contract. It is not appreciated when the customer makes a
+request for a proposal calculation at one time, and thinks about
+it for a couple of days, then returns to the web site and finds
+out that in the mean time the same request will give a much higher
+outcome. Therefore a period of price and discount freezing is
+suggested (e.g. a week).
+\item Use the GOC component: The GOC
+component is not yet in use, because some miscalculations by one
+of the preferred suppliers of the IT development organization. The
+GOC is predicted to be available in March 2005. By then, all the
+paper communication must start using the GOC component.
+\item Access control to system functionality: There need to be different
+access levels for the different groups of people accessing the
+database and the other components of the system. The system needs
+to distinguish especially the web site users from the companies
+users, because the information in the database is confidential.
+\end{itemize}
+
+\section{Quality attributes}
+The quality attributes of the system are a reflection of the
+stakeholders concerns. Because there are so many concerns involved
+in the system and some of them are contradictions, a selection
+needed to be made. For each group only the major concerns (denoted
+with +) where selected and of this pool of concerns we have chosen
+the six most important quality requirements:
+\begin{enumerate}
+\item Interoperability: we view this as the most important quality
+attribute, because the system needs above all to be able to
+interact with the components the company already has and build
+upon these.
+\item Fault tolerance (24/7 availability): One of the vital concerns
+of the acquirer is that the system must be available for the company's
+customers 24 hours a day, 7 days a week. They see this as strategic
+for their expected growth. The system to be developed, then, needs
+to be robust enough in order to ensure that, even in the case of
+isolated hardware failure, the functionality will still be there for
+the customers. Only in the case of extended failure (e.g. a fire in
+the building, with most servers burning down) is it acceptable to
+have an nonoperational system.
+\item Scalability: we expect the company to grow fast, as a result
+of the merging and of the company's future Internet availability,
+so the new system needs to be scalable to be able to deal with a
+bigger amount of customers in the future. We expect a steady increase
+in the number of customers and failure to cope with this number
+of customers would be highly counter-productive for the company.
+Therefore we have set this as an important quality aspect of our
+architecture.
+\item Security: because of the confidential kind of information the
+company deals with every day, in combination with an access to
+this information database via the web site, the system needs to be
+designed with security in mind. We see this as an important attribute
+which needs to be taken into account because its lack might have
+very negative effects on the acquirer and its customers.
+\item Changeability: this attribute (together with its related one,
+modularity) is of interest to a great part of our stakeholders, therefore
+we have decided to also take it into account as prioritary. Another
+reason for selecting it is the desire to take an incremental approach
+in the transformation of the system, which would obviously require
+\textbf{changes at each step}. It is only natural, then, to see this as a quality
+attribute to have in mind in order to ensure a smooth process.
+\item Response time: The last significant attribute on our list is response
+time due to a firm demand on the part of the acquirer of having a
+system capable of computing proposals in real time. During discussions
+it has become clear that this is a very requested attribute especially in
+what web interaction is concerned so we were convinced to include it.
+\end{enumerate}
+
+Of course quality attributes can be associated with the other concerns
+as well, but we believe that if we are able to make a system that satisfies
+these six quality requirements, then every stakeholder will be satisfied and
+will be able to use the system in a right and fulfilling way.
+
+\section{Constraints}
+The constraints that guide our design process are as follows:
+\begin{itemize}
+\item Cost: It appears from the discussions that both acquirers and management
+wish to keep costs quite low for this project, so we will define it as a constraint
+for us and, as a consequence, strive to come up with solutions which are
+as less costly as possible and, most importantly, make sure that the development
+of the system does not exceed these costs. This embraces the cost in terms of
+money, time and people needed to accomplish the system.
+\item Correctness and usability during transition: The whole transition of the
+old system to the new system takes place in several phases. During each of
+this phases the components that are already finished should be usable and
+should be working correctly. We list this as a constraint for us because each
+phase in particular has to be able to be materialized into a runnable entity.
+In fact, this constraint is largely related to the fact that SureThing wishes to have
+an incremental upgrading of their system.
+\item Oracle \& J2EE: In terms of technologies that have to be used, we are constrained
+to using the Oracle database platform as it is already purchased by the company
+and it is neither likely nor necessary that it will be changed. On the other hand,
+we will impose the use of the J2EE platform as  a constraint ourselves, largely
+due to the fact that it is already currently in use by the UCIS system, but also due
+to reasons which we explain later in this document.
+\end{itemize}

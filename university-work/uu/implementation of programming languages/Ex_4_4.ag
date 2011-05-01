@@ -1,0 +1,46 @@
+{
+
+makeAbstrSynTree l = sem_Root_Root (foldr sem_Words_Cons sem_Words_Nil l)
+
+test1list = ["aap", "noot", "mies", "foo", "bar", "p", "q"]
+
+test1tree = makeAbstrSynTree test1list
+
+main = putStr (test1tree 25)
+
+spaces n = replicate n ' '
+
+fillDiff n l = concat (map (\_ -> "|" ++ spaces l) [1 .. n]) ++ "|\n"
+
+}
+
+DATA Root
+	| Root words: Words
+
+DATA Words
+	| Nil
+	| Cons word: String words: Words
+
+ATTR Root [ totalwidth: Int | | txt: String ]
+SEM Root
+  | Root	lhs.txt		= @words.txt
+		words.colw	= @words.maxw
+		words.cols	= let val = (@lhs.totalwidth - 1) `div` (@words.maxw + 1) in if val == 0 then 1 else val
+		words.col	= 1
+
+ATTR Words [ colw: Int | | maxw: Int ]
+ATTR Words [ cols: Int | | ]
+ATTR Words [ col: Int | | txt: String ]
+
+SEM Words
+  | Nil		lhs.txt = let diff = @lhs.cols - @lhs.col + 1 in if diff == 0 then "" else fillDiff diff @lhs.colw
+  | Cons	lhs.txt = "|" ++ @word ++ spaces (@lhs.colw - length @word)
+			      ++ (if @lhs.col == @lhs.cols then "|\n" else "")
+			      ++ @words.txt
+
+SEM Words
+  | Nil		lhs.maxw = 0
+  | Cons	lhs.maxw = max @words.maxw (length @word)
+
+SEM Words
+  | Cons	words.col = if @lhs.col == @lhs.cols then 1 else @lhs.col + 1

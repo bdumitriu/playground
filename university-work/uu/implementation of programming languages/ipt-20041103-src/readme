@@ -1,0 +1,26 @@
+CONTENTS
+--------
+This directory contains
+	SL<x>:
+	 	compiler versions, <x> in {1..3}, respectively the
+		barebones (SLbb), the codegenerating (SLcg) and type inferencing (SLti) version
+	bin:
+		scripts to start hugs/ghci with the right parameters, tailored
+		for the IPT course w.r.t. pathnames
+	0<x>0:
+		example code used in the lecture notes and slides
+
+USAGE
+-----
+For example, to compile, run SLcg and run a resulting .ssm file:
+
+> cd SL2
+> ../bin/startHugs SLMain.hs
+Main> main
+Enter filename: test/01.sl
+Main> :q
+> ssm test/01.ssm
+
+The above is a non-tested sequence, as such it may be different on your system.
+In particular path's are UNIX path's, for WinXX replace '/' with '\'.
+Also, 'ssm' may not be on your path (on the UU lab machines it is in P:\ipt\SSM).

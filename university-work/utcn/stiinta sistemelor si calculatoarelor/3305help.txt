@@ -1,0 +1,16 @@
+ - Functia DOS 3305h -
+
+Functie:
+    Aflarea drive-ului de pe care a fost incarcat sistemul.
+
+Asteapta:
+    ax: 3305h
+
+Intoarce:
+    dl: drive-ul de pe care a fost incarcat sistemul (1 = A, 2 = B, etc.)
+
+Descriere:
+    Intoarce in dl numarul drive-ului  de pe care a fost incarcat sistemul.
+    
+    Acest lucru poate fi util de exemplu  pentru a putea localiza fisierele
+    CONFIG.SYS sau AUTOEXEC.BAT sau DBLSPACE.BIN, etc.

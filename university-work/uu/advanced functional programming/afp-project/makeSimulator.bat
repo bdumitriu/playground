@@ -1,0 +1,1 @@
+ghc -icommon -O2 --make -o simulator.exe -package wx Simulator

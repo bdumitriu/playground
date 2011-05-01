@@ -1,0 +1,35 @@
+README for the RA layer code
+----------------------------
+
+*** Overview ***
+
+The RA layer code is intended to access a repository directly, instead of using a working copy. This is done using native bindings from the Java code to C code, to allow us to speak to the Subversion C API (which is way more powerful than its Java counterpart, JavaHL).
+Currently, most of the C code is implemented and ready to be called from the Java side, but the Java code (specifically SVNRAStorage) is far from complete. This is generally what is currently implemented, and how far the implementation is:
+
+* Retrieving directory listings           Native and Java               completed
+* Checking for file existence             Native and Java               completed
+* Checking if a path is a directory       Native and Java               completed
+* Retrieving files                        Native and Java               completed
+* Retrieving commit logs from files       Native and Java               completed
+* Retrieving blame info                   Native and Java               completed
+* Retrieving properties                   Native and Java               completed
+* Commit: setting properties dir          Native and Java               completed
+* Commit: setting properties file         Native and Java               completed
+* Commit: creating directories            Native and Java               completed
+* Commit: removing files / directories    Native and Java               completed
+* Commit: sending files (new and modify)  Native and Java               completed, but does not work in wiki
+* Starting a commit (transaction)         Native and Java               completed
+* Aborting a commit                       Native and partially Java
+* Commit: traversing directories          Native                        completed?
+* Commit: copying files                   Partially
+* Commit: moving files                    Partially 
+
+
+The Java side code can currently not do much besides retrieving files. Even at that it is horribly slow, because before the resulting page is fed to the web browser, certain user management related files will have been retrieved from the Subversion server more than 55 times (!). Needless to say, caching would be required for this code to reach acceptable speeds.
+
+*** BUILDING ***
+
+Included is a simple Makefile. To build the native code (libsvnra.so), simply type `make'. To activate the Java portion of the RA layer code, the following must be done:
+* To allow the servlets to find libsvnra.so, change the `libraryPath' line in gw/server-pkgs/gw-instance.nix to read:
+   libraryPath = ["path/to/gw/src/java/gw/storage/bindings"]
+* Modify the occurrence of "SVNStorage" in gw/src/java/HandleFile.java to read "SVNRAStorage".

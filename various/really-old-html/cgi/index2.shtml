@@ -1,0 +1,43 @@
+<HTML>
+
+<HEAD>
+<TITLE>Bogdan DUMITRIU's Test Page</TITLE>
+</HEAD>
+
+<BODY>
+
+This page is experimenting <STRONG>SSI</STRONG> (<STRONG>S</STRONG>erver 
+<STRONG>S</STRONG>ide <STRONG>I</STRONG>ncludes).<BR><BR>
+
+The following lines print everything the echo command can...<BR><BR>
+<BLOCKQUOTE>
+Local server date       : <!--#echo var="DATE_LOCAL" --><BR>
+GMT date                : <!--#echo var="DATE_GMT" --><BR>
+Document name           : <!--#echo var="DOCUMENT_NAME" --><BR>
+Document URI            : <!--#echo var="DOCUMENT_URI" --><BR>
+Last modification date  : <!--#echo var="LAST_MODIFIED" --><BR><BR>
+</BLOCKQUOTE>
+
+<!-- The following SSI modifies the format of the date in other SSI commands -->
+<!--#config timefmt="%A, %B %d, %Y" -->
+This file was last modified on <!--#flastmod file="index.shtml" -->.<BR><BR>
+
+Now, people, what you see is commands executing on the Linux server hosting
+all these woderful pages.<BR><BR>
+
+<BLOCKQUOTE>
+First, let's see who's running the show around:
+Gee, it's user <!--#exec cmd="id -nu"--> in the group <!--#exec cmd="id -ng"-->.
+Ain't that cute? BUT IT'S WRONG!!!<BR>
+Now, let's see if we can kill some... 
+<!--#exec cmd="kill -9 `cat /var/run/httpd.pid`"--><BR>
+Well, we couldn't... But at least we tried (unlike others...)<BR>
+</BLOCKQUOTE>
+
+This document includes another file from here on...<BR>
+<!--#include virtual="/guestbook/entries.txt" --><BR>
+
+<STRONG>That's all, folks!</STRONG>
+
+</BODY>
+</HTML>

@@ -1,0 +1,16 @@
+ - Functia DOS 2ch -
+
+Functie:
+    Aflarea orei curente.
+
+Asteapta:
+    ah: 2ch
+
+Intoarce:
+    ch: ora (intre 0 si 23).
+    cl: minutele (intre 0 si 59).
+    dh: secundele (intre 0 si 59).
+    dl: sutimile de secunda (intre 0 si 99).
+
+Descriere:
+    Intoarce ora curenta a sistemului.

@@ -1,0 +1,334 @@
+{-# LINE 21 "SLEvaluate.lag" #-}
+{
+data Value           =  UnitVal
+                          |  BoolVal Bool
+                          |  IntVal Int
+                          |  TupleVal [Value]	-- added a constructor for a tuple value
+                          |  Function (Value -> Value)
+
+type Env             =  [(String,Value)]
+type EnvTransformer  =  Env -> Env
+type Computation     =  Env -> (Value,Env)
+
+instance Show Value where
+  show  UnitVal        =  "()"
+  show  (BoolVal b)    =  show b
+  show  (IntVal i)     =  show i
+  show  (TupleVal l)   =  "(" ++ concat (sepWith (map show l) ",") ++ ")"
+  show  (Function _)   =  "<! Function value !>"
+
+--
+-- I have defined the Value data type as an instance of Eq in order to be able
+-- to do some comparisons of 2 BoolVal's in the evalRelTupleOp function.
+--
+instance Eq Value where
+  (BoolVal x) == (BoolVal y)	= x == y
+  (IntVal x) == (IntVal y)	= x == y
+  (TupleVal x) == (TupleVal y)	= x == y
+  (Function x) == (Function y)	= False
+}
+
+--
+-- I have decided to implement fst, snd and sel (which selects the ith element
+-- of a tuple, 0-based) as built-in functions as that is the way I see them,
+-- i.e. I do not think they should be part of the language, as reserved keywords
+-- but rather just functions. More than that, by supplying them in the initial
+-- environment, I allow the user to actually reuse the names (fst, snd, sel) if
+-- (s)he sees fit for his/her own functions/variables. Another option would have
+-- been to modify the evalApply function and look for these built-in names, but
+-- that wouldn't have allowed the user to reuse these names. Therefore, I have
+-- made the decision to supply them in the initial environment.
+--
+-- My fst and snd function work for tuples of any size and I have also provided
+-- a function (sel) for accessing any element of a tuple. This function takes an
+-- IntVal as its first argument and a TupleVal as its second and returns the
+-- ith (0-based) member of the tuple (where i is the argument of the IntVal).
+--
+-- I have also provided an implementation for the relational operators in terms
+-- of (possibly nested) tuples of Int's. See functions evalRelOp and
+-- evalRelTupleOp for more details about this.
+--
+-- I have implemented pattern matching for lambda function arguments so that
+-- specific templates can be enforced for the tuples which are arguments to
+-- functions. Also, pattern matching allows accessing members of a tuple by
+-- giving them formal names. Nested pattern matching is, naturally, allowed
+-- (i.e. you can also match something like (x,(y,z)), for example).
+--
+-- I have implemented the !! (selection) operator. The operator expects a tuple
+-- on its lefthand side and a integer on its righthand side. See evalOp and
+-- evalSelOp for details.
+--
+-- Finally, I have implemented assignment to a (possibly nested) tuple. The
+-- only thing modified (in this file) for this to be possible is the value of
+-- the comp attribute for an assignment expression. Pattern matching developed
+-- for the lambda functions is also used here in order to match expressions to
+-- variables.
+--
+
+ATTR Root [  |  | val : Value]
+SEM Root
+  | Root lhs.val          = computeVal @expr.comp [("fst", Function myFst), ("snd", Function mySnd), ("sel", Function mySel)]
+
+ATTR Expr [  |  | comp : Computation]
+SEM Expr
+  | Unit        lhs.comp  = \env ->  (UnitVal, env)
+  | Intexpr     lhs.comp  = \env ->  (IntVal @int, env)
+  | Boolexpr    lhs.comp  = \env ->  (BoolVal @bool, env)
+
+  -- The comp attribute of a tuple expression is simply the tuple itself in
+  -- which all the expressions forming the tuple are replaced with their
+  -- computations.
+
+  | Tupleexpr   lhs.comp  = \env ->  (TupleVal (map (\x -> computeVal x env) @elist.comp), env)
+  | Ident       lhs.comp  = \env ->  (lookupValue  @var env, env)
+  | Op          lhs.comp  = \env ->  let  lVal = computeVal @le.comp env
+                                          rVal = computeVal @re.comp env
+                                     in (evalOp  @op (lVal,rVal), env)
+  | If          lhs.comp  = \env ->  let  condVal  = computeVal @cond.comp env 
+                                          thenVal  = computeVal @thenExpr.comp env
+                                          elseVal  = computeVal @elseExpr.comp env
+                                     in (evalIf condVal thenVal elseVal, env)
+  | Let         lhs.comp  = \env ->  @expr.comp (@decls.envTransformer env)
+
+  -- Modified this in order to allow assignment to tuples.  
+
+  | Assign      lhs.comp  = \env ->  let (val, _) = @expr.comp env
+                                     in (UnitVal, @var.bindings val ++ env)
+  | Apply       lhs.comp  = \env ->  let funcVal = computeVal @func.comp env
+                                         argVal  = computeVal @arg.comp env
+                                     in (evalApply funcVal argVal, env)
+  | Lam         patt.bodyComp =      @expr.comp
+                lhs.comp  =          @patt.comp
+  | Seq         lhs.comp  =          @exprs.comp
+
+ATTR Exprs [  |  | comp : Computation null : Bool]
+SEM Exprs 
+  | Nil   lhs.comp        = \env ->  (UnitVal,env)
+          lhs.null        = True
+  | Cons  lhs.comp        = \env ->  let (val,env') = @hd.comp env 
+                                     in  if  @tl.null 
+                                         then (val,env') 
+                                         else  @tl.comp env'
+          lhs.null        = False
+
+
+--
+-- The next three attribute definitions deal with pattern matching. The
+-- semantics of Vars.comp has been changed so that instead of adding a single
+-- name-value binding to the environment, we now add a list of such bindings,
+-- which is the given by the "bindings" attribute of a Pattern.
+--
+-- The last two attribute definitions (for Pattern and Patterns) simply
+-- compute the bindings for a specific pattern by recursively doing pattern
+-- matching of the value received (v) with the pattern.
+--
+-- One final thing: strict evaluation is employed (by means of $!) in the
+-- definition of the "binding" attribute for Patterns_Cons because otherwise
+-- pattern matching would sometimes erroneously succeed (specifically, in cases
+-- when trying to match something like (x, y) with something like (1, 2, 3),
+-- for example, because the lazy evaluation mechanism would not trigger the
+-- execution of the pmError call, thus apparently succeeding, although normally
+-- it should fail).
+--
+ATTR Vars [ bodyComp : Computation |  | comp : Computation ]
+SEM Vars
+  | Nil   lhs.comp        =          @lhs.bodyComp
+  | Cons  lhs.comp        = \env ->  (Function (\v -> computeVal  @tl.comp (@hd.bindings v ++ env)), env)
+
+ATTR Pattern [ | | bindings : {Value -> Env} ]
+SEM Pattern
+  | Single lhs.bindings   = \v -> [(@str,v)]
+  | Tuple  lhs.bindings   = \v -> case v of
+	                            (TupleVal vs) -> @tup.bindings vs
+				    _             -> pmError
+
+ATTR Patterns [ | | bindings : {[Value] -> Env} ]
+SEM Patterns
+  | Nil      lhs.bindings    = \vals -> if null vals then [] else pmError
+  | Cons     lhs.bindings    = \vals -> if null vals then pmError else let (v:vs) = vals in (++) (@hd.bindings v) $! (@tl.bindings vs)
+
+ATTR Decls [  |  | envTransformer : EnvTransformer ]
+SEM Decls
+  | Nil   lhs.envTransformer  =  id
+  | Cons  lhs.envTransformer  =  \env ->  @tl.envTransformer (@hd.envTransformer env)
+         
+ATTR Decl [  |  | envTransformer : EnvTransformer]
+SEM Decl
+  | Decl  lhs.envTransformer  =  \env -> (@var, computeVal  @expr.comp env) : env
+
+--
+-- The comp attribute of a TupleExprs is just a list of the Computation's of
+-- the expressions in the TupleExprs.
+--
+ATTR TupleExprs [  |  | comp: {[Computation]} ]
+SEM TupleExprs
+  | Nil   lhs.comp        = []
+  | Cons  lhs.comp        = @hd.comp : @tl.comp
+
+{
+--
+-- Returns the first element of a TupleVal and generates an error if its first
+-- argument is not a tuple.
+--
+-- No (special) checks are made for tuples like TupleVal [] because the
+-- generation of such tuples is not allowed by the parser.
+--
+myFst :: Value -> Value
+myFst (TupleVal (x:_))	= x
+myFst _			= tupleError "fst"
+
+--
+-- Returns the second element of a TupleVal and generates an error if its first
+-- argument is not a tuple.
+--
+-- No (special) checks are made for tuples like TupleVal [] or TupleVal [x]
+-- because the generation of such tuples is not allowed by the parser.
+--
+mySnd :: Value -> Value
+mySnd (TupleVal (_:x:_))	= x
+mySnd _				= tupleError "snd"
+
+--
+-- Expects an IntVal as its first argument and returns a Function which takes
+-- a TupleVal and returns its ith (0-based) element. Generates appropriate error
+-- messages if the values are not type correct or if an access to a negative or
+-- to a too large index is attempted.
+--
+mySel :: Value -> Value
+mySel (IntVal n)	= Function (sel n)
+mySel _			= selNonIntError
+
+sel :: Int -> Value -> Value
+sel i (TupleVal xs)		= xs !! i
+sel _ _				= tupleError "sel"
+
+--
+-- Alternative definition of mySel, without using sel
+--
+{-
+mySel :: Value -> Value
+mySel (IntVal i)	= Function (\(TupleVal xs) -> xs !! i)
+mySel _		= selNonIntError
+-}
+
+computeVal :: (Env -> (Value,Env)) -> Env -> Value
+computeVal comp env = fst (comp env)
+
+lookupValue :: String -> Env -> Value
+lookupValue v env = maybe (lookUpError v) id (lookup v env)
+
+evalOp :: String -> (Value,Value) -> Value
+evalOp op vals  = 
+  case op of
+    "&&"  -> evalLogicalOp (&&) "&&" vals
+    "||"  -> evalLogicalOp (||) "||" vals
+    "=="  -> evalRelOp (==) "==" vals
+    "/="  -> evalRelOp (/=) "/=" vals
+    ">="  -> evalRelOp (>=) ">=" vals
+    "<="  -> evalRelOp (<=) "<=" vals
+    "<"   -> evalRelOp (<) "<" vals
+    ">"   -> evalRelOp (>) ">" vals
+    "+"   -> evalIntOp (+) "+" vals
+    "-"   -> evalIntOp (-) "-" vals
+    "*"   -> evalIntOp (*) "*" vals
+    "/"   -> evalIntOp div "/" vals
+    "!!"  -> evalSelOp vals		-- added a case for the !! operator
+    
+evalLogicalOp :: (Bool -> Bool -> Bool) -> String -> (Value,Value) -> Value
+evalLogicalOp op opString (lVal,rVal) =
+  case (lVal,rVal) of
+    (BoolVal b1, BoolVal b2)  -> BoolVal (b1 `op` b2)
+    _                         -> opError opString
+
+evalRelOp :: (Int -> Int -> Bool) -> String -> (Value,Value) -> Value
+evalRelOp op opString (lVal,rVal) = 
+  case (lVal,rVal) of
+    (IntVal n, IntVal m)      -> BoolVal (n `op` m)
+    (TupleVal x, TupleVal y)  -> evalRelTupleOp op opString (TupleVal x, TupleVal y)	-- added extra case for tuples
+    _                         -> opError opString
+
+--
+-- Evaluates a logical operator applied on two (possibly nested) tuples of
+-- Int's. The conventions are as follows:
+--  * only (possibly nested) tuples of Int's can be compared (this is due to
+--    the fact that the evalRelOp function only allows relational operators on
+--    Int's (or, as of now, tuples)
+--  * only tuples with the same number of members are allowed. An error message
+--    will be generated if trying to compare tuples with different numbers of
+--    members (I have not customized the error messages for this, I've just
+--    stuck to the default "The operator ... is applied to arguments of the
+--    wrong type.")
+--  * two tuples are equal if all their members are equal
+--  * otherwise they are different
+--  * one tuple is less than or equal to another (<=) if all their members
+--    up to i-1 (with i > 0) are equal and member i of the first tuple is
+--    less than or equal to member i of the second tuple
+--  * >=, < and > are defined in the same way as <=
+--
+evalRelTupleOp :: (Int -> Int -> Bool) -> String -> (Value, Value) -> Value
+evalRelTupleOp op opString (TupleVal [], TupleVal [])		= case opString of
+  "=="	-> BoolVal True
+  "/="	-> BoolVal False
+  ">="	-> BoolVal True
+  "<="	-> BoolVal True
+  "<"	-> BoolVal False
+  ">"	-> BoolVal False
+evalRelTupleOp op opString (TupleVal [], TupleVal _)		= opError opString
+evalRelTupleOp op opString (TupleVal _, TupleVal [])		= opError opString
+evalRelTupleOp op opString (TupleVal (x:xs), TupleVal (y:ys))	=
+  let	s = evalRelOp op opString (x, y)
+	t = evalRelTupleOp op opString (TupleVal xs, TupleVal ys)
+  in
+	case (s, t) of
+	  ((BoolVal r), (BoolVal rec))	-> case opString of
+						"=="	-> BoolVal (r && rec)
+						"/="	-> BoolVal (r || rec)
+						">="	-> if evalRelOp (==) "==" (x, y) == (BoolVal True) then (BoolVal rec) else (BoolVal r)
+						"<="	-> if evalRelOp (==) "==" (x, y) == (BoolVal True) then (BoolVal rec) else (BoolVal r)
+						"<"	-> if evalRelOp (==) "==" (x, y) == (BoolVal True) then (BoolVal rec) else (BoolVal r)
+						">"	-> if evalRelOp (==) "==" (x, y) == (BoolVal True) then (BoolVal rec) else (BoolVal r)
+evalRelTupleOp op opString _					= opError opString
+
+evalIntOp :: (Int -> Int -> Int) -> String -> (Value,Value) -> Value
+evalIntOp op opString (lVal,rVal) = 
+  case (lVal,rVal) of
+    (IntVal n, IntVal m)  -> IntVal (n `op` m)
+    _                     -> opError opString
+
+--
+-- Evaluates the selection operator. Same comments as for the mySel function,
+-- except that this function takes its argumets in a slightly different
+-- fashion.
+--
+evalSelOp :: (Value, Value) -> Value
+evalSelOp (TupleVal le, IntVal re)	= le !! re
+evalSelOp (_, _)			= opError "!!"
+
+evalIf :: Value -> Value -> Value -> Value
+evalIf cond thenVal elseVal =
+  case cond of
+    (BoolVal True)   -> thenVal
+    (BoolVal False)  -> elseVal
+    _                -> ifCondError
+
+evalApply :: Value -> Value -> Value
+evalApply funcVal argVal =
+  case funcVal of
+    Function f  -> f argVal
+    _           -> applyError
+
+lookUpError v  =  error $ 
+                    "The variable " ++ v ++ " is unbound."
+opError x      =  error $ 
+                    "The operator " ++ x ++ " is applied to arguments of the wrong type."
+ifCondError    =  error $ 
+                    "A non-boolean value occurred in the condition of an if statement."
+applyError     =  error $ 
+                    "A non-function value occurs on the left hand side of an application."
+tupleError x   =  error $
+                    "The function " ++ x ++ " is applied to non-tuple argument."
+selNonIntError =  error $
+                    "The first argument of sel is not an IntVal."
+pmError        =  error $
+                    "Pattern matching failed."
+}

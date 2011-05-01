@@ -1,0 +1,79 @@
+<HTML>
+<HEAD>
+<TITLE>class FileNotFoundException</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>class FileNotFoundException</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1">Exception thrown whenever an access to an inexistent file is tried.
+ <small><A HREF="#longdesc">More...</A></small></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="so___include___exceptions___FileNotFoundException_h.html">so/include/exceptions/FileNotFoundException.h</A>&gt;</code></TD></TR>
+<TR><TH>Inherits</TH><TD><A HREF="FSException.html">FSException</A> <small>[public ]</small></TD></TR>
+<TR><TH><A HREF="full-list-FileNotFoundException.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Methods</h4><ul><LI>&nbsp;<b><A HREF="#ref1">FileNotFoundException</A></b> (const char* invalidFileName) 
+</LI>
+<LI>&nbsp;<b><A HREF="#ref2">FileNotFoundException</A></b> (const char* message, const char* invalidFileName) 
+</LI>
+<LI>&nbsp;<b><A HREF="#ref3">~FileNotFoundException</A></b> () 
+</LI>
+<LI>char* &nbsp;<b><A HREF="#ref4">getInvalidFileName</A></b> () 
+</LI>
+</ul><h4>Private Members</h4><ul><LI>char* <b><A HREF="#ref5">fileName</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><p>
+ This class represents an exception that is raised whenever somebody tries
+ to open a file which cannot be found on the disk.
+</p>
+<p></p>
+<A NAME="FileNotFoundException"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>FileNotFoundException</strong> (const char* invalidFileName)
+<br></td><td align="right"><h3><strong>FileNotFoundException</strong></h3></td></tr></table><p></p><p>
+ Creates a new FileNotFoundException with a default error message.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>invalidFileName</i></TD><TD align="left" valign="top">the name of the file which could not be found.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="FileNotFoundException"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>FileNotFoundException</strong> (const char* message, const char* invalidFileName)
+<br></td><td align="right"><h3><strong>FileNotFoundException</strong></h3></td></tr></table><p></p><p>
+ Creates a new FileNotFoundException with a custom error message.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>message</i></TD><TD align="left" valign="top">the custom error message.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>invalidFileName</i></TD><TD align="left" valign="top">the name of the file which could not be found.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="~FileNotFoundException"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>~FileNotFoundException</strong> ()
+<br></td><td align="right"><h3><strong>~FileNotFoundException</strong></h3></td></tr></table><p></p><p>
+ The destructor of the class.
+	 </p>
+<A NAME="getInvalidFileName"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>char* &nbsp;<strong>getInvalidFileName</strong> ()
+<br></td><td align="right"><h3><strong>getInvalidFileName</strong></h3></td></tr></table><p></p><p>
+ Returns the name of the file which could not be found.
+</p>
+<p></p>
+<p><b>Returns</b>: the name of the file which could not be found.
+	 </p>
+<A NAME="fileName"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>char*  <strong>fileName</strong>
+</td><td align="right"><h3><strong>fileName</strong></h3></td></tr></table><p> <small>[private]</small></p><HR><UL><LI><i>Version</i>: 0.1
+ </LI><LI><i>Author</i>: Bogdan DUMITRIU
+</LI><LI><i>Generated</i>: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</LI></UL></BODY></HTML>

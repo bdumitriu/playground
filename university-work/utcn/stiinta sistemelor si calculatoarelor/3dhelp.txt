@@ -1,0 +1,32 @@
+ - Functia DOS 3dh -
+
+Functie:
+    Deschiderea unui fisier spre citire/scriere.
+
+Asteapta:
+    ah: 3dh
+    al: modul de acces (0 = citire, 1 = scriere, 2 = ambele).
+    ds:dx: adresa unui  sir de caractere care se  termina cu nul (cod ascii
+        00h) si care reprezinta fisierul de deschis.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag e setat.
+        descriptorul de fisier daca nu apare nici o eroare.
+
+Descriere:
+    Deschide un fisier existent pentru citire si/sau scriere.
+    
+    ds:dx trebuie sa contina adresa unui sir de forma:
+        [d:][\cale\]nume_fisier.ext
+    care identifica locatia  si numele fisierului  ce trebuie deschis. Daca
+    se omit litera ce identifica  drive-ul urmata de : si/sau calea, se iau
+    valorile implicite.
+
+    Daca Carry Flag e  setat la iesirea din functie  atunci a avut loc o e-
+    roare si codul acestei se afla  in ax. In acest caz, fisierul nu a fost
+    deschis.
+
+Note:
+    1. Fisierul trebuie sa existe.
+    
+    2. Indicatorul de citire/scriere din/in fisier este pozitionat pe 0.

@@ -1,0 +1,107 @@
+{-# LINE 10 "SLJudgements.lag" #-}
+{
+type Gammas     = [(Gamma,Assumptions)]
+type Judgement  = (Gamma,PP_Doc,Type)
+type Gamma      = Int
+}
+
+--
+-- Description of used attributes:
+--
+-- * jgamma: just a (maintained) copy of the gamma attribute from SLTypeInference,
+--           introduced with the sole purpose of dropping the rather large initial
+--           environment which exists in the original gamma attribute. The environment
+--           couldn't just be dropped from the orignial gamma because then the
+--           inference would end up failing in many cases.
+--
+-- * gammas: the list of environments (associated with their id). This is generated
+--           by simply adding the current (in that position) value of the jgamma
+--           attribute to the already existing list. The id of the environment
+--           associated with the entry is the value of the nextGamma attribute
+--           (see below).
+--
+--           The only situation when environment(s) which don't already exist
+--           in the list are _not_ added to the gammas list is when a let
+--           expression has more than one declaration. Then you will notice (in
+--           the rules for the Decl definition) that although the value of
+--           jgamma changes twice, only one of the two values is added to the
+--           gammas list. The reason for this is that the environment generated
+--           at the end of a declaration is never used "as is" in the next declaration
+--           as it is always appended first with a definition for the variable
+--           which is introduced by the new declaration. Therefore, if I had added
+--           that environment to the gammas list, I would have in the listing of
+--           environments an environment which isn't used anywhere in the proof.
+--           The exception to this is with the environment generated at the end of
+--           the last declaration of a let expression, which will be used "as is"
+--           in the body of the let expression. That is the reason why in the rules
+--           for Let you will notice the jgamma added to the gammas list.
+--            
+-- * nextGamma: a fresh value which can be used when adding a new entry in the list.
+--              This value will represent the id of the gamma as it will be displayed
+--              in the proof. It is increased with one whenever the current jgamma is
+--              added to the gammas list.
+--
+-- * gammaId: this attribute is used as an index in the gammas list, which is inserted
+--            on the first position of each judgement triple in order to identify the environment
+--            (from the gammas list) which is used at that particular place. This attribute
+--            is mostly passed down in the tree automatically by the copy rule and it is
+--            only changed in some places where a child's environment will be different from
+--            its parent's (i.e., in each declaration of a let, in the let body and in lambda
+--            expressions).
+--
+-- You will also notice that the final substitution is applied both to all displayed types
+-- and to all the types in each environment in the gammas list.
+--
+
+SEM Root
+  | Root     loc.judge       = (1, @expr.pptex, @gentp)
+             loc.gammas      = map (\(x, y) -> (x, mapSnd (@expr.subst |=> ) y)) @expr.gammas
+             expr.jgamma     = []
+             expr.gammas     = [(1, [])]
+             expr.nextGamma  = 2
+             expr.gammaId    = 1
+
+ATTR Expr [ jgamma : Assumptions gammaId : Gamma | gammas : Gammas nextGamma : Gamma | ]
+SEM Expr
+  | Unit      loc.judge      = (@lhs.gammaId, @pptex, unittype)
+  | Intexpr   loc.judge      = (@lhs.gammaId, @pptex, inttype)
+  | Boolexpr  loc.judge      = (@lhs.gammaId, @pptex, booltype)
+  | Ident     loc.judge      = (@lhs.gammaId, @pptex, @lhs.finalSubst |=> (lookupVar @var @lhs.gamma))
+              loc.judgespec  = (@lhs.gammaId, @pptex, @lhs.finalSubst |=> @tp)
+  | Op        loc.judge      = (@lhs.gammaId, @pptex, @lhs.finalSubst |=> (getResultType (getResultType @opType)))
+  | If        loc.judge      = (@lhs.gammaId, @pptex, @lhs.finalSubst |=> @resType)
+  | Let       loc.judge      = (@lhs.gammaId, @pptex, @lhs.finalSubst |=> @expr.tp)
+              expr.gammas    = @decls.gammas ++ [(@decls.nextGamma, @decls.jgamma)]
+              expr.nextGamma = @decls.nextGamma + 1
+              expr.gammaId   = @decls.nextGamma
+  | Assign    loc.judge      = (@lhs.gammaId, @pptex, unittype)
+              loc.varjudge   = (@lhs.gammaId, text @var, @lhs.finalSubst |=> @expr.tp)
+  | Apply     loc.judge      = (@lhs.gammaId, @pptex, @lhs.finalSubst |=> @tp)
+  | Lam       loc.judge      = (@lhs.gammaId, @pptex, @lhs.finalSubst |=> (foldr arrow @expr.tp @argTypes))
+              loc.newgamma   = zip @vars.vals @vars.tps ++ @lhs.jgamma
+              expr.jgamma    = @newgamma
+              expr.gammas    = @lhs.gammas ++ [(@lhs.nextGamma, @newgamma)]
+              expr.nextGamma = @lhs.nextGamma + 1
+              expr.gammaId   = @lhs.nextGamma
+  | Seq       loc.judge      = (@lhs.gammaId, @pptex, @lhs.finalSubst |=> (last @exprs.tps))
+
+
+ATTR Exprs [ jgamma : Assumptions gammaId : Gamma | gammas : Gammas nextGamma : Gamma | ]
+
+ATTR Decls Decl [ gammaId : Gamma | jgamma : Assumptions gammas : Gammas nextGamma : Gamma | ]
+SEM Decl
+  | Decl      loc.newgamma   = (@var, @varTp) : @lhs.jgamma
+              expr.jgamma    = @newgamma
+              expr.gammas    = @lhs.gammas ++ [(@lhs.nextGamma,@newgamma)]
+              expr.nextGamma = @lhs.nextGamma + 1
+              expr.gammaId   = @lhs.nextGamma
+              lhs.jgamma     = (@var, @declType) : @lhs.jgamma
+
+SEM Vars [ | | vals : Vars ]
+  | Cons      lhs.vals       = @hd : @tl.vals
+  | Nil       lhs.vals       = []
+
+{
+unknownGamma   :: Int
+unknownGamma   = -1
+}

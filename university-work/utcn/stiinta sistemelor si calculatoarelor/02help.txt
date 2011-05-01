@@ -1,0 +1,20 @@
+ - Functia DOS 02h -
+
+Functie:
+    Afisarea unui caracter la iesirea standard.
+
+Asteapta:
+    ah: 02h
+    dl: codul ascii al caracterului de afisat.
+
+Intoarce:
+    nimic.
+
+Descriere:
+    In momentul in care se apeleaza, se  scrie la iesirea standard caracte-
+    rul al carui cod ascii se afla in  dl. In cazul codului ascii al tastei
+    backspace (8) se muta cursorul in stanga.
+
+Nota:
+    Daca se detecteaza apasarea combinatiei de taste Ctrl+Break, se apelea-
+    za intreruperea 23h.

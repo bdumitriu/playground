@@ -1,0 +1,127 @@
+Scanner:
+
+===== Problem 1 =====
+
+-- the data type Token with constructors for
+-- each type of Token that has to be supported
+data Token = Id Char                  -- identifiers
+           | Num Int                  -- numbers
+           | Add | Subt | Mul | Div   -- the four operators
+           | LParen | RParen          -- left and right parenthesis
+           deriving (Eq, Show)
+
+===== Problem 2 =====
+
+-- the tokenize function takes a string and returns a
+-- list of tokens or ends with an error message (in case
+-- of a scan error)
+tokenize :: String -> [Token]
+
+-- the empty string generates an empty list of tokens
+tokenize ""       = []
+
+-- each of the characters '(', ')', '+', '-', '*', '/'
+-- is translated directly into the corresponding token
+tokenize ('(':xs) = LParen : (tokenize xs)
+tokenize (')':xs) = RParen : (tokenize xs)
+tokenize ('+':xs) = Add    : (tokenize xs)
+tokenize ('-':xs) = Subt   : (tokenize xs)
+tokenize ('*':xs) = Mul    : (tokenize xs)
+tokenize ('/':xs) = Div    : (tokenize xs)
+
+tokenize (x:xs)
+  -- we skip over white space (i.e., we don't generate any token)
+  | isSpace x     = tokenize xs
+
+  -- a single alphabetic character is an identifier
+  | isAlpha x     = Id x : (tokenize xs)
+
+  -- if we see a digit, then we take that and all the subsequent
+  -- digits and pass them to getNum in order to get back a Num
+  -- token with the proper number as an Int; for continuing the
+  -- scanning process, the tokenize function is not called on xs
+  -- (as in all the other cases) but on whatever comes after the
+  -- sequence of digits
+  | isDigit x     = (getNum (takeWhile isDigit (x:xs))) : tokenize (dropWhile isDigit xs)
+
+  -- encounring any symbol not recognized above results in a scanner
+  -- error
+  | otherwise     = error ("Scanner error: unrecognized character: " ++ [x])
+
+-- takes a string that is already known to contain only digits and
+-- returns a Num token to represent it. The string is converted to
+-- an Int using the function read. We need to explicitly type the
+-- result of read n to Int (by saying :: Int) so that the read function
+-- knows what to translate the string to.
+getNum :: String -> Token
+getNum n = Num (read n :: Int)
+
+If the input string is not in the simple language of expressions, the scanner needs
+to report an error to the user, which is what we do above.
+
+===== Problem 3 =====
+
+$ hugs Scanner.hs
+__   __ __  __  ____   ___      _________________________________________
+||   || ||  || ||  || ||__      Hugs 98: Based on the Haskell 98 standard
+||___|| ||__|| ||__||  __||     Copyright (c) 1994-2005
+||---||         ___||           World Wide Web: http://haskell.org/hugs
+||   ||                         Report bugs to: hugs-bugs@haskell.org
+||   || Version: March 2005     _________________________________________
+
+Haskell 98 mode: Restart with command line option -98 to enable extensions
+
+Type :? for help
+Scanner> tokenize "a*(1*a)+a-1"
+[Id 'a',Mul,LParen,Num 1,Mul,Id 'a',RParen,Add,Id 'a',Subt,Num 1]
+Scanner> tokenize "(((a"
+[LParen,LParen,LParen,Id 'a']
+Scanner> tokenize "123 + + 456"
+[Num 123,Add,Add,Num 456]
+Scanner> tokenize "x + y - (999)"
+[Id 'x',Add,Id 'y',Subt,LParen,Num 999,RParen]
+Scanner> tokenize "22-!!"
+[Num 22,Subt
+Program error: Scanner error: unrecognized character: !
+
+Java:
+
+===== Problem 1 =====
+
+The output of the program is:
+
+2
+2
+
+===== Problem 2 =====
+
+What would likely be the expected, though incorrect, output?
+
+2
+7
+
+What is the likely error that this student is making?
+
+The problem is that the x variable declared in method f() hides the
+field called x of class Scope. So, the error the student is making
+is that she assumes that the statement int x = 7 will modify field
+x of the class Scope, when in fact it only modifies the local variable
+x, leaving field x unchanged.
+
+If indeed the output should have been what this poorly prepared
+student expected, how should she have coded the program?
+
+The coding should have been the following:
+
+    1	public class Scope {
+    2	    int x = 2;
+    3	    void f() {
+    4		x = 7;
+    5	    }
+    6	    public static void main(String [] ignore) {
+    7		Scope scope = new Scope();
+    8		System.out.println(scope.x);
+    9		scope.f();
+   10		System.out.println(scope.x);
+   11	    }
+   12	}

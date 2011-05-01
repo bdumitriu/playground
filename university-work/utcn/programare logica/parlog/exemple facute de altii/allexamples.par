@@ -1,0 +1,620 @@
+/*
+  PARLOG example: Database.
+
+  This example is based on Chapter 7 of Programming in PARLOG.
+
+  Compile and try the queries:
+
+    salestotal(all,jan,T).
+    salestotal(fuses,jan,T).
+
+  A convenient query to test subset/3 is to use the in_stream/1 primitive:
+
+    Demands ::: in_stream(Demands), subset(Demands,Item,sales(Item,_,_)).
+
+  This query lazily generates the names of items which have recorded sales.
+  Enter variables into the term input dialogue.  The back communications
+  from subset/3 will be visible automatically in the film output window
+  for Demands.
+*/
+
+database sales/3.
+sales(bulbs,10,date(10,jan)).
+sales(fuses,3,date(10,jan)).
+sales(batteries,14,date(14,jan)).
+sales(fuses,2,date(15,jan)).
+sales(elements,1,date(28,jan)).
+sales(bulbs,2,date(28,jan)).
+sales(fuses,5,date(3,feb)).
+sales(solder,1,date(6,feb)).
+
+mode salestotal(item?,period?,sales^).
+salestotal(all,Month,Total) <-
+  set(Quantities,Q,sales(AnyItem,Q,date(Day,Month))),
+  total(Quantities,Total).
+salestotal(Item,Month,Total) <-
+  not Item == all :
+  set(Quantities,Q,sales(Item,Q,date(Day,Month))),
+  total(Quantities,Total).
+
+mode total(nlist?,tot^).
+total([],0).
+total([N|Rest],Tot) <-
+  total(Rest,PartTot),
+  Tot is PartTot + N.
+/*
+  PARLOG example: Fair Merge.
+
+  From Chapter 6 of Programming in PARLOG.
+
+  fair_merge(List1,List2,List): List is a "fair" interleaving of List1
+                                and List2.
+*/
+
+mode fair_merge(?,?,^).
+fair_merge([T1|L1],[T2|L2],[T1,T2|L12]) <-
+  fair_merge(L1,L2,L12).
+fair_merge([T|L1],L2,[T|L12]) <- var(L2) :
+  fair_merge(L1,L2,L12).
+fair_merge(L1,[T|L2],[T|L12]) <- var(L1) :
+  fair_merge(L1,L2,L12).
+fair_merge([],L,L).
+fair_merge(L,[],L).
+/*
+  PARLOG example: Hamming's Problem.
+
+  hamming(X): X is an ordered list of all the positive integers that have
+              2, 3, or 5 as factors.
+*/
+
+mode hamming(mults^).
+hamming([1|X]) <-
+  timeslist(2,[1|X],X2),
+  timeslist(3,[1|X],X3),
+  timeslist(5,[1|X],X5),
+  amerge(X2,X3,X23),
+  amerge(X23,X5,X).
+
+mode timeslist(number?,number_list?,multiple_list^).
+timeslist(U,[V|X],[W|Y]) <-
+  W is U*V,
+  timeslist(U,X,Y).
+
+mode amerge(list1?,list2?,merged_list^).
+amerge([U|X],[U|Y],[U|Z]) <-
+  amerge(X,Y,Z).
+amerge([U|X],[V|Y],[U|Z]) <- U < V :
+  amerge(X,[V|Y],Z).
+amerge([U|X],[V|Y],[V|Z]) <- V < U :
+  amerge([U|X],Y,Z).
+/*
+  PARLOG example: Integers.
+
+  From 'Hands on Parlog for Windows'.
+*/
+
+mode integers(from?,to?,intlist^) .
+integers(N,N,[N]) .
+integers(N1,N2,[N1|Rest]) <- N1 < N2 :
+  Next is N1 + 1,
+  integers(Next,N2,Rest) .
+
+
+/*
+  PARLOG example: Incremental Output.
+
+  iwrite(Channel,Term): writes Term to Channel incrementally.
+
+  an optimized version of iwrite/2 is available as a PARLOG primitive
+  incwrite/2.
+*/
+
+mode iwrite(channel?,term?).
+iwrite(Ch,Tm) <- atomic(Tm) :
+  writeq(Ch,Tm).
+iwrite(Ch,[H|T]) <-
+  iwritelist(Ch,'[',[H|T],']');
+iwrite(Ch,Tm) <-
+  Tm =.. [Fn|Args] &
+  writeq(Ch,Fn) &
+  iwritelist(Ch,'(',Args,')').
+
+mode iwritelist(channel?,open_bracket?,args?,close_bracket?).
+iwritelist(Ch,Open,[Arg|Args],Close) <-
+  write(Ch,Open) &
+  iwrite(Ch,Arg) &
+  iwritelist(Ch,',',Args,Close).
+iwritelist(Ch,_,[],Close) <-
+  write(Ch,Close).
+/*
+   PARLOG example: Naive Reverse.
+
+   nrev(X,Z): list Z is list X in reverse order.
+*/
+
+mode nrev(list?,reversed_list^).
+nrev([U|X],Z) <-
+  nrev(X,Y),
+  append(Y,[U],Z).
+nrev([],[]).
+
+mode append(list1?,list2?,joined_list^).
+append([U|X],Y,[U|Z]) <-
+  append(X,Y,Z).
+append([],Y,Y).
+/*
+  PARLOG example: Tree Membership.
+
+  ontree(U,T): item U is a member of labelled tree T.
+*/
+
+mode test1.
+test1 <-
+  ontree(1,t(3,t(4,t(5,t(6,e,e),t(7,e,e)),t(8,t(9,e,e),t(10,e,e))),
+               t(11,t(12,t(13,e,e),t(14,e,e)),t(15,t(16,e,e),t(1,e,e))))).
+
+mode test2.
+test2 <-
+  ontree(1,t(3,t(4,t(5,t(6,e,e),t(7,e,e)),t(8,t(9,e,e),t(10,e,e))),
+               t(11,t(12,t(13,e,e),t(14,e,e)),t(15,t(16,e,e),t(17,e,e))))).
+
+mode ontree(item?,tree?).
+ontree(U,t(U,_,_)).
+ontree(U,t(_,L,_)) <- ontree(U,L) : true.
+ontree(U,t(_,_,R)) <- ontree(U,R) : true.
+/*
+  PARLOG example: Concurrent Sentence Parser.
+
+  From Chapter 8 of Programming in PARLOG.
+*/
+
+mode test1(^).
+test1(P) <-
+  parse([the,girl,smiles],P).
+
+mode test2(^).
+test2(P) <-
+  parse([the,girl,likes,the,lazy,boy],P).
+
+mode test3(^).
+test3(P) <-
+  parse([a,boy,quickly,kicks,the,ball],P).
+
+mode parse(sentence?,parse^).
+parse(S,P) <-
+  parse_form(S,sentence,P).
+
+mode parse_form(words?,form?,parsetree^).
+parse_form([Word],Form,Parse) <-
+  dictionary(Form,Dict) :
+  member(Word,Dict),
+  Parse =.. [Form,Word].
+parse_form(Words,Form,Parse) <-
+  grammar(Form,Expansions) :
+  expansions_parse(Words,Expansions,ParseList),
+  Parse =.. [Form|ParseList].
+
+mode expansions_parse(words?,expansions?,parselist^).
+expansions_parse(Words,[Expansion1,Expansion2],Parse) <-
+  one_expansion_parse(Words,Expansion1,Parse) :
+  true.
+expansions_parse(Words,[Expansion1,Expansion2],Parse) <-
+  one_expansion_parse(Words,Expansion2,Parse) :
+  true.
+expansions_parse(Words,[Expansion],Parse) <-
+  one_expansion_parse(Words,Expansion,Parse).
+
+mode one_expansion_parse(words?,expansion?,parselist^).
+one_expansion_parse(Words,[Form1,Form2],[Parse1, Parse2]) <-
+  splittings(Words,Splits),
+  splits_parse(Splits,Form1,Form2,Parse1,Parse2).
+one_expansion_parse(Words,[Form],[Parse]) <-
+  parse_form(Words,Form,Parse).
+
+mode splits_parse(listofsplits?,form1?,form2?,parse1^,parse2^).
+splits_parse([pair(Front,Back)|Splits],Form1,Form2,Parse1,Parse2) <-
+  parse_form(Front,Form1,Parse1),
+  parse_form(Back,Form2,Parse2) :
+  true;                               % This ';' was '.' in the original.
+splits_parse([Split|Splits],Form1,Form2,Parse1,Parse2) <-
+  splits_parse(Splits,Form1,Form2,Parse1,Parse2) :
+  true .
+
+mode splittings(list?,listofsplits^).
+splittings([],[pair([],[])]).
+splittings([H|T],[pair([],[H|T])|Insertions]) <-
+  splittings(T,Tsplits),
+  front_insert(H,Tsplits,Insertions).
+
+mode front_insert(term?,listofpairs?,insertedpairs^).
+front_insert(T,[],[]).
+front_insert(T,[pair(F,B)|Pairs],[pair([T|F],B)|InsertedPairs]) <-
+  front_insert(T,Pairs,InsertedPairs).
+
+mode member(?,?).
+member(X,[X|Y]);
+member(X,[Z|Y]) <-
+  member(X,Y).
+
+mode grammar(form?,expansions^).
+grammar(sentence,[[noun_phrase,verb],[noun_phrase,verb_phrase]]).
+grammar(noun_phrase,[[determiner,noun_expression]]).
+grammar(noun_expression,[[noun],[adjective,noun_expression]]).
+grammar(verb_phrase,[[verb_expression,noun_phrase]]).
+grammar(verb_expression,[[verb],[adverb,verb]]).
+
+mode dictionary(form?,words^).
+dictionary(verb,[likes,kicks,smiles,admires,eats]).
+dictionary(determiner,[the,a,an]).
+dictionary(noun,[boy,girl,table,tree,apple,ball]).
+dictionary(adverb,[quickly,easily]).
+dictionary(adjective,[big,small,lazy,eager,bad,good]).
+
+
+/* the suggested alternative expansions_parse procedure  ....
+
+mode expansions_parse(words?,expansions?,parselist^).
+expansions_parse(Words,[Expansion|OtherExpnsns],Parse) <-
+  one_expansion_parse(Words,Expansion,Parse) :
+  true.
+expansions_parse(Words,[Expansion|OtherExpnsns],Parse) <-
+  expansions_parse(Words,OtherExpnsns,Parse) :
+  true.                                                        */
+/*
+  PARLOG example: Primes Sieve (Sieve of Eratosthenes).
+
+  primes(P): P is an ordered list of all prime numbers.
+*/
+
+mode primes(primes^).
+primes(Primes) <-
+  integers_from(2,Ints),
+  sift(Ints,Primes).
+
+mode integers_from(integer?,integer_list^).
+integers_from(Int,[Int|Int_list]) <-
+  Intplus is Int + 1,
+  integers_from(Intplus,Int_list).
+
+mode sift(list?,sifted_list^).
+sift([Num|Rem_list],[Num|Shifted_rem_list]) <-
+  filter(Num,Rem_list,Filtered_list),
+  sift(Filtered_list,Shifted_rem_list).
+
+mode filter(prime?,list?,filtered_list^).
+filter(Filter_num,[Num|List1],[Num|List2]) <-
+  0 =\= Num mod Filter_num :
+  filter(Filter_num,List1,List2).
+filter(Filter_num,[Num|List1],List2) <-
+  0 =:= Num mod Filter_num :
+  filter(Filter_num,List1,List2).
+/*
+  PARLOG example: Quicksort.
+
+  qsort(List,Sorted): Sorted is List ordered.
+*/
+
+mode qsort(list?,sorted_list^).
+qsort([N|Rest],Sorted) <-
+  partition(N,Rest,LessN,MoreN),
+  qsort(LessN,SortedLess),
+  qsort(MoreN,SortedMore),
+  append(SortedLess,[N|SortedMore],Sorted).
+qsort([],[]).
+
+mode partition(pivot?,list?,less^,more^).
+partition(Pivot,[T|List],[T|Less],More) <- T < Pivot :
+  partition(Pivot,List,Less,More).
+partition(Pivot,[T|List],Less,[T|More]) <- T >= Pivot :
+  partition(Pivot,List,Less,More).
+partition(Pivot,[],[],[]).
+
+mode append(?,?,^).
+append([],Y,Y).
+append([U|X],Y,[U|Z]) <-
+  append(X,Y,Z).
+/*
+  PARLOG example: Quicksort (using difference lists for speed).
+
+  qsort(List,Sorted,[]): Sorted is List ordered.
+*/
+
+mode qsort(list?,sorted_head^,sorted_tail?).
+qsort([N|Rest],SortedH,SortedT) <-
+  partition(N,Rest,LessN,MoreN),
+  qsort(LessN,SortedH,[N|SortedM]),
+  qsort(MoreN,SortedM,SortedT).
+qsort([],SortedT,SortedT).
+
+mode partition(pivot?,list?,less^,more^).
+partition(Pivot,[T|List],[T|Less],More) <- T < Pivot :
+  partition(Pivot,List,Less,More).
+partition(Pivot,[T|List],Less,[T|More]) <- T >= Pivot :
+  partition(Pivot,List,Less,More).
+partition(Pivot,[],[],[]).
+/*
+  PARLOG example: Surgery Simulation.
+
+  From Chapter 8 of Programming in PARLOG.
+
+  This is the single-doctor version, with statistics.
+  Run the query
+
+    Patients :: go(Patients).
+*/
+
+mode go(display_me^).
+go(OutPatients) <-
+  street(InPatients),
+  w_room(InPatients,CalledPatients),
+  c_room(CalledPatients,OutPatients).
+
+mode street(arrivals^).
+street(People) <-
+  read_clock(StartTime),
+  EndTime is StartTime+90,
+  pause(street,EndPauseTime) &
+  admit_people(EndPauseTime,EndTime,People).
+
+mode admit_people(timenow?,closingtime?,arrivals^).
+admit_people(TimeNow,ClosingTime,[]) <-
+  TimeNow >= ClosingTime :
+  true;
+admit_people(TimeNow,ClosingTime,
+             [patient(in(TimeNow),called(_),out(_))|Others]) <-
+  pause(street,EndPauseTime) &
+  admit_people(EndPauseTime,ClosingTime,Others).
+
+mode pause(location?,endtime^).
+pause(Location,EndTime) <-
+  required_delay(Location,Delay),
+  read_clock(TimeNow),
+  EndTime is TimeNow+Delay,
+  busy_wait(TimeNow,EndTime).
+
+mode busy_wait(timenow?,endtime?).
+busy_wait(TimeNow,EndTime) <-
+  TimeNow >= EndTime :
+  true;
+busy_wait(T,EndTime) <-
+  read_clock(TimeNow) &
+  busy_wait(TimeNow,EndTime).
+
+mode read_clock(timenow^).
+read_clock(TimeNow) <-
+  ticks(T),
+  TimeNow is floor(T/18.2).
+
+mode required_delay(location?,delay^).
+required_delay(street,Delay) <-
+  Delay is irand(6).
+required_delay(c_room,Delay) <-
+  Delay is irand(6)+3.
+
+mode w_room(patientsin?,demands?).
+w_room([patient(In,called(CallTime),Out)|Pins],[Pcall|Pcalls]) <-
+  read_clock(CallTime),
+  Pcall = patient(In,called(CallTime),Out),
+  w_room(Pins,Pcalls).
+w_room([],[Pcall|Pcalls]) <-
+  Pcall = no_more_patients.
+
+mode c_room(patientcalls^,patientdischarges^).
+c_room([Pcall|Pcalls],Discharges) <-
+  read_respond(Pcall,Pcalls,Discharges).
+
+mode read_respond(replytocall?,pcalls^,pdischarges^).
+read_respond(patient(In,Called,out(EndTime)),Pcalls,Pdischarges) <-
+  pause(c_room,EndTime) &
+  Pdischarges = [patient(In,Called,out(EndTime))|Others],
+  c_room(Pcalls,Others).
+read_respond(no_more_patients,[],[]).
+/*
+  PARLOG example: SLIM: a Front-End for PARLOG.
+
+  From Chapter 8 of Programming in PARLOG.
+
+  There are several minor differences from the program in the book,
+  mostly to sequence side-effects properly.
+*/
+
+mode slim.
+slim <-
+  initialize(WindowVars,StartProcs) &
+  user(Commands),
+  filter(Commands,LegalCommands),
+  manager(LegalCommands,WindowVars,StartProcs,SysMessages),
+  display_msgs(SysMessages),
+  display_wvars(WindowVars).
+
+mode user(commands^).
+user(Commands) <-
+  key &
+  write('Input Window','// ') &
+  special_gread(Cmd) &
+  user_check(Cmd,Commands).
+
+mode special_gread(cmd^).
+special_gread(Cmd) <-
+  cuwind('Input Window') &
+  gread(user,Cmd) &
+  cuwind(&:).
+
+mode user_check(cmd?,cmds^).
+user_check(quit,[]).
+user_check((Cmd,Cmds),[Cmd|Others]) <-
+  user_check(Cmds,Others);
+user_check(Cmd,[Cmd|Cmds]) <-
+  user(Cmds).
+
+mode filter(cmds?,legalcommands^).
+filter([],[]).
+filter([Cmd|Cmds],[Lcmd|Lcmds]) <-
+  map_command(Cmd,Lcmd),
+  filter(Cmds,Lcmds).
+
+mode map_command(cmd?,mappedcommand^).
+map_command(reset,reset).
+map_command(input(Var,Term),input(Var,Term));
+map_command(Call,run(Call)) <-
+  functor(Call,Rel,Arity),
+  defined(Rel/Arity) :
+  true;
+map_command(Cmd,unrecognized(Cmd)).
+
+mode initialize(winvars^,startprocs^).
+initialize(WindowVars,StartProcs) <-
+  WindowVars = wvars(WControl,[window('V1',_),window('V2',_),
+                               window('V3',_),window('V4',_),
+                               window('V5',_)]),
+  StartProcs = procs(PControl,[]),
+  create_screen.
+
+mode manager(filteredcmds?,winvars?,startprocs?,sysmsgs^).
+manager([run(Call)|Cmds],Wvars,Procs,[running(Call)|Msgs]) <-
+  install_call(Call,Procs,ProcsPlusCall,Wvars),
+  manager(Cmds,Wvars,ProcsPlusCall,Msgs).
+manager([input(Wvar,Term)|Cmds],Wvars,Procs,[Inputreply|Msgs]) <-
+  input_term(Wvar,Term,Wvars,Inputreply),
+  manager(Cmds,Wvars,Procs,Msgs).
+manager([reset|Cmds],Wvars,Procs,Msgs) <-
+  reinitialize(Wvars,Procs,InitWvars,InitProcs) &
+  Msgs = ['System reset ok!'|Msgs1],
+  display_wvars(InitWvars),
+  manager(Cmds,InitWvars,InitProcs,Msgs1).
+manager([unrecognized(Cmd)|Cmds],Wvars,Procs,[unrecognized(Cmd)|Msgs]) <-
+  manager(Cmds,Wvars,Procs,Msgs).
+manager([],Wvars,Procs,[]) <-
+  terminate(Wvars,Procs).
+
+mode install_call(call?,procs?,procs2^,wvars?).
+install_call(Call,procs(Ctrl,Procs),procs(Ctrl,[Call|Procs]),Wvars) <-
+  map_arguments(Call,Wvars,MappedCall),
+  call(MappedCall,_,Ctrl).
+
+mode map_arguments(call?,wvars?,mappedcall^).
+map_arguments(Call,wvars(Ctrl,Wins),MappedCall) <-
+  map_args(Call,Wins,MappedCall).
+
+mode map_args(call?,wins?,mappedcall^).
+map_args(Call,Wins,MappedCall) <-
+  Call =.. [R|Args],
+  maparglist(Args,Wins,Args2),
+  MappedCall =.. [R|Args2].
+
+mode maparglist(args?,wins?,mappedargs^).
+maparglist([],Wins,[]).
+maparglist([Arg|Args],Wins,[MappedArg|MappedArgs]) <-
+  map_term(Arg,Wins,MappedArg),
+  maparglist(Args,Wins,MappedArgs).
+
+mode map_term(term?,wins?,mappedterm^).
+map_term(N,_,N) <-
+  number(N) :
+  true.
+map_term(A,Wins,MappedA) <-
+  atom(A) :
+  map(A,Wins,MappedA);
+map_term(Str,Wins,MappedStr) <-
+  map_args(Str,Wins,MappedStr).
+
+mode map(atom?,wlist?,mappedatom^).
+map(A,[window(A,Value)|_],Value).
+map(A,[],A);
+map(A,[_|Wlist],MappedA) <-
+  map(A,Wlist,MappedA).
+
+mode input_term(winvar?,interm?,wvars?,inputreply^).
+input_term(W,InTerm,Wvars,input(W,InTerm,ok)) <-
+  vartail(W,Wvars,Tail) :
+  Tail = [InTerm|Y];
+input_term(W,InTerm,Wvars,input(W,InTerm,not_ok)).
+
+mode vartail(w?,wvars?,tail^).
+vartail(W,wvars(Ctrl,[window(W,WVal)|Wins]),Tail) <-
+  var_tail_of(WVal,Tail);
+vartail(W,wvars(Ctrl,[Win|Wins]),Tail) <-
+  vartail(W,wvars(Ctrl,Wins),Tail).
+
+mode var_tail_of(term?,vartail^).
+var_tail_of(X,X) <- var(X) : true.
+var_tail_of([H|T],Tail) <-
+  var_tail_of(T,Tail).
+
+mode reinitialize(wvars?,procs?,initwvars^,initprocs^).
+reinitialize(Wvars,Procs,InitWvars,InitProcs) <-
+  terminate(Wvars,Procs) &
+  initialize(InitWvars,InitProcs).
+
+/* 'terminate' kills windows after sending a 'stop' message to processes.
+   Really, it should wait for the processes to reply 'stopped' before
+   killing windows. */
+mode terminate(wvars?,procs?).
+terminate(Wvars,Procs) <-
+  Wvars = wvars(stop,W),
+  Procs = procs(stop,P) &
+  kill_all_windows.
+
+mode display_wvars(winvars?).
+display_wvars(wvars(Control,[])).
+display_wvars(wvars(Control,[window(Wname,Term)|Others])) <-
+  control_write(Control,Wname,Term),
+  display_wvars(wvars(Control,Others)).
+
+mode control_write(control?,window?,term?).
+control_write(Control,Window,Term) <-
+  call(incwrite(Window,Term),_,Control).
+
+mode display_msgs(messages?).
+display_msgs([]).
+display_msgs([Msg|Messages]) <-
+  incwrite('Message Window',Msg) &
+  nl('Message Window') &
+  display_msgs(Messages).
+
+mode create_screen.
+create_screen <-
+  crwind('V1',0,0,8,24),
+  crwind('V2',0,26,8,24),
+  crwind('V3',0,52,8,24),
+  crwind('V4',10,0,6,16),
+  crwind('V5',10,18,6,16),
+  crwind('Message Window',10,36,6,40),
+  crwind('Input Window',18,0,5,76).
+
+mode kill_all_windows.
+kill_all_windows <-
+  close('V1'),
+  close('V2'),
+  close('V3'),
+  close('V4'),
+  close('V5'),
+  close('Message Window'),
+  close('Input Window').
+/*
+  PARLOG example: Squares.
+
+  From 'Hands on Parlog for Windows'.
+*/
+
+mode squares(nums?,squares^).
+squares([Num|Nums],[Square|Squares]) <-
+  Square is Num * Num,
+  squares(Nums,Squares).
+squares([],[]).
+mode integers(from?,to?,intlist^) .
+integers(N,N,[N]) .
+integers(N1,N2,[N1|Rest]) <- N1 < N2 :
+  Next is N1 + 1,
+  integers(Next,N2,Rest) .
+/*
+  PARLOG example: Variables.
+
+  From 'Hands on Parlog for Windows'.
+*/
+
+mode variables(from?,to?,varlist^) .
+variables(N,N,[V]) .
+variables(N1,N2,[V|Rest]) <- N1 < N2 :
+  Next is N1 + 1,
+  variables(Next,N2,Rest) .

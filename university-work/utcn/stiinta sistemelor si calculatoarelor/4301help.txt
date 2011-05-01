@@ -1,0 +1,46 @@
+ - Functia DOS 4301h -
+
+Functie:
+    Determinarea atributelor unui fisier.
+
+Asteapta:
+    ax: 4301h
+    ds:dx: adresa unui  sir de caractere care se  termina cu nul (cod ascii
+        00h) si care reprezinta numele fisierului.
+    cx: atributele care trebuie setate pentru fisier.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag e setat.
+
+Descriere:
+    In urma apelului functiei se vor  seta atributele fisierului sau direc-
+    torului specificat.
+    
+    ds:dx trebuie sa contina adresa unui sir de forma:
+        [d:][\cale\]nume_fisier.ext
+    care identifica fisierul ale  carui atribute dorim sa le setam. Daca se
+    omit litera ce identifica drive-ul urmata de : si/sau calea, se iau va-
+    lorile implicite. Acest nume poate fi si al unui director.
+    
+    Daca Carry Flag-ul este setat la  terminarea functiei atunci a aparut o
+    eroare al carei cod poate fi gasit in ax.
+
+Note
+    1. Octetul ce descrie atributele fisierului are urmatoarea compozitie:
+
+        +---+---+---+---+---+---+---+---+
+        | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+        +---+---+---+---+---+---+---+---+
+
+    cu semnificatia:
+
+     bitul 1 si 2: nesemnificativi.
+     bitul 3: bit de arhiva
+     bitul 4: bit setat pentru directoare
+     bitul 5: bit setat pentru fisiere/directoare din radacina
+     bitul 6: bit de fisier sistem
+     bitul 7: bit de fisier ascuns
+     bitul 8: bit de fisier read-only
+
+    2. Singurii biti  care pot fi setati sunt  3, 6, 7 si 8, asadar bitii 4
+    si 5 trebuie sa fie 0.

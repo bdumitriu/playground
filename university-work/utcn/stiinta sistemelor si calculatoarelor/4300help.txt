@@ -1,0 +1,44 @@
+ - Functia DOS 4300h -
+
+Functie:
+    Determinarea atributelor unui fisier.
+
+Asteapta:
+    ax: 4300h
+    ds:dx: adresa unui  sir de caractere care se  termina cu nul (cod ascii
+        00h) si care reprezinta numele fisierului.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag e setat.
+    cx: atributele fisierului specificat (daca nu au aparut erori).
+
+Descriere:
+    In urma apelului functiei se vor  obtine atributele fisierului specifi-
+    cat.
+    
+    ds:dx trebuie sa contina adresa unui sir de forma:
+        [d:][\cale\]nume_fisier.ext
+    care identifica  fisierul ale carui atribute  dorim sa le obtinem. Daca
+    se omit litera ce identifica  drive-ul urmata de : si/sau calea, se iau
+    valorile implicite. Acest nume poate fi si al unui director sau identi-
+    ficator de drive.
+    
+    Daca Carry Flag-ul este setat la  terminarea functiei atunci a aparut o
+    eroare al carei cod poate fi gasit in ax.
+
+Nota
+    Octetul ce descrie atributele fisierului are urmatoarea compozitie:
+
+        +---+---+---+---+---+---+---+---+
+        | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+        +---+---+---+---+---+---+---+---+
+
+    cu semnificatia:
+
+     bitul 1 si 2: nesemnificativi.
+     bitul 3: bit de arhiva
+     bitul 4: bit setat pentru directoare
+     bitul 5: bit setat pentru fisiere/directoare din radacina
+     bitul 6: bit de fisier sistem
+     bitul 7: bit de fisier ascuns
+     bitul 8: bit de fisier read-only

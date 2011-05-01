@@ -1,0 +1,18 @@
+module generic-traversal
+imports Tiger
+strategies
+
+// (A.2).1
+generic1 = bottomup(try((Var("x") -> Int("3"))))
+
+// (A.2).2
+generic2(|x) = bottomup(try((Var("x") -> Int(<int-to-string>x))))
+
+// (A.2).3
+generic3 = bottomup(try(\ Times(e, Int("2")) -> Plus(e, e) \ <+ \ Times(Int("2"), e) -> Plus(e, e)\))
+
+// (A.2).4
+generic4 = alltd(\ Plus(x, y) -> Times(x, y) \)
+
+// (A.2).5
+generic5 = somebu(\ Plus(x, y) -> Times(x, y) \)

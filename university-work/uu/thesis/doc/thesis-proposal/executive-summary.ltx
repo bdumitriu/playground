@@ -1,0 +1,164 @@
+\section*{Executive Summary}
+
+Given the excessive length of this thesis proposal, I provide here, at
+the suggestion of my thesis advisor, Eelco Visser, a short executive
+summary to give the reader a quick guide to reading the proposal.
+
+\paragraph{Motivation}
+
+The work on this thesis is motivated by the eventual goal of the group
+of people that work on the Stratego framework to provide an open
+compiler for Java. Several components of this compiler are already
+available, including a parser, a name disambiguator, a type checker
+and an pretty printer to to bytecode. What is missing for completing
+the basic compiler pipeline is a bytecode generator.  Thereafter, to
+improve on the basic compiler, we need (1) to support optimizations
+and (2) to promote ``openness.'' This thesis is driven by these latter
+two goals, while leaving the development of a bytecode generator to
+other projects. In what openness is concerned, we address two relevant
+features: customization of compiler optimizations and embedding of
+domain specific languages (DSLs) into the host language (Java).
+
+\emph{Support for optimizations} is already present in Stratego to
+some extent, in the form of the dynamic rules library. This library
+offers a number of easy-to-use abstractions which make the writing of
+data-flow transformations very attractive. However, support is not
+complete enough yet to allow for easy handling of all the types of
+constructs present in programming languages. Notably, the library
+still does not provide any abstractions for dealing with
+non-sequential control flow. Such control flow is introduced by
+statements like \icode{break} and \icode{continue}, as well as by any
+exception handling mechanism.  Another aspect which needs to be taken
+into consideration where data-flow transformations are concerned is
+that virtually all of them need access to alias information. This
+information indicates which sets of variables can point to the same
+memory address (i.e., are aliases) and is vital to data-flow
+transformations. The reason for this is that its absence imposes such
+conservative assumptions that most optimization opportunities are
+lost. Thus, if Stratego is to be successfully employed for writing
+full-fledged optimizations, we need to ensure library support for
+handling non-sequential control flow and easy access to alias
+information.
+
+The first openness-related feature, \emph{customization of compiler
+  optimizations}, implies a closer interaction between the compiler
+and the user, allowing the latter to specify information for the
+compiler's internal use. This process aids optimization because it
+feeds the compiler with additional information which would otherwise
+be hard or even impossible to compute. For instance, we could have the
+user specify which of the parameters to a native method are read-only.
+This information would otherwise be unavailable to a Java compiler,
+because the code of the native methods is written in C. Efforts on the
+second feature concerning the openness of the compiler,
+\emph{embedding DSLs into a host language}, have already been made
+within the Stratego framework, leading to the MetaBorg method.
+MetaBorg enables the embedding of the syntax of the DSL in the host
+language and the assimilation of the DSL representation in the one of
+the host language. What is still missing is the extension of
+transformations defined for the host language to cover the DSL as
+well. This extension is needed for allowing the compiler to perform
+transformations before the assimilation phase, thus benefiting from
+optimization opportunities which are otherwise lost (during the
+assimilation).
+
+We provide more details regarding these issues in the introductory
+section to this thesis. This is followed by a discussion of the tools
+that we plan to use for our practical work in section
+\ref{sec:project-setting}. Each of the three remaining sections
+explain one of the layers of our proposed work in a uniform manner.
+In each of them, we first give an overview of the topic. Then, we
+discuss the work performed by others in that respective area of
+research.  Finally, we present the tasks that we plan to tackle as
+part of that layer. We use the second part of this summary to give a
+brief overview of these tasks.
+
+\paragraph{Proposed Work}
+
+The concrete targets of this thesis project are aimed towards
+achieving the three goals that we have mentioned: support for
+optimization, customizable optimizations and extensible
+transformations. The project is structured in three layers, the first
+two of which deal with extending Stratego's support for optimizations,
+and the last of which proposes to perform some experiments with
+customizable optimizations and extensible transformations.
+
+The \emph{first layer} of this thesis will deal with updating the
+dynamic rules library in order to support non-sequential control flow.
+Before we can do that, however, we need to enforce the stability of
+the current version of the dynamic rules library by writing a fairly
+complete unit test suite for it. With the test suite in place, we plan
+to proceed to first implementing support for break of control flow
+introduced by the \icode{break} and \icode{continue} statements. This
+implies offering the user a number of functions which she can invoke
+whenever such a statement is encountered (and optionally relate it
+with a label). As an effect of invoking these functions, the set of
+dynamic rules will have to be properly adjusted (behind the scenes) to
+incorporate the extra control flow paths introduced by these
+statements. We have already produced a prototype implementation for
+\icode{break} (described in section \ref{sec:prot-supp-break}), but we
+still need to generalize it a bit before it is complete. Support for
+\icode{continue} should follow quite closely from the one for
+\icode{break}.
+
+The more complicated part is providing support for the exception
+handling mechanism. There are a number of issues that make this a
+difficult task. First of all, there is the fact that we have no easily
+identifiable point to which control flow resumes after a \icode{throw}
+statement. To identify it, we need to perform a type-based matching
+between the type of exception that is being thrown and the
+\icode{catch} clause that handles it. Secondly, the \icode{finally}
+clause introduces strange effects in the control flow, including the
+potential replacing of the exception that was being thrown with
+another, which will naturally be caught by a different \icode{catch}
+clause. Finally, the break in control flow can cross method invocation
+boundaries, which makes it different from all other abstractions that
+are currently supported by the library. All these issues are discussed
+at more length in section \ref{sec:continue-exceptions}. Our job will
+be to come up with a mechanism that accommodates all these aspects of
+exception handling.
+
+The task proposed for the \emph{second layer} of this thesis is to
+implement a pointer analysis which will allow us to offer alias
+information to all data-flow analyses that need it. We have analyzed a
+number of pointer analyses (see section \ref{sec:pe-related-work}) and
+have chosen to implement the flow- and context-insensitive one
+described in \cite{lhot02spark, lhot03spark}. We present this method
+and explain our reasons for choosing it in section
+\ref{sec:pointer-analysis-1}. The result of this analysis is in the
+form of disjoint sets, each containing the variables of the program
+that point to a same memory location. This information will have to be
+provided to Stratego users in an accessible way. Furthermore, since a
+program usually contains a lot of duplicate variable names, we also
+need to come up with a unique naming scheme which human users can use
+to properly identify the variables they are requesting information
+about.  As part of the pointer analysis, we will also have to create a
+call graph for Java programs. Since such a call graph is necessary for
+all interprocedural data-flow analyses, we plan to make it available
+to Stratego users as well.
+
+In the \emph{third layer} of our thesis we will be performing some
+experiments with customizable optimizations and extensible
+transformations. We plan to implement typestate propagation (see
+section \ref{sec:typestate}) for Java as a first attempt to
+customizing a transformation with user-provided information. Then, we
+intend to extend the restricted model of typestate to a more general
+one, and experiment with letting the user specify her own properties
+and associate property changes with program elements. We will write a
+transformation that will (statically) propagate the values of these
+properties throughout a program and trigger certain user-specified
+transformations based on conditions that involve the values of the
+properties. We will also attempt to come up with mechanisms that allow
+us to extend transformations defined for a host language so that they
+also handle DSL embeddings as well. This third layer is admittedly
+less crystallized that the other two at this point, mostly due to the
+little related work in this area to base our proposal on.  With that
+in mind, we refer you to section \ref{sec:ec-proposed-work}, where we
+still give some indication of our proposed tasks for the third layer.
+
+\paragraph{Planning}
+
+Our thesis project is planned to span over 17 weeks of work, the
+attempted organization of which is outlined in the last section of
+this proposal.
+
+\newpage

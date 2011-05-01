@@ -1,0 +1,67 @@
+import Library;
+
+dec inc::Int->Int
+def inc = (+) 1
+
+dec prefix::String->String->String
+def prefix pre = cat
+	where
+		cat post = pre ++ post
+
+-- modelarea unei cozi de prioritati ca functie aplicabila partial
+
+type Queue alpha = [alpha]->[alpha]
+
+dec id::alpha->alpha
+def id x = x
+
+dec newQueue::Queue alpha
+def newQueue = id
+
+dec enQueue::alpha->Queue alpha->Queue alpha
+def enQueue elem queue = f
+	where
+		f x = queue (elem:x)
+
+dec deQueue::Queue alpha->Queue alpha
+def deQueue queue = f
+	where
+		f x = tl (queue x)
+
+dec vid::Queue alpha->Bool
+def vid queue = queue [] == []
+
+dec queueDim::Queue alpha->Int
+def queueDim queue = length (queue [])
+
+dec prim::Queue alpha->alpha
+def prim queue = hd (queue [])
+
+dec c::(alpha->beta->gamma)->beta->alpha->gamma
+def c f x y = f y x
+
+dec k::alpha->beta->alpha
+def k n x = n
+
+dec my_map::(alpha->beta)->[alpha]->[beta]
+def my_map f [] = []
+    my_map f (x:xs) = (f x):my_map f xs
+
+dec my_reduceR::(alpha->beta->beta)->beta->[alpha]->beta
+def my_reduceR f i [] = i
+    my_reduceR f i (x:xs) = f x (my_reduceR f i xs)
+
+dec suma::[Int]->Int
+def suma = my_reduceR (+) 0
+
+dec my_length::[alpha]->Int
+def my_length = suma . my_map (k 1)
+
+dec my_all::(alpha->Bool)->[alpha]->Bool
+def my_all f lis = my_reduceR (&&) True (my_map f lis)
+
+dec my_any::(alpha->Bool)->[alpha]->Bool
+def my_any f lis = my_reduceR (||) False (my_map f lis)
+
+def main = seq
+	writeBool(my_any odd [0, 2, 4, 8])

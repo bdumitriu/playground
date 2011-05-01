@@ -1,0 +1,55 @@
+ - Functia DOS 440c7fh -
+
+Functie:
+    Aflarea modului de afisare.
+
+Asteapta:
+    ax: 440ch
+    bx: descriptor de dispozitiv sau fisier (0001h pt. iesirea standard).
+    cl: 7fh
+    ch: 03h
+    ds:dx: adresa unui IoctlDisplayModeRec care sa descrie modul dorit.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag este setat.
+
+Descriere:
+    Aceasta functie obtine informatii despre modul curent de afisare.
+    
+    Inainte de apelul  functiei, campul bInfoLevel  din IoctlDisplayModeRec
+    trebuie setat la 00h si campul wDataLen la 0eh.
+    
+    Aceasta functie functioneaza doar  daca driver-ul ANSI.SYS (sau echiva-
+    lent e incarcat.
+
+Nota:
+    Structura IocltDisplayModeRec are urmatoarea configuratie:
+    
+    Deplasament Dimensiune Continut
+    ----------- ---------- ------------------------------------------------
+         +0          1     bInfoLevel  trebuie sa fie 0
+         +1          1     res1        rezervat
+         +2          2     wDataLen    14 = lungimea datelor ce urmeaza, in
+                                       octeti
+         +4          2     wFlags      indicatori: 0000h = normal
+                                                   0001h = aldin
+         +6          1     bTxtGfx     mod: 01h = mod text
+                                            02h = mod grafic
+         +7          1     res2        rezervat
+         +8          2     wColors     numarul de culori suportat
+        +0ah         2     wWidth      latimea ecranului  in pixeli (pentru
+                                       modurile grafice)
+        +0ch         2     wHeight     inaltimea ecranului  in pixeli (pen-
+                                       tru modurile grafice)
+        +0eh         2     wClms       numarul de coloane  ale ecranului in
+                                       mod text.
+        +10h         2     wRows       numarul de randuri  ale ecranului in
+                                       mod text.
+
+    Mentiuni:
+     wFlags = 0000h inseamna  ca bitul 7 al atributelor video  va fi tratat
+              normal (faca culoarea cu care se scrie sa clipeasca).
+     wFlags = 00001h inseamna ca bitul 7 va faca parte din culoarea de fun-
+              dal.
+     wColors este de obicei 16 pentru modurile text.
+     wWidth si wHeight sunt ignorate daca bTxtGfx e 01h (mod text).

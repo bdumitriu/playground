@@ -1,0 +1,38 @@
+/**
+ * Command line switches (generic)
+ */
+module switch-options
+strategies 
+
+  SwitchOption(switch, description) =
+      where(<switch; construct-long-switch> () => sw)
+    ; ArgOption(?sw
+      , where(<set-config> (sw, <norm-switch-arg>))
+      , <concat-strings> [sw, " on|off    ", <description> ()]
+      )
+
+  if-switch(switch, strat) =
+    if-switch(switch, strat, id)
+
+  if-switch-off(switch, strat) =
+    if-switch(switch, strat, fail)
+
+  if-switch-on(switch, strat) =
+    if-switch(switch, strat, id)
+
+  if-switch(switch, strat, default) =
+    if(
+        where(<switch; construct-long-switch> () => sw)
+      ; where(<eval-config-switch(default)> sw)
+    , strat
+    )
+
+  eval-config-switch(default) =
+    get-config < ?"on" + default
+
+  norm-switch-arg =
+      lower-case
+    ; (?"off" + ?"on")
+
+  construct-long-switch =
+    <conc-strings> ("--", <id>)

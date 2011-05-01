@@ -1,0 +1,44 @@
+let var top_0_top_0 := 0
+    var top_0_square_0 := 0
+    var top_0_mod_0 := 0
+    var top_0_even_0 := 0
+    var top_0_power_0 := 0
+    var square_0_top_0 := 0
+    var square_0_square_0 := 0
+    var square_0_mod_0 := 0
+    var square_0_even_0 := 0
+    var square_0_power_0 := 0
+    var mod_0_top_0 := 0
+    var mod_0_square_0 := 0
+    var mod_0_mod_0 := 0
+    var mod_0_even_0 := 0
+    var mod_0_power_0 := 0
+    var even_0_top_0 := 0
+    var even_0_square_0 := 0
+    var even_0_mod_0 := 0
+    var even_0_even_0 := 0
+    var even_0_power_0 := 0
+    var power_0_top_0 := 0
+    var power_0_square_0 := 0
+    var power_0_mod_0 := 0
+    var power_0_even_0 := 0
+    var power_0_power_0 := 0
+ in let function square(x : int) : int =
+          x * x
+
+        function mod(x: int, y : int) : int =
+          x - x / y * y
+
+        function even(x : int) : int =
+          mod(x, 2)= 0
+
+        function power(x: int, n : int) : int =
+          if n= 0
+          then 1
+          else if even(n)
+               then square(power(x, n / 2))
+               else x * power(x, n - 1)
+     in printint(power(2, 5));
+        print("\n")
+    end
+end

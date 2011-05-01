@@ -1,0 +1,18 @@
+module Lexical
+exports
+	sorts Id
+	lexical syntax
+		[A-Za-z][A-Za-z0-9]*	-> Id
+		[\r\n\t\ ]		-> LAYOUT
+
+		"not"			-> Id {reject}
+		"true"			-> Id {reject}
+		"false"			-> Id {reject}
+		"exists"		-> Id {reject}
+		"forall"		-> Id {reject}
+
+	lexical restrictions
+		Id			-/- [A-Za-z0-9]
+		"not"			-/- [A-Za-z]
+		"exists"		-/- [A-Za-z]
+		"forall"		-/- [A-Za-z]

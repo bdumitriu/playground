@@ -1,0 +1,88 @@
+The subject of the paper 
+[[http://portal.acm.org/citation.cfm?id=257788&coll=portal&dl=ACM&CFID=13119204&CFTOKEN=43872098][Software Aging]]
+raises a number of interesting issues about the current state of software engineering practices,
+ultimately reaching the conclusion that if we, the people in the field, want the term software
+engineering to really mean something, we must take action. The main two actions the author promotes
+are properly, semi-formally documenting the design and code produced during development and
+designing and maintaining code in accordance with the much-advertised, but little-understood and
+applied concept of separation of concerns (i.e. structuring the code into properly isolated modules
+and keeping _all_ implementation details hidden inside the modules).
+
+The paper starts by analyzing the causes which make a perfectly valid software reach a point where
+it stops being an asset and turns into a liability. Among the enumerated causes we find things like
+people constantly expecting more from software as technology and possibilities advance, changes
+made to (potentially) an originally well-designed piece of software by people who do not really
+understand this design (thus turning it into a bad, increasingly unmaintainable one), software
+becoming more resource consuming and error-producing due to increased size and improper patches or
+wrong focus of people involved in software development (instead of aiming for long-term quality,
+they aim for quick releases).
+
+After identifying these problems, the author advances to proposing some solutions. One main idea
+is that although =design for change= has been advocated for more than 30 years, a quick look at the
+industry shows that it is still poorly implemented (the paper dates back to 1994, but it is likely
+that things haven't changed radically since then, although some progress has probably been made).
+Most programmers, the author complains, choose to focus on timely producing running code, rather
+than on taking more time to come up with a better design. Aside from designing for change, another
+plague in the field is the chronic =disregard of documentation=. Writing documentation is historically
+identified as a burden by most programmers and thus constantly avoided. Moreover, even when some
+documentation is produced, it is usually of mediocre quality, covering little of what it should,
+and in a form which is nowhere near formal (as the author suggests it should be). If we want code
+to be maintainable say 20 years after it is written, mentalities about both of the issues above
+have to change (or be changed).
+
+Even with design for change and proper documentation, software is still bound two age. The second
+level of defense against this process, then, is making it age more slowly than it naturally would.
+To achieve this, a series of techniques can be employed, among which: constant update of a project's
+documentation in a way that keeps it integrated and connected (as opposed to it becoming a bunch
+of dissipated essays); code refactoring in order to enhance modularization, which in turn promotes
+easier and less error-prone maintainability; elimination or replacement of (possibly large) pieces
+of code; restructuring of families of software to allow for integrated maintainability (i.e., bugs
+have to be fixed once instead of once for each family member, all family members can benefit from
+the same set of changes and so on).
+
+Finally, the paper discusses some reasons which have lead to this state of things. Interesting aspects
+refer mainly to people in the field constantly taking the wrong approach to producing software (fast
+rather then good), lack of real professionals who are trained in software engineering (a large amount
+of software is developed by people primarily specialized in various fields and who have merely learned
+some programming language, but nothing beyond that) and, on the other hand, researchers keeping
+things at a level mostly inaccessible _to the masses_, thus rendering most of their effort fruitless.
+
+Software aging has an effect on most aspects of software engineering. First of all, prevention of aging
+is done throughout design and implementation. It is during these phases that we have to make sure that
+the code is designed for change and well documented. Afterward, software aging mostly relates to how
+code is maintained. These are post-deploy activities, which take place throughout the lifetime of
+a software product. But if I were to make a single choice, I'd say that this paper is mostly about the
+philosophical aspects of software engineering, it's about educating people to stop seeing software
+engineering as a profession in which anything goes, since nobody cares, and start seeing it as a
+process which has to be properly approached, managed, documented, supervised and reviewed from beginning
+to end, in the same way in which it happens in all other engineering fields.
+
+Parnas' law (=only what is hidden can be changed without risk=) is one of the laws that backs up the
+issue discussed in the paper regarding designing for change. Designing for change means hiding implementation
+details into well-separated modules, so that if something needs to be changed in a module, it will have
+a minimal effect (ideally none) on the rest of the system. The risks mentioned in the law are, in this
+case, the potential bad design modifications which can be so easily induced if the initial design is not
+created to accommodate changes. A bad design only gets worse over time, eventually rendering the code
+unmaintainable and ultimately unusable. Aside from Parnas' law, another law that is closely related
+to the same aspect of the paper is the Dijkstra-Mills-Wirth law
+(=well-structured programs have fewer errors and are easier to maintain=) which again advocates modularity
+of programs or, in other words, design for change.
+
+Another idea from the paper which is expressed as a law is the one promoting constant restructuring of
+of code for a more natural integration of changes. We find Lehman's second law
+(=an evolving system increases its complexity unless work is done to reduce it=) stating basically the
+same thing. In essence, both the paper and this law say that the easiest way to make old code do new
+things is add new code to it, although it is usually a lot better if you can refactor and reuse the old
+one. Adding new code for such purposes usually partially duplicates the old one and makes the software
+ever less reliable. If this is to be avoided, man-hours have to be put into better understanding the old
+code in order to make reusing possible.
+
+This paper makes a well argumented case against today's "software engineers" who have yet to understand
+(and apply!) the rules of thumb of software engineering (properly design and document one's code). I find
+the paper very light and enjoyable reading, and in the meantime full of good and practical advice. Although
+I am unfamiliar with more than 99.99% of the code existing in this world, I still tend to believe the
+author when he says that practitioners of this profession either are not aware or choose to ignore some
+of the things students learn in one of their first software construction courses and then hear over and
+over again through their years of study. Although I find most suggestions of the author as common sense,
+I think putting them in a paper in such a critical manner is beneficial, since it increases people's
+awareness of these issues.

@@ -1,0 +1,10 @@
+import part2;;
+
+!Plus(Times(Int("1"),Int("2")),Var("x"));;
+collect-vars;;
+!Plus(Plus(Var("x"),Times(Var("y"),Var("z"))),Times(Int("2"),Var("z")));;
+collect-vars;;
+!Times(Int("2"),Plus(Var("a"),Var("b")));;
+collect-vars;;
+!Plus(Int("2"),Times(Int("3"),Int("4")));;
+collect-vars;;

@@ -1,0 +1,284 @@
+body
+{
+	background-color: white;
+	font-family: Arial, Comic Sans MS, cursive;
+	font-size: 12px;
+	font-weight: lighter;
+}
+
+h1
+{
+	font-family: Comic Sans MS, cursive;
+	font-size: large;
+	font-weight: lighter;
+	color: black;
+}
+
+h2
+{
+	font-family: Comic Sans MS, cursive;
+	font-size: 20px;
+	font-weight: lighter;
+	color: black;
+}
+
+a, a:link, a:active, a:visited
+{
+	text-decoration: underline;
+	font-family: Arial, Comic Sans MS, cursive;
+	font-size: 13px;
+	font-variant: small-caps;
+	color: #663333;
+	height: 0;
+	/*text-decoration: none;
+	font-family: Arial, Comic Sans MS, cursive;
+	font-size: 13px;
+	font-variant: small-caps;
+	color: #000000;
+	height: 0;
+
+	border-right: #000000 1px solid;
+	padding-right: 5px;
+	border-left: #000000 1px solid;
+	padding-left: 5px;
+	border-top: #000000 1px solid;
+	padding-top: 1px;
+	border-bottom: #000000 1px solid;
+	padding-bottom: 1px;*/
+}
+
+a:hover
+{
+	color: blue;
+	/*background-color: #000066;*/
+}
+
+a.simple, a.simple:link, a.simple:active, a.simple:visited
+{
+	font-family: Arial, Comic Sans MS, cursive;
+	font-size: 13px;
+	font-variant: smallcaps;
+	color: white;
+	width: 0px;
+
+	margin-top: 0px;
+
+	border-right: #000000 0px solid;
+	padding-right: 0px;
+	border-left: #000000 0px solid;
+	padding-left: 0px;
+	border-top: #000000 0px solid;
+	padding-top: 0px;
+	border-bottom: #000000 0px solid;
+	padding-bottom: 0px;
+}
+
+a.simple:hover
+{
+	color: #CC3300;
+	background-color: transparent;
+}
+
+a.small, a.small:link, a.small:active, a.small:visited
+{
+	font-family: Arial, Comic Sans MS, cursive;
+	font-size: 12px;
+	font-variant: normal;
+	color: white;
+	width: 0px;
+
+	margin-top: 0px;
+
+	border-right: #000000 0px solid;
+	padding-right: 0px;
+	border-left: #000000 0px solid;
+	padding-left: 0px;
+	border-top: #000000 0px solid;
+	padding-top: 0px;
+	border-bottom: #000000 0px solid;
+	padding-bottom: 0px;
+}
+
+a.small:hover
+{
+	color: #CC3300;
+	/*background-color: transparent;*/
+}
+
+a.normal, a.normal:link, a.normal:active, a.normal:visited
+{
+	font-family: Arial, Comic Sans MS, cursive;
+	font-size: 13px;
+	font-variant: normal;
+	color: black;
+	width: 0px;
+
+	margin-top: 0px;
+
+	border-right: #000000 0px solid;
+	padding-right: 0px;
+	border-left: #000000 0px solid;
+	padding-left: 0px;
+	border-top: #000000 0px solid;
+	padding-top: 0px;
+	border-bottom: #000000 0px solid;
+	padding-bottom: 0px;
+}
+
+a.normal:hover
+{
+	color: #CC3300;
+	/*background-color: transparent;*/
+}
+
+a.img, a.img:link, a.img:active, a.img:visited
+{
+	text-decoration: none;
+	font-family: Arial, Comic Sans MS, cursive;
+	font-size: 13px;
+	font-variant: normal;
+	color: #000000;
+	width: 0px;
+	cursor: default;
+
+	margin-top: 0px;
+
+	border-right: #000000 0px solid;
+	padding-right: 0px;
+	border-left: #000000 0px solid;
+	padding-left: 0px;
+	border-top: #000000 0px solid;
+	padding-top: 0px;
+	border-bottom: #000000 0px solid;
+	padding-bottom: 0px;
+}
+
+a.bigger, a.bigger:link, a.bigger:active, a.bigger:visited
+{
+
+	width: 280px;
+}
+
+table
+{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+td
+{
+	font-family: Arial, Comic Sans MS, cursive;
+	font-size: 13px;
+}
+
+td.header
+{
+	font-family: Arial, cursive;
+	font-size: 13px;
+	background-color: black;
+	color: white;
+	text-align: center;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+td.content
+{
+	font-family: Arial, cursive;
+	font-size: 13px;
+	background-color: #ccccff;
+	color: black;
+	text-align: center;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+table.smallcontainer
+{
+	border-color: #000000;
+	border-style: solid;
+	border-width: 2px;
+	background-color: white;
+}
+
+table.container
+{
+	border-color: #000000;
+	border-style: solid;
+	border-width: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+td.container
+{
+	vertical-align: top;
+	text-align: center;
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+table.bgcolor
+{
+	/*border-collapse: collapse;
+	border: 1px solid black;*/
+}
+
+tr.bgcolor
+{
+	
+}
+
+td.bgcolor1
+{
+	border: 0px solid black;
+	background-color: white;
+}
+
+td.bgcolor2
+{
+	border: 0px solid black;
+	background-color: #99CCFF;
+}
+
+td.bgcolor3
+{
+	border: 0px solid black;
+	/*background-color: #99FFFF;*/
+	background-color: #dddddd;
+}
+
+img
+{
+	border-width: 0px;
+}
+
+input.custom, select.custom, textarea.custom
+{
+	border-right: #000000 1px solid;
+	border-left: #000000 1px solid;
+	border-top: #000000 1px solid;
+	border-bottom: #000000 1px solid;
+	font-size: 12px;
+	font-family: Comic Sans MS, cursive;
+	color: black;
+	background-color: #ccccff
+}
+
+input.button
+{
+	border-right: 1px outset #000000;
+	border-left: 1px outset #000000;
+	border-top: 1px outset #000000;
+	border-bottom: 1px outset #000000;
+	font-size: 12px;
+	font-family: Comic Sans MS, cursive;
+	color: black;
+	background-color: #ccccff
+}
+
+/* this is only used for the header page (header.html) */
+h2.header
+{
+	font-family: Trebuchet MS;
+}

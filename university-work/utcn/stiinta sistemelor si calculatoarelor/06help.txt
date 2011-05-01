@@ -1,0 +1,31 @@
+ - Functia DOS 06h -
+
+Functie:
+    Intrare/iesire de la consola.
+
+Asteapta:
+    ah: 06h
+    dl: o valoare  intre 00h si feh  pentru trimiterea  unui caracter  spre
+            iesirea standard.
+        valoarea ffh pentru citirea unui caracter de la intrarea standard.
+
+Intoarce:
+    zf: nesetat (NZ) daca exista un caracter disponibil spre citire.
+    al: codul ascii al caracterului primit  de la intrarea standard daca zf
+        e nesetat.
+
+Descriere:
+    Daca dl este ffh, functia executa  o citire fara asteptare de la intra-
+    rea standard. Daca nu exista nici un caracter disponibil, se seteaza zf
+    si in al se va pune  valoarea 0. Daca exista un  caracter disponibil se
+    reseteaza zf si  se pune in al codul ascii  al caracterului disponibil.
+    Daca dl  are alta valoarea  decat ffh  atunci caracterul  cu acest  cod
+    ascii e trimis la iesirea standard.
+
+Note:
+    1. Nu se verifica apasarea combinatiei de taste Ctrl+Break.
+
+    2. Daca se doreste citirea unui  caracter din codul ascii extins vor fi
+    necesare doua  apeluri succesive  ale functiei. Dupa primul  apel in al
+    se va  gasi valoarea  0. Dupa  al doilea  apel, in  al se va gasi codul
+    ascii extins.

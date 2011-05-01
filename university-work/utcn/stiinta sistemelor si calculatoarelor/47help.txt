@@ -1,0 +1,22 @@
+ - Functia DOS 47h -
+
+Functie:
+    Aflarea directorului curent pentru un drive.
+
+Asteapta:
+    ah: 47h
+    dl: numarul drive-ului (0 = implicit, 1 = A, etc.).
+    ds:si: adresa unei zone tampon locale in care sa se poata memora o cale
+        (64 de octeti).
+
+Intoarce:
+    ax: cod de erorare daca Carry Flag e setat.
+
+Descriere:
+    In urma apelului functiei, zona  tampon ce incepe la adresa ds:si va fi
+    completata cu directorul curent  pentru drive-ul specificat in dl termi-
+    nat cu caracterul nul (cod ascii 0).
+    
+    Calea intoarsa nu  contine nici drive-ul, nici  caracterul '\' la sfar-
+    sit. De exemplu, daca directorul  curent e radacina, tot ce se va scrie
+    va fi un sir gol (caracterul nul va fi pus pe prima pozitie).

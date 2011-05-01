@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<status>
+  <file path="Wonderland">
+    <changes>
+      <modified/>
+    </changes>
+    <working-revision>12766</working-revision>
+    <last-committed>
+      <revision>12734</revision>
+      <author>that's you</author>
+    </last-committed>
+  </file>
+
+  <file path="trunk/WebLeftBar">
+    <changes/>
+    <working-revision>12766</working-revision>
+    <last-committed>
+      <revision>12734</revision>
+      <author>mbravenboer</author>
+    </last-committed>
+  </file>
+
+  <file path="trunk/WebHome">
+    <changes>
+      <added/>
+    </changes>
+    <working-revision>12766</working-revision>
+    <last-committed>
+      <revision>1234</revision>
+      <author>visser</author>
+    </last-committed>
+  </file>
+</status>

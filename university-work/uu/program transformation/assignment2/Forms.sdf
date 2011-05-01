@@ -1,0 +1,29 @@
+module Forms
+imports Lexical
+exports
+	sorts Form
+
+	context-free start-symbols Form
+
+	context-free syntax
+		"true"			-> Form {cons("True")}
+		"false"			-> Form {cons("False")}
+		Id			-> Form {cons("Prop")}
+		Id "(" {Form ","}* ")"	-> Form {cons("Pred")}
+		"not" Form		-> Form {cons("Not")}
+		Form "/\\" Form		-> Form {left, cons("And")}
+		Form "\\/" Form		-> Form {left, cons("Or")}
+		Form "<->" Form		-> Form {non-assoc, cons("Equiv")}
+		"forall" Id ":" Form	-> Form {cons("ForAll")}
+		"exists" Id ":" Form	-> Form {cons("Exists")}
+		"(" Form ")"		-> Form {bracket}
+
+	context-free priorities
+			"not" Form		-> Form
+		>	Form "/\\" Form		-> Form
+		>	Form "\\/" Form		-> Form
+		>	Form "<->" Form		-> Form
+		> {
+			"forall" Id ":" Form	-> Form
+			"exists" Id ":" Form	-> Form
+		  }

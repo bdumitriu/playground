@@ -1,0 +1,265 @@
+<HTML>
+<HEAD>
+<TITLE>class FileOutputStream</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>class FileOutputStream</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1">Provides a simple means of writing bytes to a file.
+ <small><A HREF="#longdesc">More...</A></small></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="so___include___driver___FileOutputStream_h.html">so/include/driver/FileOutputStream.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-FileOutputStream.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Methods</h4><ul><LI>&nbsp;<b><A HREF="#ref1">FileOutputStream</A></b> (<A HREF="HDD.html">HDD</A>* hdd, <A HREF="Inode.html">Inode</A>* inode, unsigned long inodeBlock, <A HREF="BlockMap.html">BlockMap</A>* map) 
+</LI>
+<LI>&nbsp;<b><A HREF="#ref2">~FileOutputStream</A></b> () 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref3">write</A></b> (unsigned char* buffer, unsigned long length) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref4">skip</A></b> (unsigned long n) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref5">setPointer</A></b> (unsigned long n) 
+</LI>
+<LI>unsigned long &nbsp;<b><A HREF="#ref6">getPointer</A></b> () 
+</LI>
+</ul><h4>Private Methods</h4><ul><LI>void &nbsp;<b><A HREF="#ref13">createExtraSpace</A></b> (unsigned long* blocks, unsigned long dataBlocks, unsigned long extraBlocks) 
+</LI>
+<LI>unsigned long &nbsp;<b><A HREF="#ref14">writeToSingleBlock</A></b> (unsigned char* buf, unsigned long length) 
+</LI>
+</ul><h4>Private Members</h4><ul><LI>HDD* <b><A HREF="#ref7">hdd</A></b></LI>
+<LI>Inode* <b><A HREF="#ref8">inode</A></b></LI>
+<LI>unsigned long <b><A HREF="#ref9">inodeBlock</A></b></LI>
+<LI>BlockMap* <b><A HREF="#ref10">map</A></b></LI>
+<LI>unsigned long <b><A HREF="#ref11">fp</A></b></LI>
+<LI>unsigned char* <b><A HREF="#ref12">buffer</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><p>
+ This class provides a simple means of writing bytes from a file.
+ It offers high level methods of write access to the bytes of a file.
+</p>
+<p></p>
+<A NAME="FileOutputStream"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>FileOutputStream</strong> (<A HREF="HDD.html">HDD</A>* hdd, <A HREF="Inode.html">Inode</A>* inode, unsigned long inodeBlock, <A HREF="BlockMap.html">BlockMap</A>* map)
+<br></td><td align="right"><h3><strong>FileOutputStream</strong></h3></td></tr></table><p></p><p>
+ Creates a new FileOutputStream. <code>hdd</code> will be used to
+ perform write operations when the class' methods are called.
+ <code>inode</code> represents the inode associated to the file
+ which this FileOutputStream writes. Beware that none of the methods
+ check whether the inode is valid or not. They all simply assume that
+ it is. This inode will be modified during write operations in order
+ to be consistent with the new file contents (i.e. fileSize - in bytes
+ and blocks - will be modified, direct & indirect addresses will be
+ modified. You should, however, make sure that the inode structure
+ contains correct date before passing it to this constructor.
+</p>
+<p> Also be warned that this class does not make a copy of the inode,
+ it simply stores a reference to it, therefore any changes made on
+ the outside will also be visible on the inside.
+</p>
+<p> <code>map</code> should be a reference to a valid BlockMap object.
+ This object will be used to find empty blocks when necessary. It
+ will also be updated by calling its alloc/free block methods.
+</p>
+<p> The file pointer is initially positioned at the beginning of the
+ file.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>hdd</i></TD><TD align="left" valign="top">the hard disk which will be used for read operations.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>inode</i></TD><TD align="left" valign="top">the inode holding information about the file to be read.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>inodeBlock</i></TD><TD align="left" valign="top">the number of the block in which the inode is found.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>map</i></TD><TD align="left" valign="top">the block map of the <code>hdd</code> hard disk.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="~FileOutputStream"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>&nbsp;<strong>~FileOutputStream</strong> ()
+<br></td><td align="right"><h3><strong>~FileOutputStream</strong></h3></td></tr></table><p></p><p>
+ The destructor of the class. This destructor does not free either
+ the <code>hdd</code> or the <code>inode</code> or the <code>map</code>
+ received as parameters in the constructor.
+	 </p>
+<A NAME="write"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>write</strong> (unsigned char* buffer, unsigned long length)
+<br>throw(
+		<A HREF="NotEnoughSpaceException.html">NotEnoughSpaceException</A>*,
+		<A HREF="FileSizeTooLargeException.html">FileSizeTooLargeException</A>*,
+		<A HREF="IOException.html">IOException</A>*,
+		<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*,
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>write</strong></h3></td></tr></table><p></p><p>
+ Writes <code>length</code> bytes of data from buffer to the file,
+ starting from the current position of the file pointer. Therefore
+ buffer should have at least <code>length</code> bytes of valid data.
+</p>
+<p> This is how the writing goes:
+ <ul>
+ <li> if the file pointer initially points before the end of file and you
+	want to write a number of bytes which would bring the file pointer
+	(at the end of the operation) somewhere before the end of file or
+	exactly on the end of file, no extra space is allocated, the file
+	remains exactly the same size and <code>length</code> bytes are
+	overwritten starting with the file pointer position.</li>
+ <li> if the file pointer initially points before the end of file and you
+	want to write a number of bytes which would bring the file pointer
+	(at the end of the operation) somewhere after the end of file, the
+	size of the file will change, extra block(s) will be allocated if
+	necessary (if there isn't enough space left in the current last block),
+	the end of file will be changed to reflect the changes and the the bytes
+	will be written partially over the old ones and partially in the
+	new space. No assumptions should be made regarding the bytes left
+	in the new last block of the file after the end of file position.</li>
+ <li> if the file pointer points exactly at the end of file, writing will
+	begin after the last byte in the old file, the file size will be
+	changed, extra block(s) will be allocated if necessary and the end
+	of file will be changed to reflect the changes.</li>
+ <li> if the file pointer points somewhere after the end of file, the
+	bytes will be written starting from there and garbage will be left
+	between the old end of file and the file pointer (garbage = whatever
+	there is in the allocated blocks). The file size will change, extra
+	block(s) will be allocated both for the 'garbage' space and for the
+	bytes you want to write and the end of file will be changed to reflect
+	the changes.</li>
+ </ul>
+</p>
+<p> In all of the cases above, the inode's data will be modified to keep it
+ consistent.
+</p>
+<p> The method throws:
+ <ul>
+ <li> NotEnoughSpaceException* if there are not enough free blocks left
+	to accomodate the data to be written. If the exception is thrown,
+	nothing will be modified (i.e., no bytes will be written).</li>
+ <li> FileSizeTooLargeException* if the inode does not have enough addressing
+	space for the new file size or if the new size of the file would be
+	larger than MAX_LONG_INT. If the exception is thrown, nothing
+	will be modified (i.e., no bytes will be written).</li>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+ <li> ArrayIndexOutOfBoundsException* forwarded form <code>inode</code>.</li>
+ </ul>
+</p>
+<p> The method updates the file pointer in order to point to the next byte
+ after the last written one. If writing goes past the old end of file,
+ the file pointer will be positioned on the new end of file after the
+ operation.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>buffer</i></TD><TD align="left" valign="top">the buffer from which the data will be written.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>length</i></TD><TD align="left" valign="top">the number of bytes to write.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="skip"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>skip</strong> (unsigned long n)
+<br></td><td align="right"><h3><strong>skip</strong></h3></td></tr></table><p></p><p>
+ Increases the file pointer with <code>n</code>. The method allows
+ the pointer to go past the end of file (see description of the
+ write method to see why this is allowed). If file pointer + n
+ would be more than MAX_LONG_INT, file pointer is set to MAX_LONG_INT.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>n</i></TD><TD align="left" valign="top">the number of bytes to skip.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="setPointer"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setPointer</strong> (unsigned long n)
+<br></td><td align="right"><h3><strong>setPointer</strong></h3></td></tr></table><p></p><p>
+ Sets the file pointer to value <code>n</code>. The method allows
+ the pointer to be set past the end of file (see description of the
+ write method to see why this is allowed).
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>n</i></TD><TD align="left" valign="top">the value the file pointer should be set to.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="getPointer"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long &nbsp;<strong>getPointer</strong> ()
+<br></td><td align="right"><h3><strong>getPointer</strong></h3></td></tr></table><p></p><p>
+ Returns the value of the filePointer data member.
+</p>
+<p></p>
+<p><b>Returns</b>: the value of the filePointer data member.
+	 </p>
+<A NAME="hdd"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="HDD.html">HDD</A>*  <strong>hdd</strong>
+</td><td align="right"><h3><strong>hdd</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="inode"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="Inode.html">Inode</A>*  <strong>inode</strong>
+</td><td align="right"><h3><strong>inode</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="inodeBlock"></A><A NAME="ref9"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long  <strong>inodeBlock</strong>
+</td><td align="right"><h3><strong>inodeBlock</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="map"></A><A NAME="ref10"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="BlockMap.html">BlockMap</A>*  <strong>map</strong>
+</td><td align="right"><h3><strong>map</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="fp"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long  <strong>fp</strong>
+</td><td align="right"><h3><strong>fp</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="buffer"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned char*  <strong>buffer</strong>
+</td><td align="right"><h3><strong>buffer</strong></h3></td></tr></table><p> <small>[private]</small></p><A NAME="createExtraSpace"></A><A NAME="ref13"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>createExtraSpace</strong> (unsigned long* blocks, unsigned long dataBlocks, unsigned long extraBlocks)
+<br></td><td align="right"><h3><strong>createExtraSpace</strong></h3></td></tr></table><p> <small>[private]</small></p><p>
+ This method allocates all the blocks in the <code>blocks</code> array (which
+ is supposed to conatin addresses of free blocks) by calling map->allocBlock(...)
+ for each of them and updates the inode information so that it contains all
+ these blocks.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>blocks</i></TD><TD align="left" valign="top">a list of <code>dataBlocks</code>+<code>extraBlocks</code>
+	free block addresses.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>dataBlocks</i></TD><TD align="left" valign="top">the number of data blocks to allocate.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>extraBlocks</i></TD><TD align="left" valign="top">the number of indirection blocks to allocate.
+	 </TD></TR>
+</TABLE></P>
+<A NAME="writeToSingleBlock"></A><A NAME="ref14"></A><table width="100%"><tr bgcolor="#eeeeee"><td>unsigned long &nbsp;<strong>writeToSingleBlock</strong> (unsigned char* buf, unsigned long length)
+<br>throw(
+		<A HREF="IOException.html">IOException</A>*,
+		<A HREF="InvalidBlockNumberException.html">InvalidBlockNumberException</A>*,
+		<A HREF="HardDiskNotInitializedException.html">HardDiskNotInitializedException</A>*,
+		<A HREF="ArrayIndexOutOfBoundsException.html">ArrayIndexOutOfBoundsException</A>*)</td><td align="right"><h3><strong>writeToSingleBlock</strong></h3></td></tr></table><p> <small>[private]</small></p><p>
+ Writes bytes to a single block of the hard disk. The functionality is as follows:
+</p>
+<p> <ul>
+ <li> if length bytes are written before the end of the physical block
+	is reached, then writing stops and the method returns.</li>
+ <li> if the end of the physical block is reached before writing
+	length bytes, the writing stops and the method returns.</li>
+ <li> if the end of the file is reached in either case, writing
+	stops and the method returns.</li>
+ </ul>
+</p>
+<p> The buffer should have at least (fp is file pointer)
+ min(length, BLOCK_DIM*(fp/BLOCK_DIM+1)-fp) valid bytes.
+</p>
+<p> In either of the three cases, the method returns the actual number of
+ bytes written (at most, BLOCK_DIM bytes).
+</p>
+<p> The method throws:
+ <ul>
+ <li> HardDiskNotInitializedException* forwarded from <code>hdd</code>.</li>
+ <li> IOException* forwarded from <code>hdd</code>.</li>
+ <li> InvalidBlockNumberException* forwarded from <code>hdd</code>.</li>
+ <li> ArrayIndexOutOfBoundsException* forwarded form <code>inode</code>.</li>
+ </ul>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>buffer</i></TD><TD align="left" valign="top">the buffer from which the data will be written.
+</TD></TR>
+<TR><TD align="left" valign="top"><i>length</i></TD><TD align="left" valign="top">the maximum number of bytes to write.
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: the actual number of bytes written.
+	 </p>
+<HR><UL><LI><i>Version</i>: 0.1
+ </LI><LI><i>Author</i>: Bogdan DUMITRIU
+</LI><LI><i>Generated</i>: bdumitriu on whitewizard on Tue Nov 12 22:08:44 2002, using kdoc 2.0a54.</LI></UL></BODY></HTML>

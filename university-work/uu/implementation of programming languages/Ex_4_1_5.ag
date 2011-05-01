@@ -1,0 +1,34 @@
+{
+import UU.Parsing
+
+instance Symbol Char
+
+exBin :: Bin
+exBin = Bin_Split
+	(Bin_Split Bin_One Bin_Zero)
+	(Bin_Split Bin_Empty (Bin_Split Bin_One Bin_One))
+
+test :: T_Bin
+test = sem_Bin exBin
+
+}
+
+DATA Bin
+	| Empty
+	| Zero
+	| One
+	| Split left, right: Bin
+
+ATTR Bin [ | | val: Int]
+SEM Bin
+  | Empty	lhs.val = 0
+  | Zero	lhs.val = 0
+  | One		lhs.val = 1
+  | Split	lhs.val = @left.val * (2 ^ @right.level) + @right.val
+
+ATTR Bin [ | | level: Int]
+SEM Bin
+  | Empty	lhs.level = 0
+  | Zero	lhs.level = 1
+  | One		lhs.level = 1
+  | Split	lhs.level = @left.level + @right.level

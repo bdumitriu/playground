@@ -1,0 +1,331 @@
+%TOC%
+
+---++ Preamble
+
+This document provides an overview of the design and implementation of the storage
+layer of the Generalized Wiki, as developed in the 2005-2006 installment of the
+Software Engineering course by the storage team.
+
+All the classes pertaining to this implementation are located in the =gw.storage.javasvn=
+package of the =src/java= directory, while all the tests are in the =gw.storage= package
+of the =src/tests= directory.
+
+The implementation described in this document uses the !JavaSVN client library, which
+is a pure Java implementation of an SVN client. This library currently supports all
+protocols except the file:// protocol. The library as well as some documentation for it
+can be found at this address: [[http://tmate.org/svn/]].
+
+---++ Overview
+
+The core of our implementation is the =PathTree= class. This class represents what you
+could see as a limited, in-memory working copy (as opposed to the "classical" file system-based
+working copy). It is a _limited_ working copy because it only contains the structure
+of the working copy, but not any contents really (specifically, file contents and properties).
+Aside from the directory and file structure, the !PathTree also stores, if the case,
+any local changes that are made to the working copy until these changes are commmited.
+This means file contents changes, property changes and modifications to the directory
+structure itself. For all operations for which it makes sense, the changes registered
+in this working copy override the values from the repository.
+
+The other "main" class of our implementation is the =SVNRAStorage= class, which is the
+incarnation of the =gw.storage.Storage= interface. The methods in !SVNRAStorage mostly
+delegate to the !PathTree methods after some sanity checking and sometimes some preprocessing.
+There are, however, a few exceptions, where the methods in !SVNRAStorage contain the
+complete implementation (one such example is the =getFileDiff= method). In order to
+delegate to a !PathTree, !SVNRAStorage must, of course, have an instance of !PathTree
+as one of its fields. This instance is created as soon as the !SVNRAStorage object is
+built itself and the creation of a !PathTree as it is right now means a full directory
+structure checkout from the repository which in turn gets passed to the !PathTree
+constructor. This was the most straightforward and easy way to do things in the beginning,
+but please see the [[http://www.cs.uu.nl/wiki/Gw/SDoc#Issues][issues section]] for a
+discussion about this.
+
+Our storage works as follows: as long as read-only operations are performed by the user,
+each method call on !SVNRAStorage will automatically first call the =checkUpdate= method,
+which makes sure the !PathTree instance is updated if necessary. This means that as long
+as there are no changes registered with the !PathTree, a transparent update takes place
+with each method call, so that the user always sees the latest changes in the wiki. As soon
+as a local change is made, the !PathTree gets _fixed_ and from this point on no more auto-updating
+is done until the local changes are committed. On request updates are still available, of
+course. As soon as the local changes are committed, the !PathTree gets unfixed, and auto-updating
+is reinstated. The auto-update can also be turned off by using the =setAutoUpdate= method
+in !SVNRAStorage.
+
+We advance with the discussion now to the internals of !PathTree. A !PathTree is actually
+a tree in which each node can have any number of children (unless programatically restricted,
+as is the case for nodes representing files). A !PathTree is supposed to serve an identical
+purpose as a normal file system, except that everything is in memory. As such, all internal
+nodes represent directories and all leaves represent files. As mentioned before, currently
+the entire structure of the !PathTree is generated on construction, but the class has methods
+for adding new paths to the tree afterwards as well. Most modifications to the tree, however,
+are intentionally not allowed in a direct manner, but rather in a controlled one, by means of
+the various =registerXXX= functions. This is because all changes to the tree have to be properly
+"logged", so that they can be transmitted to the repository when committing. You could see
+the registerXXX functions as the equivalents of the various svn commands (such as svn add,
+svn delete, svn copy, etc.) which you use with your command line client.
+
+You will notice that the !PathTree is a generic class. This is because originally we thought
+it might be useful to allow the user of the !PathTree to associate a value with each node. We
+don't currently use this value in any way in our implementation, despite the fact that !PathTree
+is usually instantiated in our code as a !PathTree&lt;String&gt;. We could've used anything else
+instead of String there, since we always use nulls as values anyway.
+
+The nodes used by the !PathTree are defined in the class !PathTreeNode. A !PathTreeNode contains
+the following fields:
+
+   * =path=: this holds the path that the node represents. The path could be obtained from the tree
+     structure as well, but for performance reasons we also store in in the node.
+   * =type=: this indicates whether the node is a directory or a file. This information is used
+     for some extra sanity checks (e.g., you can't add children to a file node, you can't add
+     contents to a directory node).
+   * =value=: this is the generic value potentially associated with the node. As mentioned, this
+     is not used in the current implementation.
+   * =changes=: this is an object of the type !CommitItem (see below) which encloses all the information
+     which is needed in order to completely specify to the repository during a commit what kind of
+     changes have been made to this node.
+   * =parent=: this is a pointer to the parent node of this node, to facilitate easy traversal of the
+     structure.
+   * =children=: this is a hash map with the child nodes of this node. The keys in the hash map
+     are the names of the directories or files represented by the child nodes, while the values
+     are the child node themselves. To give you an idea, if a node represents the path =dir1/dir2/file=,
+     then this node can be reached as follows:
+     <verbatim>
+     rootNode.children.get("dir1").children.get("dir2").children.get("file");
+     </verbatim>
+   * =baseFile=: this is used to store the base file of a file. A base file is the file as stored in
+     the repository at a certain version. Such a base file is retrieved from the repository and stored
+     in this field only when the contents of a file are changed locally. The base file is needed as
+     a participant in the merge operation which is performed during an update.
+   * =inConflict=: this is a boolean field, used to mark a node that is in conflict after an update.
+     A node is in conflict if it represents a file that has been changed both locally and on the repository
+     (by some other user) and the two sets of changes cannot be merged automatically.
+
+The final class used in this whole structure is the =CommitItem= class, which our team recovered
+and reused off a branch of last year's team. Although a lot of new things have been added to it by
+us, we haven't unfortunately got to refactoring it, although this is a clear necessity. No documentation
+other then the class' source code itself will manage to explain everything that's in there clearly,
+but we will try to give at least a description of its purpose. It basically serves as a container of
+all the changes made to a node. A file or directory can be deleted, added, deleted and added, copied,
+moved and so on. They can also have their properties changed, and a file can have its contents changed
+as well. Any (combination of) such changes will be registered in this single commit item associated
+with the node, which is why it is such a mess. There are numerous methods for setting and consulting
+all this information, and their use is very delicate.
+
+Aside from all this information about the changes, a commit item also keeps the path of the file or
+directory it stores changes about, which is rather unfortunate, since it's the third place in which
+information has to be kept in sync (the second one being the path field of the node and the first one
+being the structure of the !PathTree itself). Bad design, we know, and it should be fixed. It can't
+just be removed, though, since it is still used in the very most important method of the !CommitItem
+class, namely the =commit= method, which gets called when a commit is performed and is expected to
+_correctly_ send all the changes to the repository. This is quite a challenge, given the large number
+of possible meanings of the information stored in this class. To put it bluntly: this seriously needs
+refactoring!
+
+Last, but definitely not least, we have the (quite basic, for now) =RepositoryCache= class, which is a
+wrapper around the !JavaSVN !SVNRepository class, through which all interaction with the repository
+takes place. As the name says, the !RepositoryCache works as a cache for file contents, properties of
+files and directories and for path types (i.e., whether a given path represents a file or a directory
+in a certain version of the repository). As it is implemented right now, the cache uses a separate hash
+map for each of these things it caches (one for files, one for properties, etc.). The keys in these
+hash maps are =path@revision=. The class works as any cache: if it has the required information stored
+in the cache, it returns it from the cahce, if not, it forwards the call, gets the result, saves it and
+returns it. In addition to this basic functionality, however, the cache gets filled during the initial
+checkout with all the properties of the files and directories and with the path types. This is merely
+an improvement which we get almost for free, since we have to do the initial (partial) checkout anyway
+for building the !PathTree. And then the only extra thing that gets read just for the cache are the
+properties. There are some issues with the cache, though, which we discuss in the
+[[http://www.cs.uu.nl/wiki/Gw/SDoc#Issues][issues section]].
+
+---++ Operations
+
+In this section we discuss the internals of how the more difficult operations are implemented. This should
+partially be read as a walkthrough the !JavaSVN model (which is quite poorly documented, with the effect of
+our having a hard time figuring out how to use it) and partially as an explanation of some of the semantics
+of storage operations, as they are performed on our !PathTree.
+
+As a general tip, all methods called =registerXXX= in the !PathTree class have the effect of both actually
+making some changes to the tree _and_ registering those changes with the tree, so that when a commit is
+requested, the necessary information for telling the repository about the local changes is available.
+
+---+++ Create & Modify
+
+Creating a new directory simply means inserting a new node in the tree and registering it as inserted
+by attaching a commit item to it which says that it's a new item and that it's a directory. Creating
+a new file implies the same thing, except that the commit item will also contain a pointer to a (physical)
+file storing the contents of the newly added (logical) file. The same function that manages creation
+of files also manages editing of files, except that in this case, a different type of commit item is
+associated with the node representing the modified file, namely one that indicates that this is a modification
+of an already existing file and not an addition of one.
+
+Regardeless of whether a file or a directory is created, the behaviour is that any intermediate directories
+that might need to be created will be created automatically. So, if you add a path like "dir1/dir2/dir3/name"
+and only "dir1" currently exists in the tree, "dir2" and "dir3" will be created as well, in addition to creating
+the directory or the file called "name".
+
+---+++ Delete
+
+Deletion of a file or directory is a bit more involved, since there are several cases to handle. Normally,
+a regular node is simply marked for deletion when the delete function is called for it, and not really deleted
+physically from the tree, since we still need some way of knowing that it has been deleted, so that we can
+tell it to the repository. Marking a node for deletion means attaching a commit item to that node which says
+that the node is deleted. Many of our other !PathTree functions automatically treat nodes marked for deletion
+as deleted. However, if the node to be deleted is one marked for addition, that means that deleting it can
+actually be done physically, since there is nothing to communicate to the repository (the node was added
+locally, but then also deleted, so in essence this is the equivalent of nothing as far as the commit is concerned).
+
+Further on, if the deleted node is a directory, then not only that node is marked for deletion, but also all
+of its descendants. This might seem like a weird decision at first, and as a matter of fact, this wasn't
+really the original way of doing things. Originally, we simply marked the node for deletion and physically deleted all
+of its children. However, we found out that this was inappropriate when we considered the reverse functionality.
+This because the user could request the reversing of one of the node's children, and if they are no longer
+there, they cannot be reversed anymore. Therefore, we had to replace the physical deletion of all the node's
+children with marking them as deleted. This complicates things even further when the commit has to be done,
+since we have to make sure we don't commit the deletion of the children because as soon as we delete the
+top-most node, everything underneath it is deleted automatically, and then if we furter on try to delete its
+children as well, this will result in an error, since its children are no longer there.
+
+---+++ Copy
+
+To be filled in.
+
+---+++ Move
+
+To be filled in.
+
+---+++ Revert
+
+To be filled in.
+
+
+---+++ Commit & Update
+
+Entire volumes could probably be written about the commit and update operations, but probably no one would
+read them. Therefore, I will approach documenting these two in a different manner, namely by giving a few
+pointers which I hope will help with the understanding.
+
+---+++ Commit
+
+   * the commit operation implies _driving_ a !ISVNEditor which is returned by one of !JavaSVN's methods
+     (this is properly documented in the !JavaSVN documentation, so I won't insist on it). In essence, by
+     calling methods of this driver, you are telling the repository what changes happened locally. The driver
+     has methods for committing creation/deletion/modification of files/directories/properties and so on.
+     The only trick is calling them in the right order.
+   * the general idea is that before any changes about a directory or file can be communicated, all the
+     directories up to and including the one containing the directory or file which has been added/deleted/changed/etc.
+     have to be opened with the =openDir= method. It you need to open a path like "dir1/dir2/dir3", it is
+     not enough to just call =openDir("dir1/dir2/dir3")=, but you actually have to call =openDir= three times,
+     for each of them in part. Further on, if you wish to make any changes to a file or directory contained
+     in "dir1/dir2/dir3", you have to open that file or directory first, then apply the changes, and then
+     close it. Eventually, all opened directories have to be closed in the reverse order in which they have
+     been opened.
+   * a file or directory cannot be opened twice within the same commit session (there will be no error, but
+     only the changes from the first time it was opened will have an effect).
+   * if you delete a directory, all of its contents will be deleted automatically, so you don't have to recurse
+     through it and delete everything manually. Even worse, trying to do so will result in an error. If you
+     really want to do it (for whatever obscure reason), then the only way is to delete things bottom-up. Then
+     there will be no problems.
+   * the code which takes care of committing a single commit item is probably the nastiest in the whole storage
+     layer. This is because the commit item structure registers so many things, and this can explode in what the
+     their possible combinations are. An important thing to mention is that when a commit item is marked both
+     for deletion and addition, we implicitly know that it has to be deleted first and added afterwards (this
+     is because if it had been the other way round, the commit item wouldn't exist at all, i.e., if the node was
+     first added locally and then deleted locally, it would have disappeared physically together with its commit item).
+   * the code for sending the contents of a file to the repository is ugly, and explaining it will not make it
+     any less so. The best way to go about this is to look at the examples given in the !JavaSVN documenatation,
+     since they're probably what will make you understand what's going on.
+   * the only difference between committing a normal addition of a file/directory or the copy of a file/directory
+     lies in the second and third parameters of the =addFile/addDir= methods. If these are not specified (i.e.,
+     if you use =null= and =-1= for them), then you are committing a simple addition. If they are specified, then
+     you are saying that the file/directory you are adding is a copy of the file/directory specified by the second
+     paramter from the revision specified by the third. It looks simple, it is simple, it works, there's no need to
+     try to think (as I did) that it's not supposed to be that simple and try to figure out some other weird things :).
+
+---+++ Update
+
+   * update is even more complicated than commit, because here the roles are changed and it is us who have to
+     provide an !ISVNEditor for the repository and the repository will _drive_ this editor and thus tell us
+     about any changes. But before this happens, another step has to be carried out: we first have to report to
+     the repository about the status of our copy, so that it knows what deltas to send us (e.g., if we have
+     version 5 of a file, and the repository has version 8, then it has to send the delta between 5 and 8, but
+     if we have, say, version 2, then it has to send the delta between 2 and 8; the repository doesn't know,
+     however, what version we have, so we have to report this to it first, and of course, do this for all the
+     files and directories in our !PathTree).
+   * reporting to the repository should be easy, but it's not, and this is because things just don't work out
+     as "advertised" by the !JavaSVN documentation. And to make things even worse, errors only appear during
+     the callback phase (i.e., when the repository drives our !ISVNEditor), not during the report phase, which
+     effectively turns debugging into guess work. The outcome of all the guess work is that reporting to
+     the repository that you've added files/directories locally will just not work. Well, it will, but then
+     at some point the repository will simply call the =abortEdit= method of the editor (which basically translates
+     to the repository telling you "there was some sort of error, I'm not telling you what it was, but it's
+     there, so deal with it!" - which, of course, gives you a wide variety of options from banging your head
+     against to wall to making threats to the repository - or !JavaSVN - that if it doesn't increase its verbosity
+     level anytime soon, you're going to end the business relationship). Eventually, we simply decided to no
+     longer report to the repository about the locally added files/directories anymore, and that seems to work. With
+     no bad consequences, as much as we're able to tell. Reporting deleted files/directories seems to not break
+     things, so we're still doing that.
+   * once the reporting is done, the repository will start calling back on our implementation of the !ISVNEditor
+     in much the same way we are doing when commiting our local changes. In a sense, during the update, we are
+     the repository and the repository is the local copy.
+   * applying these changes is not very involved, except for the case where there is a file which has local
+     modifications and also remote modifications (i.e., modifications on the repository). In that case, we need
+     to do a 3-way merge between a common base file, the file with our local version, and the file with the
+     repository's version. This has a number of implications: first of all, whenever we modify a file locally,
+     we have to retrieve its base file from the repository and save it in the local !PathTree, so that it's available
+     for this 3-way merge operation. This is why you will see a =baseFile= field in the !PathTreeNode class.
+     Then, another messy thing is that the repository doesn't send the entire contents of the changed file
+     in one go, but (depending on the size of the changes) over multiple method calls to =textDeltaChunk=.
+     After the last batch of changes to the file has been sent, the repository finally calls =textDeltaEnd=.
+     It is then that we have to process these changes. But, in order to do so, we first have to put them back
+     together across a number of calls to =textDeltaChunk=. This is where the =SVNRAWorkspaceMediator= comes in,
+     to allow temporary storage for and composition of these changes. So, in processing =textDeltaChunk= we
+     keep saving the file changes in the workspace mediator and in processing =textDeltaEnd= we retrieve and
+     then remove these changes from the same workspace mediator.
+   * the repository doesn't really send the contents of the file, but a list of intstructions about how to
+     transform the base file (which we have) into the latest version of the file. This is the reason for most
+     of the ugly code in =textDeltaEnd=, where we use the !JavaSVN infrastructure to apply these instructions
+     and eventually get a regular file with contents in it. Further on, we need to perform the 3-way merge we
+     were mentioning earlier, for which we also use the !JavaSVN infrastructure.
+
+---++ Issues
+
+   1. *lazy checkout*: Currently, the !PathTree is built with the complete file/directory structure from the
+      beginning, which means that this structure has to be checked out from the repository all at once. Even
+      without file contents being read (which is the case), still checking out the whole structure is not scalable.
+      Because of this, it has been suggested that the !PathTree be constructed in a lazy fashion, as new areas
+      of the tree are required by the user. Adding paths in the tree is trivial, however ensuring consistency
+      between the repository and the local copy will be tedious, and doing it efficiently will require some
+      careful implementation.
+   2. *storage instance policy*: There should be one storage only for all the users which browse the wiki. As
+      long as users only perform read-only operations, they can safely share a common storage. This has the
+      obvious advantages of speed (all users starting with the second one get an already built !PathTree) and 
+      memory saving (one !PathTree instead of tens, hundres, thousands, etc.). As soon as a user performs a local
+      change, the !PathTree should be cloned and, from that point on, the user should be using his/her own !PathTree.
+      Once the user commits his/her changes, (s)he should fall back to the common !PathTree.
+   3. *single cache*: A cache is now associated with a !SVNRAStorage instance. This is unnecessary, however, since
+      the information in the cache is the same for all storages. Thus, there should be a single cache shared by
+      all instances of !SVNRAStorage. A straightforward solution is to make all the hash maps in the cache static,
+      but we haven't thoroughly analyzed if this works just like that (mostly due to possible synchronization
+      issues). Making the hash maps synchronized is on option, but it should only be done if strictly necessary,
+      since the cache gets used very much, and synchronized access to it would noticibly slow things down.
+   4. *cache updating*: At this point, as soon as the revision number of the local copy changes (after an update
+      or a commit), the cache unnecessarily becomes empty. This is because the keys in the hash maps are strings
+      composed from the path _and_ the revision (=path@revision=) and once the revision changes, the search keys
+      will become path@new-revision, leading to a cache miss. This shouldn't be the case, since most of the information
+      in the cache goes unchanged from one revision to the next, so it is still usable. A cache update policy is
+      thus to be desired, which makes sure that all the parts of the cache that are not changed can still be used.
+   5. *prefetching*: It would be desirable to have a (perhaps separate) piece of code which does some prefetching of
+      pages as the user is browsing. This implies analyzing the pages requested and prefetching all the links which
+      appear in those pages (perhaps one or two levels deep). This would ensure smoother navigation. Another
+      suggestion was about also collecting some statistics of most used pages, storing those in some permanent form
+      and, on startup, prefetch the most visited areas of a tree (again, this implies that lazy checkout is in place).
+   6. *CommitItem refactoring*: This was discussed in the overview section. Please have a look there for details.
+   7. *move/copy problems*: ...
+   8. *revert problems*: ...
+   9. *ISVNEditor implementation*: both checkout and update work similarly: we have to provide an implementation of the class
+      !ISVNEditor and the repository will call the methods of this implementation of ours in order to tell us about
+      changes. Right now, we have two different implementations of this editor, one for checking out and one for
+      updating, and we were also considering a third one, for updating the cache, but didn't get to it. The idea is
+      to come up with a way of unifying all these implementations in a single one (since most of what they do is the
+      same). The problem with this is that these methods have to change the internal structure of both the !PathTree
+      and the cache, so it is not really enough to just put them all in a separate implementation. Some amount of redesign
+      has to be done in order to allow this implementation to perform the changes it needs to.

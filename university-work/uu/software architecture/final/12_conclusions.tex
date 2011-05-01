@@ -1,0 +1,58 @@
+\chapter{Conclusion}
+
+Using the directives stated by this architecture description, SureThing will
+benefit from an IT system that is completely scalable (ready to cope with the
+company's growth expected after the merger) and unbounded (very unlikely to be
+threatened by the eventual discontinuation of proprietary technologies).
+In four words: SureThing will be \textbf{ready for the future}.
+
+
+\section{Why the .NET requirement has been discarded}
+
+The .NET framework is a new technology released by Microsoft
+in order to compete with Java, as-a-matter-of-factly coming
+with its share of advantages and disadvantages.
+
+On the one hand, programs in .NET are supposedly slightly faster
+than the ones written in Java, but not significantly: both use
+run-time emulation via a virtual machine, which makes them about
+two to three times slower than native programs (programs that
+have been translated to machine code).
+
+On the other hand, this performance overhead is forgivable for
+Java, because this separation between virtual machine code and
+machine code makes it possible to run the very same Java program
+on a vast variety of platforms whose manufacturers have already
+agreed to comply with Java standards, whereas .NET's expansion to
+other platforms than Microsoft Windows does not seem promising at
+all.
+
+Therefore, had we chosen to develop the SureThing architecture
+using the .NET framework, no savings could have been made by
+reusing part of the existing J2EE implementation of UCIS. Instead,
+the project would have suffered incremental costs implied by the
+licensing of the .NET technology. As for the future, it is impossible
+to assert which of the two rival techologies will prevail, but one
+thing is for sure: today, the Java technology is widely spread
+whilst the .NET technology has yet to prove itself.
+
+Finally, considering the fact that the future of the Microsoft Windows
+operating system itself has never been less sure since it overcame Apple's
+MacOS on the market in the late eighties / early nineties, with the
+Apple's recent come-back stories on every business channel nowadays,
+and worldwide organizations such as the UN praising the Linux operating
+system to the people, and computer market leaders such as IBM, HP and SUN
+promoting Linux-based IT solutions, and the increasing security threat to
+users of the Windows operating system, we believe that chosing the Java
+technology will bring extra insurance to the project in regard to the
+uncertain future of computer operating systems and architectures, since
+it is possible to easily move Java applications from a Windows- and
+PC-based platform to any other platform supporting Java, which is approximately
+\textit{any existing platform}.
+
+\section{Why the buy-before-build strategy has been ignored}
+
+The project is mainly about merging two existing architectures and enhancing
+the result. No software on the market would be exactly suitable for the task,
+and buying a whole new software system would prove to be costlier than
+building on top of the existing system as described by this proposal.

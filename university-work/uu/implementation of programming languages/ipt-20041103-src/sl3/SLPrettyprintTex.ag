@@ -1,0 +1,140 @@
+{-# LINE 12 "SLPrettyprintTex.lag" #-}
+ATTR Expr [  |  | pptex : PP_Doc]
+SEM Expr
+  | Unit        loc.pptex   =  text "Unit"
+  | Intexpr     loc.pptex   =  text (show  @int)
+  | Boolexpr    loc.pptex   =  text (show  @bool)
+  | Ident       loc.pptex   =  text  @var
+  | Op          loc.pptex   =  @le.pptex >##< text (escape  @op) >##<  @re.pptex
+  | If          loc.pptex   =  keyword "if" >##<  @cond.pptex >##<
+                               keyword "then" >##<  @thenExpr.pptex >##<
+                               keyword "else" >##<  @elseExpr.pptex >##<
+                               keyword "fi"
+  | Let         loc.pptex   =  keyword "let" >##< (pp_block "" "" "; "  @decls.pptexs) >##<
+                               keyword "in" >##<  @expr.pptex >##<
+                               keyword "ni"
+  | Assign      loc.pptex   =  text  @var >##< keyword ":=" >##<  @expr.pptex
+  | Apply       loc.pptex   =  pp_parens  @func.pptex >##< pp_parens  @arg.pptex
+  | Lam         loc.pptex   =  text "\\lambda" >#<  @vars.pptex >##<
+                               text "\\rightarrow" >##<  @expr.pptex
+  | Seq         loc.pptex   =  pp_block "" "" "; "  @exprs.pptexs
+
+ATTR Decls [ | | pptexs : PP_Docs]
+SEM Decls
+  | Nil         loc.pptexs  =  []
+  | Cons        loc.pptexs  =  @hd.pptex :  @tl.pptexs
+
+ATTR Decl [ | | pptex : PP_Doc]
+SEM Decl
+  | Decl         loc.pptex  =  text  @var >##< ppTexAnnotateType  @type 
+                               >##< text "=" >##<  @expr.pptex
+  
+ATTR Exprs [ | | pptexs : PP_Docs]
+SEM Exprs
+  | Nil         loc.pptexs  =  []
+  | Cons        loc.pptexs  =  @hd.pptex :  @tl.pptexs
+  
+ATTR Vars [ | | pptex : PP_Doc]
+SEM Vars
+  | Nil         loc.pptex   = empty
+  | Cons        loc.pptex   = text  @hd >#<  @tl.pptex
+
+{
+type PP_Docs = [PP_Doc]
+
+-- 
+
+call               :: String -> PP_Doc -> PP_Doc
+call str doc       = text ("\\" ++ str) >|< pp_braces doc
+
+callList           :: String -> [PP_Doc] -> PP_Doc
+callList str docs  = foldl (\a b -> a >-< pp_braces b) (text ("\\"++str)) docs
+
+keyword str        = call "textbf" (text str)
+package doc        = call "usepackage" doc
+
+environment          :: String -> PP_Doc -> PP_Doc
+environment env doc  = call "begin" (text env) >-< doc >-< call "end" (text env)
+
+document   = environment "document"
+landscape  = environment "landscape"
+mathmode   = environment "displaymath"
+
+quad       = text "\\quad"
+unknown    = text "\\Unknown"
+
+a >##< b = a >|< text "~" >|< b
+
+-- 
+
+header  :: PP_Doc
+header  = text "\\def\\FlagUseIPTStyleInBookStyle{\\No}"
+  >-< call "documentclass" (text "article")
+  >-< package (text "ipt")
+  >-< package (text "deduction")
+  >-< package (text "lscape")
+
+-- 
+
+over :: String -> PP_Docs -> String -> Judgement -> PP_Doc
+over format upper name (gamma,pp,tp) =
+  text ("\\ovr[" ++ format ++ "]")
+    >-< pp_braces list
+          >-< pp_brackets (text ("\\" ++ name))
+          >-< pp_braces (callList "Judgement" [ppTexGamma gamma,pp,ppTexType tp])
+    where list =  if null upper
+                  then empty
+                  else foldr1 (\a b -> a >-< quad >-< b) upper
+
+-- 
+
+ppTexAnnotateType (TAny)  = empty
+ppTexAnnotateType t       = text "::" >#< ppTexType t
+
+ppTexType t = case t of
+  TBool             -> text "Bool"
+  TInt              -> text "Int"
+  TUnit             -> text "Unit"
+  TFunc a b         -> ppLeft a >#< text "\\rightarrow" >#< ppTexType b
+  TForall i t       -> text ("\\forall " ++ take i ['a'..] ++ ".") >|< ppTexType t
+  TBound i          -> text [chr (i + ord 'a')]
+  TVar i            -> text "v_" >|< pp_braces (pp i) 
+  TError "unknown"  -> unknown
+  _                 -> pp "\\perp"
+  where  ppLeft (TFunc a b)  = pp_parens (ppTexType (TFunc a b))
+         ppLeft tp           = ppTexType tp
+
+-- 
+
+ppTexGammas          :: Gammas -> PP_Doc
+ppTexGammas          = environment "GammasEnvironment" . vlist . map f
+   where f (i,as) = callList "GammasEntry" [text (show i),ppTexAssumptions as]  
+
+ppTexAssumptions []  = text "\\emptyset"
+ppTexAssumptions as  = (environment "GammaEnvironment" . vlist . map f . correct) as
+  where f (str,tp) = callList "GammaEntry" [text (escape str), ppTexType tp]
+
+ppTexGamma           :: Int -> PP_Doc
+ppTexGamma i         =  if i == unknownGamma
+                          then unknown
+                          else call "Gamma_" (text (show i))
+
+inGamma :: Judgement -> PP_Doc
+inGamma (gamma,pp,tp) = callList "InGamma" [pp, ppTexType tp, ppTexGamma gamma]
+
+-- 
+
+correct :: Assumptions -> Assumptions
+correct []                    = []
+correct (("_",tp)  : xs)  = correct xs
+correct ((v,tp)    : xs)  = (v,tp) : correct (filter ((v/=) . fst) xs)
+
+(|==>)      :: Subst -> Assumptions -> Assumptions
+(|==>) sub  =  let  op (v,t) xs = (v,sub  |=> t) : xs 
+               in   foldr op []
+      
+escape :: String -> String
+escape = foldr (\c str -> case c of 
+                  '&'  -> "\\&" ++ str
+                  x    -> x : str) []
+}

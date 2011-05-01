@@ -1,0 +1,999 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+
+  \setbeamercovered{transparent}
+}
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{url}
+
+\lstset{% general command to set parameter(s)
+        %frame=single, % frame code fragments
+        breaklines=true, % break long lines
+        basicstyle=\tt\small % print whole listing small
+        %keywordstyle=\color{black}\bfseries\underbar, % underlined bold black keywords
+        %identifierstyle=, % nothing happens
+        %commentstyle=\color{white}, % white comments
+        %stringstyle=\ttfamily % typewriter type for strings
+        %showstringspaces=false % no special string spaces
+       }
+
+\title{Component Composition with Scala}
+
+\author{Bogdan Dumitriu}
+
+\institute
+{
+  Department of Computer Science\\
+  University of Utrecht
+}
+
+\date{June 1st, 2006}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{The Composition Problem}
+
+\begin{frame}
+  \frametitle{Software Engineering}
+
+  The reality of software engineering:
+  \begin{itemize}
+  \item tons of software components exist
+  \item ... and more are created daily
+  \item specifying services \alert{offered} by a component is
+    commonplace
+  \item changing services \alert{used} by a component
+    \begin{itemize}
+    \item needs complex design patterns
+    \item is usually not possible
+    \end{itemize}
+
+  \pause
+
+  \item \emph{software writing is currently an art}
+  \item can we turn it into an industry?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Composition}
+
+  Composition in other braches of engineering:
+  \begin{itemize}
+  \item components are written to conform to standards
+    \begin{itemize}
+    \item e.g., integrated circuits, car parts
+    \end{itemize}
+  \item systems are assembled from parts
+  \item no adaptation is necessary
+  \end{itemize}
+
+  \vspace*{1cm}
+
+  \pause
+
+  Composition in software:
+  \begin{itemize}
+  \item components comply to no standards
+  \item systems are not assembled from parts
+  \item at most, they reuse certain independent parts
+  \item to put components together, ``glue'' code is usually needed
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Software Composition Problem}
+  \framesubtitle{Reasons}
+
+  Why can't we build software from components?
+  \begin{itemize}
+  \item components are only made to work in one environment
+  \item to reuse them in a different context we need to
+    \alert{abstract} over:
+    \begin{itemize}
+    \item provided services
+    \item required services
+    \end{itemize}
+  \item required services are generally hard coded
+  \item design patterns can alleviate this, but
+    \begin{itemize}
+    \item some are difficult to understand
+    \item can be circumvented since they are not enforced by the
+      system
+    \item complicate the design significantly
+    \item often involve unsafe type casts
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Software Composition Problem}
+  \framesubtitle{Requirements}
+
+  To advance towards seamless composition of components:
+  \begin{itemize}
+  \item lift all hard coded links into abstract specifications
+  \item required services should be as easy to specify as provided
+    ones
+  \item mechanism of composition with static type checking
+  \item composition should be possible without any changes to
+    components
+  \end{itemize}
+
+  \pause
+
+  \vspace*{0.5cm}
+
+  The \alert{Scala} programming language allows all this and
+  \begin{itemize}
+  \item infinite scalability (components are classes)
+  \end{itemize}
+\end{frame}
+
+\section{Scala Mechanisms for Composition}
+
+\begin{frame}
+  \frametitle{What is Scala?}
+
+  Scala
+  \pause
+  \begin{itemize}
+  \item is a programming language
+  \pause
+  \item is an object oriented programming language
+  \pause
+  \item is a functional programming language
+  \pause
+  \item has a featureful static type system
+    \begin{itemize}
+    \item generics, variance annotations, abstract types, selftypes,
+      views
+    \end{itemize}
+  \pause
+  \item has a large variety of syntactic constructs
+  \pause
+  \item interoperates smoothly with Java and C\#
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Using Scala with Java}
+
+\begin{block}{Collecting arguments}
+\begin{verbatim}
+import java.util.ArrayList;
+
+object Test {
+  def main(args: Array[String]): unit = {
+    val list = new ArrayList;
+    for (val elem <- args)
+      list.add(elem);
+  }
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Scala Mechanisms for Composition}
+
+  Scala features that enable composition:
+
+  \begin{itemize}
+  \item nested classes
+  \item abstract type members
+  \item modular mixin composition
+  \item selftype annotations
+  \item views
+  \end{itemize}
+
+\end{frame}
+
+\subsection{Abstract Type Members}
+
+\begin{frame}[fragile]
+  \frametitle{Abstract Type Members}
+
+  Abstract type members
+  \begin{itemize}
+  \item type variables that appear at the class level
+  \item generalize the idea of abstract members to types
+  \item the type can be used throughout the class
+  \item similar to generics
+  \end{itemize}
+
+  \begin{block}{Abstract Type Member T}
+  \begin{verbatim}
+abstract class SomeClass {
+  type T;
+  [...]
+}
+  \end{verbatim}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Abstract Type Members}
+
+\begin{block}{Buffer with abstract type member}
+\begin{verbatim}
+abstract class Buffer {
+  type T;
+  val size: int;
+  protected var buff = new Array[T](size);
+
+  def prepend(elem: T): unit = ...
+  def append(elem: T): unit = ...
+  def remove(pos: int): T = ...
+  def clear: unit = ...
+}
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Abstract Type Members}
+
+To create instances of \texttt{Buffer}, we have to provide \texttt{T}.
+
+\begin{block}{Instantiation of abstract type}
+\begin{verbatim}
+val mybuffer = new Buffer
+  { type T = char; val size = 10 };
+mybuffer.append('a');
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Abstract Type Members}
+
+  Composition-wise,
+  \begin{itemize}
+  \item type members are ``hooks'' for plugging in components
+  \item allow class methods to not use concrete types
+    \begin{itemize}
+    \item thus eliminating hard coding of components
+    \end{itemize}
+  \end{itemize}
+
+  \pause
+  \vspace*{1cm}
+
+  Unrestricted type members are rarely useful $\Rightarrow$ \alert{upper type bounds}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Abstract Type Members}
+  \framesubtitle{Upper Type Bounds}
+
+  Upper type bounds:
+  \begin{itemize}
+  \item have similar uses as type classes in Haskell
+  \item restrict the range of an abstract type to subclasses of the
+    bound
+  \item compositionally, can be used to specify required services
+  \end{itemize}
+
+\pause
+
+\begin{block}{Sample Bound}
+\begin{verbatim}
+trait PrettyPrintable {
+  def pp: String;
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Abstract Type Members}
+  \framesubtitle{Upper Type Bounds}
+
+\begin{block}{Upper type bound}
+\begin{verbatim}
+abstract class PPBuffer
+  extends Buffer {
+  type T <: PrettyPrintable;
+
+  def pp: String = {
+    var result = "";
+    for (val elem <- buff) {
+      result = result + elem.pp + "\n";
+    }
+    result;
+  }
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Abstract Type Members}
+  \framesubtitle{Views}
+
+Views:
+\begin{itemize}
+\item different mechanisms to restrict type variables
+\item useful for component adaptation
+\item allows to ``view'' a component as a different one
+\item implicit methods applied automatically by the compiler
+  \begin{itemize}
+  \item when an expression does not match expected type
+  \item when a member of an expression doesn't exist in its type
+  \end{itemize}
+\item application is controlled by scoping and specificity
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Abstract Type Members}
+  \framesubtitle{Views}
+
+\begin{block}{Set \& List}
+\begin{verbatim}
+trait Set[T] {
+  def add(x: T): Set[T];
+  def contains(x: T): boolean;
+}
+
+class List[T] {
+  def prepend(x: T): List[T] = { ... }
+  def head: T = { ... }
+  def tail: List[T] = { ... }
+  def isEmpty: boolean = { ... }
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Abstract Type Members}
+  \framesubtitle{Views}
+
+\begin{block}{View from List to Set}
+\begin{verbatim}
+implicit def list2set[T](xs: List[T]):
+  Set[T] = new Set[T] {
+    def add(x: T): Set[T] =
+      xs prepend x
+    def contains(x: T): boolean =
+      !xs.isEmpty && ((xs.head == x) ||
+                      (xs.tail contains x))
+  }
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Abstract Type Members}
+  \framesubtitle{Views}
+
+\begin{block}{Using the view}
+\begin{verbatim}
+object Test {
+  def addToSet[T](elem: T, set: Set[T]) = {
+    set.add(elem);
+  }
+  def test = {
+    val l: List[char] = new List;
+    addToSet('a', l);
+  }
+}
+\end{verbatim}
+\end{block}
+
+\pause
+
+\begin{block}{Restricting a type}
+\begin{verbatim}
+def m[T <% U](x: T) = { ... }
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\subsection{Modular Mixin Composition}
+
+\begin{frame}
+  \frametitle{Modular Mixin Composition}
+
+Mixin Composition:
+
+\begin{itemize}
+\item Scala mechanism for multiple inheritance
+\item avoids the ``diamond problem''
+\item but still allows code reuse
+\item based on stateless classes called \alert{traits}
+\item compositionally, the method for building systems
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Modular Mixin Composition}
+  \framesubtitle{Traits}
+
+Traits:
+
+\begin{itemize}
+\item stateless classes
+  \begin{itemize}
+  \item no constructor parameters
+  \item no variable definitions
+  \end{itemize}
+\item allow method definitions $\Rightarrow$ code reuse
+\item can be used anywhere abstract classes can
+\item are the only classes that can be \emph{mixed in}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Modular Mixin Composition}
+  \framesubtitle{Traits}
+
+\begin{block}{Defining traits}
+\begin{verbatim}
+trait Logger {
+  def log(message: String): unit;
+}
+
+trait Debugger extends Logger {
+  def debug(message: String,
+            active: boolean) = {
+    if (active) { log(message); }
+  }
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Modular Mixin Composition}
+  \framesubtitle{Traits}
+
+\begin{block}{Using traits}
+\begin{verbatim}
+class FileLogger(path: String)
+  extends Logger {
+  import java.io._;
+  val f = new FileWriter(new File(path));
+
+  def log(message: String) = {
+    f.write(message + "\n");
+  }
+  def close = { f.close; }
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Modular Mixin Composition}
+
+\begin{block}{Mixing in traits}
+\begin{verbatim}
+object Test {
+  def main(args: Array[String]): unit = {
+    class FileDebugger
+      extends FileLogger(args(0))
+      with Debugger;
+    var dbg = new FileDebugger;
+    dbg.debug("some message", true);
+    dbg.close;
+  }
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Modular Mixin Composition}
+
+Mixins, formally:
+
+\begin{itemize}
+\item first class: \emph{superclass}, the rest: \emph{mixins}
+\item superclass must be a subclass of all the superclasses of the mixins
+\item inheritance relationships $\Rightarrow$ DAG
+\end{itemize}
+
+\begin{block}{Linearization of $C$ extends $C_1$ with ... with $C_n$}
+\begin{equation*}
+\quad \mathcal{L}(C) = \lbrace{}C\rbrace \vec{+} \mathcal{L}(C_n)
+\vec{+} \dotsb \vec{+} \mathcal{L}(C_1)
+\end{equation*}
+\begin{equation*}
+\lbrace a,A\rbrace \vec{+} B =
+\begin{cases}
+a,(A\vec{+}B) & \text{if }a\notin{}B,\\
+A\vec{+}B     & \text{if }a\in{}B.
+\end{cases}
+\end{equation*}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Modular Mixin Composition}
+
+Linearization of \texttt{FileDebugger extends FileLogger with Debugger}:
+
+\begin{equation*}
+\begin{split}
+\mathcal{L}(\text{FileDebugger})& = \lbrace\text{FileDebugger}\rbrace \vec{+} \mathcal{L}(\text{Debugger})\vec{+}\mathcal{L}(\text{FileLogger})\\
+                                & = \lbrace\text{FileDebugger}\rbrace \vec{+} \lbrace\text{Debugger}\rbrace \vec{+} \mathcal{L}(\text{Logger}) \vec{+}\\
+                                & \lbrace\text{FileLogger}\rbrace \vec{+} \mathcal{L}(\text{Logger})\\
+                                & = \lbrace\text{FileDebugger}\rbrace \vec{+} \lbrace\text{Debugger}\rbrace \vec{+} \lbrace\text{Logger}\rbrace \vec{+}\\
+                                & \lbrace\text{FileLogger}\rbrace \vec{+} \lbrace\text{Logger}\rbrace\\
+                                & = \lbrace\text{FileDebugger}, \text{Debugger}, \text{FileLogger}, \text{Logger}\rbrace
+\end{split}
+\end{equation*}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Modular Mixin Composition}
+
+\begin{block}{Concrete members}
+  The concrete member that appears in the leftmost class in
+  $\mathcal{L}(C)$ will be inherited in the composition, \emph{even if
+    there are matching abstract members more to the left}.
+\end{block}
+
+\pause
+
+\begin{block}{Abstract members}
+  The abstract member that appears in the leftmost class in
+  $\mathcal{L}(C)$ will be inherited in the composition, \emph{unless
+    there is at least a matching concrete member anywhere in
+    $\mathcal{L}(C)$}.
+\end{block}
+
+\end{frame}
+
+\subsection{Selftype Annotations}
+
+\begin{frame}
+  \frametitle{Selftype Annotations}
+
+Selftype annotations:
+
+\begin{itemize}
+\item all mixins of a class have to be concrete types
+\item what if we need a class to extend an abstract type?
+\item use selftype annotations
+\item changes the type of the self reference \emph{this}
+\item compositionally, the same purpose as abstract types
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Selftype Annotations}
+  \framesubtitle{Family polymorphism}
+
+Family polymorphism:
+
+\begin{itemize}
+\item systems with two or more types that
+  \begin{itemize}
+  \item mutually reference one another
+  \item tend to vary together
+  \end{itemize}
+\item in Java/C++, extended types will refer the supertypes
+\item in Scala, this can be solved using selftype annotations
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Selftype Annotations}
+  \framesubtitle{FSM Example}
+
+\begin{block}{Finite State Machine (1)}
+\begin{verbatim}
+trait FiniteStateMachine {
+  type T;
+  type S <: State;
+  type F <: FSM;
+
+  trait State {
+    def runState(fsm: F): unit;
+    def getNext(x: T): S;
+  }
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Selftype Annotations}
+  \framesubtitle{FSM Example}
+
+\begin{block}{Finite State Machine (2)}
+\begin{verbatim}
+  abstract class FSM(ss: S, endState: S) {
+    protected var curState = ss;
+
+    def readInput: T;
+
+    def run = {
+      while (curState != endState) {
+        val x = readInput;
+        curState = curState.getNext(x);
+        curState.runState(this);
+      }
+} } }
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Selftype Annotations}
+  \framesubtitle{FSM Example}
+
+\begin{block}{Selftype Annotation for FSM}
+\begin{verbatim}
+  abstract class FSM(ss: S, endState: S)
+    requires F
+  { ... }
+\end{verbatim}
+\end{block}
+
+\pause
+
+Requirements (according to [1]):
+\begin{itemize}
+\item selftype of a class must be a subtype of the selftypes of all
+  its base classes
+\item when instantiating a class in a \texttt{new} expression, it is
+  checked that the selftype of the class is a supertype of the type of
+  the object being created
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Selftype Annotations}
+  \framesubtitle{FSM Example}
+
+\begin{block}{State Definition}
+\begin{verbatim}
+object MyFSM extends FiniteStateMachine {
+  type T = char;
+  type S = PrintState; type F = CharFSM;
+
+  abstract class PrintState extends State {
+    val msg: String;
+    def runState(fsm: CharFSM) = {
+      Console.println(msg +
+        " after reading character " +
+        fsm.input.charAt(fsm.ipos-1));
+    }
+  }
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Selftype Annotations}
+  \framesubtitle{FSM Example}
+
+\begin{block}{FSM Definition}
+\begin{verbatim}
+  class CharFSM(ss: PrintState, fs: PrintState, i: String)
+    extends FSM(ss, fs) {
+    val input: String = i;
+    private var pos: int = 0;
+
+    def readInput: char = {
+      [...]
+      input.charAt(pos++);
+    }
+
+    def ipos = pos;
+} }
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\section{An Example: Broker System}
+
+\begin{frame}
+  \frametitle{Broker System}
+  \framesubtitle{Description}
+
+Example: A Broker System
+\begin{itemize}
+\item original problem: reuse component without changing source code
+\item the system's components:
+  \begin{itemize}
+  \item two interface servers, one for bidders, one for sellers
+  \item one backend server, to match transactions
+  \item component representing clients' accounts
+  \end{itemize}
+\item components are highly interconnected
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Broker System}
+  \framesubtitle{Description}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.75]{fig/dependencies}
+\caption{Component dependencies}
+\label{fig:dep}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Broker System}
+  \framesubtitle{Issues}
+
+So, why isn't this easy?
+\begin{itemize}
+\item basic solution with components as top level classes
+  \begin{itemize}
+  \item introduces hard links
+  \item prevents re-entrancy in the presence of static data
+  \end{itemize}
+
+\pause
+
+\item pass components around in a context object
+  \begin{itemize}
+  \item loses type safety
+  \end{itemize}
+
+\pause 
+
+\item use various design patterns
+  \begin{itemize}
+  \item reduces performance
+  \item it is up to the user to enforce their use
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Broker System}
+  \framesubtitle{Solution}
+
+Guideline to solution (in Scala):
+
+\begin{itemize}
+\item use nested classes 
+\item outer class: entire system
+\item inner classes: components
+\end{itemize}
+
+\begin{block}{System with nested classes (and objects)}
+\begin{verbatim}
+class System {
+  class Component1 = ...
+  class Component2 = ...
+  object staticData = ...
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Broker System}
+  \framesubtitle{Solution}
+
+\begin{block}{file Accounts.scala}
+\begin{verbatim}
+trait Accounts {
+  class Account { ... }
+}
+\end{verbatim}
+\end{block}
+
+\pause
+
+\begin{block}{file MatchServers.scala}
+\begin{verbatim}
+trait MatchServers
+  requires (MatchServers
+              with AskServers
+              with BidServers) {
+  abstract class Input {
+    val client: String;
+    [...]
+  }
+
+  object MatchServer { ... }
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Broker System}
+  \framesubtitle{Solution}
+
+\begin{block}{file AskServers.scala}
+\begin{verbatim}
+trait AskServers
+  requires (AskServers
+              with Accounts
+              with MatchServers) {
+  object AskServer { ... }
+}
+\end{verbatim}
+\end{block}
+
+\pause
+
+\begin{block}{file BidServers.scala}
+\begin{verbatim}
+trait BidServers
+  requires (BidServers
+              with Accounts
+              with MatchServers) {
+  object BidServer { ... }
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Broker System}
+
+The final system:
+\begin{itemize}
+\item literally mix everything together
+\end{itemize}
+
+\begin{block}{Final system}
+\begin{verbatim}
+object BrokerSystem extends Accounts
+                   with MatchServers
+                   with BidServers
+                   with AskServers {
+  def main(args: Array[String]) = { ... }
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Broker System}
+  \framesubtitle{Granularity}
+
+Granularity of the required services:
+
+\begin{itemize}
+\item currently at component level
+\item not necessarily appropriate for all systems
+\item can be made coarser
+\item or more fine grained
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Broker System}
+  \framesubtitle{Granularity}
+
+\begin{block}{Coarser granularity}
+\begin{verbatim}
+trait MatchServers
+  requires BrokerSystem { ... }
+
+trait AskServers
+  requires BrokerSystem { ... }
+
+trait BidServers
+  requires BrokerSystem { ... }
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Broker System}
+  \framesubtitle{Granularity}
+
+\begin{block}{Finer granularity}
+\begin{verbatim}
+trait MatchServers {
+  type AskServer <: AskServerInterface;
+  type BidServer <: BidServerInterface;
+
+  def completeBid(bid: Input): unit;
+  def completeAsk(ask: Input): unit;
+
+  object MatchServer { ... }
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}
+  \frametitle{Conclusion}
+
+The four language features that enable composition:
+
+\begin{itemize}
+\item nested classes
+\item abstract type members
+\item mixin composition
+\item selftype annotations
+\end{itemize}
+
+Bonus: the Scala language
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Bibliography}
+
+  [1] Odersky, M., Zenger, M. Scalable component abstractions. In
+  \emph{OOPSLA'05: Proceedings of the 20th annual ACM SIGPLAN
+    conference on Object oriented programming, systems, languages, and
+    applications} (New York, NY, USA, 2005), ACM Press, pp. 41--57.
+
+\vspace*{0.5cm}
+
+  [2] Scala home page. \url{http://http://scala.epfl.ch/}
+
+\vspace*{0.5cm}
+
+  [3] Dumitriu, B. Component Composition with Scala.
+  \url{http://losser.labs.cs.uu.nl/~bdumitri/article.pdf}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Questions?}
+
+Q \& A Session
+\end{frame}
+
+\end{document}

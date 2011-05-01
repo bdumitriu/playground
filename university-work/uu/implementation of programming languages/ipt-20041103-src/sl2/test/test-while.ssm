@@ -1,0 +1,29 @@
+  LDC  3
+  annote SP 0 0 green "def of a"
+  LDC  1
+  annote SP 0 0 green "def of b"
+L0: 
+  LDL  1
+  annote SP 0 0 green "copy of a"
+  LDC  0
+  GT
+  BRF L1
+  LDL  2
+  annote SP 0 0 green "copy of b"
+  LDL  1
+  annote SP 0 0 green "copy of a"
+  ADD
+  STL  2
+  LDL  1
+  annote SP 0 0 green "copy of a"
+  LDC  1
+  SUB
+  STL  1
+  BRA L0
+L1: 
+  LDL  2
+  annote SP 0 0 green "copy of b"
+  STS  -2
+  AJS  -1
+  TRAP 0
+  HALT

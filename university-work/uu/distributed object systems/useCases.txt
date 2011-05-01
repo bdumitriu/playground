@@ -1,0 +1,186 @@
++--------------------------+
+| General system use cases |
++--------------------------+
+
+1. Log in:
+	- user browses to the page where he must log in
+	- user types in his user name
+	- user types in his password
+	- system checks his login and password and replies with a success or failure notification
+
+1a. Log out:
+	- user presses the log out button
+	- system logs the user out and he has to log in again if he wants to perform any action in the system
+	  marked with [user has to be logged in]
+
+2. Create a user account:
+	- user browses to the page where he can create an account
+	- user fills in a user name
+	- user enters a password
+	- user enters same password again
+	- system checks that passwords match
+	- system checks that user name doesn't already exist
+	- system creates user and replies with a success or failure notification
+
+3. Deleting a user account:
+	- [user has to be logged in]
+	- user browses to the page where he can delete his account
+	- user clicks on some button to delete his account
+	- system deletes account and confirms
+
+
++------------------------+
+| Email module use cases |
++------------------------+
+
+4. Send a message:
+	- [user has to be logged in]
+        - user browses to the page where he can send messages
+	- user types in the message he wants to send
+	- user selects or types in the user(s) he want to send the message to
+	- user clicks on a send button
+	- system sends message and notifies the user if the message has been sent successfully
+
+5. Read a message:
+	- [user has to be logged in]
+	- user browses to the page where he can read messages
+	- system displays a list of all the messages in the default mailbox
+	- user can select another mailbox
+	- user clicks on the message he wants to read
+	- system displays the message to the user and marks the message as read
+
+5a. Delete a message:
+	- [user has to be logged in]
+	- user browses to the page where he can delete messages
+	- system displays a list of all the messages in the default mailbox
+	- user can select another mailbox
+	- user selects the message(s) he wants to delete
+	- user confirms
+	- system delete the message(s) and notifies the user if the message(s) has(have) been deleted successfully
+
+6. Create mailbox:
+	- [user has to be logged in]
+        - user browses to the page where he can create mailboxes
+	- user types in the name of the mailbox
+	- user confirms
+	- system creates mailbox and notifies the user if the mailbox has been created successfully
+
+7. Delete mailbox:
+	- [user has to be logged in]
+        - user browses to the page where he can delete mailboxes
+	- user selects the mailbox(es) he wants to delete
+	- user confirms
+	- system deletes the mailbox(es) and notifies the user if the mailbox(es) has(have) been removed successfully
+
+7a. Move message to another mailbox
+	- [user has to be logged in]
+        - user browses to the page where he can move messages to other mailboxes
+	- user selects the message(s) to move
+	- system displays a list of all the mailboxes the message(s) can be moved to
+	- user selects the destination mailbox
+	- user confirms
+	- system moves message(s) to the destination mailbox and notifies the user if it has moved it(them) successfully
+
+8. Add contact (user or mailing list) to address book:
+	- [user has to be logged in]
+	- user browses to the page where he can add contacts to his address book
+	- system displays a list with all the users and the mailing lists of the system
+	- user selects the contact(s) he wants to add to his address book
+	- user confirms
+	- system adds the contact(s) and notifies the user if the contact(s) has(have) been added successfully
+
+8a. Delete contact (user or mailing list) from address book:
+	- [user has to be logged in]
+	- user browses to the page where he can delete contacts from his address book
+	- system displays a list of all the contacts in the address book
+	- user selects the contact(s) to delete
+	- user confirms
+	- system deletes the address(es) and notifies the user if the address(es) has(have) been deleted successfully
+
+9. Create mailing list:
+	- [user has to be logged in]
+	- user browses to the page where he can create mailing lists
+	- system displays a list with all the users of the system
+	- user selects the users he wants to be part of the mailing list
+	- user enters the name for the mailing list
+	- user confirms
+	- system creates the mailing list and notifies the user if the mailing list has been created successfully
+
++---------------------------+
+| Calendar module use cases |
++---------------------------+
+
+10. Browse the calendar:
+	- [user has to be logged in]
+	- user browses to the page where he can browse the calendar
+	- user sees the current month
+	- user can select other months or years
+	- within a months he sees all the days with or without appointments
+
+11. Create a single appointment:
+	- [user has to be logged in]
+	- user browses to the page where he can create single appointments
+	- user specifies information about the appointment (location, descpription, begin time/date, end time/date)
+	- user confirms
+	- system adds the appointment to the user's calendar and notifies the user if the appointment has been created successfully
+
+12. Create a group appointment:
+	- [user has to be logged in]
+	- user browses to the page where he can create group appointments
+	- system shows a list of all the other users in the system
+	- user selects the users he wants in the appointment
+	- user specifies a duration of the appointment
+	- user specifies additional information about the appointment (location, descpription)
+	- user optionally specifies constraints regarding the appointment (either earliest date or latest date or both)
+	- system computes and displays a few choices for the appointment to the user
+	- user selects one of them
+	- user confirms
+	- system adds the appointment to all selected users' calendars and notifies the user if the appointment has been created successfully
+
+13. Delete a single appointment:
+	- [user has to be logged in]
+	- user browses to the page where he can delete appointments
+	- user selects the appointment he wants to delete
+	- if group appointment is selected, see use case 14
+	- user confirms
+	- system deletes the appointment from the user's calendar and notifies the user if the appointment has been deleted successfully
+
+14. Delete a group appointment:
+	- [user has to be logged in]
+	- user browses to the page where he can delete appointments
+	- user selects the appointment he wants to delete
+	- if single appointment is selected, see use case 13
+	- user confirms
+	- system asks the user if he wants to delete the appointment altogether or just from his calendar
+	- user makes the selection
+	- user confirms
+	- system deletes the appointment from the user's calendar and, if necessary, from the other users' calendars and notifies the user
+	  if the appointment has been deleted successfully
+
+15. Move a single appiontment / Edit any type of appointment:
+	- [user has to be logged in]
+	- user browses to the page where he can move/edit appiontments
+	- user selects the appointment he wants to move/edit
+	- if appointment is a group appointment and the intention is that of moving it, see use case 16
+	- user moves/edits the appointment as he wishes
+	- user confirms
+	- system makes the modification(s) to the appointment and notifies the user if the appointment has been modified successfully
+	- if edited appointment was a group appointment, then the changes are made to all users' calendars
+
+16. Move a group appiontment:
+	- [user has to be logged in]
+	- user browses to the page where he can move/edit appiontments
+	- user selects the appointment he wants to move
+	- if appointment is a single appointment or if the intention is that of editing, not moving, see use case 15
+	- user specifies new constraints regarding the appointment (either earliest date or latest date or both)
+	- system computes and displays a few choices for the appointment to the user
+	- user selects one of them
+	- user confirms
+	- system moves the appointment in all users' calendars and notifies the user if the appointment has been moved successfully
+
+17. Modify granularity
+	- [user has to be logged in]
+	- user browses to the page where he can edit the granularity
+	- user can choose between different kinds of granularity
+	- user confirms
+	- system saves the changes and notifies the user if the granularity has been changed successfully

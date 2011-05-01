@@ -1,0 +1,49 @@
+(*) Perform various general optimizations using extra information provided by
+    the library for flow analysis and alias analysis.
+
+    (.) constant propagation
+    (.) copy propagation
+    (.) common subexpression elimination
+    (.) dead code elimination
+    (.) for loop unrolling
+    (.) code motion
+
+        Code motion moves code that performs an operation or calculates an
+        expression whose result doesn't change, or is invariant. The code is
+        moved so that it only executes when the result may change, rather
+        than executing each time the result is required. This is most common
+        with loops, but it can also involve code repeated on each invocation
+        of a method. The following is an example of invariant code motion in
+        a loop:
+
+        for (int i = 0; i < x.length; i++)
+            x[i] *= Math.PI * Math.cos(y);
+
+        becomes
+
+        double picosy = Math.PI * Math.cos(y);
+        for (int i = 0; i < x.length; i++)
+            x[i] *= picosy;
+
+    (.) ...
+
+(*) Transform use of ArrayList to native arrays. Something like:
+
+    ArrayList<String> x = new ArrayList<String>();
+    ...
+    x.add("abc");
+    x.add("def");
+    ...
+
+    String[] x = new String[??];
+    x[??] = "abc";
+    x[??] = "def";
+
+    System.arraycopy(x, 0, x = new String[x.length + ?? or * ??], 0, x.length);
+
+(*) Allow users to specify objects belonging to Sets in a natural way and
+    then transform the code to use bit masks.
+
+(*) Get object instantiations outside of loops. For this, each constructor should
+    be annotated with some code which would "reset" an object to its initial state,
+    as if that constructor had been called.

@@ -1,0 +1,6 @@
+The only changes were made to the file SLJudgements.ag
+(and are commented therein). There is one small exception:
+the finalSubst attribute has been added in SLTypeInference.ag.
+This is the attribute used to resend the final computed
+substitution back into the tree so that it can be used
+in SLJudgements.ag.

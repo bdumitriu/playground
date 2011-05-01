@@ -1,0 +1,38 @@
+/**
+ * The IDL definition for the interoperability module.
+ *
+ * Author:	Bogdan Dumitriu
+ * Date:	April 10, 2005
+ * Version:	0.1
+ */
+
+module interoperability
+{
+	struct Date
+	{
+		long second;
+		long minute;
+		long hour;
+		long day;
+		long month;
+		long year;
+	};
+
+	struct Appointment
+	{
+		long id;
+		Date startDate;
+		Date endDate;
+		string location;
+		string description;
+		boolean isGroupAppointment;
+	};
+
+	typedef sequence<Appointment> Appointments;
+	
+
+	interface Calendar
+	{
+		Appointments getAppointments(in string loginName, in string password);
+	};
+};

@@ -1,0 +1,35 @@
+package id3jon6deu1xkakdeu2cqck;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#ListenerBehaviour:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#ListenerEvent:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference60 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options option.detail = Implementation 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#ListenerEvent:oiref>=70,180,320,110,0:oigroup>
+<oigroup:<oiref:java#Class#ListenerBehaviour:oiref>=50,50,350,117,0:oigroup>
+*/
+class __positions {
+}

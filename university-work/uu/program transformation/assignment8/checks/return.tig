@@ -1,0 +1,11 @@
+let function twice(x : int) : int = x + x
+    var y : int
+ in twice(1)
+  ; y := 1
+  ; while y < 10000 do
+      ( y := twice(y)
+      ; printint(y)
+      ; print("\n")
+      )
+  ; if 1 then twice(4) else twice(5)
+end

@@ -1,0 +1,19 @@
+/*
+  PARLOG example: Quicksort (using difference lists for speed).
+
+  qsort(List,Sorted,[]): Sorted is List ordered.
+*/
+
+mode qsort(list?,sorted_head^,sorted_tail?).
+qsort([N|Rest],SortedH,SortedT) <-
+  partition(N,Rest,LessN,MoreN),
+  qsort(LessN,SortedH,[N|SortedM]),
+  qsort(MoreN,SortedM,SortedT).
+qsort([],SortedT,SortedT).
+
+mode partition(pivot?,list?,less^,more^).
+partition(Pivot,[T|List],[T|Less],More) <- T < Pivot :
+  partition(Pivot,List,Less,More).
+partition(Pivot,[T|List],Less,[T|More]) <- T >= Pivot :
+  partition(Pivot,List,Less,More).
+partition(Pivot,[],[],[]).

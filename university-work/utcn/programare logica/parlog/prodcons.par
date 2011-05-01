@@ -1,0 +1,51 @@
+/*
+ * Problema producator-conumator. Consumatorul alege un numar
+ * si producatorii incearca sa-l ghiceasca.
+ */
+
+mode consuml(^).
+consuml([C|RestC])<-
+	read_c(C,RestC).
+
+mode read_c(listaintregi?,lista^).
+read_c(I,[])<-
+	corect(I): true.
+read_c(I,RestC)<-
+	not(corect(I)): consuml(RestC).
+
+mode corect(?).
+corect(107).
+
+mode prod1(?).
+prod1(C)<-lazy_int(0,1000,C).
+
+mode prod2(?).
+prod2(C)<-lazy_int(105,200,C).
+
+mode lazy_int(?,?,?).
+lazy_int(N,N,[C|RestC])<-
+	C=N, RestC=[].
+lazy_int(X,Y,[]).
+lazy_int(N1,N2,[C|RestC])<-
+	N1<N2: C=N1, N$is N1+1, lazy_int(N,N2,RestC).
+
+mode split(?,^,^).
+split([],[],[]).
+split([H|Rest],[H|T1],L2)<- split(Rest,L2,T1).
+
+mode swrite(?).
+swrite(X)<-$data(X) & write(X).
+
+mode swritelist(?).
+swritelist([]).
+swritelist([H|T])<- swrite(H) & swritelist(T).
+
+mode not(?).
+not(P)<-P:$f(1);
+not(P).
+
+mode go.
+go<-consuml(C),split(C,C1,C2),prod1(C1),prod2(C2).
+
+mode gow.
+gow<-consuml(C),split(C,C1,C2),prod1(C2),prod2(C1),swritelist(C).

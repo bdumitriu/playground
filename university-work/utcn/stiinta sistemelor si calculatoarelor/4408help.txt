@@ -1,0 +1,24 @@
+ - Functia DOS 4408h -
+
+Functie:
+    Verificare daca un drive anume  foloseste dispozitive de stocare porta-
+    bile.
+
+Asteapta:
+    ax: 4408h
+    bl: numarul drive-ului (0 = implicit, 1 = A, 2 = B, etc.).
+
+Intoarce:
+    ax:
+        cod de eroare daca Carry Flag este setat.
+        0000h: daca drive-ul foloseste dispozitive de stocare portabile.
+        0001h: daca drive-ul nu foloseste dispozitive de stocare portabile.
+
+Descriere:
+    Aceasta functie determina daca un anumit drive foloseste dispozitive de
+    stocare portabile  (de ex., pentru  a vedea daca un  drive este un hard
+    disk sau o unitate de discheta).
+
+Nota:
+    Aceasta functie nu poate fi folosita pentru a interoga un dispozitiv
+    de retea.

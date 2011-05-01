@@ -1,0 +1,27 @@
+Mod de instalare:
+
+1. Se instaleaza serverul Jakarta Tomcat (noi am folosit versiunea 4.0.3)
+disponibil la adresa "http://jakarta.apache.org".
+
+2. Se copiaza fisierul server.xml din directorul "fisier configurare Tomcat"
+din arhiva .zip in directorul tomcat_home\conf\.
+
+3. Se copiaza directorul vutest din arhiva .zip in directorul tomcat_home\webapps\.
+
+4. Se instaleaza sistemul de gestiune a bazelor de date Microsoft SQL server
+(disponibil contra cost la firma Microsoft si distribuitori).
+
+5. Se porneste Microsoft SQL Server.
+
+6. Se ruleaza toate scripturile din fisierele sql\vu.sql si sql\stored_procedures.sql
+din utilitarul Query Analyzer in ordinea aceasta (a fisierelor).
+
+7. Se modifica in fisierul server.xml copiat la pasul 2 numele utilizatorului
+si parola de acces la server precum si IP-ul si port-ul pe care ruleaza acesta
+(este vorba de Microsoft SQL Server). Acesti parametri se gasesc intre randurile
+300 si 325 din fisier. Tot in acest fisier trebuie modificata adresa serverului
+smtp pentru trimitere de e-mail-uri. Aceasta se gaseste la linia 335 in fisier.
+
+8. Se reporneste Tomcat-ul.
+
+9. Se acceseaza pagina de intrare folosind "http://ip_server_tomcat:8080/vutest/".

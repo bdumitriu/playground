@@ -1,0 +1,61 @@
+{-# LINE 8 "SLAttributes.lag" #-}
+imports
+{
+import SLTypes
+}
+DATA Root
+   | Root	Expr
+DATA Expr
+   | Unit
+   | Intexpr	Int
+   | Boolexpr	Bool
+   | Tupleexpr	elist: TupleExprs	-- added a constructor which is used for
+					-- defining a tuple expression. The
+					-- argument elist is of the type
+					-- TupleExprs, which is defined below,
+					-- and it represents the list of
+					-- expressions which are the members of
+					-- the tuple.
+   | Ident	var: String
+   | Op		op: String  le, re: Expr
+   | If		cond, thenExpr, elseExpr: Expr
+   | Let	decls: Decls expr: Expr
+   | Assign	var: Pattern expr: Expr
+   | Apply	func, arg: Expr
+   | Lamcall	call: Expr
+   | Lam	patt: Vars expr: Expr
+   | Seq	exprs: Exprs
+
+DATA Decl
+   | Decl	var: String type: Type expr: Expr
+
+DATA Pattern				-- added a new data type for storing
+   | Single	str: String		-- either single variable names or
+   | Tuple	tup: Patterns		-- (possibly nested) patterns
+
+TYPE Decls	= [Decl]
+
+TYPE Exprs	= [Expr]
+
+TYPE Vars	= [Pattern]		-- changed this from [String] to [Pattern]
+					-- in order to support patterns in addition
+					-- to simple variable names
+
+TYPE Patterns   = [Pattern]		-- added a new type which is used for
+					-- storing and manipulating a list of
+					-- patterns. It is used in the Pattern
+					-- data type.
+
+TYPE TupleExprs	= [Expr]		-- added a new type which is used to
+					-- represent a list of expressions which
+					-- are members of the same tuple. It has
+					-- been introduced as a new type (as
+					-- opposed to using {[Expr]} directly
+					-- above instead of TupleExprs) so that
+					-- attributes could be defined for the
+					-- list of expressions which form the
+					-- tuple.
+
+INCLUDE "SLPrettyprint.ag"
+INCLUDE "SLEvaluate.ag"
+INCLUDE "SLStaticErrors.ag"

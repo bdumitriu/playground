@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <edit>
+    <displayedit />
+  </edit>
+  <view>
+    <!--<displayedit />-->
+  </view>
+  <name>logtest</name>
+  <formbase>
+    <Date />
+    <Description />
+    <Duration />
+  </formbase>
+  <formvalues>
+    <formentry index="3">
+      <Date>2004-10-05</Date>
+      <Description>FooBar 3</Description>
+      <Duration>3</Duration>
+    </formentry>
+    <formentry index="4">
+      <Date>2004-10-10</Date>
+      <Description>FooBar 4</Description>
+      <Duration>0.5</Duration>
+    </formentry>
+    <formentry index="5">
+      <Date>2004-11-04</Date>
+      <Description>bla bla</Description>
+      <Duration>6</Duration>
+    </formentry>
+    <formentry index="base">
+      <Date />
+      <Description />
+      <Duration>0</Duration>
+    </formentry>
+  </formvalues>
+</root>
+

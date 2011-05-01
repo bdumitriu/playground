@@ -1,0 +1,31 @@
+ - Functia DOS 3ah -
+
+Functie:
+    Stergerea unui director gol.
+
+Asteapta:
+    ah: 3ah
+    ds:dx: adresa unui  sir de caractere care se  termina cu nul (cod ascii
+        00h) si care reprezinta directorul de sters.
+
+Intoarce:
+    ax: cod de eroare daca Carry Flag e setat.
+
+Descriere:
+    In  urma apelului  functiei se va  sterge directorul  specificat. ds:dx
+    trebuie sa contina adresa unui sir de forma:
+        [d:][\cale\]nume_director
+    care identifica directorul ce trebuie sters.
+    
+    Daca Carry Flag-ul este setat la  terminarea functiei atunci directorul
+    nu a fost sters, iar codul de  eroare care indica motivul caruia se da-
+    toreaza acest lucru se afla in ax.
+    
+Note:
+    1. Directorul trebuie  sa fie gol. Nu poate contine  nici fisiere, nici
+    subdirectoare. Totodata, directorul nu poate fi cel curent.
+    
+    2. Daca litera ce identifica  drive-ul urmata de : si/sau calea pana la
+    director sunt omise, se folosesc cele implicite.
+    
+    3. Lungimea maxima a sirului aflat la adresa ds:dx poate fi 64 octeti.

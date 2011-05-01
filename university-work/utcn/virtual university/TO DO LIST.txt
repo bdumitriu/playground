@@ -1,0 +1,84 @@
+When some "to do' is done, remove the entry from this file
+(but only if it is completely & thoroughly done).
+
+*** make the chat work properly!!! For example, if you click
+on Start chat with a certain user, leave the opend applet
+running and then click again with the same user, the server
+goes down for good and nothing works anymore. The chat system
+should be thoroughly tested & fixed. (Tudor)
+
+*** modify sp_... to delete all records in User_Message table
+when a message contents is updated. (Bogdan)
+
+*** add a few "Back" buttons here and there, where their absence
+is felt (e.g. if you delete/update something (Announcement,
+Conference, Task, etc.) you get a "... has been deleted/updated
+successfully and then you have to click List ... all over again
+to delete something else. (Bogdan)
+
+*** add:
+	a) "Delete all" buttons;
+	b) checkboxes to select more things to delete at once.
+(not assigned yet)
+
+*** create a "Tips & tricks & tricky things" files for the entire
+project (where we have to specify stuff like: "call Tools.replaceHTMLChars(...)
+when you create text using jsp in a value parameter (e.g.
+<input type="text" value="<%= ... %>" /> or you won't get any text if it
+is enclosed in double quotes", "if you use the {call sp_name
+@parmam=value,...} you might run into problems", etc.) (not assigned yet)
+
+*** filter all stored procedure String parameters through
+substring(0, database_field_size-1) in order to avoid errors when
+inserting/updating stuff due to field dimension limitations.
+(not assigned yet)
+
+*** add help messages where they are needed (as in Add task, for example).
+(not assigned yet)
+
+*** update the Announcement (and other, if any) tables to use
+class_id & idx as primary key instead of announcement_id.
+(Tudor)
+
+*** see what happens when there are errors in the .xml files.
+(Bogdan)
+
+*** solve the problem with data enable when hitting "Back" in the
+browser in the Conference & Announcement pages. Also fix the following
+situation: when an announcement only has an end date or a start
+date (but not both) and is displayed for editing, the checkbox
+for the missing date is initially disabled, even though the "announcement
+should be visible" radio button is selected. (not assigned yet)
+
+*** modify code that makes comparison implying dates in order to make
+things all right if the date in question is today (e.g. if conference/
+announcemnt is supposed to be visible starting with a certain date
+(which is today) make this happen as soon as the clock strikes twelve.
+This implies setting the hour, minute, second and milisecond parameters
+of the day accordingly). See jsp/assignments/ListStudentAssignments.jsp
+in the part with 'due date expired'. (Bogdan)
+
+*** check what needs to be (and can be) checked using JavaScript.
+(not assigned yet)
+
+*** make some better checks on the dates (e.g. don't allow
+start_date > end_date when creating/editing an announcement,
+don't allow due date for an assignement to already be expired,
+etc.). (not assigned yet)
+
+*** change all
+
+<textarea>
+<%= displaySomething() %>
+</textarea>
+
+to:
+
+<textarea>
+<%= displaySmth() %></textarea>
+
+so that no unwanted new lines are inserted unwillingly. (not assigned yet)
+
+*** find other things which have to be done/fixed and do/fix 'em or
+add 'em here. This to do should always be here (it is never completely
+taken care of). (everybody who works on this project)

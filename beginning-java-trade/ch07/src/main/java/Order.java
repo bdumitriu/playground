@@ -6,6 +6,7 @@ import java.util.List;
  * @author Bogdan Dumitriu
  */
 @Entity
+@Table(name="tOrder") // embedded JavaDB fails to create a table named ORDER, since ORDER is a keyword
 public class Order {
 
 	@Id

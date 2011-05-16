@@ -6,6 +6,8 @@ import javax.ejb.Stateless;
 import java.util.concurrent.Future;
 
 /**
+ * Demos asynchronous calls.
+ *
  * @author Bogdan Dumitriu
  */
 @Stateless

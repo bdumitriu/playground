@@ -2,13 +2,14 @@ import static javax.persistence.TemporalType.*;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author Bogdan Dumitriu
  */
 @Entity
-public class Customer {
+public class Customer implements Serializable {
 
 	@Id
 	@GeneratedValue
@@ -104,5 +105,13 @@ public class Customer {
 
 	public void setCreationTime(Date creationTime) {
 		this.creationTime = creationTime;
+	}
+
+	public int getBirthDay() {
+		return dateOfBirth.getDate();
+	}
+
+	public int getBirthMonth() {
+		return dateOfBirth.getMonth();
 	}
 }

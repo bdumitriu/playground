@@ -22,23 +22,12 @@
 			<property name="databaseName" value="${com.sun.aas.instanceRoot}/lib/databases/embedded_default" />
 			<property name="connectionAttributes" value=";create=true" />
 		</jdbc-connection-pool>
-		<jdbc-connection-pool driver-classname=""
-				datasource-classname="org.apache.derby.jdbc.ClientDataSource"
-				res-type="javax.sql.DataSource"
-				description="JDBC Connection Pool for chapter 7 of &quot;Beginning Java Trade&quot;"
-				name="Chapter07Pool">
-			<property name="User" value="APP" />
-			<property name="DatabaseName" value="chapter07DB" />
-			<property name="RetrieveMessageText" value="true" />
-			<property name="Password" value="APP" />
-			<property name="ServerName" value="localhost" />
-			<property name="Ssl" value="off" />
-			<property name="SecurityMechanism" value="4" />
-			<property name="TraceFileAppend" value="false" />
-			<property name="TraceLevel" value="-1" />
-			<property name="PortNumber" value="1527" />
-			<property name="LoginTimeout" value="0" />
-			<property name="ConnectionAttributes" value=";create=true" />
+		<jdbc-connection-pool name="Chapter07Pool"
+				datasource-classname="org.apache.derby.jdbc.EmbeddedXADataSource"
+				res-type="javax.sql.XADataSource"
+				description="Embedded JDBC Connection Pool for chapter 7 of &quot;Beginning Java Trade&quot;">
+			<property name="databaseName" value="memory:Chapter07" />
+			<property name="connectionAttributes" value=";create=true" />
 		</jdbc-connection-pool>
 	</resources>
 	<servers>
@@ -56,11 +45,11 @@
 			</http-service>
 			<iiop-service>
 				<orb use-thread-pool-ids="thread-pool-1" />
-				<iiop-listener address="0.0.0.0" port="3700" id="orb-listener-1" />
-				<iiop-listener security-enabled="true" address="0.0.0.0" port="3820" id="SSL">
+				<iiop-listener address="0.0.0.0" port="13700" id="orb-listener-1" />
+				<iiop-listener security-enabled="true" address="0.0.0.0" port="13820" id="SSL">
 					<ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" />
 				</iiop-listener>
-				<iiop-listener security-enabled="true" address="0.0.0.0" port="3920" id="SSL_MUTUALAUTH">
+				<iiop-listener security-enabled="true" address="0.0.0.0" port="13920" id="SSL_MUTUALAUTH">
 					<ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl"
 							cert-nickname="s1as"
 							client-auth-enabled="true" />
@@ -71,7 +60,7 @@
 						auth-realm-name="admin-realm"
 						security-enabled="false"
 						address="0.0.0.0"
-						port="8686"
+						port="18686"
 						name="system" />
 				<das-config autodeploy-enabled="false"
 						dynamic-reload-enabled="true"
@@ -95,7 +84,7 @@
 			<jms-service type="EMBEDDED" default-jms-host="default_JMS_host">
 				<jms-host name="default_JMS_host"
 						host="localhost"
-						port="7676"
+						port="17676"
 						admin-user-name="admin"
 						admin-password="admin"
 						lazy-init="false" />

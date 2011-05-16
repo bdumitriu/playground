@@ -3,6 +3,8 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 /**
+ * Demos access of resource configurable in ejb-jar.xml.
+ *
  * @author Bogdan Dumitriu
  */
 @Stateless

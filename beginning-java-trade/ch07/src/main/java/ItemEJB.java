@@ -8,6 +8,8 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
+ * Demos access to session context.
+ *
  * @author Bogdan Dumitriu
  */
 @Stateless

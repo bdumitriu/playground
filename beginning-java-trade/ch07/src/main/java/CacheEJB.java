@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Demos chaining singletons and concurrency setup.
+ *
  * @author Bogdan Dumitriu
  */
 @Singleton

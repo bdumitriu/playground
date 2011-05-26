@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+	<title>Create a new book</title>
+</h:head>
+
+<h:body>
+
+<h1>Create a new book</h1>
+
+<hr />
+
+<h:form>
+	<table border="0">
+
+		<tr>
+			<td><h:outputLabel value="ISBN:" for="label_isbn" /></td>
+			<td><h:inputText id="label_isbn" value="#{bookController.book.isbn}" /></td>
+		</tr>
+
+		<tr>
+			<td><h:outputLabel value="Title:" /></td>
+			<td><h:inputText value="#{bookController.book.title}" /></td>
+		</tr>
+
+		<tr>
+			<td><h:outputLabel value="Price:" /></td>
+			<td>€ <h:inputText value="#{bookController.book.price}" /></td>
+		</tr>
+
+		<tr>
+			<td><h:outputLabel value="Description:" /></td>
+			<td><h:inputTextarea value="#{bookController.book.description}" cols="20" rows="5" /></td>
+		</tr>
+
+		<tr>
+			<td><h:outputLabel value="Number of pages:" /></td>
+			<td><h:inputText value="#{bookController.book.numberOfPages}" /></td>
+		</tr>
+
+		<tr>
+			<td><h:outputLabel value="Illustrations:" /></td>
+			<td><h:selectBooleanCheckbox value="#{bookController.book.illustration}" /></td>
+		</tr>
+
+	</table>
+
+	<h:commandButton value="Create a book" action="#{bookController.doCreateBook}" />
+
+</h:form>
+
+<hr />
+
+<i>APress - Beginning Java EE 6</i>
+
+</h:body>
+
+</html>

@@ -5,11 +5,30 @@
 		xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 	<persistence-unit name="chapter10PU" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<!--<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>-->
+		<!--
+			You need to create a JDBC connection pool called "ch10Pool" using:
+				- datasourceclassname=org.apache.derby.jdbc.ClientDataSource
+				- restype=javax.sql.DataSource
+				- properties:
+					- portNumber=1527
+					- password=APP
+					- user=APP
+					- serverName=localhost
+					- databaseName=ch10DB
+					- connectionAttributes=;create=true
+			You also need to create a JDBC resource with JNDI name "jdbc/ch10" using:
+				- connectionpoolid ch10Pool
+		-->
 		<jta-data-source>jdbc/ch10</jta-data-source>
 		<class>entitiy.Book</class>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 		</properties>
+		<!--<properties>
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+			<property name="eclipselink.logging.level" value="INFO" />
+		</properties>-->
 	</persistence-unit>
 </persistence>

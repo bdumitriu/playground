@@ -1,11 +1,7 @@
 package entitiy;
 
+import javax.persistence.*;
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 /**
  * @author Bogdan Dumitriu
@@ -32,6 +28,19 @@ public class Book implements Serializable {
 	private Integer numberOfPages;
 
 	private Boolean illustration;
+
+	public Book(String title, String price, String description, String isbn, Integer numberOfPages,
+			Boolean illustration) {
+		this.title = title;
+		this.price = price;
+		this.description = description;
+		this.isbn = isbn;
+		this.numberOfPages = numberOfPages;
+		this.illustration = illustration;
+	}
+
+	public Book() {
+	}
 
 	public Long getId() {
 		return id;

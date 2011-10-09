@@ -1,12 +1,13 @@
 package controller;
 
-import ejb.BookEJB;
-import entitiy.Book;
-import java.util.ArrayList;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import java.util.ArrayList;
+import java.util.List;
+
+import ejb.BookEJB;
+import entitiy.Book;
 
 /**
  * @author Bogdan Dumitriu
@@ -29,7 +30,9 @@ public class BookController {
 	public String doCreateBook() {
 		book = bookEJB.createBook(book);
 		bookList = bookEJB.findBooks();
-		return "listBooks.xhtml";
+//		return "listBooks.xhtml";
+//		return "listBooks_oldStyle.jsp";
+		return "listBooks_tagLib.jsp";
 	}
 
 	public Book getBook() {

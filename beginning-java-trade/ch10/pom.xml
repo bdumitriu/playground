@@ -19,15 +19,22 @@
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.ejb</artifactId>
-			<version>3.1</version>
+			<version>3.1.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-api</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.2</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+			<scope>provided</scope>
+		</dependency>
+
 <!--
 	Extra libraries for Tomcat (EJB support still missing)
 		<dependency>
@@ -46,6 +53,7 @@
 			<version>1.1.2</version>
 		</dependency>
 -->
+
 <!--
 	EclipseLink config
 		<dependency>
@@ -59,6 +67,10 @@
 			<version>2.2.0</version>
 		</dependency>
 -->
+
+<!--
+	Hibernate config
+-->
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
 			<artifactId>hibernate-jpa-2.0-api</artifactId>
@@ -68,17 +80,12 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>3.5.6-Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-annotations</artifactId>
-			<version>3.5.6-Final</version>
+			<version>3.6.7.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>3.5.6-Final</version>
+			<version>3.6.7.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -88,8 +95,9 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.5.8</version>
+			<version>1.6.2</version>
 		</dependency>
+
 <!--
 		<dependency>
 			<groupId>javax</groupId>
@@ -102,7 +110,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
+			<version>4.9</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -121,6 +129,20 @@
 						<endorseddirs>${endorsed.dir}</endorseddirs>
 					</compilerArguments>
 -->
+					<!--
+						The maven-compiler-plugin approach:
+						
+							<configuration>
+								<compilerArguments>
+									<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+								</compilerArguments>
+							</configuration>
+
+						has the disadvantage that the maven compiler plugin does currently not allow to specify multiple
+						compiler arguments (MCOMPILER-62) and that messages from the Messenger API are suppressed
+						(MCOMPILER-66). A better approach is to disable annotation processing for the compiler plugin.
+						This is the purpose of the <proc>nonc</proc> below.
+					-->
 					<proc>none</proc>
 					<showDeprecation>true</showDeprecation>
 				</configuration>
@@ -170,16 +192,37 @@
 						</goals>
 						<phase>generate-sources</phase>
 						<configuration>
-							<outputDirectory>src/main/java/</outputDirectory>
-<!--							<compilerArguments>-Aeclipselink.persistencexml=src/main/resources/META-INF/persistence.xml</compilerArguments>-->
+							<outputDirectory>target/metamodel</outputDirectory>
+							<!--<compilerArguments>-Aeclipselink.persistencexml=src/main/resources/META-INF/persistence.xml</compilerArguments>-->
 							<processors>
-<!--								<processor>org.eclipse.persistence.internal.jpa.modelgen.CanonicalModelProcessor</processor>-->
+								<!-- <processor>org.eclipse.persistence.internal.jpa.modelgen.CanonicalModelProcessor</processor> -->
 								<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
 							</processors>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+			<!--
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/metamodel</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			-->
 		</plugins>
 		<finalName>ch10</finalName>
 	</build>

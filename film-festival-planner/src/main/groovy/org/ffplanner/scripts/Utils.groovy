@@ -1,6 +1,7 @@
-package org.ffplanner
+package org.ffplanner.scripts
 
-import org.htmlcleaner.*
+import org.htmlcleaner.HtmlCleaner
+import org.htmlcleaner.SimpleXmlSerializer
 
 /**
  *
@@ -9,7 +10,7 @@ import org.htmlcleaner.*
  */
 class Utils {
 
-	static def download(address, fileName) {
+	static def download(String address, String fileName) {
 		def file = new File(fileName)
 		def fileOutputStream = new FileOutputStream(file)
 		def out = new BufferedOutputStream(fileOutputStream)

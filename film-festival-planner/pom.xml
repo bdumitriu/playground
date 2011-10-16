@@ -9,57 +9,45 @@
 
 	<name>film-festival-planner</name>
 
-	<profiles>
-		<profile>
-			<id>webapp</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-				<property>
-					<name>webapp</name>
-				</property>
-			</activation>
-			<properties>
-				<user.packaging>war</user.packaging>
-			</properties>
-		</profile>
-		<profile>
-			<id>scripts</id>
-			<activation>
-				<property>
-					<name>scripts</name>
-				</property>
-			</activation>
-			<properties>
-				<user.packaging>jar</user.packaging>
-			</properties>
-		</profile>
-	</profiles>
-
 	<properties>
 		<endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
 	</properties>
 
 	<dependencies>
-		<!--<dependency>
+<!--		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.ejb</artifactId>
+			<version>3.1.1</version>
+			<scope>provided</scope>
+		</dependency>-->
+<!--		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>-->
+		<dependency>
+			<groupId>org.glassfish.extras</groupId>
+			<artifactId>glassfish-embedded-all</artifactId>
+			<version>3.1.1</version>
+			<scope>provided</scope>
+		</dependency>
+<!--		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-web-api</artifactId>
 			<version>6.0</version>
 			<scope>provided</scope>
 		</dependency>-->
-		<dependency>
-			<groupId>org.glassfish</groupId>
-			<artifactId>javax.ejb</artifactId>
-			<version>3.1.1</version>
-		</dependency>
 
 		<!-- start Hibernate -->
-		<dependency>
+		<!--		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
 			<artifactId>hibernate-jpa-2.0-api</artifactId>
-			<version>1.0.0.Final</version>
-			<!--<scope>provided</scope>-->
-		</dependency>
+			<version>1.0.1.Final</version>
+			<scope>provided</scope>
+		</dependency>-->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -75,32 +63,20 @@
 			<artifactId>hibernate-jpamodelgen</artifactId>
 			<version>1.1.1.Final</version>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.2</version>
+		<!-- only enable logback if you want debug info -->
+<!--		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>0.9.30</version>
 		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>0.9.30</version>
+		</dependency>-->
 		<!-- end Hibernate -->
 
-		<!-- needed for Groovy scripts -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.17</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.extras</groupId>
-			<artifactId>glassfish-embedded-all</artifactId>
-			<version>3.1.1</version>
-		</dependency>
-		<!-- TODO: temporary; listed due to bug in embedded-glassfish 3.1.1; remove when bug fixed -->
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.core</artifactId>
-			<version>4.2.0</version>
-		</dependency>
-
-		<!-- configuration for groovy scripts -->
+		<!-- start configuration for groovy scripts -->
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
@@ -111,7 +87,7 @@
 			<artifactId>htmlcleaner</artifactId>
 			<version>2.2</version>
 		</dependency>
-		<!-- END configuration for groovy scripts -->
+		<!-- end configuration for groovy scripts -->
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -143,7 +119,6 @@
 				<version>2.1.1</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<packagingExcludes>WEB-INF/classes/org/ffplanner/scripts/*</packagingExcludes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -211,26 +186,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.2</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<finalName>groovy-scripts-${project.version}</finalName>
-							<classifier>groovy-scripts</classifier>
-							<includes>
-								<include>org/ffplanner/scripts/*</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.gmaven</groupId>
 				<artifactId>gmaven-plugin</artifactId>
 				<version>1.3</version>
@@ -265,19 +220,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>appassembler-maven-plugin</artifactId>
-				<version>1.1.1</version>
-				<configuration>
-					<programs>
-						<program>
-							<mainClass>org.ffplanner.scripts.TiffDownloader</mainClass>
-							<name>TiffDownloader</name>
-						</program>
-					</programs>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

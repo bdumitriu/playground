@@ -1,6 +1,5 @@
 package org.ffplanner.scripts
 
-import javax.naming.Context
 import org.ffplanner.MovieBundleEJB
 import org.ffplanner.MovieEJB
 import org.ffplanner.entity.Movie
@@ -18,17 +17,14 @@ class TiffMovies {
 
 	final def movieMap = [:]
 
-	Context context
-
 	MovieEJB movieEJB
 
 	MovieBundleEJB movieBundleEJB
 
-	def TiffMovies(also_download, Context context) {
+	def TiffMovies(also_download, MovieEJB movieEJB, MovieBundleEJB movieBundleEJB) {
 		this.also_download = also_download
-		this.context = context
-		this.movieEJB = (MovieEJB) context.lookup("java:global/classes/MovieEJB");
-		this.movieBundleEJB = (MovieBundleEJB) context.lookup("java:global/classes/MovieBundleEJB");
+		this.movieEJB = movieEJB
+		this.movieBundleEJB = movieBundleEJB
 	}
 
 	def getMovieBundle(movieBundleLink, section) {
@@ -104,7 +100,7 @@ class TiffMovies {
 	def downloadMovieFile(address) {
 		def addressTokens = address.tokenize("/");
 		def fileName = addressTokens[-2] + "_" + addressTokens[-1] + ".html"
-		if (also_download) {
+		if (also_download && !(new File(fileName).exists())) {
 			return download(address, fileName)
 		} else {
 			return new File(fileName)

@@ -1,8 +1,8 @@
 package org.ffplanner.scripts
 
-import javax.ejb.embeddable.EJBContainer
-import javax.naming.Context
 import org.ffplanner.ShowingEJB
+import org.ffplanner.MovieEJB
+import org.ffplanner.MovieBundleEJB
 import static org.ffplanner.scripts.Utils.download
 
 /**
@@ -10,47 +10,25 @@ import static org.ffplanner.scripts.Utils.download
  */
 class TiffDownloader {
 
-	private def also_download = false;
+	private def also_download = true;
 
 	private TiffMovies tiffShowings
 
-	EJBContainer ejbContainer
-
-	Context context
-
 	ShowingEJB showingEJB
 
-	public static void main(String[] args) {
-		new TiffDownloader().workYourMagic()
-	}
+	def workYourMagic(ShowingEJB showingEJB, MovieEJB movieEJB, MovieBundleEJB movieBundleEJB) {
+		this.showingEJB = showingEJB
+		tiffShowings = new TiffMovies(also_download, movieEJB, movieBundleEJB)
 
-	def workYourMagic() {
-		initEJBContainer()
-		try {
-			this.showingEJB = (ShowingEJB) context.lookup("java:global/classes/ShowingEJB");
-			tiffShowings = new TiffMovies(also_download, context)
-
-			def file
-			if (also_download) {
-				file = download("http://www.tiff.ro/en/program", "tiff.html")
-			} else {
-				file = new File("tiff.html")
-			}
-
-			def tiffProgramNode = new XmlSlurper(false, false).parse(file)
-			tiffProgramNode.depthFirst().findAll {it.@class == "tableview"}.each {processDayAndVenueTable(it)}
-		} finally {
-			ejbContainer.close()
+		def file
+		if (also_download && !(new File("tiff.html").exists())) {
+			file = download("http://www.tiff.ro/en/program", "tiff.html")
+		} else {
+			file = new File("tiff.html")
 		}
-	}
 
-	def initEJBContainer() {
-		final Map<String, Object> properties = new HashMap<String, Object>();
-		properties.put(EJBContainer.MODULES, new File("target/classes"));
-		properties.put("org.glassfish.ejb.embedded.glassfish.installation.root",
-				"C:\\Users\\bdumitriu\\glassfish3\\glassfish");
-		ejbContainer = EJBContainer.createEJBContainer(properties)
-		context = ejbContainer.getContext()
+		def tiffProgramNode = new XmlSlurper(false, false).parse(file)
+		tiffProgramNode.depthFirst().findAll {it.@class == "tableview"}.each {processDayAndVenueTable(it)}
 	}
 
 	def processDayAndVenueTable(dayVenueNode) {

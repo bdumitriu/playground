@@ -4,9 +4,12 @@ import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import sun.util.calendar.Gregorian;
 
 @Entity
 public class Movie {
@@ -116,5 +119,11 @@ public class Movie {
 			this.countries = new ArrayList<>();
 		}
 		this.countries.addAll(countries);
+	}
+
+	public int getDurationInMinutes() {
+		final GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(duration);
+		return calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
 	}
 }

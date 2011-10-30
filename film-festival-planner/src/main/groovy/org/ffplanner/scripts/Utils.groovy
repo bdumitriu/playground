@@ -1,5 +1,6 @@
 package org.ffplanner.scripts
 
+import java.nio.charset.StandardCharsets;
 import org.htmlcleaner.HtmlCleaner
 import org.htmlcleaner.SimpleXmlSerializer
 
@@ -18,7 +19,7 @@ class Utils {
 		out.close()
 
 		def cleaner = new HtmlCleaner()
-		def node = cleaner.clean(file)
+		def node = cleaner.clean(file, StandardCharsets.UTF_8.name())
 
 		def props = cleaner.getProperties()
 		def serializer = new SimpleXmlSerializer(props)

@@ -3,6 +3,7 @@
  */
 package org.ffplanner;
 
+import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -11,8 +12,17 @@ import javax.persistence.PersistenceContext;
 
 import java.text.ParseException;
 
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.ffplanner.entity.MovieBundle;
 import org.ffplanner.entity.Showing;
+import org.ffplanner.entity.Showing_;
 
 /**
  * @author Bogdan Dumitriu
@@ -44,5 +54,27 @@ public class ShowingEJB {
 		showing.setVenue(venueEJB.getVenue(venueName));
 		showing.setMovieBundle(movieBundle);
 		entityManager.persist(showing);
+	}
+
+	public Collection<Showing> getShowingsFor(Date day) {
+		final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<Showing> query = criteriaBuilder.createQuery(Showing.class);
+		final Root<Showing> root = query.from(Showing.class);
+		query.where(criteriaBuilder.greaterThanOrEqualTo(root.get(Showing_.dateAndTime), day),
+				criteriaBuilder.lessThanOrEqualTo(root.get(Showing_.dateAndTime), getDayAfter(day)));
+		query.orderBy(criteriaBuilder.asc(root.get(Showing_.venue)), criteriaBuilder.asc(root.get(Showing_.dateAndTime)));
+		final TypedQuery<Showing> showings = entityManager.createQuery(query);
+		final List<Showing> xList = showings.getResultList();
+		for (Showing showing : xList) {
+			showing.getMovieBundle().getMovies().size();
+		}
+		return xList;
+	}
+
+	private Date getDayAfter(Date day) {
+		final Calendar calendar = new GregorianCalendar();
+		calendar.setTime(day);
+		calendar.roll(Calendar.DAY_OF_MONTH, true);
+		return calendar.getTime();
 	}
 }

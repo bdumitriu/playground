@@ -37,7 +37,7 @@ public class MovieBundle {
 	}
 
 	public String getEnglishTitle() {
-		return englishTitle;
+		return movies.size() == 1 ? movies.get(0).getEnglishTitle() : englishTitle;
 	}
 
 	public void setEnglishTitle(String englishTitle) {
@@ -45,7 +45,7 @@ public class MovieBundle {
 	}
 
 	public String getOriginalTitle() {
-		return originalTitle;
+		return movies.size() == 1 ? movies.get(0).getOriginalTitle() : originalTitle;
 	}
 
 	public void setOriginalTitle(String originalTitle) {
@@ -65,5 +65,17 @@ public class MovieBundle {
 			this.movies = new ArrayList<>();
 		}
 		this.movies.addAll(movies);
+	}
+
+	public List<Movie> getMovies() {
+		return movies;
+	}
+
+	public int getDurationInMinutes() {
+		int totalDuration = 0;
+		for (Movie movie : movies) {
+			totalDuration += movie.getDurationInMinutes();
+		}
+		return totalDuration;
 	}
 }

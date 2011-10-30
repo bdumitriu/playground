@@ -6,7 +6,9 @@ package org.ffplanner.entity;
 import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * @author Bogdan Dumitriu
@@ -43,6 +45,18 @@ public class Showing {
 
 	public void setDateAndTime(Date dateAndTime) {
 		this.dateAndTime = dateAndTime;
+	}
+
+	public int getHour() {
+		final Calendar calendar = new GregorianCalendar();
+		calendar.setTime(dateAndTime);
+		return calendar.get(Calendar.HOUR_OF_DAY);
+	}
+
+	public int getMinute() {
+		final Calendar calendar = new GregorianCalendar();
+		calendar.setTime(dateAndTime);
+		return calendar.get(Calendar.MINUTE);
 	}
 
 	/**

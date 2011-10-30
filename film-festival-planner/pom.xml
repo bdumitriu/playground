@@ -64,7 +64,7 @@
 			<version>1.1.1.Final</version>
 		</dependency>
 		<!-- only enable logback if you want debug info -->
-<!--		<dependency>
+		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
 			<version>0.9.30</version>
@@ -73,7 +73,7 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>0.9.30</version>
-		</dependency>-->
+		</dependency>
 		<!-- end Hibernate -->
 
 		<!-- start configuration for groovy scripts -->

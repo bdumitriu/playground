@@ -1,0 +1,244 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style type="text/css">
+<!--
+a {  font-family: Arial, Helvetica, sans-serif; color: #CC0000; font-size: 12pt; text-decoration: none}
+a:hover {  color: #00FFFF}
+-->
+</style>
+<script>
+function go(nrOfQuestions)
+{
+	var i;
+	var scorA = 0;
+	var scorB = 0;
+	var scorC = 0;
+	var tipA = "Aveti probleme cu partenerul/partenera dumneavoastra in a stabili relatii sincere. Dificultatile" +
+		   " apar mai cu seama in situatiile in care intr-o discutie trebuie sa va confruntati cu sentimentele" +
+		   " negative ale partenerului/partenerei. Incercarea de eschivare, respectiv stilul inadecvat, fals" +
+		   " al discutiei va determina fie sa subestimati, fie sa supraestimati sentimentele partenerului/" +
+		   "partenerei, fapt care genereaza stari conflictuale. Nu va mai sfiiti sa spuneti deschis ceea" +
+		   " ce ganditi, ceea ce va deranjeaza. Cand nu stiti cum sa procedati in continuare cel mai bine" +
+		   " ar fi sa exprimati in scris - printr-o scrisoare - ceea ce va framanta. O scrisoare nu obliga" +
+		   " cu nimic, este ca o conversatie.";
+	var tipB = "Faptul ca in relatiile personale aveti din cand in cand probleme cu interlocutorul (partenerul/" +
+		   "partenera) dumneavoastra se datoreaza unui conflict de autoritate mai mult sau mai putin actual." +
+		   " De cele mai multe ori acesta duce la divergente de opinii, care contribuie la clarificarea" +
+		   " raportului de forte. Fara ca sa vreti, lasati partenerului/partenerei de discutie ca nu il/o" +
+		   " intelegeti sau ca nu puneti mare pret pe parerea sa.";
+	var tipC = "Este o bagatela pentru dumneavoastra sa faceti schimb de opinii si sa va exprimati gandurile, ceea" +
+		   " ce denota o atitudine de atasament fata de oamenii apropiati. Si capacitatea dumneavoastra de a" +
+		   " sti sa puneti lucrurile la punct in cadrul unui dialog este cu totul extraordinara si demna de a" +
+		   " fi subliniata. Sunteti consecvent/a si nu folositi cuvinte de ocara. Sunteti suficient de" +
+		   " flexibil/a si nu ezitati sa va revizuiti atitudinea atunci cand este cazul. Felicitari!";
+
+	for (i = 0; i < nrOfQuestions; i++)
+	{
+		if ((i == 2) || (i == 5) || (i == 8) || (i == 11) || (i == 14) || (i == 16) || (i == 19))
+			if (document.forms[0].elements[4*i].checked == true)
+				scorA += 1;
+			else
+				if (document.forms[0].elements[4*i+1].checked == true)
+					scorA += 2;
+				else
+					if (document.forms[0].elements[4*i+2].checked == true)
+						scorA += 3;
+					else
+						scorA += 4;
+		if ((i == 0) || (i == 3) || (i == 7) || (i == 9) || (i == 12) || (i == 17) || (i == 20))
+			if (document.forms[0].elements[4*i].checked == true)
+				scorB += 1;
+			else
+				if (document.forms[0].elements[4*i+1].checked == true)
+					scorB += 2;
+				else
+					if (document.forms[0].elements[4*i+2].checked == true)
+						scorB += 3;
+					else
+						scorB += 4;
+		if ((i == 1) || (i == 4) || (i == 6) || (i == 10) || (i == 13) || (i == 15) || (i == 18))
+			if (document.forms[0].elements[4*i].checked == true)
+				scorC += 1;
+			else
+				if (document.forms[0].elements[4*i+1].checked == true)
+					scorC += 2;
+				else
+					if (document.forms[0].elements[4*i+2].checked == true)
+						scorC += 3;
+					else
+						scorC += 4;
+	}
+	
+	var raspuns = "Scorul dumneavoastra este:\n\tTipul A: " + scorA + 
+		      " puncte\n\tTipul B: " + scorB + " puncte\n\tTipul C: " + scorC + " puncte.\n\n";
+	if (scorA == scorB)
+		if (scorB == scorC)
+			raspuns += "Asadar sunteti la granita dintre cele trei tipuri.";
+		else
+			if (scorB > scorC)
+				raspuns += "Asadar sunteti la granita dintre tipurile A si B.";
+			else
+				raspuns += "Asadar sunteti de tipul C.";
+	else
+		if (scorA < scorB)
+			if (scorB == scorC)
+				raspuns += "Asadar sunteti la granita dintre tipurile B si C.";
+			else
+				if (scorB > scorC)
+					raspuns += "Asadar sunteti de tipul B.";
+				else
+					raspuns += "Asadar sunteti de tipul C.";
+		else
+			if (scorA == scorC)
+				raspuns += "Asadar sunteti la granita dintre tipurile A si C.";
+			else
+				if (scorA > scorC)
+					raspuns += "Asadar sunteti de tipul A.";
+				else
+					raspuns += "Asadar sunteti de tipul C.";
+	raspuns += "\n\n\nIata si descrierea lor:\n\n  Tipul A: Armonia cu orice pret naste conflicte\n" + tipA +
+		   "\n\n  Tipul B: 1, 2, 3 - Cine detine puterea?\n" + tipB + 
+		   "\n\n  Tipul C: Arta conversatiei mai presus de orice\n" + tipC;
+	alert(raspuns);
+}	
+</script>
+</head>
+
+<body bgcolor="#330066">
+<font face="arial" color="#CC0000">
+<center>
+<h1>Se poate comunica bine cu dumneavoastra?</h1>
+</center>
+<form name="testForm">
+1. In discutiile cu ceilalti schimb subiectul catre problemele care ma preocupa.<br>
+<input type="radio" name="q1" checked> Nu corespunde.<br>
+<input type="radio" name="q1"> Corespunde uneori.<br>
+<input type="radio" name="q1"> Corespunde deseori.<br>
+<input type="radio" name="q1"> Corespunde pe deplin.<br>
+<br>
+2. Seara, cand suntem impreuna, trec clipele pe negandite.<br>
+<input type="radio" name="q2" checked> Nu corespunde.<br>
+<input type="radio" name="q2"> Corespunde uneori.<br>
+<input type="radio" name="q2"> Corespunde deseori.<br>
+<input type="radio" name="q2"> Corespunde pe deplin.<br>
+<br>
+3. Nu ma simt in largul meu cand mai este o persoana in lift.<br>
+<input type="radio" name="q3" checked> Nu corespunde.<br>
+<input type="radio" name="q3"> Corespunde uneori.<br>
+<input type="radio" name="q3"> Corespunde deseori.<br>
+<input type="radio" name="q3"> Corespunde pe deplin.<br>
+<br>
+4. Nu ma pot abtine sa nu-mi spun parerea.<br>
+<input type="radio" name="q4" checked> Nu corespunde.<br>
+<input type="radio" name="q4"> Corespunde uneori.<br>
+<input type="radio" name="q4"> Corespunde deseori.<br>
+<input type="radio" name="q4"> Corespunde pe deplin.<br>
+<br>
+5. Sunt un/o bun/a ascultator/ascultatoare.<br>
+<input type="radio" name="q5" checked> Nu corespunde.<br>
+<input type="radio" name="q5"> Corespunde uneori.<br>
+<input type="radio" name="q5"> Corespunde deseori.<br>
+<input type="radio" name="q5"> Corespunde pe deplin.<br>
+<br>
+6. Imi vine greu sa-i contrazic pe ceilalti.<br>
+<input type="radio" name="q6" checked> Nu corespunde.<br>
+<input type="radio" name="q6"> Corespunde uneori.<br>
+<input type="radio" name="q6"> Corespunde deseori.<br>
+<input type="radio" name="q6"> Corespunde pe deplin.<br>
+<br>
+7. De dragul armoniei, cuplul nostru evita conflicte.<br>
+<input type="radio" name="q7" checked> Nu corespunde.<br>
+<input type="radio" name="q7"> Corespunde uneori.<br>
+<input type="radio" name="q7"> Corespunde deseori.<br>
+<input type="radio" name="q7"> Corespunde pe deplin.<br>
+<br>
+8. Adeseori incep frazele cu "Da, dar...".<br>
+<input type="radio" name="q8" checked> Nu corespunde.<br>
+<input type="radio" name="q8"> Corespunde uneori.<br>
+<input type="radio" name="q8"> Corespunde deseori.<br>
+<input type="radio" name="q8"> Corespunde pe deplin.<br>
+<br>
+9. Cu greu ma abtin sa tac.<br>
+<input type="radio" name="q9" checked> Nu corespunde.<br>
+<input type="radio" name="q9"> Corespunde uneori.<br>
+<input type="radio" name="q9"> Corespunde deseori.<br>
+<input type="radio" name="q9"> Corespunde pe deplin.<br>
+<br>
+10. Cand ma cert am tendinta sa jignesc.<br>
+<input type="radio" name="q10" checked> Nu corespunde.<br>
+<input type="radio" name="q10"> Corespunde uneori.<br>
+<input type="radio" name="q10"> Corespunde deseori.<br>
+<input type="radio" name="q10"> Corespunde pe deplin.<br>
+<br>
+11. O controversa cu mine, de cele mai multe ori, se termina cu o intelegere rezonabila.<br>
+<input type="radio" name="q11" checked> Nu corespunde.<br>
+<input type="radio" name="q11"> Corespunde uneori.<br>
+<input type="radio" name="q11"> Corespunde deseori.<br>
+<input type="radio" name="q11"> Corespunde pe deplin.<br>
+<br>
+12. Imi este greu sa spun ceea ce gandesc cu adevarat.<br>
+<input type="radio" name="q12" checked> Nu corespunde.<br>
+<input type="radio" name="q12"> Corespunde uneori.<br>
+<input type="radio" name="q12"> Corespunde deseori.<br>
+<input type="radio" name="q12"> Corespunde pe deplin.<br>
+<br>
+13. Felul in care ma cert poate fi uneori ofensator.<br>
+<input type="radio" name="q13" checked> Nu corespunde.<br>
+<input type="radio" name="q13"> Corespunde uneori.<br>
+<input type="radio" name="q13"> Corespunde deseori.<br>
+<input type="radio" name="q13"> Corespunde pe deplin.<br>
+<br>
+14. Pot intelege bine modul de a gandi al altora.<br>
+<input type="radio" name="q14" checked> Nu corespunde.<br>
+<input type="radio" name="q14"> Corespunde uneori.<br>
+<input type="radio" name="q14"> Corespunde deseori.<br>
+<input type="radio" name="q14"> Corespunde pe deplin.<br>
+<br>
+15. Este jenant pentru mine cand cineva plange in fata mea.<br>
+<input type="radio" name="q15" checked> Nu corespunde.<br>
+<input type="radio" name="q15"> Corespunde uneori.<br>
+<input type="radio" name="q15"> Corespunde deseori.<br>
+<input type="radio" name="q15"> Corespunde pe deplin.<br>
+<br>
+16. As putea fi un/o bun/a profesor/profesoara.<br>
+<input type="radio" name="q16" checked> Nu corespunde.<br>
+<input type="radio" name="q16"> Corespunde uneori.<br>
+<input type="radio" name="q16"> Corespunde deseori.<br>
+<input type="radio" name="q16"> Corespunde pe deplin.<br>
+<br>
+17. Evit ca ceilalti sa fie prea apropiati fata de mine.<br>
+<input type="radio" name="q17" checked> Nu corespunde.<br>
+<input type="radio" name="q17"> Corespunde uneori.<br>
+<input type="radio" name="q17"> Corespunde deseori.<br>
+<input type="radio" name="q17"> Corespunde pe deplin.<br>
+<br>
+18. In discutiile aprinse folosesc mai frecvent pronumele eu si arareori ma adresez cu tu.<br>
+<input type="radio" name="q18" checked> Nu corespunde.<br>
+<input type="radio" name="q18"> Corespunde uneori.<br>
+<input type="radio" name="q18"> Corespunde deseori.<br>
+<input type="radio" name="q18"> Corespunde pe deplin.<br>
+<br>
+19. In discutiile cu ceilalti incerc sa fiu foarte exact.<br>
+<input type="radio" name="q19" checked> Nu corespunde.<br>
+<input type="radio" name="q19"> Corespunde uneori.<br>
+<input type="radio" name="q19"> Corespunde deseori.<br>
+<input type="radio" name="q19"> Corespunde pe deplin.<br>
+<br>
+20. Am uneori sentimentul ca trebuie sa spun ceva, dar nu stiu ce anume.<br>
+<input type="radio" name="q20" checked> Nu corespunde.<br>
+<input type="radio" name="q20"> Corespunde uneori.<br>
+<input type="radio" name="q20"> Corespunde deseori.<br>
+<input type="radio" name="q20"> Corespunde pe deplin.<br>
+<br>
+21. Chiar cand nu am dreptate imi sustin punctul de vedere incat ii pun pe ceilalti in dificultate (ii fac sa se indoiasca).<br>
+<input type="radio" name="q21" checked> Nu corespunde.<br>
+<input type="radio" name="q21"> Corespunde uneori.<br>
+<input type="radio" name="q21"> Corespunde deseori.<br>
+<input type="radio" name="q21"> Corespunde pe deplin.<br>
+<br>
+<input type="submit" value="Evaluare test" onClick="javascript:go(21);">
+<input type=reset>
+</form>
+</body>
+</html>

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#
+# Recursively renames all directories to lowercase starting from
+# the one you specify in the command line.
+#
+# Author: Bogdan Dumitriu
+# Date:   June 24th, 2003
+#
+
+if [ $# -ne 1 ]
+then
+	echo "Usage: $0 /path/to/dir"
+	exit
+fi
+
+for i in `ls $1`
+do
+	if [ -d $1/$i ]
+	then
+		$0 $1/$i
+		nn=`echo $i | tr [:upper:] [:lower:]`
+		mv $1/$i $1/$nn
+	fi
+done

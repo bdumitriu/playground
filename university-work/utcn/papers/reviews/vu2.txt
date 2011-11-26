@@ -1,0 +1,129 @@
+Paper Number: 35
+Author: bdumitriu@bdumitriu.ro
+Title: The CONED project: a WEB-based Virtual University
+
+
+==================== REVIEW 1 ====================
+PPPJ 2003 PAPER EVALUATION FORM
+
+
+=========================================================================
+
+
+Paper Number: 35  
+
+=========================================================================
+EVALUATION: 
+
+Please mark the paper under each of the following headings, on a
+scale of 1 through 5 (inclusive), where 1=disagree, and 5=agree
+
+
+a) The overall topic of this paper is appropriate for PPPJ 2002
+   MARK --> 5
+
+b) This paper is well structured and clearly written
+   MARK --> 4
+
+c) This paper addresses its subject in a way that will be of
+   interest to researchers, teachers or programmers who work with Java
+   MARK --> 2
+
+d) This paper describes work that is novel, stimulating or
+   significant
+   MARK --> 1
+
+
+e) As a Referee how do you rate your knowledge,
+   ability and confidence in reviewing this paper
+   in the range 1=sketchy, through to 5=very confident
+   MARK --> 5
+
+=========================================================================
+OVERALL RECOMMENDATION :
+   Please give an overall recommendation, where:
+     1=strong reject
+     2=weak reject
+     3=neutral
+     4=weak accept
+     5=strong accept
+   MARK --> 2
+
+=========================================================================
+COMMENTS TO AUTHOR:
+Please use this space to give some constructive feedback to the
+author, particularly in the case of a low overall mark
+
+The paper lacks focus. It is not clear what decision model lead the authors to start developing their own solution or why
+Java is the best technology for implementing a virtual university (The reasons mentioned in the paper are not strong
+enough to make the case. The comparisons should be more precise.), or what functionality is needed for which role in the
+virtual university as well as why EJBs were excluded as a solution, etc. 
+
+From the paper we can conclude that the authors don't have enough knowledge about UML. They confuse it with a software
+process (UML is a modeling language) and do not know how to use UML correctly.
+
+Many hot topics regarding virtual universities technical solutions are not covered adequately in the paper, for example
+security issues, identity verification for exams, the preparation of course materials and presentation, etc. Technical
+descriptions are very general.
+
+==========================================================================
+==================== REVIEW 2 ====================
+PPPJ 2003 PAPER EVALUATION FORM
+
+
+=========================================================================
+
+
+Paper Number:    35
+
+=========================================================================
+EVALUATION:  
+
+Please mark the paper under each of the following headings, on a
+scale of 1 through 5 (inclusive), where 1=disagree, and 5=agree
+
+
+a) The overall topic of this paper is appropriate for PPPJ 2003
+   MARK --> 3
+
+b) This paper is well structured and clearly written
+   MARK --> 3
+
+c) This paper addresses its subject in a way that will be of 
+   interest to researchers, teachers or programmers who work with Java
+   MARK --> 3
+
+d) This paper describes work that is novel, stimulating or
+   significant
+   MARK --> 1
+
+
+e) As a Referee how do you rate your knowledge, 
+   ability and confidence in reviewing this paper
+   in the range 1=sketchy, through to 5=very confident
+   MARK --> 4
+
+=========================================================================
+OVERALL RECOMMENDATION : 
+   Please give an overall recommendation, where:
+     1=strong reject
+     2=weak reject
+     3=neutral
+     4=weak accept
+     5=strong accept 
+   MARK --> 1
+
+
+=========================================================================
+COMMENTS TO AUTHOR: 
+Please use this space to give some constructive feedback to the
+author, particularly in the case of a low overall mark
+
+The paper superficially describes the analysis and design of an
+e-learning environment. There is nothing in the paper that could not
+be found in any introduction to J2EE. The architecture arrived at is
+the obvious one, so no new insights emerge.
+
+==========================================================================
+Note: Copies of the completed evaluation form and comments will be
+supplied anonymously to the author(s).  Please return your review

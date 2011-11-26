@@ -1,0 +1,67 @@
+****************************************************************************
+  NOTE: This is an automatically generated email from a paper registration
+  system used for the BCI2003 conference. If you get this email without prior
+  registration of a paper for BCI2003, it is likely that someone misused our
+  registration system. In this case, we apologize! Please reply to the above
+  address and let us know.
+****************************************************************************
+
+Dear Alin Suciu,
+
+You registered the following paper information for submission to BCI2003:
+
+============================================================================
+Paper ID: 72
+============================================================================
+Contact Author: Alin Suciu
+CA Title      : Senior Lecturer
+Organization  : Technical University of Cluj-Napoca
+Street Address: 26-28 G.Baritiu
+City          : Cluj-Napoca
+State         : Cluj
+Zip           : 3400
+Country       : Romania
+Phone         : 0040-745-511010
+Fax           : 0040-264-194491
+Email         : alin.suciu@cs.utcluj.ro
+Paper Title   : The jSpider Project: a Prolog IDE in Java
+Author Name1  : Alin Suciu
+Author Name2  : Bogdan Dumitriu
+Author Name3  : Tudor Marian
+Author Name4  :
+Author Name5  :
+Author Name6  :
+Papertype     : Research Paper
+Keyword1      : Programming Languages
+Keyword2      : Intelligent Systems
+Keyword3      : NONE
+Keyword4      : NONE
+Keyword5      : NONE
+Add_Keyword   : Java, Integrated Development Environment, Prolog, Sicstus
+Prolog, IDE features
+
+ABSTRACT:
+The Integrated Development Environment is an essential ingredient for
+achieving increased productivity in writing applications. So far, such tools
+are rather scarce in the logic programming world and even the few ones that
+exist lack many of the required functionalities. Therefore we tried to
+develop such an environment and build it on top of one of the most powerful
+and robust Prolog nowadays &#8211; Sicstus Prolog [5]. In this paper, we
+describe the methodology we adopted in order to identify our product&#8217;s
+requirements and we outline the main features of the resulted product in a
+comparative manner. The implementation is done entirely in Java and
+therefore benefits from the advantages inherent to the use of the Java
+programming language.
+============================================================================
+
+To upload your paper at our submission site, please use link
+below or use the following url for later use:
+
+http://bci1.csd.auth.gr/bci-online/cgi-bin/OPEN/upload_front.cgi?id=72&pw=cl
+usututcoalilujr
+
+Please use one of the available style files for
+MS Word and Latex
+Best regards
+
+BCI2003 organizing committee

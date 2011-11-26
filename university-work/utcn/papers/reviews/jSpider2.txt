@@ -1,0 +1,162 @@
+PPPJ 2003 PAPER EVALUATION FORM
+=========================================================================
+
+Paper Number:  34 (The jSpider Project: a Prolog IDE in Java)
+
+=========================================================================
+EVALUATION:
+
+Please mark the paper under each of the following headings, on a
+scale of 1 through 5 (inclusive), where 1=disagree, and 5=agree
+
+
+a) The overall topic of this paper is appropriate for PPPJ 2003
+   MARK --4
+
+b) This paper is well structured and clearly written
+   MARK --2
+
+c) This paper addresses its subject in a way that will be of
+   interest to researchers, teachers or programmers who work with Java
+   MARK --2
+
+d) This paper describes work that is novel, stimulating or
+   significant
+   MARK --3
+
+
+e) As a Referee how do you rate your knowledge,
+   ability and confidence in reviewing this paper
+   in the range 1=sketchy, through to 5=very confident
+   MARK --5
+
+=========================================================================
+OVERALL RECOMMENDATION :
+   Please give an overall recommendation, where:
+     1=strong reject
+     2=weak reject
+     3=neutral
+     4=weak accept
+     5=strong accept
+   MARK --2
+
+
+=========================================================================
+COMMENTS TO AUTHOR:
+Please use this space to give some constructive feedback to the
+author, particularly in the case of a low overall mark
+
+The tool described in this paper sounds interesting. However, it is
+difficult to assess with precision the achievements of the authors,
+as the paper lacks techinical depth in its description of jSpider.
+Some screen-grabs would have been useful to give a clearer impression
+of features of the tool, and as 'evidence' of the working product that
+has been developed.
+
+In this reviewer's opinion, the style of this paper is slightly too
+informal. It should be possible to make the tone of the paper less
+casual, for example by using the passive voice and present tense
+throughout, without losing its good readability and flow.
+
+While a standard for internet references is not really yet established
+in the scientific community, this reviewer recommends treating them as
+similarly as possible to traditional references, citing (where known)
+the author, date and title of web pages along with their URL.
+
+
+==========================================================================
+
+
+PPPJ 2003 PAPER EVALUATION FORM
+
+
+=========================================================================
+
+
+Paper Number: 34
+
+=========================================================================
+EVALUATION:
+
+Please mark the paper under each of the following headings, on a
+scale of 1 through 5 (inclusive), where 1=disagree, and 5=agree
+
+
+a) The overall topic of this paper is appropriate for PPPJ 2002
+   MARK --5
+
+b) This paper is well structured and clearly written
+   MARK --5
+
+c) This paper addresses its subject in a way that will be of
+   interest to researchers, teachers or programmers who work with Java
+   MARK --4
+
+d) This paper describes work that is novel, stimulating or
+   significant
+   MARK --5
+
+
+e) As a Referee how do you rate your knowledge,
+   ability and confidence in reviewing this paper
+   in the range 1=sketchy, through to 5=very confident
+   MARK --4
+
+=========================================================================
+OVERALL RECOMMENDATION :
+   Please give an overall recommendation, where:
+     1=strong reject
+     2=weak reject
+     3=neutral
+     4=weak accept
+     5=strong accept
+   MARK --5
+
+
+=========================================================================
+COMMENTS TO AUTHOR:
+Please use this space to give some constructive feedback to the
+author, particularly in the case of a low overall mark
+
+Comments:
+
+
+The paper outlines the work carried out on the iSpider project and it
+is clear that this was a challanging and multi-faceted application of
+the Java language. In this regard it provided much scope to
+demonstrate technical and other skills using the Java language.
+
+
+I am happy to report that in my view what is described in the paper is
+a successful project that addressed virtually all the aspects
+associated with the development of a userfriendly yet powerful Prolog
+IDE. I particularily like two of the features, namely
+   1) the potential to develop distributed logic applications;
+   2) the ability to graphically manipulate the Sicstus flags and use
+      its library modules
+Also the comparison table was very helpful and helped put the work in
+context.
+
+
+The material in the paper is presented in an easy to read way. It
+would have been nice to have more detail in places, but this was not a
+fault of the authors, since they were limited to six pages.
+
+=========================================================================
+
+==================== STEERING COMMITTEE DECISION ====================
+Paper #34
+
+I was disappointed in this paper, as I had hoped for a fuller analysis
+of both programming in Prolog, and developing IDEs in Java.  The
+Prolog environment described here seems to be just an interface to the
+compiler, coupled with a nice editor - surely this is now standard
+technology?  Is there not a se.sics.jasper package to handle this kind
+of thing?  The one clear issue (of some complexity) is how to debug
+Prolog programs, and this does not seem to be addressed.  Even an
+interface to the standard text-based debugger would be something.
+
+I don't see the particular payoff for a Java conference either -
+what's useful and reusable here for a Java programmer?
+I must side with the more negative reviewer, and recommend acceptance
+only as a short paper.

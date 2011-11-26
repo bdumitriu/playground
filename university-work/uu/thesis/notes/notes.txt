@@ -1,0 +1,23 @@
+*** OptimizationOfObjectOrientedProgramsUsingStaticClassHierarchyAnalysis.pdf
+
+- class hierarchy analysis:
+	* class F derives C, class C derives A
+	* class A has method m, class C overrides method m
+	* some method of F calls this.m
+	* if by class hierarchy analysis we can determine that no subclass of F overrides m, then we
+	  can replace a general method call to m with a direct call to C.m
+
+- a class and the classes that inherit from it form a "Cone".
+
+- the idea is to optimize the compiled program by detecting the cases where the class whose method
+  is called can be identified at compile time and replace a dynamic method call with a static one.
+
+*** StagedCompilation.pdf
+
+- the idea is to try to combine the benefits of "static compilation" (not caring
+about compilation time/space costs) with those of "run-time compilation" (taking
+advantage of the peculiarities of the system the program is run on). This is done
+by detecting parts of the code which are "static", i.e. are based on variables whose
+values don't change (or who take very few values during a run) and compile those
+parts at run-time, when the values of the variables are known and compilation can
+benefit from them. The rest of the code is compiled statically.

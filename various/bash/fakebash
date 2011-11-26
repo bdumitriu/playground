@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Autor: 	Bogdan DUMITRIU
+# Data:  	26.07.2000
+# Functie:	Afiseaza un prompt care preia comenzile de la utilizator
+#		si le adauga 1>/dev/null pt. a-l speria putin (comenzile
+#		nu vor mai functiona in mod normal).
+# Merge:	da
+# Inca:		1. de facut sa afiseze promptul pe care-l avea utilizatorul
+#		2. de facut sa afiseze in caz de comanda necunoscuta mesajul
+#		   bash: comanda: command not found in loc de 
+#		   ./fakebash: comanda: command not found
+
+PSFAKE="$(whoami)'s command:"
+echo -n -e "$PSFAKE "
+read COM
+until [ $COM = "iesi" ]
+do
+	`$COM 1>/dev/null`
+	echo -n -e "$PSFAKE "
+	read COM
+done

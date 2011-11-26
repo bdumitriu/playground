@@ -1,0 +1,1 @@
+c:\jdk1.5\bin\java -cp im.jar client.IMClient localhost 5000

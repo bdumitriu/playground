@@ -1,0 +1,1 @@
+echo -e "Current directory: \033[1;32m`pwd`\033[0m"

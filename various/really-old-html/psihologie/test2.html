@@ -1,0 +1,247 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style type="text/css">
+<!--
+a {  font-family: Arial, Helvetica, sans-serif; color: #CC0000; font-size: 12pt; text-decoration: none}
+a:hover {  color: #00FFFF}
+-->
+</style>
+<script>
+function go(nrOfQuestions)
+{
+	var i;
+	var scorA = 0;
+	var scorB = 0;
+	var scorC = 0;
+	var tipA = "Nu este de mirare faptul ca doar foarte rar va simtiti bine. Permanent sunteti" +
+		   " sub presiune si uneori nici nu va dati seama de aceasta. Totodata nu se poate" +
+		   " spune ca faceti parte din categoria celor care suporta bine starile de incordare." +
+		   " Situatiile care, in general, sunt legate de cresterea tensiunii va dau de furca." +
+		   " In loc sa va gasiti echilibrul, va ambalati si mai mult, purtat de valtoarea incordarii," +
+		   " fara sa observati ca ceilalti s-au retras deja in sinea lor. Contrar aparentelor," +
+		   " va temeti de relatiile interumane. Lasati-i pe ceilalti sa se apropie mai mult de" +
+		   " dumneavoastra.";
+	var tipB = "Va folositi intreaga energie pentru a inabusi orice situatie generatoare de tensiune." +
+		   " Urmarea acestei rezistente inconstiente este lipsa initiativei si aparitia plictiselii." +
+		   " Lasati impresia unei persoane linistite, distante, impasibile. Dar aceasta atitudine" +
+		   " nu se datoreaza unui echilibru interior. Evident, trebuie sa va aparati de tot ceea ce" +
+		   " v-ar putea produce enervare, fapt ce conduce la un tonus scazut, la scaderea vivacitatii." +
+		   " Astfel se instaleaza o stare apatie, de inertie, careia ii faceti fata doar cu mare efort." +
+		   " Descoperiti de ce trebuie sa inabusiti, inca din fasa, chiar si starile de incordare" +
+		   " placuta. Gasind raspunsul la aceasta intrebare veti reusi sa va ridicati calitatea vietii.";
+	var tipC = "Faceti parte din categoria acelor oameni care traiesc intens starile tensionate. De fapt" +
+		   " sunteti un tip dat naibii. Cand ati luat viteza nu va mai opreste nimeni. Sunteti plin" +
+		   " de verva si pierdeti adeseori din vedere ca prin comportamentul dumneavoastra cam intindeti" +
+		   " coarda. Cei din jur devin in acest caz publicul. O relatie adevarata cu dumneavoastra, in" +
+		   " aceste circumstante, nu este deloc usor de stabilit. Chiar daca nu vreti sa recunoasteti," +
+		   " sunteti prea volubil pentru ca cineva sa se poata apropia de dumneavoastra. Nu v-ar strica," +
+		   " din cand in cand, putina relaxare.";
+	for (i = 0; i < nrOfQuestions; i++)
+	{
+		if ((i == 0) || (i == 3) || (i == 7) || (i == 8) || (i == 11) || (i == 15) || (i == 19))
+			if (document.forms[0].elements[4*i].checked == true)
+				scorA += 1;
+			else
+				if (document.forms[0].elements[4*i+1].checked == true)
+					scorA += 2;
+				else
+					if (document.forms[0].elements[4*i+2].checked == true)
+						scorA += 3;
+					else
+						scorA += 4;
+		if ((i == 2) || (i == 4) || (i == 6) || (i == 9) || (i == 10) || (i == 13) || (i == 17))
+			if (document.forms[0].elements[4*i].checked == true)
+				scorB += 1;
+			else
+				if (document.forms[0].elements[4*i+1].checked == true)
+					scorB += 2;
+				else
+					if (document.forms[0].elements[4*i+2].checked == true)
+						scorB += 3;
+					else
+						scorB += 4;
+		if ((i == 1) || (i == 5) || (i == 12) || (i == 14) || (i == 16) || (i == 18) || (i == 20))
+			if (document.forms[0].elements[4*i].checked == true)
+				scorC += 1;
+			else
+				if (document.forms[0].elements[4*i+1].checked == true)
+					scorC += 2;
+				else
+					if (document.forms[0].elements[4*i+2].checked == true)
+						scorC += 3;
+					else
+						scorC += 4;
+	}
+	
+	var raspuns = "Scorul dumneavoastra este:\n\tTipul A: " + scorA + 
+		      " puncte\n\tTipul B: " + scorB + " puncte\n\tTipul C: " + scorC + " puncte.\n\n";
+	if (scorA == scorB)
+		if (scorB == scorC)
+			raspuns += "Asadar sunteti la granita dintre cele trei tipuri.";
+		else
+			if (scorB > scorC)
+				raspuns += "Asadar sunteti la granita dintre tipurile A si B.";
+			else
+				raspuns += "Asadar sunteti de tipul C.";
+	else
+		if (scorA < scorB)
+			if (scorB == scorC)
+				raspuns += "Asadar sunteti la granita dintre tipurile B si C.";
+			else
+				if (scorB > scorC)
+					raspuns += "Asadar sunteti de tipul B.";
+				else
+					raspuns += "Asadar sunteti de tipul C.";
+		else
+			if (scorA == scorC)
+				raspuns += "Asadar sunteti la granita dintre tipurile A si C.";
+			else
+				if (scorA > scorC)
+					raspuns += "Asadar sunteti de tipul A.";
+				else
+					raspuns += "Asadar sunteti de tipul C.";
+	raspuns += "\n\n\nIata si descrierea lor:\n\n  Tipul A: Nabadaiosul\n" + tipA +
+		   "\n\n  Tipul B: Infrantul\n" + tipB + "\n\n  Tipul C: Invartitul\n" + tipC;
+	alert(raspuns);
+}	
+</script>
+</head>
+
+<body bgcolor="#330066">
+<font face="arial" color="#CC0000">
+<center>
+<h1>Cum faceti fata situatiilor tensionate?</h1>
+</center>
+<form name="testForm">
+1. Vorbesc mai repede si mai tare decat ceilalti.<br>
+<input type="radio" name="q1" checked> Nu corespunde.<br>
+<input type="radio" name="q1"> Corespunde uneori.<br>
+<input type="radio" name="q1"> Corespunde deseori.<br>
+<input type="radio" name="q1"> Corespunde pe deplin.<br>
+<br>
+2. Cand sunt intr-o dispozitie buna, as dori sa cumpar tot ceea vad.<br>
+<input type="radio" name="q2" checked> Nu corespunde.<br>
+<input type="radio" name="q2"> Corespunde uneori.<br>
+<input type="radio" name="q2"> Corespunde deseori.<br>
+<input type="radio" name="q2"> Corespunde pe deplin.<br>
+<br>
+3. In situatiile in care ceilalti reactioneaza nervos, pe mine ma cuprinde o oboseala toropitoare.<br>
+<input type="radio" name="q3" checked> Nu corespunde.<br>
+<input type="radio" name="q3"> Corespunde uneori.<br>
+<input type="radio" name="q3"> Corespunde deseori.<br>
+<input type="radio" name="q3"> Corespunde pe deplin.<br>
+<br>
+4. Raportez totul la persoana mea.<br>
+<input type="radio" name="q4" checked> Nu corespunde.<br>
+<input type="radio" name="q4"> Corespunde uneori.<br>
+<input type="radio" name="q4"> Corespunde deseori.<br>
+<input type="radio" name="q4"> Corespunde pe deplin.<br>
+<br>
+5. Nu ma pot decide decat cu mare greutate.<br>
+<input type="radio" name="q5" checked> Nu corespunde.<br>
+<input type="radio" name="q5"> Corespunde uneori.<br>
+<input type="radio" name="q5"> Corespunde deseori.<br>
+<input type="radio" name="q5"> Corespunde pe deplin.<br>
+<br>
+6. Uneori sunt atat de fericit/a incat imi vine sa cant si sa sar in sus de bucurie.<br>
+<input type="radio" name="q6" checked> Nu corespunde.<br>
+<input type="radio" name="q6"> Corespunde uneori.<br>
+<input type="radio" name="q6"> Corespunde deseori.<br>
+<input type="radio" name="q6"> Corespunde pe deplin.<br>
+<br>
+7. Nu las sa se vada ceea ce simt in realitate.<br>
+<input type="radio" name="q7" checked> Nu corespunde.<br>
+<input type="radio" name="q7"> Corespunde uneori.<br>
+<input type="radio" name="q7"> Corespunde deseori.<br>
+<input type="radio" name="q7"> Corespunde pe deplin.<br>
+<br>
+8. Uneori sunt agitat/a si repezit/a.<br>
+<input type="radio" name="q8" checked> Nu corespunde.<br>
+<input type="radio" name="q8"> Corespunde uneori.<br>
+<input type="radio" name="q8"> Corespunde deseori.<br>
+<input type="radio" name="q8"> Corespunde pe deplin.<br>
+<br>
+9. Am tendinta sa-i intrerup pe ceilalti cand vorbesc.<br>
+<input type="radio" name="q9" checked> Nu corespunde.<br>
+<input type="radio" name="q9"> Corespunde uneori.<br>
+<input type="radio" name="q9"> Corespunde deseori.<br>
+<input type="radio" name="q9"> Corespunde pe deplin.<br>
+<br>
+10. Toti ma considera o persoana calma, linistita.<br>
+<input type="radio" name="q10" checked> Nu corespunde.<br>
+<input type="radio" name="q10"> Corespunde uneori.<br>
+<input type="radio" name="q10"> Corespunde deseori.<br>
+<input type="radio" name="q10"> Corespunde pe deplin.<br>
+<br>
+11. Pot adormi in orice imprejurare.<br>
+<input type="radio" name="q11" checked> Nu corespunde.<br>
+<input type="radio" name="q11"> Corespunde uneori.<br>
+<input type="radio" name="q11"> Corespunde deseori.<br>
+<input type="radio" name="q11"> Corespunde pe deplin.<br>
+<br>
+12. Ma surprind uneori ca-mi batai picorul.<br>
+<input type="radio" name="q12" checked> Nu corespunde.<br>
+<input type="radio" name="q12"> Corespunde uneori.<br>
+<input type="radio" name="q12"> Corespunde deseori.<br>
+<input type="radio" name="q12"> Corespunde pe deplin.<br>
+<br>
+13. Sunt zile in care nu se poate discuta deloc serios cu mine.<br>
+<input type="radio" name="q13" checked> Nu corespunde.<br>
+<input type="radio" name="q13"> Corespunde uneori.<br>
+<input type="radio" name="q13"> Corespunde deseori.<br>
+<input type="radio" name="q13"> Corespunde pe deplin.<br>
+<br>
+14. Adeseori ma las in voia gandurilor si nici nu imi dau seama ce se petrece in jurul meu.<br>
+<input type="radio" name="q14" checked> Nu corespunde.<br>
+<input type="radio" name="q14"> Corespunde uneori.<br>
+<input type="radio" name="q14"> Corespunde deseori.<br>
+<input type="radio" name="q14"> Corespunde pe deplin.<br>
+<br>
+15. Uneori mi-e atat de bine, incat as putea face din noapte zi.<br>
+<input type="radio" name="q15" checked> Nu corespunde.<br>
+<input type="radio" name="q15"> Corespunde uneori.<br>
+<input type="radio" name="q15"> Corespunde deseori.<br>
+<input type="radio" name="q15"> Corespunde pe deplin.<br>
+<br>
+16. Ma simt penibil cand intr-o discutie apar momente prelungite de tacere.<br>
+<input type="radio" name="q16" checked> Nu corespunde.<br>
+<input type="radio" name="q16"> Corespunde uneori.<br>
+<input type="radio" name="q16"> Corespunde deseori.<br>
+<input type="radio" name="q16"> Corespunde pe deplin.<br>
+<br>
+17. Cand sunt in forma, ii distrez pe toti din jur.<br>
+<input type="radio" name="q17" checked> Nu corespunde.<br>
+<input type="radio" name="q17"> Corespunde uneori.<br>
+<input type="radio" name="q17"> Corespunde deseori.<br>
+<input type="radio" name="q17"> Corespunde pe deplin.<br>
+<br>
+18. Fara vreun motiv anume, uneori ma simt complet epuizat/a.<br>
+<input type="radio" name="q18" checked> Nu corespunde.<br>
+<input type="radio" name="q18"> Corespunde uneori.<br>
+<input type="radio" name="q18"> Corespunde deseori.<br>
+<input type="radio" name="q18"> Corespunde pe deplin.<br>
+<br>
+19. Adesea sunt atat de vesel/a, incat seara stau treaz/a in pat si nu pot adormi.<br>
+<input type="radio" name="q19" checked> Nu corespunde.<br>
+<input type="radio" name="q19"> Corespunde uneori.<br>
+<input type="radio" name="q19"> Corespunde deseori.<br>
+<input type="radio" name="q19"> Corespunde pe deplin.<br>
+<br>
+20. Daca nu-mi reuseste ceva din prima incercare, ma enervez.<br>
+<input type="radio" name="q20" checked> Nu corespunde.<br>
+<input type="radio" name="q20"> Corespunde uneori.<br>
+<input type="radio" name="q20"> Corespunde deseori.<br>
+<input type="radio" name="q20"> Corespunde pe deplin.<br>
+<br>
+21. De cele mai multe ori nu-mi cunosc limitele.<br>
+<input type="radio" name="q21" checked> Nu corespunde.<br>
+<input type="radio" name="q21"> Corespunde uneori.<br>
+<input type="radio" name="q21"> Corespunde deseori.<br>
+<input type="radio" name="q21"> Corespunde pe deplin.<br>
+<br>
+<input type="submit" value="Evaluare test" onClick="javascript:go(21);">
+<input type=reset>
+</form>
+</body>
+</html>

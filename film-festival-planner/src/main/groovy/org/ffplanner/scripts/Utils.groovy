@@ -1,8 +1,8 @@
 package org.ffplanner.scripts
 
-import java.nio.charset.StandardCharsets;
 import org.htmlcleaner.HtmlCleaner
 import org.htmlcleaner.SimpleXmlSerializer
+import static java.nio.charset.StandardCharsets.UTF_8
 
 /**
  *
@@ -19,16 +19,11 @@ class Utils {
 		out.close()
 
 		def cleaner = new HtmlCleaner()
-		def node = cleaner.clean(file, StandardCharsets.UTF_8.name())
+		def node = cleaner.clean(file, UTF_8.name())
 
 		def props = cleaner.getProperties()
 		def serializer = new SimpleXmlSerializer(props)
-		def xml = serializer.getXmlAsString(node)
-
-		fileOutputStream = new FileOutputStream(file)
-		out = new BufferedOutputStream(fileOutputStream)
-		out << xml
-		out.close()
+		serializer.writeToFile(node, fileName, UTF_8.name())
 
 		return file
 	}

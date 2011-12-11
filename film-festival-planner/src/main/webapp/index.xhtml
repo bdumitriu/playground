@@ -1,19 +1,22 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html">
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core">
 
-    <h:head>
-        <title>Film Festival Planner</title>
+	<h:head>
+		<title>Film Festival Planner</title>
 		<h:outputStylesheet name="css/jsfcrud.css"/>
-    </h:head>
+	</h:head>
 
-    <h:body>
+	<h:body>
 		Hello from Facelets
 		<h:form>
 			<h:commandLink action="/movie/List" value="Show All Movie Items"/>
 			<br />
-			<h:commandLink action="#{showingController.prepareShowings}" value="Festival Schedule" />
+			<h:commandLink action="#{showingController.prepareShowings}" value="Festival Schedule">
+				<f:param name="day" value="03/06/2011" />
+			</h:commandLink>
 		</h:form>
 	</h:body>
 

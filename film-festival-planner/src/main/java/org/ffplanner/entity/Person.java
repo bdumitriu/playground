@@ -13,16 +13,16 @@ import javax.persistence.Id;
 @Entity
 public class Person {
 
-	@Id
-	@GeneratedValue
-	private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	private String name;
+    private String name;
 
-	public Person() {
-	}
+    public Person() {
+    }
 
-	public Person(String name) {
-		this.name = name;
-	}
+    public Person(String name) {
+        this.name = name;
+    }
 }

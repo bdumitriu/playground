@@ -1,53 +1,58 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-		xmlns:ui="http://java.sun.com/jsf/facelets"
-		xmlns:h="http://java.sun.com/jsf/html"
-		xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
 
-	<h:head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>Day Schedule</title>
-		<h:outputStylesheet name="css/schedule.css"/>
-	</h:head>
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Day Schedule</title>
+    <h:outputStylesheet name="css/schedule.css"/>
+</h:head>
 
-	<h:body>
-		<h:form>
-			<h:commandLink action="#{showingController.prepareShowings}" value="Previous" rendered="#{showingController.previousDay != null}">
-				<f:param name="day" value="#{showingController.previousDay}" />
-			</h:commandLink>
-			<h:outputText value=" | " />
-			<h:commandLink action="#{showingController.prepareShowings}" value="Next" rendered="#{showingController.nextDay != null}">
-				<f:param name="day" value="#{showingController.nextDay}" />
-			</h:commandLink>
-			<h:outputText value=" | " />
-			<h:commandLink action="#{showingController.x}" value="x" />
-		</h:form>
-		<div class="sch_container" style="width: 1200px; height: 800px; ">
-			<div style="width: 2719px; height: 30px">
-				<div style="width: 150px; height: 30px; float: left" />
-				<ui:repeat value="#{showingController.hours}" var="hour" varStatus="status">
-					<div class="#{status.index == 0 ? 'sch_hour_first_cell' : 'sch_hour_cell'}">
-						<h:outputText value="#{hour.formatted}" styleClass="sch_hour_text" />
-					</div>
-				</ui:repeat>
-				<ui:repeat value="#{showingController.venues}" var="venue">
-					<div style="width: 2719px; height: 70px">
-						<div style="width: 150px; height: 70px; float: left">
-							<h:outputText value="#{venue.name}" />
-						</div>
-						<ui:repeat value="#{showingController.getHourSlotsFor(venue)}" var="hourSlot" varStatus="status">
-							<div class="#{status.index == 0 ? 'sch_hour_first_cell' : 'sch_hour_cell'}" style="height: 70px">
-								<h:panelGroup rendered="#{hourSlot.hasShowing()}">
-									<div class="sch_movie_cell" style="margin-left: #{hourSlot.getMargin(150)}px; width: #{hourSlot.getWidth(150)}px;">
-										<h:outputText value="#{hourSlot.showing.movieBundle.originalTitle}" />
-									</div>
-								</h:panelGroup>
-							</div>
-						</ui:repeat>
-					</div>
-				</ui:repeat>
-			</div>
-		</div>
-	</h:body>
+<h:body>
+    <h:form>
+        <h:commandLink action="#{showingController.prepareShowings}" value="Previous"
+                       rendered="#{showingController.previousDay != null}">
+            <f:param name="day" value="#{showingController.previousDay}"/>
+        </h:commandLink>
+        <h:outputText value=" | "/>
+        <h:commandLink action="#{showingController.prepareShowings}" value="Next"
+                       rendered="#{showingController.nextDay != null}">
+            <f:param name="day" value="#{showingController.nextDay}"/>
+        </h:commandLink>
+        <h:outputText value=" | "/>
+        <h:commandLink action="#{showingController.x}" value="x"/>
+    </h:form>
+    <div class="sch_container" style="width: 1200px; height: 800px; ">
+        <div style="width: 2719px; height: 30px">
+            <div style="width: 150px; height: 30px; float: left"/>
+            <ui:repeat value="#{showingController.hours}" var="hour" varStatus="status">
+                <div class="#{status.index == 0 ? 'sch_hour_first_cell' : 'sch_hour_cell'}">
+                    <h:outputText value="#{hour.formatted}" styleClass="sch_hour_text"/>
+                </div>
+            </ui:repeat>
+            <ui:repeat value="#{showingController.venues}" var="venue">
+                <div style="width: 2719px; height: 70px">
+                    <div style="width: 150px; height: 70px; float: left">
+                        <h:outputText value="#{venue.name}"/>
+                    </div>
+                    <ui:repeat value="#{showingController.getHourSlotsFor(venue)}" var="hourSlot" varStatus="status">
+                        <div class="#{status.index == 0 ? 'sch_hour_first_cell' : 'sch_hour_cell'}"
+                             style="height: 70px">
+                            <h:panelGroup rendered="#{hourSlot.hasShowing()}">
+                                <div class="sch_movie_cell"
+                                     style="margin-left: #{hourSlot.getMargin(150)}px; width: #{hourSlot.getWidth(150)}px;">
+                                    <h:outputText value="#{hourSlot.showing.movieBundle.originalTitle}"/>
+                                </div>
+                            </h:panelGroup>
+                        </div>
+                    </ui:repeat>
+                </div>
+            </ui:repeat>
+        </div>
+    </div>
+</h:body>
 </html>

@@ -19,31 +19,31 @@ import org.ffplanner.entity.Person_;
  */
 public class PersonEJB {
 
-	@PersistenceContext(unitName = "ffp")
-	private EntityManager entityManager;
+    @PersistenceContext(unitName = "ffp")
+    private EntityManager entityManager;
 
-	public Person addOrGetActor(String actorName) {
-		return getPerson(actorName);
-	}
+    public Person addOrGetActor(String actorName) {
+        return getPerson(actorName);
+    }
 
-	public Person addOrGetDirector(String directorName) {
-		return getPerson(directorName);
-	}
+    public Person addOrGetDirector(String directorName) {
+        return getPerson(directorName);
+    }
 
-	private Person getPerson(String personName) {
-		final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		final CriteriaQuery<Person> query = criteriaBuilder.createQuery(Person.class);
-		final Root<Person> root = query.from(Person.class);
-		query.where(criteriaBuilder.equal(root.get(Person_.name), personName));
-		final TypedQuery<Person> countryQuery = entityManager.createQuery(query);
-		final List<Person> result = countryQuery.getResultList();
-		final Person person;
-		if (result.isEmpty()) {
-			person = new Person(personName);
-		} else {
-			assert result.size() == 1;
-			person = result.get(0);
-		}
-		return person;
-	}
+    private Person getPerson(String personName) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Person> query = criteriaBuilder.createQuery(Person.class);
+        final Root<Person> root = query.from(Person.class);
+        query.where(criteriaBuilder.equal(root.get(Person_.name), personName));
+        final TypedQuery<Person> countryQuery = entityManager.createQuery(query);
+        final List<Person> result = countryQuery.getResultList();
+        final Person person;
+        if (result.isEmpty()) {
+            person = new Person(personName);
+        } else {
+            assert result.size() == 1;
+            person = result.get(0);
+        }
+        return person;
+    }
 }

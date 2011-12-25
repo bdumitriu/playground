@@ -11,20 +11,20 @@ import static java.nio.charset.StandardCharsets.UTF_8
  */
 class Utils {
 
-	static def download(String address, String fileName) {
-		def file = new File(fileName)
-		def fileOutputStream = new FileOutputStream(file)
-		def out = new BufferedOutputStream(fileOutputStream)
-		out << new URL(address).openStream()
-		out.close()
+    static def download(String address, String fileName) {
+        def file = new File(fileName)
+        def fileOutputStream = new FileOutputStream(file)
+        def out = new BufferedOutputStream(fileOutputStream)
+        out << new URL(address).openStream()
+        out.close()
 
-		def cleaner = new HtmlCleaner()
-		def node = cleaner.clean(file, UTF_8.name())
+        def cleaner = new HtmlCleaner()
+        def node = cleaner.clean(file, UTF_8.name())
 
-		def props = cleaner.getProperties()
-		def serializer = new SimpleXmlSerializer(props)
-		serializer.writeToFile(node, fileName, UTF_8.name())
+        def props = cleaner.getProperties()
+        def serializer = new SimpleXmlSerializer(props)
+        serializer.writeToFile(node, fileName, UTF_8.name())
 
-		return file
-	}
+        return file
+    }
 }

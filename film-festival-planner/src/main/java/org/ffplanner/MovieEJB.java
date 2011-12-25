@@ -23,32 +23,32 @@ import org.ffplanner.entity.Person;
 @LocalBean
 public class MovieEJB {
 
-	@PersistenceContext(unitName = "ffp")
-	private EntityManager entityManager;
+    @PersistenceContext(unitName = "ffp")
+    private EntityManager entityManager;
 
-	@Inject
-	private CountryEJB countryEJB;
+    @Inject
+    private CountryEJB countryEJB;
 
-	@Inject
-	private PersonEJB personEJB;
+    @Inject
+    private PersonEJB personEJB;
 
-	public void addMovie(Movie movie,
-			Collection<String> directorNames, Collection<String> actorNames, Collection<String> countryNames) {
-		final List<Country> countries = new ArrayList<>();
-		for (String country : countryNames) {
-			countries.add(countryEJB.getCountry(country));
-		}
-		movie.addCountries(countries);
-		final List<Person> actors = new ArrayList<>();
-		for (String actorName : actorNames) {
-			actors.add(personEJB.addOrGetActor(actorName));
-		}
-		movie.addActors(actors);
-		final List<Person> directors = new ArrayList<>();
-		for (String directorName : directorNames) {
-			directors.add(personEJB.addOrGetDirector(directorName));
-		}
-		movie.addDirectors(directors);
-		entityManager.persist(movie);
-	}
+    public void addMovie(Movie movie,
+                         Collection<String> directorNames, Collection<String> actorNames, Collection<String> countryNames) {
+        final List<Country> countries = new ArrayList<>();
+        for (String country : countryNames) {
+            countries.add(countryEJB.getCountry(country));
+        }
+        movie.addCountries(countries);
+        final List<Person> actors = new ArrayList<>();
+        for (String actorName : actorNames) {
+            actors.add(personEJB.addOrGetActor(actorName));
+        }
+        movie.addActors(actors);
+        final List<Person> directors = new ArrayList<>();
+        for (String directorName : directorNames) {
+            directors.add(personEJB.addOrGetDirector(directorName));
+        }
+        movie.addDirectors(directors);
+        entityManager.persist(movie);
+    }
 }

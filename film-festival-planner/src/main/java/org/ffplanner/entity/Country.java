@@ -14,17 +14,17 @@ import javax.persistence.Id;
 @Entity
 public class Country {
 
-	@Id
-	@GeneratedValue
-	private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	@Column(unique = true)
-	private String name;
+    @Column(unique = true)
+    private String name;
 
-	public Country() {
-	}
+    public Country() {
+    }
 
-	public Country(String name) {
-		this.name = name;
-	}
+    public Country(String name) {
+        this.name = name;
+    }
 }

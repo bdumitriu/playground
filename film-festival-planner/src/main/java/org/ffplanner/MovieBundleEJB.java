@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import org.ffplanner.entity.MovieBundle;
 import org.ffplanner.entity.MovieBundle_;
 
@@ -22,17 +23,17 @@ import org.ffplanner.entity.MovieBundle_;
 @LocalBean
 public class MovieBundleEJB {
 
-	@PersistenceContext(unitName = "ffp")
-	private EntityManager entityManager;
+    @PersistenceContext(unitName = "ffp")
+    private EntityManager entityManager;
 
-	@Inject
-	private SectionEJB sectionEJB;
+    @Inject
+    private SectionEJB sectionEJB;
 
-	@Inject
-	private MovieEJB movieEJB;
+    @Inject
+    private MovieEJB movieEJB;
 
-	public void addShowing(MovieBundle movieBundle, String sectionName) {
-		movieBundle.setSection(sectionEJB.getSection(sectionName));
-		entityManager.persist(movieBundle);
-	}
+    public void addShowing(MovieBundle movieBundle, String sectionName) {
+        movieBundle.setSection(sectionEJB.getSection(sectionName));
+        entityManager.persist(movieBundle);
+    }
 }

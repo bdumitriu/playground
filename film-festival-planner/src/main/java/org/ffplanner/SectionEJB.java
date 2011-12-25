@@ -19,23 +19,23 @@ import org.ffplanner.entity.Section_;
  */
 public class SectionEJB {
 
-	@PersistenceContext(unitName = "ffp")
-	private EntityManager entityManager;
+    @PersistenceContext(unitName = "ffp")
+    private EntityManager entityManager;
 
-	public Section getSection(String sectionName) {
-		final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		final CriteriaQuery<Section> query = criteriaBuilder.createQuery(Section.class);
-		final Root<Section> root = query.from(Section.class);
-		query.where(criteriaBuilder.equal(root.get(Section_.name), sectionName));
-		final TypedQuery<Section> sectionQuery = entityManager.createQuery(query);
-		final List<Section> result = sectionQuery.getResultList();
-		final Section section;
-		if (result.isEmpty()) {
-			section = new Section(sectionName);
-		} else {
-			assert result.size() == 1;
-			section = result.get(0);
-		}
-		return section;
-	}
+    public Section getSection(String sectionName) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Section> query = criteriaBuilder.createQuery(Section.class);
+        final Root<Section> root = query.from(Section.class);
+        query.where(criteriaBuilder.equal(root.get(Section_.name), sectionName));
+        final TypedQuery<Section> sectionQuery = entityManager.createQuery(query);
+        final List<Section> result = sectionQuery.getResultList();
+        final Section section;
+        if (result.isEmpty()) {
+            section = new Section(sectionName);
+        } else {
+            assert result.size() == 1;
+            section = result.get(0);
+        }
+        return section;
+    }
 }

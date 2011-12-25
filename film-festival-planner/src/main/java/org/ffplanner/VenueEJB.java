@@ -19,23 +19,23 @@ import org.ffplanner.entity.Venue_;
  */
 public class VenueEJB {
 
-	@PersistenceContext(unitName = "ffp")
-	private EntityManager entityManager;
+    @PersistenceContext(unitName = "ffp")
+    private EntityManager entityManager;
 
-	public Venue getVenue(String venueName) {
-		final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		final CriteriaQuery<Venue> query = criteriaBuilder.createQuery(Venue.class);
-		final Root<Venue> root = query.from(Venue.class);
-		query.where(criteriaBuilder.equal(root.get(Venue_.name), venueName));
-		final TypedQuery<Venue> venueQuery = entityManager.createQuery(query);
-		final List<Venue> result = venueQuery.getResultList();
-		final Venue venue;
-		if (result.isEmpty()) {
-			venue = new Venue(venueName);
-		} else {
-			assert result.size() == 1;
-			venue = result.get(0);
-		}
-		return venue;
-	}
+    public Venue getVenue(String venueName) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Venue> query = criteriaBuilder.createQuery(Venue.class);
+        final Root<Venue> root = query.from(Venue.class);
+        query.where(criteriaBuilder.equal(root.get(Venue_.name), venueName));
+        final TypedQuery<Venue> venueQuery = entityManager.createQuery(query);
+        final List<Venue> result = venueQuery.getResultList();
+        final Venue venue;
+        if (result.isEmpty()) {
+            venue = new Venue(venueName);
+        } else {
+            assert result.size() == 1;
+            venue = result.get(0);
+        }
+        return venue;
+    }
 }

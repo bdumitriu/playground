@@ -51,12 +51,12 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>3.6.7.Final</version>
+            <version>3.6.8.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>3.6.7.Final</version>
+            <version>3.6.8.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -80,7 +80,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.8.2</version>
+            <version>1.8.5</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.htmlcleaner</groupId>
@@ -119,6 +119,41 @@
                 <version>2.1.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>1.1.4</version>
+                <configuration>
+
+                    <!-- Container configuration -->
+                    <container>
+                        <containerId>glassfish3x</containerId>
+                        <home>${local.glassfish.home}</home>
+                    </container>
+
+                    <!-- Configuration to use with the container -->
+                    <configuration>
+                        <type>existing</type>
+                        <properties>
+                            <cargo.remote.username>${local.glassfish.user}</cargo.remote.username>
+                            <cargo.remote.password>${local.glassfish.password}</cargo.remote.password>
+                            <cargo.glassfish.domain.name>${local.glassfish.domain}</cargo.glassfish.domain.name>
+                        </properties>
+                    </configuration>
+
+                    <!-- Deployer configuration -->
+                    <deployer>
+                        <type>installed</type>
+                        <deployables>
+                            <deployable>
+                                <groupId>${project.groupId}</groupId>
+                                <artifactId>${project.artifactId}</artifactId>
+                                <type>war</type>
+                            </deployable>
+                        </deployables>
+                    </deployer>
                 </configuration>
             </plugin>
             <plugin>
@@ -207,7 +242,7 @@
                     <dependency>
                         <groupId>org.codehaus.groovy</groupId>
                         <artifactId>groovy-all</artifactId>
-                        <version>1.8.2</version>
+                        <version>1.8.5</version>
                     </dependency>
                 </dependencies>
                 <executions>

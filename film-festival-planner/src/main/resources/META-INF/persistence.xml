@@ -8,7 +8,7 @@
         <jta-data-source>jdbc/ffp</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.hbm2ddl.auto" value="update" />
         </properties>
     </persistence-unit>
     <!--<persistence-unit name="ffp" transaction-type="RESOURCE_LOCAL">

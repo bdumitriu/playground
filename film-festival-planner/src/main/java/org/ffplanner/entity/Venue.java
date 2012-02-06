@@ -6,12 +6,15 @@ package org.ffplanner.entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * @author Bogdan Dumitriu
  */
 @Entity
-public class Venue {
+public class Venue implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @GeneratedValue
     @Id

@@ -1,9 +1,11 @@
 package org.ffplanner.controller;
 
+import java.io.Serializable;
+
 /**
  * @author Bogdan Dumitriu
  */
-public class Hour {
+public class Hour implements Serializable {
 
     private int hour;
 

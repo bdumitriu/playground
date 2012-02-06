@@ -4,6 +4,7 @@
 package org.ffplanner.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +13,9 @@ import java.util.List;
  * @author Bogdan Dumitriu
  */
 @Entity
-public class MovieBundle {
+public class MovieBundle implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @GeneratedValue
     @Id

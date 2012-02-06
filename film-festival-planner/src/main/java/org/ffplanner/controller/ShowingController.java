@@ -1,27 +1,22 @@
 package org.ffplanner.controller;
 
-import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.inject.Named;
-import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import org.ffplanner.ShowingEJB;
+import org.ffplanner.converter.DayConverter;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.Venue;
+
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * @author Bogdan Dumitriu
  */
-@Named(value = "showingController")
+@ManagedBean
 @RequestScoped
 public class ShowingController implements Serializable {
-
-    private static final SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
     @EJB
     private ShowingEJB showingEJB;
@@ -30,7 +25,7 @@ public class ShowingController implements Serializable {
 
     private Collection<Venue> venues;
 
-    private Collection<Hour> hours;
+    private final Collection<Hour> hours;
 
     private Date day;
 
@@ -39,61 +34,11 @@ public class ShowingController implements Serializable {
         for (int i = 9; i < 24; i++) {
             hours.add(new Hour(i));
         }
-        for (int i = 0; i < 2; i++) {
-            hours.add(new Hour(i));
-        }
+        hours.add(new Hour(0));
+        hours.add(new Hour(1));
     }
 
-    public Collection<Hour> getHours() {
-        return hours;
-    }
-
-    public Collection<Venue> getVenues() {
-        return venues;
-    }
-
-    public Collection<HourSlot> getHourSlotsFor(Venue venue) {
-        final Map<Integer, Showing> showingsByHour = showingsByVenuesAndHours.get(venue);
-        final LinkedList<HourSlot> hourSlots = new LinkedList<>();
-        for (Hour hour : getHours()) {
-            final Showing showing = showingsByHour == null ? null : showingsByHour.get(hour.getHour());
-            hourSlots.add(new HourSlot(hour, showing));
-        }
-        return hourSlots;
-    }
-
-    public String getPreviousDay() {
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(day);
-        calendar.roll(Calendar.DAY_OF_MONTH, false);
-        return DAY_FORMAT.format(calendar.getTime());
-    }
-
-    public String getNextDay() {
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(day);
-        calendar.roll(Calendar.DAY_OF_MONTH, true);
-        return DAY_FORMAT.format(calendar.getTime());
-    }
-
-    public void setDay(Date day) {
-        this.day = day;
-    }
-
-    public String x() {
-        return "index";
-    }
-
-    public String prepareShowings() {
-        final ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        final String day = externalContext.getRequestParameterMap().get("day");
-        try {
-            final Date date = DAY_FORMAT.parse(day);
-            setDay(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+    public void prepareShowings() {
         final Collection<Showing> showings = showingEJB.getShowingsFor(this.day);
         showingsByVenuesAndHours = new HashMap<>();
         venues = new LinkedList<>();
@@ -114,11 +59,45 @@ public class ShowingController implements Serializable {
             showingsByHour.put(dateAndTime.get(Calendar.HOUR_OF_DAY), showing);
         }
         showingsByVenuesAndHours.put(currentVenue, showingsByHour);
-        return "DaySchedule";
     }
 
-    public static void main(String[] args) throws ParseException {
-        final Date day = DAY_FORMAT.parse("03/06/2011");
-        System.out.println(day);
+    public Collection<Hour> getHours() {
+        return hours;
+    }
+
+    public Collection<Venue> getVenues() {
+        return venues;
+    }
+
+    public Collection<HourSlot> getHourSlotsFor(Venue venue) {
+        final Map<Integer, Showing> showingsByHour = showingsByVenuesAndHours.get(venue);
+        final Collection<HourSlot> hourSlots = new LinkedList<>();
+        for (Hour hour : getHours()) {
+            final Showing showing = showingsByHour == null ? null : showingsByHour.get(hour.getHour());
+            hourSlots.add(new HourSlot(hour, showing));
+        }
+        return hourSlots;
+    }
+
+    public String getPreviousDay() {
+        final GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(day);
+        calendar.roll(Calendar.DAY_OF_MONTH, false);
+        return new DayConverter().getAsString(null, null, calendar.getTime());
+    }
+
+    public String getNextDay() {
+        final GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(day);
+        calendar.roll(Calendar.DAY_OF_MONTH, true);
+        return new DayConverter().getAsString(null, null, calendar.getTime());
+    }
+
+    public void setDay(Date day) {
+        this.day = day;
+    }
+
+    public Date getDay() {
+        return day;
     }
 }

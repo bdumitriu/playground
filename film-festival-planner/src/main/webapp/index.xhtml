@@ -11,14 +11,11 @@
 </h:head>
 
 <h:body>
-    Hello from Facelets
-    <h:form>
-        <h:commandLink action="/movie/List" value="Show All Movie Items"/>
-        <br/>
-        <h:commandLink action="#{showingController.prepareShowings}" value="Festival Schedule">
-            <f:param name="day" value="03/06/2011"/>
-        </h:commandLink>
-    </h:form>
+    <h:link action="/movie/List" value="Show All Movie Items" />
+    <br />
+    <h:link value="Festival Schedule" outcome="DaySchedule">
+        <f:param name="day" value="03/06/2011"/>
+    </h:link>
 </h:body>
 
 </html>

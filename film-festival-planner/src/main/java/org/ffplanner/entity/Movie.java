@@ -1,12 +1,15 @@
 package org.ffplanner.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Entity
-public class Movie {
+public class Movie implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private static final SimpleDateFormat DURATION_FORMAT = new SimpleDateFormat("H'h':m'm'");
 

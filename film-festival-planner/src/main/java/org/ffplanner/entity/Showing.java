@@ -4,6 +4,7 @@
 package org.ffplanner.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,7 +15,9 @@ import java.util.GregorianCalendar;
  * @author Bogdan Dumitriu
  */
 @Entity
-public class Showing {
+public class Showing implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private static final SimpleDateFormat DAY_TIME_FORMAT = new SimpleDateFormat("d MMM yyyy H:m");
 

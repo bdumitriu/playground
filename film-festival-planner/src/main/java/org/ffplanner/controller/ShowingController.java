@@ -7,16 +7,19 @@ import org.ffplanner.entity.Venue;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * @author Bogdan Dumitriu
  */
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class ShowingController implements Serializable {
+
+    private final Logger log = Logger.getLogger(this.getClass().getName());
 
     @EJB
     private ShowingEJB showingEJB;
@@ -30,6 +33,7 @@ public class ShowingController implements Serializable {
     private Date day;
 
     public ShowingController() {
+        log.entering("ShowingController", "init");
         hours = new ArrayList<>();
         for (int i = 9; i < 24; i++) {
             hours.add(new Hour(i));
@@ -39,6 +43,8 @@ public class ShowingController implements Serializable {
     }
 
     public void prepareShowings() {
+//        log.setLevel(Level.ALL);
+        log.entering("ShowingController", "prepareShowings");
         final Collection<Showing> showings = showingEJB.getShowingsFor(this.day);
         showingsByVenuesAndHours = new HashMap<>();
         venues = new LinkedList<>();
@@ -59,6 +65,7 @@ public class ShowingController implements Serializable {
             showingsByHour.put(dateAndTime.get(Calendar.HOUR_OF_DAY), showing);
         }
         showingsByVenuesAndHours.put(currentVenue, showingsByHour);
+        log.exiting("ShowingController", "prepareShowings");
     }
 
     public Collection<Hour> getHours() {
@@ -66,17 +73,27 @@ public class ShowingController implements Serializable {
     }
 
     public Collection<Venue> getVenues() {
-        return venues;
+        log.entering("ShowingController", "getVenues");
+        try {
+            return venues;
+        } finally {
+            log.exiting("ShowingController", "getVenues", venues == null ? "null" : venues.size());
+        }
     }
 
     public Collection<HourSlot> getHourSlotsFor(Venue venue) {
+        log.entering("ShowingController", "getHourSlotsFor", venue == null ? "null" : venue.getName());
         final Map<Integer, Showing> showingsByHour = showingsByVenuesAndHours.get(venue);
         final Collection<HourSlot> hourSlots = new LinkedList<>();
         for (Hour hour : getHours()) {
             final Showing showing = showingsByHour == null ? null : showingsByHour.get(hour.getHour());
             hourSlots.add(new HourSlot(hour, showing));
         }
-        return hourSlots;
+        try {
+            return hourSlots;
+        } finally {
+            log.exiting("ShowingController", "getHourSlotsFor");
+        }
     }
 
     public String getPreviousDay() {
@@ -94,10 +111,16 @@ public class ShowingController implements Serializable {
     }
 
     public void setDay(Date day) {
+        log.entering("ShowingController", "setDay", day == null ? null : day.toString());
         this.day = day;
+        log.exiting("ShowingController", "setDay");
     }
 
     public Date getDay() {
         return day;
+    }
+
+    public void showingClicked(Long showingId) {
+
     }
 }

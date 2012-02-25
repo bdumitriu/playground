@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<f:metadata>
+    <f:event type="preRenderView" listener="#{dummy.createEntries}"/>
+</f:metadata>
+
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Dummy</title>
+    <h:outputScript name="jsf.js" library="javax.faces"/>
+</h:head>
+
+<h:body>
+    <h:panelGrid>
+        <ui:repeat value="#{dummy.hours}" var="hour">
+            <h:form rendered="#{dummy.hasEntryForHour(hour)}">
+                <h:commandButton style="background-color: #{dummy.getColor(hour)}"
+                                 value="#{dummy.getEntryForHour(hour).hour}: #{dummy.getEntryForHour(hour).event}" action="#{dummy.changeColor(hour)}">
+                    <f:ajax render="@this"/>
+                </h:commandButton>
+            </h:form>
+        </ui:repeat>
+    </h:panelGrid>
+</h:body>
+
+</html>

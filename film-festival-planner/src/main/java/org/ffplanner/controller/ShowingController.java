@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 @ViewScoped
 public class ShowingController implements Serializable {
 
-    private final Logger log = Logger.getLogger(this.getClass().getName());
+    private final Logger log = Logger.getLogger(ShowingController.class.getName());
 
     @EJB
     private ShowingEJB showingEJB;

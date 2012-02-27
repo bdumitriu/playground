@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<f:metadata>
+    <f:event type="preRenderView" listener="#{authController.processOpenIDProviderResponse}"/>
+</f:metadata>
+
+<h:head>
+    <title>Simple JSF Facelets page</title>
+</h:head>
+
+<h:body>
+    <h:outputLabel value="#{authController.registrationModel.firstName}"/>
+    <br/>
+    <h:outputLabel value="#{authController.registrationModel.lastName}"/>
+    <br/>
+    <h:outputLabel value="#{authController.registrationModel.emailAddress}"/>
+    <br/>
+    <h:outputLabel value="#{authController.registrationModel.openId}"/>
+</h:body>
+
+</html>

@@ -11,18 +11,13 @@
 </h:head>
 
 <h:body>
-    <h:form>
-        <h:outputLabel value="OpenID: "/>
-        <h:inputText value="#{authController.userSuppliedIdentifier}"/>
-        <h:commandButton value="Log in" action="#{authController.logIn}"/>
-    </h:form>
     <h:link action="/movie/List" value="Show All Movie Items"/>
     <br/>
     <h:link value="Festival Schedule" outcome="DaySchedule">
         <f:param name="day" value="03/06/2011"/>
     </h:link>
     <br/>
-    <h:link value="Dummy" outcome="Dummy"/>
+    <h:link value="Dummy" outcome="/Dummy"/>
 </h:body>
 
 </html>

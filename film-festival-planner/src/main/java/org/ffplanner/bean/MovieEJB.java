@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 QTronic GmbH. All rights reserved.
  */
-package org.ffplanner;
+package org.ffplanner.bean;
 
 import org.ffplanner.entity.Country;
 import org.ffplanner.entity.Movie;

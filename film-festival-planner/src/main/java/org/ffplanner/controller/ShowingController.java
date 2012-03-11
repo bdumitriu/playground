@@ -1,9 +1,10 @@
 package org.ffplanner.controller;
 
-import org.ffplanner.ShowingEJB;
+import org.ffplanner.bean.ShowingEJB;
 import org.ffplanner.converter.DayConverter;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.Venue;
+import org.joda.time.DateTime;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -12,12 +13,16 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static org.joda.time.DateTimeConstants.JUNE;
+
 /**
  * @author Bogdan Dumitriu
  */
 @ManagedBean
 @ViewScoped
 public class ShowingController implements Serializable {
+
+    private static final long serialVersionUID = 868645927823933930L;
 
     private final Logger log = Logger.getLogger(ShowingController.class.getName());
 
@@ -45,6 +50,10 @@ public class ShowingController implements Serializable {
     public void prepareShowings() {
 //        log.setLevel(Level.ALL);
         log.entering("ShowingController", "prepareShowings");
+        if (this.day == null) {
+            final DateTime dateTime = new DateTime(2011, JUNE, 3, 0, 0);
+            this.day = dateTime.toDate();
+        }
         final Collection<Showing> showings = showingEJB.getShowingsFor(this.day);
         showingsByVenuesAndHours = new HashMap<>();
         venues = new LinkedList<>();

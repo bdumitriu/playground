@@ -1,40 +1,45 @@
 /*
  * Copyright 2011 QTronic GmbH. All rights reserved.
  */
-package org.ffplanner.controller.auth;
+package org.ffplanner.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
  * @author Bogdan Dumitriu
  */
+@Entity
+public class User implements Serializable {
 
-public class RegistrationModel implements Serializable {
+    private static final long serialVersionUID = -3332755932464496941L;
 
-    private static final long serialVersionUID = -8667859852129851575L;
-
-    private String openId;
+    @Id
+    @GeneratedValue
+    private Long id;
 
     private String firstName;
-
+    
     private String lastName;
-
+    
     private String emailAddress;
-
-    public String getOpenId() {
-        return openId;
+    
+    public Long getId() {
+        return id;
     }
 
-    public void setOpenId(String openId) {
-        this.openId = openId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String fullName) {
-        this.firstName = fullName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {

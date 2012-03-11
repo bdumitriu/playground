@@ -1,29 +1,23 @@
 /*
  * Copyright 2011 QTronic GmbH. All rights reserved.
  */
-package org.ffplanner;
+package org.ffplanner.bean;
 
-import java.util.List;
+import org.ffplanner.entity.MovieBundle;
+import org.ffplanner.entity.Showing;
+import org.ffplanner.entity.Showing_;
+
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import java.text.ParseException;
-
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import org.ffplanner.entity.MovieBundle;
-import org.ffplanner.entity.Showing;
-import org.ffplanner.entity.Showing_;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * @author Bogdan Dumitriu

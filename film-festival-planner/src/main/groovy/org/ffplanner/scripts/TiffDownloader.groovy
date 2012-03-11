@@ -1,8 +1,8 @@
 package org.ffplanner.scripts
 
-import org.ffplanner.ShowingEJB
-import org.ffplanner.MovieEJB
-import org.ffplanner.MovieBundleEJB
+import org.ffplanner.bean.ShowingEJB
+import org.ffplanner.bean.MovieEJB
+import org.ffplanner.bean.MovieBundleEJB
 import static org.ffplanner.scripts.Utils.download
 
 /**

@@ -1,7 +1,7 @@
 package org.ffplanner.scripts
 
-import org.ffplanner.MovieBundleEJB
-import org.ffplanner.MovieEJB
+import org.ffplanner.bean.MovieBundleEJB
+import org.ffplanner.bean.MovieEJB
 import org.ffplanner.entity.Movie
 import org.ffplanner.entity.MovieBundle
 import static org.ffplanner.scripts.Utils.download

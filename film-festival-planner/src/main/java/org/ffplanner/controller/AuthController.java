@@ -3,13 +3,18 @@
  */
 package org.ffplanner.controller;
 
-import org.ffplanner.controller.auth.RegistrationModel;
+import org.ffplanner.bean.UserEJB;
+import org.ffplanner.controller.auth.AuthData;
 import org.ffplanner.controller.auth.RegistrationService;
+import org.ffplanner.entity.User;
+import org.ffplanner.util.Logging;
 import org.openid4java.discovery.DiscoveryInformation;
 import org.openid4java.message.AuthRequest;
 
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.io.Serializable;
@@ -19,53 +24,116 @@ import java.util.logging.Logger;
 /**
  * @author Bogdan Dumitriu
  */
-@ManagedBean
+@ManagedBean(name = "auth")
 @SessionScoped
 public class AuthController implements Serializable {
 
-    private static final Logger log = Logger.getLogger(AuthController.class.getName());
+    private static final long serialVersionUID = -6304509374050562162L;
 
-    private String userSuppliedIdentifier;
+    private static final Logger logger = Logger.getLogger(AuthController.class.getName());
+
+    private static final String GOOGLE_OPENID_URL = "https://www.google.com/accounts/o8/id"; //NON-NLS
+
+    private static final String YAHOO_OPENID_URL = "https://me.yahoo.com/"; //NON-NLS
+
+    private String redirectPath;
 
     private DiscoveryInformation discoveryInformation;
 
-    private RegistrationModel registrationModel;
+    private AuthData authData;
 
-    public void logIn() {
-        discoveryInformation = RegistrationService.performDiscoveryOnUserSuppliedIdentifier(userSuppliedIdentifier);
-        final AuthRequest authRequest =
-                RegistrationService.createOpenIdAuthRequest(discoveryInformation, RegistrationService.getReturnToUrl());
+    @EJB
+    private UserEJB userEJB;
+
+    private User user;
+
+    public void logInWithGoogle(String redirectPath) {
+        logIn(GOOGLE_OPENID_URL, redirectPath);
+    }
+
+    public void logInWithYahoo(String redirectPath) {
+        logIn(YAHOO_OPENID_URL, redirectPath);
+    }
+
+    private void logIn(String identifier, String redirectPath) {
+        discoveryInformation = RegistrationService.performDiscoveryOnUserSuppliedIdentifier(identifier);
+        this.redirectPath = redirectPath;
+        final String returnToUrl = RegistrationService.getReturnToUrl();
+        final AuthRequest authRequest = RegistrationService.createOpenIdAuthRequest(discoveryInformation, returnToUrl);
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect(authRequest.getDestinationUrl(true));
         } catch (IOException e) {
-            final String message = "Redirect failed: " + e.getMessage();
-            log.severe(message);
-            throw new RuntimeException(message, e);
+            Logging.getInstance().log(logger, "Redirect failed: ", e);
         }
     }
 
     public void processOpenIDProviderResponse() {
-        if (registrationModel == null) {
-            final Map<String, String> parameterMap =
-                    FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-            registrationModel = RegistrationService.processReturn(
+        if (user == null && authData == null) {
+            final ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+            final Map<String, String> parameterMap = externalContext.getRequestParameterMap();
+            authData = RegistrationService.processReturn(
                     discoveryInformation, parameterMap, RegistrationService.getReturnToUrl());
+            if (authData == null) {
+                try {
+                    if (!FacesContext.getCurrentInstance().getResponseComplete()) {
+                        externalContext.redirect("Login.xhtml");
+                    }
+                } catch (IOException e) {
+                    Logging.getInstance().log(logger, "Redirect failed: ", e);
+                }
+            } else {
+                final User user = userEJB.getUserWithOpenId(authData.getOpenId());
+                if (user != null) {
+                    authData = null;
+                    setUser(user);
+                    try {
+                        if (!FacesContext.getCurrentInstance().getResponseComplete()) {
+                            if (redirectPath != null) {
+                                externalContext.redirect(redirectPath);
+                            } else {
+                                externalContext.redirect("auth/DaySchedule.xhtml");
+                            }
+                        }
+                    } catch (IOException e) {
+                        Logging.getInstance().log(logger, "Redirect failed: ", e);
+                    }
+                }
+            }
         }
     }
 
-    public String getUserSuppliedIdentifier() {
-        return userSuppliedIdentifier;
+    public String createNewAccount() {
+        if (user == null && authData != null) {
+            user = userEJB.addUser(authData);
+            authData = null;
+            if (redirectPath != null) {
+                try {
+                    FacesContext.getCurrentInstance().getExternalContext().redirect(redirectPath);
+                } catch (IOException e) {
+                    Logging.getInstance().log(logger, "Redirect failed: ", e);
+                }
+                return null;
+            } else {
+                return "/auth/DaySchedule";
+            }
+        } else {
+            return null;
+        }
     }
 
-    public void setUserSuppliedIdentifier(String userSuppliedIdentifier) {
-        this.userSuppliedIdentifier = userSuppliedIdentifier;
+    public AuthData getAuthData() {
+        return authData;
     }
 
-    public RegistrationModel getRegistrationModel() {
-        return registrationModel;
+    public void setAuthData(AuthData authData) {
+        this.authData = authData;
     }
 
-    public void setRegistrationModel(RegistrationModel registrationModel) {
-        this.registrationModel = registrationModel;
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

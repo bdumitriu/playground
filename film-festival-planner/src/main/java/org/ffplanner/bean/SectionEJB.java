@@ -1,7 +1,10 @@
 /*
  * Copyright 2011 QTronic GmbH. All rights reserved.
  */
-package org.ffplanner;
+package org.ffplanner.bean;
+
+import org.ffplanner.entity.Section;
+import org.ffplanner.entity.Section_;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,9 +13,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
-
-import org.ffplanner.entity.Section;
-import org.ffplanner.entity.Section_;
 
 /**
  * @author Bogdan Dumitriu

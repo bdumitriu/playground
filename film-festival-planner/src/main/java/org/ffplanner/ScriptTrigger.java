@@ -3,6 +3,9 @@ package org.ffplanner;
 import javax.ejb.EJB;
 import javax.jws.WebService;
 
+import org.ffplanner.bean.MovieBundleEJB;
+import org.ffplanner.bean.MovieEJB;
+import org.ffplanner.bean.ShowingEJB;
 import org.ffplanner.scripts.TiffDownloader;
 
 /**

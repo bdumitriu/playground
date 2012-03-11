@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<f:metadata>
+    <f:event type="preRenderView" listener="#{auth.processOpenIDProviderResponse}"/>
+</f:metadata>
+
+<h:head>
+    <title>Create new account</title>
+    <h:outputStylesheet name="css/screen.css"/>
+</h:head>
+
+<h:body>
+
+    <h:outputText value="#{session.getAttribute('from')}"/>
+    This is the first time you have logged in using this OpenID (<h:outputText value="#{auth.authData.openId}"/>).
+    <br/>
+    We are about to create a new account for you using the data obtained from your OpenID provider.
+    <br/>
+    Please review it, modify it if necessary, and confirm the account creation.
+    <br/>
+    <br/>
+
+    <h:form>
+        <h:outputLabel value="First name:" /> <h:inputText value="#{auth.authData.firstName}"/>
+        <br/>
+        <h:outputLabel value="Last name:" /> <h:inputText value="#{auth.authData.lastName}"/>
+        <br/>
+        <h:outputLabel value="Email address:" /> <h:inputText value="#{auth.authData.emailAddress}"/>
+        <br/>
+        <br/>
+        <h:commandButton value="Create account" action="#{auth.createNewAccount}"/>
+    </h:form>
+
+</h:body>
+
+</html>

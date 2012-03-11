@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>Log in</title>
+</h:head>
+
+<h:body>
+    <h:form>
+        <h:outputLabel value="Log in using"/>
+        <br/><br/>
+        <h:commandButton image="resources/img/google.png" style="width: 100px; height: 100px;"
+                         action="#{auth.logInWithGoogle(session.getAttribute('redirectTo'))}"/>
+        <h:commandButton image="resources/img/yahoo.png" style="margin-left: 10px; width: 100px; height: 100px;"
+                         action="#{auth.logInWithYahoo(session.getAttribute('redirectTo'))}"/>
+    </h:form>
+</h:body>
+
+</html>

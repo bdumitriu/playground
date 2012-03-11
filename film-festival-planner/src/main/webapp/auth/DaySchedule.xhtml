@@ -11,52 +11,51 @@
     <f:event type="preRenderView" listener="#{showingController.prepareShowings}"/>
 </f:metadata>
 
-<h:head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Day Schedule</title>
-    <h:outputStylesheet name="css/schedule.css"/>
-    <h:outputScript name="jsf.js" library="javax.faces"/>
-</h:head>
+<ui:composition template="layout.xhtml">
+    <ui:define name="title">Day Schedule</ui:define>
+    <ui:define name="additional-headers">
+        <h:outputStylesheet name="css/schedule.css"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:link value="Previous" rendered="#{showingController.previousDay != null}">
+            <f:param name="day" value="#{showingController.previousDay}"/>
+        </h:link>
+        <h:outputText value=" | "/>
+        <h:link value="Next" rendered="${showingController.nextDay != null}">
+            <f:param name="day" value="${showingController.nextDay}"/>
+        </h:link>
 
-<h:body>
-    <h:link value="Previous" rendered="#{showingController.previousDay != null}">
-        <f:param name="day" value="#{showingController.previousDay}"/>
-    </h:link>
-    <h:outputText value=" | "/>
-    <h:link value="Next" rendered="${showingController.nextDay != null}">
-        <f:param name="day" value="${showingController.nextDay}"/>
-    </h:link>
-
-    <div class="sch_container" style="width: 1200px; height: 800px; ">
-        <div style="width: 2719px; height: 30px">
-            <div style="width: 150px; height: 30px; float: left" ></div>
-            <ui:repeat value="#{showingController.hours}" var="hour" varStatus="status">
-                <div class="#{status.index == 0 ? 'sch_hour_first_cell' : 'sch_hour_cell'}">
-                    <h:outputText value="#{hour.formatted}" styleClass="sch_hour_text"/>
-                </div>
-            </ui:repeat>
-            <h:form>
-                <ui:repeat value="#{showingController.venues}" var="venue">
-                    <div style="width: 2719px; height: 70px">
-                        <div style="width: 150px; height: 70px; float: left">
-                            <h:outputText value="#{venue.name}"/>
-                        </div>
-                        <ui:repeat value="#{showingController.getHourSlotsFor(venue)}" var="hourSlot" varStatus="status">
-                            <h:panelGroup class="#{status.index == 0 ? 'sch_hour_first_cell' : 'sch_hour_cell'}"
-                                          style="height: 70px">
-                                <h:commandButton styleClass="sch_movie_cell" rendered="#{hourSlot.hasShowing()}"
-                                                 action="#{showingController.showingClicked(hourSlot.showing.id)}"
-                                                 value="#{hourSlot.showing.movieBundle.originalTitle}"
-                                                 style="margin-left: #{hourSlot.getMargin(150)}px; width: #{hourSlot.getWidth(150)}px;">
-                                    <f:ajax execute="@form"/>
-                                </h:commandButton>
-                            </h:panelGroup>
-                        </ui:repeat>
+        <div class="sch_container" style="width: 1200px; height: 800px; ">
+            <div style="width: 2719px; height: 30px">
+                <div style="width: 150px; height: 30px; float: left" ></div>
+                <ui:repeat value="#{showingController.hours}" var="hour" varStatus="status">
+                    <div class="#{status.index == 0 ? 'sch_hour_first_cell' : 'sch_hour_cell'}">
+                        <h:outputText value="#{hour.formatted}" styleClass="sch_hour_text"/>
                     </div>
                 </ui:repeat>
-            </h:form>
+                <h:form>
+                    <ui:repeat value="#{showingController.venues}" var="venue">
+                        <div style="width: 2719px; height: 70px">
+                            <div style="width: 150px; height: 70px; float: left">
+                                <h:outputText value="#{venue.name}"/>
+                            </div>
+                            <ui:repeat value="#{showingController.getHourSlotsFor(venue)}" var="hourSlot" varStatus="status">
+                                <h:panelGroup class="#{status.index == 0 ? 'sch_hour_first_cell' : 'sch_hour_cell'}"
+                                              style="height: 70px">
+                                    <h:commandButton styleClass="sch_movie_cell" rendered="#{hourSlot.hasShowing()}"
+                                                     action="#{showingController.showingClicked(hourSlot.showing.id)}"
+                                                     value="#{hourSlot.showing.movieBundle.originalTitle}"
+                                                     style="margin-left: #{hourSlot.getMargin(150)}px; width: #{hourSlot.getWidth(150)}px;">
+                                        <f:ajax execute="@form"/>
+                                    </h:commandButton>
+                                </h:panelGroup>
+                            </ui:repeat>
+                        </div>
+                    </ui:repeat>
+                </h:form>
+            </div>
         </div>
-    </div>
+    </ui:define>
+</ui:composition>
 
-</h:body>
 </html>

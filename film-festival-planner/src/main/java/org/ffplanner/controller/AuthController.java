@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
@@ -46,6 +47,16 @@ public class AuthController implements Serializable {
     private UserEJB userEJB;
 
     private User user;
+
+    public void logOut() {
+        final ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        ((HttpSession) context.getSession(false)).invalidate();
+        try {
+            context.redirect(context.getRequestContextPath());
+        } catch (IOException e) {
+            Logging.getInstance().log(logger, "Redirect failed: ", e);
+        }
+    }
 
     public void logInWithGoogle(String redirectPath) {
         logIn(GOOGLE_OPENID_URL, redirectPath);

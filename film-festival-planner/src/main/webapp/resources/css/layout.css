@@ -1,0 +1,17 @@
+.overlay {
+    position: fixed;
+    background-color: #9acd32;
+    padding: 10px;
+    top: 0;
+    right: 0;
+    z-index: 100;
+}
+
+a.logout, a.logout:visited {
+    text-decoration: none;
+    color: black;
+}
+
+a.logout:hover {
+    color: white;
+}

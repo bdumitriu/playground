@@ -22,6 +22,8 @@ public class Venue implements Serializable {
 
     private String name;
 
+    private String address;
+
     public Venue() {
     }
 
@@ -43,5 +45,13 @@ public class Venue implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

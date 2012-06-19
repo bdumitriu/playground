@@ -3,6 +3,8 @@
  */
 package org.ffplanner.entity;
 
+import org.ffplanner.util.DateUtils;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -74,11 +76,42 @@ public class MovieBundle implements Serializable {
         return movies;
     }
 
+    public String getFormattedDuration() {
+        return new DateUtils().formatHoursAndMinutes(getDurationInMinutes());
+    }
+
     public int getDurationInMinutes() {
         int totalDuration = 0;
         for (Movie movie : movies) {
             totalDuration += movie.getDurationInMinutes();
         }
         return totalDuration;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MovieBundle that = (MovieBundle) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "MovieBundle{" +
+                "englishTitle='" + englishTitle + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
+                ", section=" + section +
+                ", movies=" + movies +
+                '}';
     }
 }

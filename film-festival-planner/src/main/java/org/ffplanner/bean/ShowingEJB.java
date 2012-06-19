@@ -47,6 +47,21 @@ public class ShowingEJB {
         entityManager.persist(showing);
     }
 
+    /**
+     * @param movieBundle the movie bundle being shown
+     * @param day         expected in the format "9 Jun 2011"
+     * @param time        expected in the format "16:00"
+     * @param venueName   where the showing takes places
+     * @throws ParseException if the {@code duration} is not in the correct format
+     */
+    public void addShowing(MovieBundle movieBundle, Date day, String time, String venueName) throws ParseException {
+        final Showing showing = new Showing();
+        showing.setDateAndTime(day, time);
+        showing.setVenue(venueEJB.getVenue(venueName));
+        showing.setMovieBundle(movieBundle);
+        entityManager.persist(showing);
+    }
+
     public Collection<Showing> getShowingsFor(Date day) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Showing> query = criteriaBuilder.createQuery(Showing.class);

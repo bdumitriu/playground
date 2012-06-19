@@ -11,6 +11,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
+
 /**
  * @author Bogdan Dumitriu
  */
@@ -19,7 +22,9 @@ public class Showing implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private static final SimpleDateFormat DAY_TIME_FORMAT = new SimpleDateFormat("d MMM yyyy H:m");
+    private static final SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("d MMM yyyy");
+
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("H:m");
 
     @GeneratedValue
     @Id
@@ -53,7 +58,7 @@ public class Showing implements Serializable {
     public int getHour() {
         final Calendar calendar = new GregorianCalendar();
         calendar.setTime(dateAndTime);
-        return calendar.get(Calendar.HOUR_OF_DAY);
+        return calendar.get(HOUR_OF_DAY);
     }
 
     public int getMinute() {
@@ -68,7 +73,19 @@ public class Showing implements Serializable {
      * @throws ParseException if the {@code duration} is not in the correct format
      */
     public void setDateAndTime(String day, String time) throws ParseException {
-        this.dateAndTime = DAY_TIME_FORMAT.parse(day + " " + time);
+        final Date dayDate = DAY_FORMAT.parse(day);
+        setDateAndTime(dayDate, time);
+    }
+
+    public void setDateAndTime(Date day, String time) throws ParseException {
+        final Date timeDate = TIME_FORMAT.parse(time);
+        final GregorianCalendar timeCalendar = new GregorianCalendar();
+        timeCalendar.setTime(timeDate);
+        final GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(day);
+        calendar.set(HOUR_OF_DAY, timeCalendar.get(HOUR_OF_DAY));
+        calendar.set(MINUTE, timeCalendar.get(MINUTE));
+        dateAndTime = calendar.getTime();
     }
 
     public Venue getVenue() {

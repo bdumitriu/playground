@@ -1,17 +1,19 @@
 package org.ffplanner.entity;
 
+import org.ffplanner.util.DateUtils;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Movie implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    private static final SimpleDateFormat DURATION_FORMAT = new SimpleDateFormat("H'h':m'm'");
 
     @GeneratedValue
     @Id
@@ -76,6 +78,10 @@ public class Movie implements Serializable {
         return duration;
     }
 
+    public String getFormattedDuration() {
+        return new DateUtils().formatHoursAndMinutes(duration);
+    }
+
     public void setDuration(Date duration) {
         this.duration = duration;
     }
@@ -85,7 +91,7 @@ public class Movie implements Serializable {
      * @throws ParseException if the {@code duration} is not in the correct format
      */
     public void setDuration(String duration) throws ParseException {
-        this.duration = DURATION_FORMAT.parse(duration);
+        this.duration = new DateUtils().parseHoursAndMinutes(duration);
     }
 
     public String getDescription() {
@@ -118,8 +124,20 @@ public class Movie implements Serializable {
     }
 
     public int getDurationInMinutes() {
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(duration);
-        return calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
+        return new DateUtils().getInMinutes(duration);
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "englishTitle='" + englishTitle + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
+                ", year='" + year + '\'' +
+                ", duration=" + duration +
+                ", description='" + description + '\'' +
+                ", actors=" + actors +
+                ", directors=" + directors +
+                ", countries=" + countries +
+                '}';
     }
 }

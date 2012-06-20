@@ -100,7 +100,6 @@ class TiffMovies(alsoDownload: Boolean, movieEJB: MovieEJB, movieBundleEJB: Movi
     val movieYear = getAttributeIfAvailable(movieSpecsNode, "geb")
     val movieDirectors = getAttributeIfAvailable(movieSpecsNode, "regia")
     val movieCast = getAttributeIfAvailable(movieSpecsNode, "cast")
-    val movieDuration = "01h:30m"
     val movieDescription = cleanSynopsis(getAttributeIfAvailable(movieSpecsNode, "synopsis"))
 
     val movie = new Movie()
@@ -108,7 +107,17 @@ class TiffMovies(alsoDownload: Boolean, movieEJB: MovieEJB, movieBundleEJB: Movi
     movie.setOriginalTitle(movieOriginalTitle)
     movie.setYear(movieYear)
     movie.setDescription(movieDescription)
-    movie.setDuration(movieDuration)
+
+    val movieInfo = ScalaUtils.getMovieInfoFromImdb(movie)
+    try {
+      val durationString: String = movieInfo("Runtime").asInstanceOf[String]
+      if (durationString != "N/A") {
+        movie.setDuration(durationString.replace("h", "h:").replaceAll("\\s+", ""))
+      }
+      movie.setImdbId(movieInfo("imdbID").asInstanceOf[String])
+    } catch {
+      case e: util.NoSuchElementException =>
+    }
 
     movie.addActors(JavaConversions.asJavaCollection(movieCast.split(", ") map {
       new Person(_)

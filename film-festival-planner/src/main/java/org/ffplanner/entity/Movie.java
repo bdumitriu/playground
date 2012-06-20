@@ -42,6 +42,8 @@ public class Movie implements Serializable {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Country> countries;
 
+    private String imdbId;
+
     public Long getId() {
         return id;
     }
@@ -123,6 +125,14 @@ public class Movie implements Serializable {
         this.countries.addAll(countries);
     }
 
+    public String getImdbId() {
+        return imdbId;
+    }
+
+    public void setImdbId(String imdbId) {
+        this.imdbId = imdbId;
+    }
+
     public int getDurationInMinutes() {
         return new DateUtils().getInMinutes(duration);
     }
@@ -138,6 +148,7 @@ public class Movie implements Serializable {
                 ", actors=" + actors +
                 ", directors=" + directors +
                 ", countries=" + countries +
+                ", imdbID=" + imdbId +
                 '}';
     }
 }

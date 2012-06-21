@@ -51,7 +51,7 @@ public class ShowingController implements Serializable {
 //        log.setLevel(Level.ALL);
         log.entering("ShowingController", "prepareShowings");
         if (this.day == null) {
-            final DateTime dateTime = new DateTime(2011, JUNE, 3, 0, 0);
+            final DateTime dateTime = new DateTime(2012, JUNE, 1, 0, 0);
             this.day = dateTime.toDate();
         }
         final Collection<Showing> showings = showingEJB.getShowingsFor(this.day);

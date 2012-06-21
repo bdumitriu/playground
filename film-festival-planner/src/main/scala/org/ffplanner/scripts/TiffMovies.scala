@@ -8,6 +8,7 @@ import collection.JavaConversions
 import java.lang.Iterable
 import org.ffplanner.entity.{Country, Person, Movie, MovieBundle}
 import java.util
+import java.nio.charset.StandardCharsets
 
 /**
  *
@@ -53,7 +54,7 @@ class TiffMovies(alsoDownload: Boolean, movieEJB: MovieEJB, movieBundleEJB: Movi
     try {
       val path = downloadMovieFile(link)
       val parser = XML.withSAXParser(new SAXFactoryImpl().newSAXParser())
-      val movieNode: Node = parser.loadFile(path.toFile)
+      val movieNode: Node = parser.load(Files.newBufferedReader(path, StandardCharsets.UTF_8))
       val movieBundleEnglishTitle = movieNode.\\("h1").text
       val singleNodeSeq = movieNode \\ "div" filter {
         _.\("@class").text.contains("node-film")
@@ -90,7 +91,7 @@ class TiffMovies(alsoDownload: Boolean, movieEJB: MovieEJB, movieBundleEJB: Movi
       movieBundle.setOriginalTitle(movieBundleOriginalTitle)
     }
     movieBundle.addMovies(JavaConversions.asJavaCollection(movies))
-    //    movieBundleEJB.addShowing(movieBundle, section)
+    movieBundleEJB.addShowing(movieBundle, section)
     movieBundle
   }
 
@@ -113,22 +114,19 @@ class TiffMovies(alsoDownload: Boolean, movieEJB: MovieEJB, movieBundleEJB: Movi
       val durationString: String = movieInfo("Runtime").asInstanceOf[String]
       if (durationString != "N/A") {
         movie.setDuration(durationString.replace("h", "h:").replaceAll("\\s+", ""))
+      } else {
+        movie.setDuration("00h:15m")
       }
+    } catch {
+      case e: util.NoSuchElementException => movie.setDuration("00h:15m")
+    }
+    try {
       movie.setImdbId(movieInfo("imdbID").asInstanceOf[String])
     } catch {
       case e: util.NoSuchElementException =>
     }
 
-    movie.addActors(JavaConversions.asJavaCollection(movieCast.split(", ") map {
-      new Person(_)
-    }))
-    movie.addDirectors(JavaConversions.asJavaCollection(movieDirectors.split(", ") map {
-      new Person(_)
-    }))
-    movie.addCountries(JavaConversions.asJavaCollection(movieCountries.split(", ") map {
-      new Country(_)
-    }))
-    //    movieEJB.addMovie(movie, toIterable(movieDirectors), toIterable(movieCast), toIterable(movieCountries))
+    movieEJB.addMovie(movie, toIterable(movieDirectors), toIterable(movieCast), toIterable(movieCountries))
     movie
   }
 

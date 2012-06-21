@@ -6,6 +6,7 @@ import java.nio.file._
 import java.text.SimpleDateFormat
 import xml.{Node, XML}
 import java.util
+import java.nio.charset.StandardCharsets
 
 
 /**
@@ -27,7 +28,7 @@ class TiffDownloader(showingEJB: ShowingEJB) {
     }
 
     val parser = XML.withSAXParser(new SAXFactoryImpl().newSAXParser())
-    val tiffProgramNode: Node = parser.loadFile(path.toFile)
+    val tiffProgramNode: Node = parser.load(Files.newBufferedReader(path, StandardCharsets.UTF_8))
 
     tiffProgramNode \\ "_" filter {_.\("@class").text == "view-grouping"} map {processDay(_)}
   }
@@ -51,8 +52,9 @@ class TiffDownloader(showingEJB: ShowingEJB) {
       val showingHour = cells(0).text.trim
       val section = cells(3).text.trim
       val movieBundle = tiffMovies.getMovieBundle(getMovieLink(cells(1)), section)
-  //    showingEJB.addShowing(movieBundle, day, showingHour, venue)
-      println("(" + showingHour + "): " + movieBundle)
+      if (movieBundle.isDefined) {
+        showingEJB.addShowing(movieBundle.get, day, showingHour, venue)
+      }
     }
   }
 

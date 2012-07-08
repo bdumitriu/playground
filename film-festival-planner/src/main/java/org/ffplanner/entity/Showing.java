@@ -64,7 +64,7 @@ public class Showing implements Serializable {
     public int getMinute() {
         final Calendar calendar = new GregorianCalendar();
         calendar.setTime(dateAndTime);
-        return calendar.get(Calendar.MINUTE);
+        return calendar.get(MINUTE);
     }
 
     /**

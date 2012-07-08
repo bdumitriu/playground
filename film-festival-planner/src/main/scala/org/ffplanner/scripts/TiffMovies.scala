@@ -113,7 +113,7 @@ class TiffMovies(alsoDownload: Boolean, movieEJB: MovieEJB, movieBundleEJB: Movi
     try {
       val durationString: String = movieInfo("Runtime").asInstanceOf[String]
       if (durationString != "N/A") {
-        movie.setDuration(durationString.replace("h", "h:").replaceAll("\\s+", ""))
+        movie.setDuration(durationString.replace("h", "h:").replace("min", "m").replaceAll("\\s+", ""))
       } else {
         movie.setDuration("00h:15m")
       }

@@ -16,8 +16,18 @@ public class DateUtils {
 
     private static final SimpleDateFormat DURATION_FORMAT = new SimpleDateFormat("HH'h':mm'm'");
 
+    private static final SimpleDateFormat DURATION_FORMAT_MINUTES_ONLY = new SimpleDateFormat("mm'm'");
+
     public Date parseHoursAndMinutes(String hoursAndMinutes) throws ParseException {
-        return DURATION_FORMAT.parse(hoursAndMinutes);
+        try {
+            return DURATION_FORMAT.parse(hoursAndMinutes);
+        } catch (ParseException e) {
+            try {
+                return DURATION_FORMAT_MINUTES_ONLY.parse(hoursAndMinutes);
+            } catch (ParseException ignored) {
+                throw e;
+            }
+        }
     }
 
     public String formatHoursAndMinutes(Date time) {

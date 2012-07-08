@@ -22,11 +22,10 @@
          <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
              <MaxFileSize>100MB</MaxFileSize>
          </triggeringPolicy>
-
      </appender>
 
-    <logger name="org.hibernate.SQL" level="ALL"/>
-    <logger name="org.hibernate.type" level="ALL"/>
+    <!--<logger name="org.hibernate.SQL" level="ALL"/>-->
+    <!--<logger name="org.hibernate.type" level="ALL"/>-->
     <logger name="org.hibernate" level="WARN"/>
 
     <root level="INFO">

@@ -37,7 +37,8 @@ public class HourSlot {
     }
 
     /**
-     * @param hourCellWidth the width (in pixels) of the cell representing the hour
+     * @param hourCellWidth
+     *            the width (in pixels) of the cell representing the hour
      * @return the number of margin pixels to use in order to correctly position a div representing the showing of this
      *         slot in a cell representing the hour.
      */

@@ -7,9 +7,7 @@ import org.ffplanner.util.DateUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Bogdan Dumitriu
@@ -30,7 +28,8 @@ public class MovieBundle implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL)
     private Section section;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy
     private List<Movie> movies;
 
     public Long getId() {
@@ -42,7 +41,7 @@ public class MovieBundle implements Serializable {
     }
 
     public String getEnglishTitle() {
-        return movies.size() == 1 ? movies.get(0).getEnglishTitle() : englishTitle;
+        return movies.size() == 1 ? movies.iterator().next().getEnglishTitle() : englishTitle;
     }
 
     public void setEnglishTitle(String englishTitle) {
@@ -50,7 +49,7 @@ public class MovieBundle implements Serializable {
     }
 
     public String getOriginalTitle() {
-        return movies.size() == 1 ? movies.get(0).getOriginalTitle() : originalTitle;
+        return movies.size() == 1 ? movies.iterator().next().getOriginalTitle() : originalTitle;
     }
 
     public void setOriginalTitle(String originalTitle) {
@@ -67,7 +66,7 @@ public class MovieBundle implements Serializable {
 
     public void addMovies(Collection<Movie> movies) {
         if (this.movies == null) {
-            this.movies = new ArrayList<>();
+            this.movies = new LinkedList<>();
         }
         this.movies.addAll(movies);
     }

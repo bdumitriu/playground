@@ -5,9 +5,9 @@ import org.ffplanner.util.DateUtils;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -33,13 +33,16 @@ public class Movie implements Serializable {
 
     @JoinTable(name = "movie_actor")
     @ManyToMany(cascade = CascadeType.ALL)
+    @OrderBy
     private List<Person> actors;
 
     @JoinTable(name = "movie_director")
     @ManyToMany(cascade = CascadeType.ALL)
+    @OrderBy
     private List<Person> directors;
 
     @ManyToMany(cascade = CascadeType.ALL)
+    @OrderBy
     private List<Country> countries;
 
     private String imdbId;
@@ -106,21 +109,21 @@ public class Movie implements Serializable {
 
     public void addActors(Collection<Person> actors) {
         if (this.actors == null) {
-            this.actors = new ArrayList<>();
+            this.actors = new LinkedList<>();
         }
         this.actors.addAll(actors);
     }
 
     public void addDirectors(Collection<Person> directors) {
         if (this.directors == null) {
-            this.directors = new ArrayList<>();
+            this.directors = new LinkedList<>();
         }
         this.directors.addAll(directors);
     }
 
     public void addCountries(Collection<Country> countries) {
         if (this.countries == null) {
-            this.countries = new ArrayList<>();
+            this.countries = new LinkedList<>();
         }
         this.countries.addAll(countries);
     }
@@ -135,6 +138,18 @@ public class Movie implements Serializable {
 
     public int getDurationInMinutes() {
         return new DateUtils().getInMinutes(duration);
+    }
+
+    public List<Person> getActors() {
+        return actors;
+    }
+
+    public List<Person> getDirectors() {
+        return directors;
+    }
+
+    public List<Country> getCountries() {
+        return countries;
     }
 
     @Override

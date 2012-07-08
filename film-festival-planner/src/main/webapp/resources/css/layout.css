@@ -7,6 +7,15 @@
     z-index: 100;
 }
 
+a, a:visited {
+    text-decoration: none;
+    color: blue;
+}
+
+a:hover {
+    color: red;
+}
+
 a.logout, a.logout:visited {
     text-decoration: none;
     color: black;

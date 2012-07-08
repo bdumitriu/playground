@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<f:metadata>
+    <f:viewParam name="section" value="#{programmeController.section}" converter="sectionConverter"/>
+    <f:viewParam name="movieBundle" value="#{programmeController.movieBundle}" converter="movieBundleConverter"/>
+</f:metadata>
+
+<ui:composition template="layout.xhtml">
+    <ui:define name="title">Programme</ui:define>
+    <ui:define name="body">
+        <h:panelGroup layout="block" style="float: left">
+            <ui:repeat value="#{programmeController.sections}" var="section">
+                <h:outputText value="#{section.name}" rendered="#{section == programmeController.section}"/>
+                <h:link value="#{section.name}" outcome="Programme" rendered="#{section != programmeController.section}">
+                    <f:param name="section" value="#{section.id}"/>
+                </h:link>
+                <br/>
+            </ui:repeat>
+        </h:panelGroup>
+        <h:panelGroup layout="block" style="float: left; margin-left: 50px" rendered="#{programmeController.section != null}">
+            <ui:repeat value="#{programmeController.section.movieBundles}" var="movieBundle">
+                <h:outputText value="#{movieBundle.englishTitle}" rendered="#{movieBundle == programmeController.movieBundle}"/>
+                <h:link value="#{movieBundle.englishTitle}" outcome="Programme" rendered="#{movieBundle != programmeController.movieBundle}">
+                    <f:param name="section" value="#{programmeController.section.id}"/>
+                    <f:param name="movieBundle" value="#{movieBundle.id}"/>
+                </h:link>
+                <br/>
+            </ui:repeat>
+        </h:panelGroup>
+        <h:panelGroup layout="block" style="float: left; margin-left: 50px; width: 300px" rendered="#{programmeController.movie != null}">
+            <b><h:outputLink value="http://www.imdb.com/title/#{programmeController.movie.imdbId}" target="new"><h:outputText value="#{programmeController.movie.originalTitle}"/></h:outputLink> </b>
+            <br/>
+            <h:outputText value="#{programmeController.movie.englishTitle}"/>
+            <br/>
+            <h:outputText value="#{programmeController.movie.formattedDuration}"/>
+            <br/>
+            <ui:repeat value="#{programmeController.movie.countries}" var="country">
+                <h:outputText value="#{country.name}"/>,
+            </ui:repeat>
+            <h:outputText value="#{programmeController.movie.year}"/>
+            <br/>
+            <br/>
+            <h:outputText value="#{programmeController.movie.description}"/>
+        </h:panelGroup>
+        <h:panelGroup layout="block" style="float: left; margin-left: 50px; width: 300px" rendered="#{programmeController.movie == null}">
+            <b><h:outputText value="#{programmeController.movieBundle.originalTitle}"/></b>
+            <br/>
+            <h:outputText value="#{programmeController.movieBundle.englishTitle}"/>
+            <br/>
+            <h:outputText value="#{programmeController.movieBundle.formattedDuration}"/>
+            <br/>
+            <br/>
+            <ui:repeat value="#{programmeController.movieBundle.movies}" var="movie">
+                <h:outputText value="#{movie.originalTitle}"/>
+                <br/>
+                <h:outputText value="#{movie.year}"/>
+                <br/>
+                <h:outputText value="#{movie.description}"/>
+                <br/>
+                <br/>
+            </ui:repeat>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>
+
+</html>

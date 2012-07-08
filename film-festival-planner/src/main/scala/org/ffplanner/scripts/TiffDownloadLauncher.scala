@@ -7,5 +7,4 @@ package org.ffplanner.scripts
 object TiffDownloadLauncher extends App {
 
   new TiffDownloader(null).fillDatabaseFromSite(null, null)
-
 }

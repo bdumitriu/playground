@@ -1,0 +1,1 @@
+* ShowingController does not allow for more than one movie at the same hour because a map hour -> movie is used

@@ -3,7 +3,7 @@ package org.ffplanner.scripts.tiff2011
 import org.ffplanner.bean.ShowingEJB
 import org.ffplanner.bean.MovieEJB
 import org.ffplanner.bean.MovieBundleEJB
-import static org.ffplanner.scripts.ScalaUtils$.download
+import static org.ffplanner.scripts.Utils.download
 
 /**
  * @author Bogdan Dumitriu

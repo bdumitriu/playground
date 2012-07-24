@@ -4,7 +4,7 @@ import org.ffplanner.bean.MovieBundleEJB
 import org.ffplanner.bean.MovieEJB
 import org.ffplanner.entity.Movie
 import org.ffplanner.entity.MovieBundle
-import static org.ffplanner.scripts.ScalaUtils$.download
+import static org.ffplanner.scripts.Utils.download
 
 /**
  * @author Bogdan Dumitriu

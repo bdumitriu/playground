@@ -11,7 +11,7 @@ import javax.faces.convert.FacesConverter;
  * @author Bogdan Dumitriu
  */
 @FacesConverter(value = "movieBundleConverter")
-public class MovieBundleConverter extends EntityConverter<MovieBundle> {
+public class MovieBundleConverter extends BasicEntityConverter<MovieBundle> {
 
     @Override
     protected String getEntityEjbJndiName() {

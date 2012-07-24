@@ -10,12 +10,11 @@ import org.ffplanner.entity.Showing_;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.SingularAttribute;
 import java.text.ParseException;
 import java.util.*;
 
@@ -24,13 +23,20 @@ import java.util.*;
  */
 @Stateless
 @LocalBean
-public class ShowingEJB {
-
-    @PersistenceContext(unitName = "ffp")
-    private EntityManager entityManager;
+public class ShowingEJB extends BasicEntityEJB<Showing> {
 
     @EJB
     private VenueEJB venueEJB;
+
+    @Override
+    protected Class<Showing> getEntityClass() {
+        return Showing.class;
+    }
+
+    @Override
+    protected SingularAttribute<Showing, Long> getIdAttribute() {
+        return Showing_.id;
+    }
 
     /**
      * @param movieBundle
@@ -78,8 +84,8 @@ public class ShowingEJB {
         final Root<Showing> root = query.from(Showing.class);
         query.where(criteriaBuilder.greaterThanOrEqualTo(root.get(Showing_.dateAndTime), day),
                 criteriaBuilder.lessThanOrEqualTo(root.get(Showing_.dateAndTime), getDayAfter(day)));
-        query.orderBy(criteriaBuilder.asc(root.get(Showing_.venue)), criteriaBuilder.asc(root.get(
-                Showing_.dateAndTime)));
+        query.orderBy(
+                criteriaBuilder.asc(root.get(Showing_.venue)), criteriaBuilder.asc(root.get(Showing_.dateAndTime)));
         final TypedQuery<Showing> showings = entityManager.createQuery(query);
         final List<Showing> xList = showings.getResultList();
         for (Showing showing : xList) {
@@ -88,7 +94,7 @@ public class ShowingEJB {
         return xList;
     }
 
-    private Date getDayAfter(Date day) {
+    private static Date getDayAfter(Date day) {
         final Calendar calendar = new GregorianCalendar();
         calendar.setTime(day);
         calendar.roll(Calendar.DAY_OF_MONTH, true);

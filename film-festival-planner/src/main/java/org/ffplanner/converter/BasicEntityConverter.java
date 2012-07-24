@@ -3,7 +3,7 @@
  */
 package org.ffplanner.converter;
 
-import org.ffplanner.bean.EntityEJB;
+import org.ffplanner.bean.BasicEntityEJB;
 import org.ffplanner.util.Logging;
 
 import javax.faces.component.UIComponent;
@@ -16,9 +16,9 @@ import java.util.logging.Logger;
 /**
  * @author Bogdan Dumitriu
  */
-public abstract class EntityConverter<T> implements Converter {
+public abstract class BasicEntityConverter<T> implements Converter {
 
-    private static final Logger logger = Logger.getLogger(EntityConverter.class.getName());
+    private static final Logger logger = Logger.getLogger(BasicEntityConverter.class.getName());
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
@@ -28,7 +28,8 @@ public abstract class EntityConverter<T> implements Converter {
             try {
                 final InitialContext initialContext = new InitialContext();
                 try {
-                    final EntityEJB<T> entityEJB = (EntityEJB<T>) initialContext.lookup(getEntityEjbJndiName());
+                    final BasicEntityEJB<T> entityEJB =
+                            (BasicEntityEJB<T>) initialContext.lookup(getEntityEjbJndiName());
                     try {
                         final Long entityId = Long.valueOf(value);
                         return entityEJB.find(entityId);

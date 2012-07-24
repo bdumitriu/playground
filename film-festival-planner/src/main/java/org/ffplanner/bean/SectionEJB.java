@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Stateless
 @LocalBean
-public class SectionEJB extends EntityEJB<Section> {
+public class SectionEJB extends BasicEntityEJB<Section> {
 
     @Override
     protected Class<Section> getEntityClass() {

@@ -11,7 +11,7 @@ import javax.faces.convert.FacesConverter;
  * @author Bogdan Dumitriu
  */
 @FacesConverter("sectionConverter")
-public class SectionConverter extends EntityConverter<Section> {
+public class SectionConverter extends BasicEntityConverter<Section> {
 
     @Override
     protected String getEntityEjbJndiName() {

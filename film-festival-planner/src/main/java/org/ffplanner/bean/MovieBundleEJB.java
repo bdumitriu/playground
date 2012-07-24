@@ -17,7 +17,7 @@ import javax.persistence.metamodel.SingularAttribute;
  */
 @Stateless
 @LocalBean
-public class MovieBundleEJB extends EntityEJB<MovieBundle> {
+public class MovieBundleEJB extends BasicEntityEJB<MovieBundle> {
 
     @EJB
     private SectionEJB sectionEJB;

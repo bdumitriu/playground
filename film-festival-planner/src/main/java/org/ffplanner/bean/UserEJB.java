@@ -10,12 +10,11 @@ import org.ffplanner.entity.UserToken_;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.SingularAttribute;
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,12 +23,19 @@ import java.util.List;
  */
 @Stateless
 @LocalBean
-public class UserEJB implements Serializable {
+public class UserEJB extends BasicEntityEJB<User> implements Serializable {
 
     private static final long serialVersionUID = -1563393265561085150L;
 
-    @PersistenceContext(unitName = "ffp")
-    private EntityManager entityManager;
+    @Override
+    protected SingularAttribute<User, Long> getIdAttribute() {
+        return User_.id;
+    }
+
+    @Override
+    protected Class<User> getEntityClass() {
+        return User.class;
+    }
 
     public User getUserWithOpenId(String openId) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

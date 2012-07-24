@@ -5,6 +5,7 @@ package org.ffplanner.controller;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,7 +16,7 @@ import java.util.Map;
  */
 @ManagedBean
 @ViewScoped
-public class Dummy {
+public class Dummy implements Serializable {
 
     private final Collection<Integer> hours;
 

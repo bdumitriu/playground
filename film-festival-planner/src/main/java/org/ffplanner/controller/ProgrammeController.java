@@ -12,6 +12,7 @@ import org.ffplanner.entity.Section;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  */
 @ManagedBean
 @RequestScoped
-public class ProgrammeController {
+public class ProgrammeController implements Serializable {
 
     private final Logger log = Logger.getLogger(ProgrammeController.class.getName());
 

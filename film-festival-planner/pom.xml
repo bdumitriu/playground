@@ -67,12 +67,18 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>4.1.1.Final</version>
+            <version>4.1.4.Final</version>
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>antlr</groupId>-->
+                    <!--<artifactId>antlr</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.1.1.Final</version>
+            <version>4.1.4.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -287,14 +293,28 @@
                 <artifactId>maven-scala-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>compile</id>
                         <goals>
                             <goal>compile</goal>
+                        </goals>
+                        <phase>compile</phase>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <goals>
                             <goal>testCompile</goal>
+                        </goals>
+                        <phase>test-compile</phase>
+                    </execution>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>compile</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <sourceDir>src/main/java</sourceDir>
+                    <sourceDir>src/main/scala</sourceDir>
                     <jvmArgs>
                         <jvmArg>-Xms64m</jvmArg>
                         <jvmArg>-Xmx1024m</jvmArg>

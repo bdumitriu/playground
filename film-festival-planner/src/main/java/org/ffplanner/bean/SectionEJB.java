@@ -3,13 +3,11 @@
  */
 package org.ffplanner.bean;
 
-import org.ffplanner.entity.Movie;
 import org.ffplanner.entity.MovieBundle;
 import org.ffplanner.entity.Section;
 import org.ffplanner.entity.Section_;
 
 import javax.ejb.LocalBean;
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;

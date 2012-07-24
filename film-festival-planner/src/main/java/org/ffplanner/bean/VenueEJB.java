@@ -6,6 +6,8 @@ package org.ffplanner.bean;
 import org.ffplanner.entity.Venue;
 import org.ffplanner.entity.Venue_;
 
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -17,6 +19,8 @@ import java.util.List;
 /**
  * @author Bogdan Dumitriu
  */
+@Stateless
+@LocalBean
 public class VenueEJB {
 
     @PersistenceContext(unitName = "ffp")

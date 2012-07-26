@@ -30,6 +30,9 @@ public class Showing implements Serializable {
     @Id
     private Long id;
 
+    @ManyToOne
+    private FestivalEdition festivalEdition;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateAndTime;
 
@@ -45,6 +48,14 @@ public class Showing implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public FestivalEdition getFestivalEdition() {
+        return festivalEdition;
+    }
+
+    public void setFestivalEdition(FestivalEdition festivalEdition) {
+        this.festivalEdition = festivalEdition;
     }
 
     public Date getDateAndTime() {

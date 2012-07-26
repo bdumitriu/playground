@@ -4,9 +4,7 @@
 package org.ffplanner.bean;
 
 import org.ffplanner.controller.auth.AuthData;
-import org.ffplanner.entity.User;
-import org.ffplanner.entity.UserToken;
-import org.ffplanner.entity.UserToken_;
+import org.ffplanner.entity.*;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -17,6 +15,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 import java.io.Serializable;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * @author Bogdan Dumitriu
@@ -48,7 +47,9 @@ public class UserEJB extends BasicEntityEJB<User> implements Serializable {
             return null;
         } else {
             assert result.size() == 1;
-            return result.get(0).getUser();
+            final User user = result.get(0).getUser();
+            forceLazyLoad(user);
+            return user;
         }
     }
 
@@ -63,5 +64,46 @@ public class UserEJB extends BasicEntityEJB<User> implements Serializable {
         entityManager.persist(user);
         entityManager.persist(userToken);
         return user;
+    }
+
+    public UserSchedule getScheduleFor(Long userId, FestivalEdition festivalEdition) {
+        return getScheduleFor(userId, festivalEdition, true);
+    }
+
+    public Long getScheduleIdFor(Long userId, FestivalEdition festivalEdition) {
+        return getScheduleFor(userId, festivalEdition, false).getId();
+    }
+
+    public UserSchedule getScheduleFor(Long userId, FestivalEdition festivalEdition, boolean forceLazyLoad) {
+        final User user = find(userId);
+        final List<UserScheduleUseHistory> userSchedules = user.getSchedules();
+        final UserSchedule userSchedule;
+        if (userSchedules.isEmpty()) {
+            userSchedule = new UserSchedule();
+            userSchedule.setScheduleName(ResourceBundle.getBundle("/Bundle").getString("MySchedule"));
+            userSchedule.setFestivalEdition(festivalEdition);
+            final UserScheduleUseHistory userScheduleUseHistory = new UserScheduleUseHistory();
+            userScheduleUseHistory.setUser(user);
+            userScheduleUseHistory.setUserSchedule(userSchedule);
+            entityManager.persist(userSchedule);
+            entityManager.persist(userScheduleUseHistory);
+            entityManager.refresh(userSchedule);
+        } else {
+            userSchedule = userSchedules.get(0).getUserSchedule();
+        }
+        if (forceLazyLoad) {
+            forceLazyLoad(userSchedule);
+        }
+        return userSchedule;
+    }
+
+    private static void forceLazyLoad(User user) {
+        user.getSchedules().iterator();
+    }
+
+    private static void forceLazyLoad(UserSchedule userSchedule) {
+        userSchedule.getShowings().iterator();
+        userSchedule.getConstraints().iterator();
+        userSchedule.getUseHistory().iterator();
     }
 }

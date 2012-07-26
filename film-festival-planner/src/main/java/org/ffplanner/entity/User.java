@@ -3,10 +3,10 @@
  */
 package org.ffplanner.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Bogdan Dumitriu
@@ -21,11 +21,15 @@ public class User implements Serializable {
     private Long id;
 
     private String firstName;
-    
+
     private String lastName;
-    
+
     private String emailAddress;
-    
+
+    @OneToMany(mappedBy = "userId")
+    @OrderBy("lastUsed desc")
+    private List<UserScheduleUseHistory> schedules = new LinkedList<>();
+
     public Long getId() {
         return id;
     }
@@ -56,5 +60,13 @@ public class User implements Serializable {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    }
+
+    public List<UserScheduleUseHistory> getSchedules() {
+        return schedules;
+    }
+
+    public void addSchedule(UserScheduleUseHistory schedule) {
+        this.schedules.add(schedule);
     }
 }

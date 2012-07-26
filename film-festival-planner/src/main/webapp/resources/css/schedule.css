@@ -40,10 +40,14 @@ root {
 }
 
 .sch_movie_cell {
+    font-family: Candara;
     height: 70px;
+    margin-top: -1px;
     float: left;
     border-style: solid;
-    border-width: 0px;
+    border-width: 1px;
+    /*border-color: #b0c4de;*/
     opacity: 0.8;
-    background-color: lightgreen;
+    background-color: lightyellow;
+    border-radius: 10px;
 }

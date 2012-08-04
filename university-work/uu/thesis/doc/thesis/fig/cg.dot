@@ -1,0 +1,13 @@
+digraph G
+{
+	graph [rankdir=LR]
+
+	foo [label="Foo.foo()",shape=plaintext,fontname=Courier]
+	vcol [label="Vehicle.getColor()",shape=plaintext,fontname=Courier]
+	cwheels [label="Car.getWheels()",shape=plaintext,fontname=Courier]
+	bwheels [label="Bike.getWheels()",shape=plaintext,fontname=Courier]
+
+	foo -> vcol
+	foo -> cwheels
+	foo -> bwheels
+}

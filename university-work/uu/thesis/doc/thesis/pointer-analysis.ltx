@@ -1,0 +1,1504 @@
+\chapter{Pointer Analysis}
+\label{ch:pointer-analysis}
+
+In this chapter we discuss the second layer of our work which consists
+of making alias information about the variables of a program available
+to the general user. This is intended to enable users of the Stratego
+platform to write more realistic data-flow transformations. Without
+alias information, a user had two choices: either she assumed that no
+two variables in a program can ever point to the same memory location
+or she assumed that any two variables in a program can point to the
+same memory location. The first variant is over optimistic, while the
+second is excessively pessimistic. Since using the latter variant
+yields almost all transformations useless, most users went for the
+over optimistic variant, which is unfortunately unrealistic. In order
+to bridge the gap between these variants, alias information is
+necessary and this is what our work for this part of the thesis has
+been about.
+
+This is not to say that we have solved the problem entirely. There are
+two main issues that remain. In the first place, pointer analysis is
+language dependent. This means that each language that has to be
+supported needs its own implementation made available. However, since
+the base algorithm is unique, supplying a parameterized generalization
+is possible with some effort. Thereafter, all that would be needed for
+each language is the filling in of the particulars. The second issue
+is that our analysis is flow- and context-insensitive. While this is
+appropriate for many cases, it is not appropriate for all. Therefore,
+a pointer analysis that takes flow and/or context sensitivity into
+account will still be a welcome addition to the platform.
+
+\section{Overview}
+
+There are two main features of modern languages that make the lives of
+compiler writers difficult: exceptions and wide-spread use of
+pointers. We have already explained in the previous chapter why the
+complex control flow introduced by exception mechanisms complicates
+optimizations of programs. In this section, we will focus on the
+second of the two aspects: \emph{pointers}.
+
+Languages like Java and C\# have integrated pointers into the language
+so much that it is impossible to avoid using them. This means that
+even the most basic of programs written in such languages is still
+almost certain to employ pointers. Basic compilation is not affected
+by the presence of pointers, since pointers boil down to memory
+addresses, and there is no inherent difficulty in dealing with memory
+addresses. As soon as we want to turn our compiler into an optimizing
+one, however, we run into trouble when pointers are involved. The
+reason for this is that virtually all data flow analyses stop working
+as they used to when pointers were not in the picture. If the same
+memory location can be referred by different variables, then our
+analyses can no longer use variable names as unique identifiers of
+memory locations. This creates a problem because a program is
+specified in terms of variable stores and loads and not in terms of
+memory location stores and loads. Without pointers, we had a
+one-to-one mapping between the two, so we could use them
+interchangeably. In the presence of pointers, this mapping no longer
+holds, leading to the need of very conservative assumptions in order
+to ensure the soundness of analyses.
+
+To explain why this is, consider the following example:
+
+\begin{code}
+    void foo() {
+      BitSet x = new BitSet();
+      BitSet y = x;
+      y.set(3);
+      if (x.isEmpty()) {
+        System.out.println("some text");
+      }
+    }
+\end{code}
+
+A pointer-unaware analysis could conclude that, since between the
+\icode{x = new BitSet()} and the test \icode{x.isEmpty()} the variable
+\icode{x} is not changed by any other instruction, the test can be
+safely eliminated since we know at compile time that it will always
+evaluate to true. This would yield the following optimized version of
+the program above:
+
+\begin{code}
+    void foo() {
+      BitSet x = new BitSet();
+      BitSet y = x;
+      y.set(3);
+      System.out.println("some text");
+    }
+\end{code}
+
+However, this pointer-unaware optimization is wrong in the context of
+a language like Java, since Java uses pointers, so the simple fact
+that the literal variable \icode{x} is not modified is not a guarantee
+that the contents of the memory location \icode{x} points to is not
+modified. In fact, in our example code, it is the case that the memory
+location is modified through the variable \icode{y}, which is an alias
+of \icode{x} (or, alternatively, which points to the same memory
+location as \icode{x}). As you can see, the presence of pointer
+invalidates otherwise valid optimizations.
+
+We can deal with this in two ways. The easier, but essentially
+inefficient one, is to make the most conservative assumption of all,
+namely that any variable in the program (including instance
+variables, class variables, local variables and method arguments) can
+be an alias of any other variable. Such an assumption makes our
+analysis perfectly sound, but utterly useless, since any store to any
+variable in our program would have to be interpreted as a potential
+store to any other variable. This means that we can only perform
+optimizations between stores to variables. While making this
+assumption is an option, it is clearly a poor one.
+
+The alternative to this is to collect pointer information from the
+program in order to have more precise knowledge about what variables
+may point to what other variables. This process of collecting
+information about pointers is called \emph{pointer analysis}. In fact,
+pointer analysis comes in more shapes and sizes, depending of what
+kind of pointer information we are looking for and how we represent
+it. We distinguish \emph{alias analysis} as the pointer analysis that
+creates pairs of variables which can be aliases of one another:
+$(x,y)$ indicates that $x$ and $y$ could point to the same memory
+location. A more space-efficient alternative to alias analysis is
+\emph{points-to analysis}. Points-to analysis computes what memory
+location(s) a variable can point to. We know that two variables can be
+aliases of one another if they can point to the same memory location.
+\emph{Shape analysis} goes beyond simple aliasing information and
+computes what ``shape'' the data structures represented in memory have
+(graph-like, tree-like, list-like, etc.). Finally, \emph{escape
+  analysis} computes whether or not a heap location allocated in a
+method (or thread) can escape that method (or thread). A heap location
+can escape a method, for example, if that method returns a pointer to
+it or if it passes a pointer to it to a different method. Knowing that
+a heap location cannot escape a method (or thread) can enable certain
+optimizations. Since all these analyses have to analyze pointer
+assignments (or equivalent code which translates to pointer
+assignments) in order to compute their result, they are all referred
+to as pointer analyses.
+
+Pointer analyses can be \emph{context-sensitive} or
+\emph{context-insensitive}. Context-insensitive analyses do not
+consider the calling context of a method (i.e., it does not make a
+distinction between calls to the same method based on the caller).
+This has the effect that there will be a unification of pointer
+information among all the call sites of a method, resulting in the
+transfer of information from each call site to all others.  This will
+generate less precise aliasing information, since it will determine a
+potential aliasing relationship between variables that could never
+point to the same memory location. Notice that this is not wrong, but
+simply less precise (or conservative). What would be wrong is for the
+analysis to conclude that two variables cannot be aliased when in fact
+they can, according to the program. Context-sensitive analysis, by
+contrast, does consider calling contexts, thereby producing more
+precise points-to information\footnote{We use the terms ``aliasing
+  information'' and ``points-to information'' interchangeably since
+  any of them can be directly derived from the other.}.
+
+Another distinction of pointer analyses refers to whether or not we
+consider control flow. Based on this, we have \emph{flow-sensitive}
+and \emph{flow-insensitive} pointer analysis. Flow-sensitive analysis
+differs from the flow-insensitive one by computing separate pointer
+information for each program point. Flow-insensitive analysis computes
+a single ``batch'' of information (e.g., a single points-to graph) for
+the entire program. The information computed by flow-insensitive
+analyses is valid for all points of a program, whereas each ``batch''
+of information computed by flow-sensitive analyses is only valid at
+the particular program point with which it is associated. Naturally,
+flow-sensitive analyses are more precise, especially given that the
+points-to information of a program changes a lot during its execution.
+By computing only one ``batch'' of information per entire program (as
+is the case with flow-insensitive analysis), it is clear that there
+will be a lot of unnecessary unification of points-to sets, which
+leads to loss of precision (to put things into perspective, the least
+precise case is that when we have a single points-to set, i.e., all we
+know is that any variable can point to any other variable).
+
+Both in the case of context-insensitive vs. context-sensitive and the
+case of flow-insensitive vs. flow-sensitive, the gain of precision
+that corresponds to the sensitive versions translates to a loss of
+efficiency. Thus, the balance that has to be found both in terms of
+context and flow sensitiveness is that between the precision of the
+results and the cost (both of time and space) of the analysis. A more
+precise analysis will take more time and space to compute and will not
+be scalable to large code bases. A less precise analysis, while less
+costly, will open fewer optimization opportunities. Depending on each
+particular situation, combinations of these variants can be used.
+
+Another important aspect which distinguishes pointer analyses is
+whether or not they take type information into consideration. It is
+generally a good idea to consider type information because it incurs
+little extra cost, but it can significantly increase precision. Type
+information is useful to discard spurious aliasing. If we know that
+two variables have incompatible types, then we can conclude that they
+can never alias each other.
+
+Pointer analysis is required for many kinds of data-flow
+transformations. Constant propagation cannot be performed with much
+efficiency if we do not have pointer information since each store to a
+variable disallows any further propagation. Dead-code elimination
+cannot be done without pointer information either because, for
+example, we cannot assume an assignment to a variable is useless just
+because that particular variable is not used further on in the
+program. It could be that the memory location modified by the store
+through that variable is accessed later on in the program through
+another, so removing the assignment would yield incorrect results.
+Even common subexpression elimination can be incorrect if we do not
+consider pointers. For instance, if we have a sequence of assignments
+like \icode{x = a * b; c = 5; y = a * b;}, it would be incorrect to
+replace it with \icode{x = a * b; c = 5; y = x;} if we do not know for
+a fact that c is \emph{not} aliased with any of \icode{x}, \icode{a}
+or \icode{b}. Without alias information, we have to assume that, for
+all we know, \emph{it may be aliased}, so we have to conservatively
+disallow replacing \icode{a * b} with \icode{x}.
+
+These are just a few examples of data-flow optimizations which have to
+consider pointer information in order to behave correctly. Like them
+there are many others. This generalized need for pointer information
+makes us conclude that if Stratego is to be used for writing data-flow
+transformations that can apply to real programs, it clearly needs to
+provide pointer information. This is why, as part of this thesis, we
+have put effort into making this information available by looking for
+and implementing a strategy that computes such information.
+
+\paragraph{The issue of dynamic dispatch}
+
+When performing any kind of interprocedural data-flow analysis (as the
+points-to analysis is), one of the things we need to do is figure out
+which body of a method (or procedure) to inspect when we encounter a
+method (or procedure) call in the analyzed code. While this is not too
+difficult in procedural programming, things get more complicated when
+we have to deal with object-oriented languages. Such languages use the
+dynamic dispatch mechanism at run time in order to decide which method
+to call, which makes it not so straightforward to find out which of
+potentially many method bodies will actually be executed. Consider the
+following Java code, for example:
+
+\begin{minipage}{0.5\linewidth}
+\begin{code}
+    A o;
+    n = System.in.read();
+    if (n == -1) {
+      o = new B();
+    } else {
+      o = new C();
+    }
+    o.someMethod();
+\end{code}
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+\begin{code}
+    abstract class A {
+      abstract void someMethod();
+    }
+    class B extends A {
+      void someMethod() {...}
+    }
+    class C extends A {
+      void someMethod() {...}
+    }
+\end{code}
+\end{minipage}
+
+There is no way of telling at compile time if method
+\icode{someMethod} of class B or the same method of class C will be
+called at the call site \icode{o.someMethod()} in the code on the
+left. In such cases, we have no other option than to consider all
+possibilities and merge the results (this will translate to a loss of
+precision for points-to analysis, for example).
+
+In order to find out what code we have to analyze, it is necessary
+that we have access to class hierarchy information. This enables us to
+search all descendants of a base class for matching methods. Section
+\ref{ssec:cha} discusses this in more detail.
+
+\section{Related Work}
+\label{sec:pa-related-work}
+
+Pointer analysis has been an active field of research for over 20
+years, with a huge amount of work being put in. In a paper from 2001
+\cite{hind01pointer}, Michael Hind gives a measure of ``over
+seventy-five papers and nine Ph.D. theses'' that have been dealing
+with this subject. According to the same paper, there are a number of
+reasons why this problem is not yet considered solved. All these
+reasons are really different facets of the same core one: there is so
+much variability that has to be dealt with in what pointer analysis is
+concerned, that all this work has not yet managed to cover all there
+is cover.
+
+Among the open issues that still remain are things like how to improve
+scalability and precision at the same time (i.e., find ways in which
+we can achieve better precision, but still be able to apply the
+techniques to very large code bases), offering pointer analysis
+options based on the needs of the client analysis that uses its
+results, implementing demand-driven analyses and tuning the analyses
+to deal with incomplete programs.
+
+Efforts in pointer analysis far precede the birth of the Java
+programming language, so much of this research is related to analyzing
+C/C++ programs. Although some of the results are still applicable,
+there is much difference between the approaches. The main aspects of
+Java which make pointer analysis distinct than in C/C++ is the absence
+of multi-level dereferencing of pointers and the lack of function
+pointers. We have focused our interest on pointer analyses that were
+implemented specifically for Java, since our efforts were in the
+direction of supporting Java-like languages.
+
+Rountev et al. \cite{rountev-oopsla01} took a constraint-based
+approach for doing points-to analysis for Java. They model the
+semantics of assignment statements and method calls (the two relevant
+types of statements that any points-to analysis has to consider) using
+\emph{annotated inclusion constraints}. Annotated inclusion
+constraints refer to set-inclusion relations that can optionally be
+annotated ($L \subseteq_a R$). To illustrate, the constraint
+$ref(o,v_o,\overline{v_o}) \subseteq v_r$ indicates that reference
+variable $r$ refers to object $o$ (why object $o$ is represented by
+$ref(o,v_o,\overline{v_o})$ is less important). Annotated constraints
+are used when object fields or method calls are involved. For
+instance, the annotated constraint
+$ref(o_2,v_{o_2},\overline{v_{o_2}}) \subseteq_f v_{o_1}$ indicates
+that field $f$ of object $o_1$ ($o_1.f$) points to object $o_2$. In the
+case of methods, annotations are used to identify the compile-time
+method that is called. Annotated inclusion constraints can be
+represented as a directed multi-graph\footnote{A multi-graph is a
+  graph which allows multiple edges between any pair of nodes.}, with
+the annotations labeling the edges. First, the entire program is
+traversed in order to generate the system of constraints. Then, a
+generic algorithm is applied to the multi-graph representation of the
+constraints in order to compute its transitive closure. The edges in
+the resulting graph represent the the points-to relations of the
+program. The analysis of Rountev et al. is context- and
+flow-insensitive.
+
+Whaley and Rinard propose a combined pointer and escape analysis in
+\cite{whaley99compositional}. The analysis is flow-sensitive and
+context-sensitive and its result is a so-called \emph{points-to escape
+  graph}, which is a quadruple consisting of a set of outside edges
+(representing references to object allocation sites that are outside
+the current analysis scope), a set of inside edges (references within
+the current analysis scope), an escape function (indicates for each
+node what unanalyzed methods it escapes to) and a return set (what
+objects are returned): $\langle O,I,e,r \rangle$. One such graph is
+associated with each program point (since this is a flow-sensitive
+analysis) and there are two program points for each statement, before
+and after it executes. The nodes of the graph can be of several types:
+inside nodes (objects created in the analyzed scope), thread nodes
+(thread creation sites, subtype of inside nodes), outside nodes
+(objects created outside of analyzed scope) and class nodes (one per
+class, as a container for static fields). Outside nodes further
+subdivide in parameter, global, load and return nodes. This complex
+structure is used to represent all types of statements that are
+interesting for pointer analysis. For instance, an object creation
+site (\icode{l = new cl}) represents the new object with an inside
+node and creates an edge form the node representing \icode{l} (which
+could be a parameter node or a global node, for example) to the newly
+created node. The intraprocedural part of the analysis implies
+creating and deleting edges at each analyzed statement. A pass through
+a method will start with an initial points-to graph which contains
+parameter nodes and global nodes along with edges pointing to them as
+well as an escape function returning the empty set for any node and an
+empty return set. Statements are then analyzed in accordance with the
+control-flow graph, updating and storing the points-to graph
+accordingly at each program point. In the end, an exit points-to graph
+will be obtained. Interprocedural analysis uses a mapping algorithm to
+produce the graph for an invocation site, taking into consideration
+the graph before the site as well as the entry and exit graphs for the
+invoked method. After the analysis of the entire program is completed,
+we have accurate points-to and escape information for each program
+point.
+
+S\u{a}lcianu set out in his master thesis \cite{salcianu01pointer} to
+provide the correctness proof for the analysis of Whaley and Rinard
+discussed above. To make reasoning easier, a reformalization of the
+original method was needed, which actually resulted in a significantly
+distinct formalism. The idea and type of the analysis have remained
+similar, nevertheless. The representation was switched from a
+quadruple to a five-tuple, $\langle I^a,O^a,L^a,S^a,U^a
+\rangle$\footnote{The superscript $^a$ stands for the program point
+  for which the graph is computed.}, consisting of inside edges
+($I^a$) and outside edges ($O^a$) just like before, and the abstract
+state of local variables ($L^a$, maps each variable to the set of
+nodes it might point to), the set of threads started by the analyzed
+scope ($T^a$) and the set of nodes that escape to unanalyzed methods
+($S^a$). The last two components are used for modeling sources of
+escape information. The rest of the algorithm is similar to the one
+described above (by defining what edges and nodes are created or
+deleted by each statement and how mapping is performed at call sites).
+The bulk of the thesis, however, focuses on proving the correctness of
+the proposed method, which is of less interest to us.
+
+Research on pointer analysis has also been done within the Soot
+framework for analyzing Java programs \cite{vall99soot}. Ond\v{r}ej
+Lhot\'ak has begun work on pointer analysis as part of his master
+thesis \cite{lhot02spark} by creating Spark (Soot Pointer Analysis
+Research Kit). Spark is a generic implementation of pointer analysis,
+the goal of which is to compare different approaches within the same
+conditions, in order to provide results about how things like taking
+type declarations into consideration during the analysis or performing
+points-to graph simplification steps influence speed, memory
+consumption and precision of the results. The method proposed in
+\cite{lhot02spark} and then further refined in \cite{lhot03spark}
+implies the construction of a \emph{pointer assignment graph} in order
+to represent the initial points-to relationships in the program, the
+optional simplification of this graph and then the propagation of the
+information along the edges. Since this is in fact the analysis we
+chose to adapt to Stratego, we postpone the details for later.
+
+The same group of people working on Soot have come up with an
+interesting idea afterwards, in order to allow better scaling of the
+original method. In the work described above they were using a hybrid
+set representation to represent points-to sets in the pointer
+assignment graph (points-to sets are sets containing object allocation
+sites which are associated with certain nodes of the graph). These
+hybrid sets use an array of pointers representation if the set
+contains 16 elements or less and a bitset representation otherwise.
+Even with this optimization, the algorithm still requires a lot of
+memory for large code bases. In this newer approach
+\cite{berndl03bdd}, the authors propose the use of Binary Decision
+Diagrams (BDDs) in order to represent points-to sets.  After proper
+tuning of the representation, the benchmarks show that the analysis
+time is somewhat larger, but the memory requirements drop to 4 up to
+6-7 times less, which allows the analysis of programs that were
+previously not analyzable. The BDD representation is so efficient
+because it allows maximal sharing of set elements representation. This
+means that in order to represent sets $S_1, S_2, \dotsc, S_n$ we need
+roughly the same space as if we were to represent their union. This
+clearly saves a lot of space when there is considerable overlap
+between the sets (as is the case for points-to sets).
+
+\cite{whaley04cloningbased} also proposes the use of BDDs for pointer
+analysis, but for a different purpose than in \cite{berndl03bdd}.
+Their approach is to obtain a context-sensitive pointer analysis by
+running a context-insensitive one over an extended call graph in which
+a different node is used for every call to a method (meaning that
+calls to the same method will be represented by edges to clones of the
+same node). It is clear that even for reasonably sized programs, such
+an extended graph would explode beyond representation capabilities,
+making it impractical, if not impossible, to compute with it. The
+context-insensitive analysis that is implemented is actually the one
+in \cite{berndl03bdd}, to which type information is added to improve
+precision. The entire algorithm (including the cloning of the call
+graph nodes in order to turn the context-insensitive analysis into a
+context-sensitive one) is represented in Datalog. Datalog is a
+language for specifying database relations with Prolog-style
+predicates and the paper explains how automatic translation from
+Datalog to a BDD implementation can be done. This automatic
+translation is used to transform the Datalog representation of the
+pointer analysis into BDDs. What is achieved is that the huge extended
+call graph is now represented and manipulated using BDDs, thus making
+the whole process feasible.
+
+\section{Setup for pointer analysis}
+
+In this section we discuss the infrastructure that had to be put in
+place in order to implement pointer analysis. We have chosen to
+implement our pointer analysis for a toy language that is very similar
+to Java, mainly in order to avoid all the clutter that is usually
+associated with a real-life language. Since this was the first
+implementation of a pointer analysis in Stratego, and hence we had
+little previous experience to build on, we tried to minimize the risks
+involved by allowing ourselves to iron out some of the difficulties
+inherent to real languages. We made sure, however, to retain (or
+rather build) in our toy language all those features which is
+important that pointer analysis takes into consideration.
+
+The toy language we developed to perform pointer analysis over is
+called TOOL and was presented in section \ref{sec:tool}. Aside from an
+interpreter for TOOL (also discussed in the aforementioned section),
+the need also arose for a type annotator and a simplifier. We detail
+these a bit in the first part of this section. Furthermore, in order
+to allow pointer analysis to properly handle dynamic dispatching,
+information about TOOL class hierarchy was necessary. We turn to this
+in the second part of the section.
+
+\subsection{Analysis of TOOL programs}
+\label{ssec:tool}
+
+The main aspect of a language that pointer analysis has to deal with
+are assignments. Everything pointer-related happens as an effect of
+assignments. Two variables, method parameters or object fields can
+only end up pointing to the same memory location as the result of an
+assignment. Argument passing is simply a more concise form of
+assignment(s), but in essence the same: each actual argument is
+assigned to its corresponding formal argument. Also related to
+argument passing in the context of object-oriented programs is the
+assignment of the target of a method call (i.e., \icode{obj} in
+\icode{obj.method(...)}) to the special variable \icode{this} that is
+available in the body of the method. Despite the mechanism, this is in
+fact nothing more than a trivial assignment. Finally, another special
+form of assignment is that of the assignment of the result of a method
+to a variable. Since a method may contain multiple return statements,
+it follows that any of the expressions returned may end up being
+assigned to the receiving variable.
+
+To sum up, when dealing with pointer analysis, all that we are
+interested in are assignments, in one of the many forms discussed
+above. Even so, assignments can come in various shapes and sizes and
+we need to be able to contain this variability and reduce it a number
+of basic types of assignments. Otherwise, we would be forced to
+support a very wide range of syntactic variants of what is essentially
+the same process in reality. In fact, there are only four basic types
+of assignments to which all this variability can be reduced to. These
+are $p:=\text{new object}$, $p:=q$, $p:=q.f$ and $p.f:=q$. Every other
+form of assignment can to be reduced to sequences of these.
+
+For this reason, we need to run a transformation over the TOOL
+programs that we analyze which simplifies all complex assignments to
+these four base cases. Furthermore, we want to restrict argument
+passing and assignment of return values to assignments of the type
+$p:=q$ only. This means that we can only accept simple variables as
+arguments to method calls and as expressions in return statements. We
+summarize this and other simplifications that we perform on TOOL code
+below.
+
+\begin{itemize}
+
+\item any assignment that is not in the form $p:=q$, $p:=q.f$ or
+  $p.f:=q$ will be transformed into a series of assignments, each in
+  one of these forms. However, we do not simplify assignments of
+  boolean or arithmetic expressions, regardless of the nature of the
+  left hand side. This is because these types of assignments do not
+  deal with pointers; we know, in fact, that the target of the
+  assignment is bound to be of a non-pointer type. For instance,
+  \icode{x := (y+4)/5} will not be simplified because it does not
+  change pointer relationships in any way.
+
+  However, assignments of the form
+  $p.f_1.f_2\ldots{}f_n:=q.g_1.g_2\ldots{}g_n$ have to be adjusted on
+  multiple levels. The general rule is that either the left hand or
+  the right hand side of the assignment may contain one level of
+  dereferencing at most, but not both sides. For the assignment above
+  we have two options: we can either reduce it to one of the form
+  $p.f:=q$ or to one of the form $p:=q.f$. We randomly chose the
+  latter in our simplification. Hence, the original assignment will
+  become $temp_1:=p.f_1\ldots{}f_n;$ $temp_2:=q.g_1.g_2\ldots{}g_{n-1};$
+  $temp_1:=temp_2.g_n$. Naturally, simplification has to continue
+  recursively for the first two statements from above. However, the
+  third statement is now in an acceptable form.
+
+\item any method call (including constructors) will have to be in the
+  form $o.m(p_1,p_2,\ldots,p_n)$, where $p_i$ are simple variables (no
+  expressions, no field dereferences, no method calls).  Therefore,
+  another of our simplifications is that any argument passed to a
+  method call that is not a simple variable will be assigned to one
+  and replaced in the call by that variable. To illustrate,
+  \icode{obj.method(p.f, q.g$_1$.g$_2$, r.foo())} will be replaced
+  with \icode{temp$_1$ := p.f;} \icode{temp$_2$ := q.g$_1$.g$_2$;}
+  \icode{temp$_3$ := r.foo();} \icode{obj.method(temp$_1$, temp$_2$,
+    temp$_3$)}. The second statement will have to be further
+  simplified to meet our criteria.
+
+  A series of method calls will likewise have to be simplified by
+  breaking them into separate multiple calls, the result of each being
+  assigned to an additional temporary variable. If you consider
+  \icode{obj.m1(...).m2(...)}, this will have to be transformed into
+  \icode{temp := obj.m1(...);} \icode{temp.m2(...)}.
+
+\item finally, any return (or throw) statement that does not return
+  (or throw) a simple variable will have to be modified so that it
+  does so. This code: \icode{return p.f.foo();} will have to be
+  changed to \icode{temp:=p.f.foo();} \icode{return temp}.
+  Naturally, the first statement will need further simplification.
+
+\end{itemize}
+
+In order to be able to perform all these simplifications, we needed
+type information for our variables and expressions. If not for more,
+at least for the fact that all the additional variables that have to
+be introduced as part of the simplification transformation also have
+to be properly declared, and their declaration involves specifying
+their type. As it is, we need type information for each expression
+that appears on the left or right hand side of an assignment, in a
+method call, or as part of a return (or throw) statement. Not only do
+we need the type for an entire expression, but we need it for all
+subexpressions that compose the expression as well, especially in what
+successive field dereferences are concerned. For example, in the case
+of the expression $p.f_1.f_2\ldots{}f_n$, we need the type of the
+entire expression and that of subexpressions $p.f_1$, $p.f_1.f_2$,
+\ldots, $p.f_1.f_2\ldots{}f_{n-1}$ as well.
+
+Due to this necessity, we have implemented a type annotator for TOOL
+programs which supports all elements of the TOOL syntax: local
+variables, method parameters, class fields (static and non-static,
+inherited fields), method calls, and, generally speaking, all types of
+statements and expressions. The type annotator is run over TOOL
+programs prior to simplification in order to produce the type
+information needed by the simplifier.
+
+\subsection{Class hierarchy analysis}
+\label{ssec:cha}
+
+The last prerequisite for running pointer analysis over a TOOL program
+(and its accompanying collection of classes) is structural information
+about the class hierarchy. This is in fact not something that we need
+specifically for pointer analysis, but rather something that is
+necessary for virtually any interprocedural\footnote{We the coined
+  term \emph{interprocedural} in our discussion, despite the fact that
+  in OO programming we are dealing with methods, not procedures.}
+analysis. The typical analysis will start from the main function of
+the program and will inevitably (with the exception of some very
+simple programs) reach method calls. In the case of an intraprocedural
+analysis we can either ignore method calls or handle them in some
+conservative way, whichever of the two makes sense given the semantics
+of our transformation. However, in the case of interprocedural
+analyses, handling of a method call implies applying our analysis over
+the body (or bodies, even) of the method that is being called. In
+order to be able to do this, we naturally need to retrieve the right
+method(s).
+
+\paragraph{Resolving methods}
+
+The issue of identifying which method body (or bodies) to analyze is
+trickier than would seem at first sight. First of all, we need type
+information regarding the target of the method call, since otherwise
+we do not know what class (or set of classes) to scan for finding the
+right method. Fortunately, we already have the type information
+available from before, when we needed it for the simplification. It is
+perhaps worth mentioning that the type that we use is the declared
+type of the variable.
+
+Once we know the type of the target object, we can proceed to
+determining the method (or methods) that we have to analyze. The first
+case is when the method is declared (as abstract) or defined
+(concretely) in the class indicated by the declared type of the target
+object (for simplicity, let us call this class the \emph{target
+  class}). In either of these two cases, it does not suffice to simply
+return that method as the result of our search. If we have an abstract
+method declared in the target class, it is clear that we need to
+search for (and return) a concrete definition in one of the subclasses
+that will actually get executed.
+
+However, even if we do have a definition proper in the target class,
+we still have the dynamic dispatch mechanism that makes it possible
+that other method bodies might get executed as well. It could be the
+case that even if the declared type of an object is, say, class Foo,
+the object might be initialized with an instance of a (direct or
+indirect) subclass of Foo, say Bar. If both Foo and Bar define the
+method that we are looking for, the actual method that gets executed
+is the one defined in class Bar. It follows that the actual body that
+will end up being executed at run time might be that defined in the
+target class \emph{or} it might be any of the bodies defined in
+(direct or indirect) subclasses of the target class.  As a result, in
+this case, we need to return \emph{all non-abstract methods that match
+  the signature of the called method, defined in either the target
+  class or in any of its subclasses}.
+
+The second case we have to deal with is when the target class does not
+declare or define the method we are looking for. In this case, the
+method that might end up being executed is either one defined in one
+of the subclasses of the target class or (and here we have a
+distinction from the previous case) one defined in a superclass of the
+target class. We only need to consider the very first definition that
+appears in the inheritance chain, as we go upwards from the target
+class.
+
+To sum up the two cases, the result will always be a union of two
+components. The first component is the same for both cases and it
+comprises of the matching methods defined in any of the subclasses of
+the target class. The second component of the union will be either (1)
+the (single) definition of the method in the target class itself or
+(2) the (single) definition of the method in the first superclass of
+the target class as we go upwards in the hierarchy. Either the first
+or the second component of this union may be empty, but never both at
+the same time. That would be a program error.
+
+Each interprocedural analysis will deal with this set of methods in
+its own way, once the set is obtained. Most analyses will want to
+examine each member of the set and perform some sort of merging of the
+results that makes sense in the context of the analysis. How we deal
+with this set in the context of the pointer analysis will be discussed
+in the following section.
+
+Things are a bit easier in the case of constructors (which are still a
+special case of method call). Whenever we have to retrieve the body
+that gets executed as a result of a statement like \icode{new C(...)},
+we simply look for a matching constructor in class C. The dynamic
+dispatch mechanism does not intervene here, so that constructor is the
+only method (or, if you prefer, constructor) body that has to be
+returned.
+
+When analyzing the body of a constructor, it is sometimes the case
+that calls to the \icode{super} method are encountered. Such calls are
+the syntactic means of calling the constructor of the superclass of
+the current class. Calls to \icode{super} can also be resolved quite
+easily, since they always result in a single (constructor) method
+which is always defined in the superclass.
+
+\paragraph{Building the hierarchy}
+
+It should be clear by now that resolving sets of methods implies many
+queries related to class hierarchy structure. It is necessary that we
+can easily navigate from a given class upwards in the hierarchy chain
+to its ancestor classes as well as downwards in the hierarchy chain,
+to all its subclasses. Given that we do not want to scan files over
+and over again in order to retrieve hierarchy information, some sort
+of in-memory structure clearly has to be built.
+
+The fact that we need to be able to retrieve all subclasses of a class
+makes an incremental approach to building this in-memory structure of
+little use. This is because there is no way of knowing which classes
+are subclasses of a class without scanning all the class files in the
+project. So, even though an incremental approach to building the
+structure would make sense in the case of navigating upwards (given
+that each class specifies which class it extends, so we could read in
+the relevant classes directly), it cannot be accommodated when
+navigating downwards.
+
+Since a full scan of all the classes present in a project has to be
+done anyway, the only method for improving efficiency that we can
+foresee is the setting up a caching mechanism. Such a mechanism could
+be employed for libraries of classes which are reused across different
+projects. Each library could be accompanied by an additional file that
+specifies the class hierarchy structure. Although we have not
+experimented with this ourselves, it is only a matter of writing the
+in-memory structure to disk and reading it back into memory from the
+disk every time it is needed.
+
+We return now to what we do in the particular case of TOOL. Since TOOL
+only supports a flat directory structure (i.e., all the class files
+are in the same directory), we simply read in all the class files and
+store the inheritance relationships among them using a dynamic rule.
+For each (class, superclass) pair we add an entry of the type
+SuperClass(c) $\rightarrow$ sc and an entry of the type SubClass(sc)
+$\rightarrow$ c. In the subclass relationship, we actually append
+entries to a list, given that a class may have multiple subclasses.
+
+With this information in memory, we can navigate from a class to its
+superclass(es) by using the SuperClass entries and we can collect all
+subclasses of a class by using the SubClass entries. In order to
+support interprocedural analysis of TOOL programs (and, in particular,
+the pointer analysis) we have built a number of strategies on top of
+the class hierarchy information, the most important of which we list
+below:
+
+\begin{itemize}
+
+\item \icode{get-class}, \icode{get-superclass},
+  \icode{get-ancestors}, \icode{get-all-subclasses}: return the code
+  of a class, the name of the superclass of a class, the names of the
+  ancestor classes of a class and the names of all subclasses of a
+  class, respectively.
+
+\item \icode{get-method}: takes a class name, a method name and a list
+  of argument types and returns a single matching method. The
+  definition that is returned may be the one from the class itself (if
+  there is such a definition) or, if not, that from the first
+  superclass as we go upwards in the hierarchy in which the method is
+  defined. When looking for the matching method, matching of argument
+  types is done by taking inheritance relationships into
+  consideration. Assuming S is a subclass of T, then a requested
+  argument type of S and a declared argument type of T will result in
+  a match.
+
+  The \icode{get-method} strategy only returns non-abstract and
+  non-static definitions.  Similar strategies exist for retrieving
+  abstract methods and static methods.
+
+\item \icode{get-all-methods}: just like \icode{get-method}, it takes
+  a class name, a method name and a list of argument types as
+  arguments, but unlike \icode{get-method}, it returns all possible
+  methods that might end up being executed at run time.  We have
+  described the methods that form this set earlier on when discussing
+  the difficulties introduced by dynamic dispatching.
+
+\item \icode{get-field}, \icode{get-static-field}: looks for
+  non-static and static fields, respectively, defined either in the
+  class passed as an argument or in any of its superclasses. These
+  strategies (and some of the others, as well) are used in the type
+  annotation strategy, for example.
+
+\end{itemize}
+
+\section{Pointer analysis algorithm}
+\label{sec:pointer-analysis}
+
+The eventual purpose of our efforts for this part of the thesis
+project was implementing pointer analysis for our prototype object
+oriented language (TOOL) and making its results readily available to
+Stratego users. We have investigated a number of approaches to
+performing pointer analysis, and in the end we have decided to adopt
+the one described in \cite{lhot02spark, lhot03spark}. This is a
+context insensitive and flow insensitive analysis, which produces a
+single instance of pointer information that is valid for the entire
+length of the program. The information obtained after running the
+pointer analysis is meant to be used as a resource for other data-flow
+transformations.
+
+We have chosen this particular method for a number of reasons. To
+start with, ours has been the first attempt of implementing a pointer
+analysis in Stratego and as there is no previous experience to build
+on, we preferred choosing an analysis which was clearly described and
+rather straightforward to implement. We have considered the process of
+implementing such an analysis in Stratego complicated enough even
+without adding more complexity by choosing a more demanding analysis.
+Secondly, there is a version of this same analysis (presented in
+\cite{berndl03bdd}) which reduces the space requirements by using
+Binary Decision Diagrams (BDDs) for representing points-to sets (see
+section \ref{sec:pa-related-work}). We expect that a future effort can
+start with the base implementation that is now available and change it
+to the improved BDD version. This will first require binding Stratego
+with an existing C library that allows manipulation of BDDs and then
+replacing of the data structures used by our analysis with different
+ones based on BDDs. Finally, we chose a context insensitive and flow
+insensitive analysis to ensure a reasonable efficiency so that it can
+be immediately used (i.e., without requiring further optimization) in
+our data-flow transformations. Granted, its precision will suffer from
+both types of insensitivity's, but we regard this as an acceptable
+compromise.
+
+As a side note, flow sensitivity may not even be desired at all in
+Stratego transformations if we consider how dependent dynamic rules
+work. We expect that the primary use for the information generated by
+the pointer analysis will be to define triggers for the undefinition
+of dynamic rules using the dependent dynamic rules mechanism. To
+illustrate, consider again the case of constant propagation. We want a
+constant propagation rule for a particular variable to be undefined
+when that variable \emph{or any of its potential aliases} is changed.
+For this, we need to use a list of potential aliases that is not only
+valid at the point in the program where we define the triggers for
+undefining the rule, but which is valid at any point of the program.
+From this perspective, we regard program-wide information more useful
+than information that is only valid at a discrete points of the
+program. The former is the case when we perform flow insensitive
+analysis, while the latter is the case when we perform flow sensitive
+analysis.
+
+The original analysis that we adopted, described in \cite{lhot02spark,
+  lhot03spark}, is designed so that it can accommodate a lot of
+variability in the algorithm. This is because it is built to allow
+experimentation with various implementations of pointer algorithms.
+Since our goal is different, we have fixed a number of aspects and
+have only focused on implementing support for those. We chose to use a
+subset-based approach in propagating points-to sets (as opposed to a
+equality-based approach), to use a class hierarchy structure that we
+build before running the algorithm, to do a \emph{field-sensitive}
+analysis (i.e., consider fields separately for each instance) and not
+to simplify the pointer assignment graph. We maintained some
+variability in the propagation algorithm by implementing both the
+iterative propagation the worklist-based propagation algorithm. If you
+want to achieve a better understanding of the alternatives, we refer
+you to the original papers \cite{lhot02spark, lhot03spark}.
+
+We only want to detail the choice between the subset-based and the
+equality-based approach. The basic idea of subset-based pointer
+analyses is that an assignment like $p:=q$ will have the effect that
+all objects that $q$ points to will be pointed to by $p$ as well, but
+not the reverse. In other words, the set of objects pointed to by $q$
+will be a \emph{subset} of the set of objects pointed to by $p$. In
+equality-based approaches, the two sets will always end up equal. You
+have probably guessed that the subset-based approach is more precise.
+
+The pointer analysis, as we have implemented it, consists of one
+preparatory step and two main steps. Let us first explain the two main
+steps and then we will come back to the preparatory step. The first
+thing we have to do is analyze the entire program and build a
+\emph{pointer assignment graph} for it. We start from Main.tool, which
+contains the ``main'' function and recursively follow all method calls
+to whichever code they lead us. The graph we build will be a
+representation of all the assignments that exist in the program and
+which we discussed earlier on in this chapter (basic assignments,
+implicit assignments of actual to formal arguments and return
+expressions).  Once the graph is built, the second step will deal with
+propagating memory locations along the edges until no more propagation
+can be done. At that point we have information about what
+variables/class fields/method parameters can point to what memory
+locations, which is what we wanted. This leaves us with the
+preliminary step. Its purpose is to create unique encodings for all
+the variables, method parameters and memory locations created in the
+program. We need this unique encoding both for the pointer analysis
+itself and for the end user. In both cases, it is important to know if
+\icode{x} refers to local variable \icode{x} in the main program or to
+argument \icode{x} of method \icode{foo} of class \icode{Bar} or to
+the index of the for loop in method \icode{bar} of class \icode{Foo}.
+
+We discuss these three steps at more length in the following
+subsections. We also have a final subsection about how we transform
+the points-to information (given a variable, we can tell what memory
+locations it may point to) into alias information (given a variable,
+we can tell what variables it may be an alias of).
+
+\subsection{Variable annotation}
+\label{ssec:va}
+
+Three reasons have generated the need for an annotation scheme. First
+of all, we needed a way to name memory locations that program
+variables can refer. Memory locations can be created by \icode{new}
+statements (e.g., \icode{new Foo(...)}) or by string constants (e.g.,
+\icode{str := "some string"}). Memory locations are relevant because
+they are what variables point to. Two variables may be aliases of one
+another if they may point to the same memory location. We need to be
+able to identify each particular memory location, so we need to
+annotate each of them with a unique identifier.
+
+Secondly, we needed to be able to tell identically named variables
+apart. As we all know, scoping allows the reuse of variable names, so
+generally there will be no single \icode{x}, \icode{y} or \icode{i}
+across a number of methods and classes. Since we need to treat
+different instances of variable \icode{x} separately, we need to know
+which occurrences refer to which declarations of the variable. More
+precisely, as we will detail in section \ref{ssec:pag}, each
+declaration of a variable will have a node representing it in the
+pointer assignment graph. It is thus important to be able to identify
+what nodes an assignment like \icode{x := y} has to connect. For this,
+all variables of a program need to be uniquely annotated so that all
+occurrences of a variable that refer to the same declared variable are
+annotated with the same identifier.
+
+Finally, the third reason is quite similar to the second, except that
+we view it from an end user perspective. In order for the user to be
+able to actually use the results of the pointer analysis, she needs to
+have access to a strategy that, when passed a variable, will return
+all possible aliases of that variable. Both the variable and its
+aliases need to be identified uniquely across the entire program, for
+similar reasons as before. The user interaction also introduces an
+additional constraint, namely that the annotation scheme needs to be
+reproducible (i.e., if we run it twice, it yields the same results).
+Otherwise, there would be a mismatch between the annotations
+introduced by the analysis and those introduced by the user, and
+obviously the two would not be compatible.
+
+The annotation scheme that we use for all the purposes detailed above
+is as follows:
+
+\begin{itemize}
+
+\item we annotate all new memory locations (\icode{new} statements and
+  string constants) that are created in a method with the identifier
+  \icode{NewId(cn, ms, idx)}. \icode{cn} stands for class name,
+  \icode{ms} stands for method signature (a pair containing the method
+  name and a list with the types of the method's arguments) and
+  \icode{idx} is an index that starts at 1 and increases for each
+  newly created memory location, in program order.
+
+\item we annotate the special \icode{this} variable with
+  \icode{VarId(cn, ms, 0)}, the $n$ formal arguments of a method with
+  \icode{VarId(cn, ms, $i$)}, with $i=1,n$ and the local variables of
+  the method with \icode{VarId(cn, ms, $idx$)}, with $idx$ starting at
+  $n+1$ and increasing for each newly declared local variable in
+  program order. Variables declared in catch clauses are handled no
+  differently from regular local variables. Just like before,
+  \icode{cn} and \icode{ms} stand for class name and method signature,
+  respectively.
+
+\item we have two special cases: the main program and static blocks.
+  Both are handled just like normal methods, except that we use a non
+  existent class name (for the main program) and hand-crafted method
+  signatures (for both). In the case of the main program we use
+  \icode{Main} as the class name, \icode{main} as the method name and
+  an empty list of arguments; in the case of a static block, we use
+  the regular class name of the class it appears in,
+  \icode{Static.Block} as the method name and an empty list of
+  arguments.
+
+\end{itemize}
+
+We provide an example below of how the variables and memory locations
+created in the method \icode{toString()} of class \icode{Object} are
+annotated. To clarify the rather strange \icode{\_\_temp\_13} variable
+name, remember that we perform simplification on the code before
+annotating the variables. The original method only had one line:
+\icode{return "N/A"}.
+
+\definecolor{c1}{rgb}{1,0,0}
+
+\begin{Verbatim}[commandchars=\\\%\^]
+MethodDec([], "toString", [], TypeName("String")
+  , Block([
+      DeclarationTyped("__temp_13", TypeName("String"))
+        {%\color%c1^VarId("Object", MethodSig("toString", []), 1)^}
+    , Assign(Var("__temp_13")
+               {%\color%c1^VarId("Object", MethodSig("toString", []), 1)^}
+           , String("N/A")
+               {%\color%c1^NewId("Object", MethodSig("toString", []), 0)^})
+    , Return(Some(Var("__temp_13")
+                    {%\color%c1^VarId("Object", MethodSig("toString", []), 1)^}))
+    ])
+)
+\end{Verbatim}
+
+\subsection{Pointer assignment graph}
+\label{ssec:pag}
+
+The pointer analysis uses a graph structure called a \emph{pointer
+  assignment graph} in order to represent the program under analysis.
+We begin by describing what the nodes and edges of this graph
+represent and then we proceed to explaining how the graph is built.
+Since there will be a lot of terms coming up, please make a mental
+note that in what follows, we use the terms \emph{memory location},
+\emph{allocation node} and \emph{element in the points-to set} to
+refer to essentially the same concrete thing: a representation of the
+memory space occupied by the object or objects created at an
+allocation site of the program. Allocation sites are statements of the
+type \icode{new SomeClass()} or string constants. These
+representations are memory locations (since objects are allocated at
+some location in memory), are what an allocation node represents (see
+below), and are also the elements of points-to sets.
+
+There are two functions that the nodes of the pointer assignment graph
+have to accomplish: a representation function and a ``holder''
+function. Some nodes represent either memory locations created by the
+program or various types of variables used by the program. Some nodes
+hold points-to sets that are associated to them. These points-to sets
+will eventually have to be filled with memory locations. The fact that
+a memory location (eventually, after the propagation phase) appears in
+the points-to set of a node means that the variable that node
+represents may point to that memory location. If two nodes have common
+entries in their points-to sets, it means that the variables they
+represent may be aliases of each other.
+
+The four types of nodes that may appear in the pointer assignment
+graph are as follows:
+
+\begin{itemize}
+
+\item \textbf{allocation nodes}: each such node stands for a set of
+  run time objects. Each allocation site of the program (i.e., each
+  \icode{new SomeClass(...)} or string constant) will be represented
+  by such a node. Allocation nodes stand for sets of objects and not
+  necessarily just single objects because the same allocation site may
+  allocate an indefinite number of objects (consider an allocation
+  site in a loop or in a method that gets called multiple times, for
+  instance). Allocation nodes mainly have a representation function
+  and, secondly, a trivial holder function (trivial in that allocation
+  nodes will always have points-to sets with one entry only: the
+  allocation node itself).
+
+\item \textbf{variable nodes}: these nodes are used to represent a set
+  of memory locations that hold pointers to objects. One such node
+  will be created for and associated with each local variable, each
+  formal method argument and each static field (which can be regarded
+  as global variables). These nodes have both a representation
+  function and a holder function.
+
+\item \textbf{field reference nodes}: they are used to represent
+  pointer dereferences (e.g., $p.f$). Each field reference node will
+  pair a link to a variable node with a field name. This type of node
+  only plays a representation function; it will not, like all other
+  types of nodes, have a points-to set associated with it.
+
+\item \textbf{concrete field nodes}: this type of node only comes into
+  play during the propagation of points-to sets (described in the next
+  subsection) and it is complementary to the field reference node.
+  Concrete field nodes do not play a representation function (i.e.,
+  they do not represent a concrete occurrence in the program, like the
+  other types of nodes). Each concrete field node will only be used to
+  hold the points-to set of a pair consisting of a link to an
+  allocation node and a field name. This points-to set holds the
+  memory locations that the field (second member of pair) of the
+  object(s) represented by the allocation node (first member of pair)
+  may point to.
+
+\end{itemize}
+
+Edges in the pointer assignment graph represent assignments. If two
+nodes are connected by an edge, it means that at some point in the
+program there has been an assignment involving the variables they
+represent. With the introduction of edges, the distinction between the
+representation function and the holder function of nodes can be
+clarified. Since edges only play a representation function themselves,
+they will only connect nodes that also have a representation function.
+In other words, concrete field nodes will never be connected among
+themselves or with any other type of node. In fact, their definition
+as nodes in the graph is really just so that we do not deal with other
+data structures beside the graph. They could just have well been
+separated completely.
+
+Just as with nodes, there are also four different types of edges that
+can appear in the pointer assignment graph. We described them below.
+
+\begin{itemize}
+
+\item \textbf{allocation edges}: connect an allocation node to a
+  variable node and indicate that the variable may point to the memory
+  location(s) represented by the allocation node. Remember, an
+  allocation node may just as well stand for a single object or for a
+  set of objects, all created using the same program statement. There
+  is no way of knowing, and it is in fact irrelevant in the context of
+  pointer analysis.
+
+\item \textbf{assignment edges}: an edge between two variable nodes,
+  representing an assignment of one variable to another. Since
+  assignment edges represent assignments, they allow all elements in
+  the points-to set of the source node to flow into the points-to set
+  of the destination node. Therefore, an edge from $r(q)$ to $r(p)$
+  indicates that there exists an assignment $p := q$ in the program
+  (we use $r(x)$ to indicate the node representing the program
+  variable $x$). So, all the elements in the points-to set of $r(q)$
+  will have to appear in the points-to set of $r(p)$ as well. Or, in
+  terms of subsets, the points-to set of $r(q)$ will be a subset of
+  the points-to set of $r(p)$.
+
+\item \textbf{store edges}: these edges link a variable node to a
+  field reference node. An edge from $r(p)$ to $r(q.f)$ is used to
+  represent assignments of the type $q.f:=p$. By contrast with
+  assignment edges, store edges will not determine a flow of pointers
+  from the points-to set of the source node to the points-to set of
+  the destination node, given that the destination node is a field
+  reference node in this case, and that field reference nodes do not
+  have points-to sets associated with them (remember, they only have a
+  representation function). To explain how elements flow along store
+  edges, let us come back to our example.
+
+  We had $r(p)$ as the source node and $r(q.f)$ as the destination
+  node. To refresh the reader's memory, a field reference node (which
+  $r(q.f)$ is) is made up of a reference to a variable node ($r(q)$,
+  in this case) and a field name ($f$, in this case). A concrete field
+  node is made up of a link to an allocation node and a field name. In
+  this context, elements will flow from the points-to set of the
+  $r(p)$ node to the points-to sets of all the \emph{concrete field
+    nodes} that associate elements from the points-to set of $r(q)$
+  with the field name $f$.
+
+\item \textbf{load edges}: load edges link a field reference node to a
+  variable node. An edge from $r(p.f)$ to $r(q)$ is used to represent
+  an assignment of the type $q:=p.f$. Flow of elements along load
+  edges is again different from everything we have seen this far. It
+  is, in a way, the reverse process than that taking place in the case
+  of store edges. For the edge from $r(p.f)$ to $r(q)$, elements will
+  flow from all the points-to sets of concrete field nodes that
+  associate elements from the points-to set of $r(p)$ with the field
+  name $f$ into the points-to set of $r(q)$.
+
+\end{itemize}
+
+\paragraph{Stratego graph representation}
+
+We used dynamic rules in order to represent the nodes and the edges of
+the graph. Dynamic rules representing the nodes bind a unique
+identifier for the node to the points-to set for that node.  We use as
+unique identifiers the identifiers with which we have annotated the
+memory locations and variables of the program beforehand (we have
+discussed this in section \ref{ssec:va}). For allocation nodes we use
+the memory location identifier, for variable nodes we use the variable
+identifier, for field reference nodes we use the variable identifier -
+field name pair and for concrete field nodes we use the memory
+location identifier - field name pair.
+
+Edges are also represented using dynamic rules, which bind the unique
+identifier for the source node to the unique identifier for the
+destination node. The identifiers used are the same ones as in the
+case of nodes. Since the same source node can be connected to multiple
+destination nodes, we use the mechanism of appending right hand sides
+to a dynamic rule with the same left hand side, and later using
+\icode{bagof-}DynRule to retrieve all the right hand sides.
+
+As a side note, for supporting this type of representation, we needed
+to add an additional strategy to the dynamic rules library,
+\icode{dr-all-keys(|rulename)}. This strategy returns all the keys
+(left hand sides) defined for a dynamic rule. The syntactic sugar
+variant of this strategy is \icode{all-keys-}$L$, which is generated
+automatically for each user-defined dynamic rule $L$.  We use
+\icode{all-keys-}$L$ when we need to process all nodes or all edges of
+a certain type. This is required during the next step, the propagation
+of points-to sets, described in the following subsection. Without this
+strategy, the only way of retrieving all the nodes or edges we define
+during the graph building process was to store all the keys
+separately. This was obviously inconvenient.
+
+\paragraph{Building the graph}
+
+The idea behind how the pointer assignment graph is built is to add
+nodes and edges that represent all the assignments that we have
+discussed at the beginning of section \ref{ssec:tool}. The creation is
+driven by the various types of variable declarations and assignments,
+which introduce nodes and edges in the graph, respectively. In the
+case of store or load edges, the field reference node involved may not
+exist. In that case, it is created on the spot. In all cases where
+this makes sense\footnote{Some examples are assignments involving
+  variables with basic types, passing of arguments with basic types or
+  returning values with basic types from methods.}, we look at the
+type of the variables that we encounter, so that we do not consider
+any variables (local variables, method arguments, class fields, etc.)
+which have basic types (int or bool, in the case of TOOL) in our
+analysis. Such variables are not pointers, so they are not the object
+of our analysis.
+
+Most of the process of adding nodes and edges should be clear from the
+description that we made earlier, therefore we will only focus here on
+the more delicate issues, while only quickly mentioning the obvious
+ones.
+
+Each \icode{new} statement or string constant determines the addition
+of an allocation node, each variable declaration or method argument
+declaration triggers the addition of a variable node, each field
+access generates a concrete field node. Static fields generate
+variable nodes. As explained, allocation edges, assignment edges,
+store edges and load edges are created for statements that follow the
+patterns $p:=\text{new Class(...)}$ (or $p:="..."$), $p:=q$, $q.f:=p$
+and $q:=p.f$, respectively.
+
+The more interesting part comes when we have to handle method calls.
+We will unify constructor calls and method calls in this discussion,
+since their handling is similar. The first thing that we need to do
+for a method call is find out what method bodies may end up being
+executed as a result of that method call. We use the infrastructure
+that we have already discussed in section \ref{ssec:cha} in order to
+get a list of possible target method definitions. Such method
+definitions include, among others, the formal arguments and the body
+of the method. For each method definition that is returned, we perform
+the following steps:
+
+\begin{enumerate}
+
+\item first, we create variable nodes for the formal method arguments
+  and assignment edges between corresponding actual and formal
+  arguments.  If the method call is \icode{obj.m(a, b, c)} and the
+  method is defined with the formal arguments \icode{x}, \icode{y} and
+  \icode{z}, then assignment edges are drawn from $r(\icode{a})$ to
+  $r(\icode{x})$, from $r(\icode{b})$ to $r(\icode{y})$ and from
+  $r(\icode{c})$ to $r(\icode{z})$.
+
+\item if the method called is not static, we need to handle the
+  special \icode{this} pointer, which is a pointer to the target
+  object of the method call. So, during the call \icode{obj.m(a, b,
+    c)} from above, \icode{this} will be an alias of \icode{obj}
+  (i.e., it will point to whatever \icode{obj} is pointing). This is,
+  in effect, equivalent to a (virtual) assignment \icode{this := obj},
+  which means that we need to create an assignment edge between
+  $r(\icode{obj})$ and $r(\icode{this})$. Before we can do this,
+  however, we have to create a variable node for the special
+  \icode{this} pointer. If you recall, we annotate each method's
+  \icode{this} pointer differently, which means there will be a
+  distinct nodes representing \icode{this} for each different method.
+  In the case of static methods, we simply skip this step.
+
+  Handling of the special \icode{this} variable differs in the case of
+  constructor calls, since in constructor calls we do not have a
+  target object which to assign to \icode{this} (as we do in other
+  method calls). However, due to our simplification, the result of any
+  constructor call is bound to be assigned to a variable. It is this
+  variable that will point to the newly created object, so this is the
+  variable that will take the place of the target object from the
+  normal method calls. As an effect of this observation, we create an
+  assignment edge from the node representing the variable to the node
+  representing \icode{this} in the constructor body.
+
+\item the third step is simply running the pointer analysis over the
+  body of the method, which does not imply any particular
+  difficulties.
+
+\item the last step is only necessary when the result of the method
+  call is assigned to a variable (i.e., \icode{x := obj.m(a, b, c)}).
+  In this case, we collect all the return statements that appear in
+  the method and extract the returned variables out of those
+  statements. To accommodate the new aliases that are created, we need
+  to add an assignment edge between each of the nodes representing
+  those returned variables and the node representing the variable that
+  receives the result of the method call. In this way, we ensure that
+  we properly cover any of the potential assignments that might take
+  place (of whichever variable is returned at run time to the
+  receiving variable).
+
+\end{enumerate}
+
+There is another issue related to the handling of method calls, which
+comes up with virtually any interprocedural analysis. We need to
+avoid, during the analysis, the creation of the infinite loop that can
+be triggered by direct or indirect recursion in the target code.
+Given that the pointer analysis is a context insensitive analysis (so
+we only need to analyze each method once, regardless of the context in
+which it is called), we can resort to a simple trick. We can cache the
+information we need for each method. In addition to giving us faster
+access to the information we need for each method call, this solves
+the infinite loop problem implicitly as well. How? Well, as soon as
+information about a method is cached, we no longer do anything (except
+retrieve the cached information), so we avoid the danger of restarting
+the analysis of the same method. All we need to ensure is that we
+cache the method before we start the analysis of its body. With many
+analyses this is not possible since we need the result of running the
+analysis over the method body in order to have something to cache. In
+the particular case of pointer analysis, however, all we need to cache
+are the formal arguments and the variables returned by the method.
+This information is available immediately, without having to run
+pointer analysis over the body of the method first.
+
+The last interesting approach that we want to mention is related to
+the handling of exceptions. Exceptions introduce the difficulty that
+the variables thrown by throw statements (if you recall, we simplify
+the code beforehand in order for all throw statements to throw simple
+variables, not expressions) are caught by some catch clause and given
+a new name. What we would need, then, is to create assignment edges
+between the nodes representing the variables thrown and the nodes
+representing the variables declared in the matching catch clause.
+Instead of doing this, we took the more simplistic approach of
+creating a special variable node that represents all exceptions. Every
+time we see a throw statement, we create an edge from the node
+representing the thrown variable to the special exception node and
+every time we see a catch statement, we create an edge from the
+special exception node to the node representing the variable declared
+in the catch clause.  In this way, we effectively make all exceptions
+of the program aliases of each other. For handling exceptions, we
+adopted this rather conservative solution (also used in
+\cite{lhot02spark, lhot03spark}) because variables used in exception
+throwing/catching are rarely important for optimizations. Therefore,
+putting in a lot of effort for obtaining very precise alias
+information regarding them is unlikely to pay off.
+
+As a final mention, we also make sure to run the pointer analysis over
+the static blocks defined in a class, as soon as that class is first
+encountered in the code. This happens either when an instance of that
+class is first created or when a static field of that class is
+accessed.
+
+\subsection{Propagation of points-to sets}
+
+In the previous step we have created a pointer assignment graph which
+is a special representation of all the assignments in the analyzed
+code. However, if variables would be aliased only by direct
+assignment, things would be pretty easy. In reality, variables may end
+up being aliased also by transitivity. Because of this, this step in
+the pointer analysis will propagate memory locations from one points-to
+set to another according to the rules we explained when discussing the
+types of edges that exist in the graph. Propagation takes place until
+a fix point is reached.
+
+Initially, all the points-to sets are empty. We start propagation by
+putting all allocation nodes in the points-to sets of their successor
+(all allocation nodes have one successor only). Five different
+algorithms are presented in the original work for propagating the
+elements of points-to sets along the edges: an iterative one, a
+worklist one (with an incremental version) and an alias edge one (with
+an incremental version). We chose to implement the worklist
+propagation algorithm (the second fastest, slower only than its
+incremental variant) and, for verification purposes, the simple
+iterative propagation algorithm.
+
+Before explaining the algorithm, let us again remind you how the four
+types of edges are handled in any version of the propagation
+algorithm. The easiest are allocation edges: we simply put the
+allocation node from the origin of the edge in the points-to set of
+the variable node, before running the fix point iteration of the
+algorithm.  Assignment edges are also easy to handle: we add all the
+elements in the points-to set of the node at the origin of the edge to
+the points-to set of node at the destination.  Store edges ($p
+\rightarrow q.f$) are a bit more tricky. A store edge indicates that
+all the elements in the points-to set of $p$ theoretically need to be
+in the points-to set of $q.f$. However, $q.f$ is a field reference
+node, so it represents the field $f$ of all objects that $q$ may point
+to. This means that what we actually have to do is propagate the
+elements in the points-to set of $p$ to the fields of all these
+objects. For this purpose, we need to introduce one concrete field
+node for each allocation node from the points-to set of $q$.
+Afterwards, we can propagate the elements from the points-to set of
+$p$ in the points-to set of all these concrete field nodes. The
+reverse process happens during the handling of load edges ($p.f
+\rightarrow q$): elements from the points-to set of all the concrete
+field nodes associated with any allocation node from the points-to set
+of $p$ will flow to the points-to set of $q$.
+
+First, we have implemented the simple iterative propagation algorithm
+as a reference implementation. This algorithm simply applies the
+propagation rules we have explained above for all assignment edges,
+store edges and load edges in turn, in an repetitive fashion, until no
+more changes are produced. At that point, the fix point is reached,
+and the propagation is completed. The iterative approach is simple,
+but also very slow. In order to boost the performance of the
+propagation, we need to add some complexity to the algorithm in order
+to eliminate useless traversal of edges. The result is the worklist
+propagation algorithm, which we discuss in the remainder of this
+section.
+
+What makes the worklist propagation algorithm perform better than the
+iterative propagation algorithm is the use of a list in which we save
+the variable nodes whose points-to sets have been changed by a
+previous propagation step. By maintaining this worklist, we no longer
+have to traverse all the edges of the graph over and over again (as we
+had to in the iterative version), but only consider those that involve
+nodes that appear in the worklist. This is the basic idea of the
+worklist version. The exact details we discuss below.
+
+The initialization phase of the worklist propagation algorithm, as
+with the iterative one, involves propagating allocation nodes along
+allocation edges to the points-to sets of variable nodes and adding
+all these variable nodes with non-empty points-to sets to the
+worklist. Thereafter, an iterative process starts, which constantly
+picks a node from the worklist and processes it. The worklist is
+updated with variable nodes whose points-to sets get updated during
+the processing of other nodes. Processing of a variable node involves
+handling the following types edges: assignment edges and store edges
+originating from it (to propagate the new elements in the points-to
+set of the processed node), store edges ending in a field reference
+node that has this node as its base (to update the concrete field
+nodes associated with the allocation nodes that were added to the
+processed node's points-to set) and load edges originating from a
+concrete field node that has this node as its base (to propagate the
+points-to sets of the concrete field nodes associated with the
+allocation nodes that were added to the points-to set of the processed
+node).
+
+In addition to the basic handling, there are also some special cases
+that have to be treated additionally. One such case is when $q$ is in
+the worklist, but $p$ is not, $p$ has allocation node $a$ in its
+points-to set, and $q$ also had the same $a$ added to its points-to
+set. This makes $p$ and $q$ possible aliases, so any updates done to
+the concrete field nodes based on $a$ as an effect of processing store
+edges ending in $q.f$ (during normal processing of $q$) should also
+propagate through the load edges originating in $p.f$ (since $p$
+points to $a$ as well). However, this does not happen, since $p$ is
+not in the worklist.  Therefore, we need to additionally process the
+load edges outside the main loop. The same case can also happen in
+reverse, so we need to similarly process the store edges as well.
+
+The following is a verbatim copy of the worklist algorithm, as it is
+summarized in \cite{lhot02spark}:
+
+\begin{verbatim}
+process allocations
+repeat
+  repeat
+    remove first node p from worklist
+    process each assignment edge p -> q
+    process each store edge p -> q.f
+    process each store edge q -> p.f
+    process each load edge p.f -> q
+  until worklist is empty
+  process every store edge
+  process every load edge
+until worklist is empty
+\end{verbatim}
+
+The only aspect left unexplained is what nodes get added to the
+worklist during the iteration. We enumerate these below:
+
+\begin{itemize}
+
+\item when processing the assignment edge $p \rightarrow q$, $q$ gets
+  added to the worklist if any elements are propagated from the
+  points-to set of $p$ to that of $q$.
+
+\item when processing store edges, whether of type $p \rightarrow q.f$
+  or of type $q \rightarrow p.f$, we only (potentially) modify the
+  points-to sets of concrete field nodes. Since we only keep variable
+  nodes in our worklist, there is nothing we can add here. The same
+  holds for when we process all store edges in the outer loop.
+
+\item when processing the load edge $p.f \rightarrow q$, we add $q$ to
+  the worklist if any elements are propagated into its points-to set.
+  The same holds for when we process all load edges in the outer loop.
+
+\end{itemize}
+
+\subsection{Supplying alias information}
+
+The propagation of the points-to set concludes the pointer analysis
+algorithm, as described in \cite{lhot02spark, lhot03spark}. The
+conclusion of this step leaves us with a graph that contains nodes
+with associated points-to sets. However, this information in this form
+is of little use since users are usually interested not in what memory
+locations a variable (object field, method argument) may point to, but
+in what the aliases of that variable (object field, method argument)
+are. In order to transform the points-to information into alias
+information, an additional transformation is necessary.
+
+The point of this transformation is to generate a data structure which
+can be queried using a variable name (or, more realistically, an
+annotation which uniquely identifies a variable, a method argument or
+an object field) in order to get a list of variable names (or, again,
+annotations) in return. As you have probably guessed by now, we encode
+this data structure as a dynamic rule that binds a variable annotation
+to a set of variable annotations. If you recall, only variable nodes
+and field reference nodes represent actual variable expressions that
+appear in the program. Concrete field nodes do not have an equivalent.
+They merely store the memory locations that can be pointed to by
+fields of nameless objects. The user, however, is only interested in
+the variable expressions that appear in her program, since her
+analysis will be performed only in terms of those expressions. As
+such, the alias lists we return to the user only have to contain
+annotations that uniquely identify local variables, method parameters
+or field references.
+
+The idea of the conversion can be explained fairly easily if, for the
+time being, we only consider variable nodes. Each variable node points
+to a number of memory locations. In order to find out which variables
+are potential aliases, we need to see which variables have the same
+memory locations in their points-to sets. For this, we can create a
+structure that maps each memory location to all the variables that
+point to it. This structure can be filled in by considering each
+variable node and mapping each memory location in its points-to set to
+the variable the node represents. In the end, each memory location
+will end up being mapped to a list of variables. Once this is
+achieved, we know that all variables that appear in the same list of a
+memory location are aliases of one another. So, we iterate over each
+list and we create our final structure: the one that maps each
+variable to all its aliases. For each list we process, we add the
+entire list to the list of aliases of each of its elements.
+
+Now we can return to the general case and explain how field reference
+nodes and concrete field nodes fit into the picture. What we have to
+do is find out all the memory locations that a particular field
+reference node may point to, indirectly, through concrete field nodes.
+A field reference node is made up of a (link to a) variable node and a
+field name. We look at all the memory locations in the points-to set
+of the variable node and, by matching them with the field name, we get
+the concrete field nodes that we have to examine. (Remember, the
+concrete field nodes are pairs of a memory location and a field name.)
+In this way, we obtain a large points-to set for each field reference
+node, which we can then treat just as if it had belonged to a variable
+node. So, we traverse the points-to set and map each memory location
+in the set to the field reference, just like we did for variable
+nodes. Thus, the structure mapping memory locations to variables has
+been extended to map memory locations to field references as well. The
+last step is exactly the same, except that we will not only have
+variables in the lists that are mapped to memory locations, but also
+field references.
+
+In this way, we have obtained the alias information we needed: given a
+variable or a field reference (or, rather, the annotations that
+uniquely identify them), we can supply the list of its alias variables
+and field references.

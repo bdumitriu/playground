@@ -1,0 +1,1907 @@
+\chapter{Enhancing Stratego's dynamic rules}
+\label{ch:dynam-rules-libr}
+
+The first layer of work completed as part of this thesis consisted in
+\emph{improving}, \emph{extending} and \emph{increasing the
+  reliability} of Stratego's dynamic rules library. We increased the
+reliability of the library by developing a unit test suite that covers
+the most complex parts of the library, we improved the library by
+fixing bugs revealed both by the unit tests and by our code
+verification during the development and we extended the library by
+adding new strategies that help the user to easily handle various
+types of jumps in the control flow of a program. This chapter already
+assumes a certain degree of familiarity with dynamic rules (the use of
+which has been summarized in chapter \ref{ch:project-setting}) and
+proceeds to cover almost exclusively the way in which the new
+strategies are implemented and can be employed. The unit tests and bug
+fixes will be briefly covered as well, but the focus will still stay
+on the extensions of the library.
+
+\section{Overview}
+
+Originally, the dynamic rules library already incorporated a number of
+abstractions that could (and obviously still can) be successfully used
+for flow-sensitive transformations, as shown in \cite{bravo05dynrules,
+  karina05dynrules}.
+
+Basic statement sequencing is supported implicitly since dynamic
+rules, once defined, are automatically valid until they are undefined
+or until the scope in which they have been defined is exited. Thus, we
+do not have to explicitly ensure the flow of information from one
+statement to the next.
+
+Conditional structures (if-then-else) are supported by the
+intersection and union operators. These operators work in such a way
+that whenever branching occurs in the control flow due to an
+if-then-else, two distinct sets of dynamic rules are computed, one for
+the ``then'' branch and one for the ``else'' branch. After the
+if-then-else, the two sets are merged either by intersection or by
+union and the resulting set will be the one valid from that point
+onwards.
+
+Finally, loops are also supported in the current implementation of the
+dynamic rules library through fix point iteration. If a loop (may it
+be a while loop, a for loop or a do-while loop) is encountered in the
+control flow, the fix point operator can be used to compute a set of
+rules that are valid after the loop. This is done by repeatedly
+computing the set of dynamic rules defined by a strategy that is
+applied to the loop block, and merging this set with the previously
+computed one (the first set of rules is the one that is valid before
+the loop). This is done until the set of rules remains stable from one
+iteration to the next. Either union or intersection can be used as the
+merging operation performed at the end of each iteration.
+
+The kind of support that is available enables the writing of
+conceptually interesting data-flow transformations, but is not
+advanced enough yet to enable application to real-life source code.
+The reason for this is the lack of abstractions in the dynamic rules
+library for non-sequential control flow. What we refer to here is
+control flow statements that allow some type of goto behavior. In the
+case of Java, for instance, such statements are \emph{break},
+\emph{continue}, \emph{return} and \emph{throw} (along with the entire
+exception throwing/catching mechanism). The user could, in principle,
+use Stratego for handling such behavior, but it would virtually imply
+writing the abstractions for dealing with such jumps herself. There is
+a clear need here for a general mechanism to support this type of
+control flow.
+
+Hence, our goal with this first layer of work was precisely to add
+these missing operations to the dynamic rules library. With this
+additional support, we aimed to make the Stratego framework advanced
+enough to allow the writing of transformations which can handle all
+constructs of a modern language. While doing this, we also strived to
+meet the non-functional requirement of usability of the new
+abstractions.  We hope to have supplied the user with abstractions
+which are easy enough to use that handling of non-sequential control
+flow is at the same high level as existing handling of sequential
+control flow.
+
+Unfortunately, the complexity of the code in the dynamic rules library
+was (and still is) far from trivial, and that has brought it in a
+somewhat delicate state in which any modification came with the risk
+of breaking previously working code. This made ours and other
+development dangerous and thus unattractive. Since leaving the code
+alone was not an option, we acknowledged that the only alternative was
+to make modifications feasible again by implementing a unit test suite
+that would cover at least the more complex functionality of the
+library. While some disparate unit tests were already available, there
+had not been a proper organizational and development effort in order
+to reach a test suite that offers a clear indication of how much of
+the library code is actually covered. We hope that through our work we
+have eventually achieved this goal.
+
+In addition to unit tests that verify correct behavior of the old
+code, we have also developed unit tests for our own extensions as
+well, such that the library is now in a reasonably reliable state,
+with further modifications feasible, if not attractive. It is not only
+the unit test suite that makes us have more confidence in the library
+on the whole, but also our fixing of all the bugs revealed by the unit
+tests and by the code scrutiny. Naturally, we have no way of knowing
+just how many of the problems with the library have been discovered
+during our efforts, but certainly important steps forward have been
+made.
+
+\section{Related Work}
+
+The work we carried out through this phase (supporting non-sequential
+control flow) is related to efforts for building and using control
+flow graphs (CFGs) that accommodate interruptions in control flow
+(break, continue and return statements as well as exception throwing).
+Even though the approach we take in Stratego is different from the
+CFG-based approaches, there are inherent similarities between the two.
+In particular, all the additional edges that are introduced in CFGs
+had to be captured identically in the model that we developed for
+Stratego.
+
+The break and continue instructions are quite trivial to handle in a
+CFG, therefore literature can be summarized by common sense. To
+accommodate a break statement we create an edge from the node
+representing the statement to the node representing the statement
+following the structure that break indicates the termination of. In
+the case of continue we need to do the same thing and, in addition, to
+add an edge from the node representing the continue statement to the
+node representing the condition of the loop that the continue
+statement interrupts.
+
+Accommodating exceptions, on the other hand, is not such an easy job,
+as the rest of this section discusses.
+
+Hennessy identifies a number of issues that exceptional control flow
+introduces in classical program optimization techniques
+\cite{hennessy81exceptions}. He distinguishes two types of effects of
+exceptions, which he calls indirect and direct, and which have to be
+properly considered in order to ensure the correctness of the
+optimizations in the presence of exceptions. \emph{Indirect effects}
+refer to method execution being aborted after a call to a method that
+generates an exception. The effect is that we cannot assume during the
+optimization that the statements following the point where the method
+can be aborted will be executed. \emph{Direct effects} are the ones
+resulted from the execution of exception handlers. These obviously
+have to be included in the analysis of the program. Hennessy also
+discusses the issue of implicit exceptions. These are exceptions that
+can be raised without this being specified explicitly (similar to
+unchecked exceptions in Java). He proposes either that implicit
+exceptions are made explicit (cumbersome) or that the statements that
+could generate such exceptions (e.g., arithmetic statements) are
+identified and treated accordingly.  Either way, he concludes that
+implicit exceptions severely hamper optimizations because they can
+occur almost anywhere and there is not much we can do about it (except
+design languages which use such exceptions very restrictively or even
+not at all).
+
+\cite{sinha98analysis} addresses the problem of constructing a CFG for
+Java by proposing a method for building paths in the CFG that
+represent the control flow paths introduced by exceptions. The
+analysis is straightforward, taking the various types of paths that
+exceptions can introduce as a starting point and determining how this
+has to be mimicked in the CFG\@. Their representation is precise,
+based on a local type inference algorithm, which allows the matching
+of throw statements with the catch clauses that handle them. The main
+difficulty lies with introducing edges between nodes representing
+throw statements, nodes representing catch clauses and nodes
+representing finally clauses. A throw node will have to be united
+either with the innermost catch node that catches the type of
+exception that is thrown or with the finally node that intervenes on
+the path to the catch node that eventually catches the
+exception.\footnote{If you are not familiar with how exceptions work
+  in Java, you might be able to understand this section better by
+  first reading the overview given in section
+  \ref{sec:support-exceptions}.}  This will happen directly, if the
+catch node or finally node to which the throw node has to be connected
+is part of the same method as the throw node. If, however, that is not
+the case, then an intermediate node called an \emph{exceptional node}
+will be created, signaling an exceptional exit from the method. Later
+on, when constructing the interprocedural CFG, this node will be
+connected (again, directly or indirectly) with the proper catch node
+or finally node.  The statements in a finally block are represented in
+a separate CFG and interaction between the main CFG of a method and
+that of the finally block is done by inserting call nodes (similar to
+those used to model normal method calls). For each finally node there
+will a call node per try block and per each of the catch blocks that
+are part of the same try-catch-finally construct. These will be linked
+with the nodes representing the last statements in the try and the
+catches. In addition, there will be a call node per exception type
+that is raised but not handled in the same try and catch blocks. A
+throw of an unhandled exception of type $t$ will be linked with the
+call node to finally for type $t$. Each call node to finally has a
+matching return node, and these return nodes are linked (directly or
+indirectly, through exceptional nodes) either to a call node to the
+next finally up in the nesting hierarchy or to a catch for the proper
+type. The CFG that results represents all the ``normal'' paths and the
+ones introduced by exceptional execution.
+
+\section{Implementation of dynamic rules}
+\label{sec:imp-dyn-rules}
+
+In order to explain the details of our work regarding abstractions for
+non-sequential control flow, we need to first introduce the basic
+implementation ideas on which the dynamic rules library is built. A
+summary of dynamic rules have already been given in section
+\ref{sec:dynam-rewr-rules} of this proposal, so please make sure you
+read that section first if you are not familiar with them.
+
+\paragraph{Hash tables.}
+
+Hash tables are the data structure that is used for storing, managing
+and applying dynamic rules definitions. A modified version of left
+hand side of a dynamic rule (in which all unbound variables that
+appear in the left hand side are replaced with the dummy term
+\icode{[DR\_DUMMY()]}) is used as the key in the hash table. The
+\emph{logical} value such a key is mapped to is the right hand side of
+the dynamic rule definition. The \emph{real} value stored in the hash
+table, however, is not exactly that, but a tuple that contains all the
+variables used in the condition of the dynamic rule (i.e., the one
+specified in the where clause) and the right hand side itself. This
+tuple is called a \emph{closure} and contains enough information to
+uniquely identify the original right hand side. (The mechanism by
+which this tuple is effectively used to obtain the concrete value is
+less important for us. If you are interested in the details, you are
+referred to \cite{bravo05dynrules}.)
+
+\paragraph{Hash table values are lists.}
+
+Instead of mapping each key to a single value, the dynamic rules
+library works instead by mapping keys to lists of values. This is
+because dynamic rules with the same left hand side can be bound to
+multiple right hand sides, as a result of the possibility to add
+definitions to a rule. For instance \icode{rules(Foo : "x" -> 1)}
+followed by \icode{rules(Foo :+ "x" -> 2)} will determine the key
+\icode{"x"} to be (logically) mapped in the hash table to the list
+\icode{[1, 2]}.
+
+\paragraph{Scoping with hash tables.}
+
+Among other things, the dynamic rules library also supports scoping
+(see section \ref{sec:dynam-rewr-rules} for details). Scoping is
+implemented by creating a new hash table for each scope. The resulting
+model is that we have a number of rule sets (one rule set per dynamic
+rule name) and each rule set is composed of a variable number of rule
+scopes (i.e., hash tables representing scopes). Maintaining a list of
+scopes per dynamic rule name enables each rule to have its own scoping
+semantics, while representing scopes using distinct hash tables
+enables a good compromise in what performance is concerned. Defining,
+undefining and looking up of rules is slightly more expensive than it
+would be with a single hash table, since in the worst case we have
+$O(s)$ complexity (with $s$ being the number of scopes). Nevertheless,
+the number of scopes is usually small, so we can still regard these as
+a constant time operations. The major benefit is yielded when entering
+and exiting scopes, since these both become $O(1)$ operations.
+
+\paragraph{Intersection and union of rule sets.} 
+
+For dealing with conditional structures in control flow, intersection
+and union of rule sets was implemented (generally speaking, merging of
+rule sets was implemented). We explain here how the intersection
+operation works for a single rule set.  Assume the intersection
+operator is called with the \icode{Foo} dynamic rule as parameter
+(i.e., \icode{$s_1$ /Foo\bs\ $s_2$}). At this point, the rule set for
+rule \icode{Foo} is duplicated\footnote{The explanation details how
+  things work conceptually. For efficiency reasons, the actual
+  implementation avoids actually duplicating the rule set.}, so we end
+up with two rule sets: the original one (say $rs_1$) and its clone
+(say $rs_2$).  First, strategy $s_1$ is executed (implicitly using
+$rs_1$ as the current rule set), then the current rule set is changed
+to $rs_2$ and strategy $s_2$ is executed. After this process, we have
+$rs_1$ containing the effects of running $s_1$ and $rs_2$ containing
+the effects of running $s_2$.  Since we are dealing with the
+intersection operator, it means that the user was interested in
+keeping only those changes which were introduced both by $s_1$ and by
+$s_2$. Hence, the final operation will be to \emph{intersect} $rs_1$
+and $rs_2$ and set the resulting rule set as the active rule set after
+the operation \icode{$s_1$ /Foo\bs\ $s_2$}.
+
+Generalization to multiple rule sets is done by performing the same
+cloning/setting as current rule set/merging process for each rule set
+in particular (however, we still execute $s_1$ and $s_2$ only once).
+The union operation is identical, except that in the end the rule sets
+are joined by union, not by intersection.
+
+\paragraph{Fix point iteration.}
+
+The idea behind the fix point iterator implementation is also based on
+merging of rule sets (again, the merge operation can be chosen from
+intersection and union), except this time we do not merge the rule
+sets created by two different strategies, but instead we merge the
+rule sets created by the same strategy applied over and over, until we
+reach a fix point. We explain how the intersect fix point operator
+works for a single rule set. Let $rs_0$ be the current rule set for
+rule \icode{Foo} before the call to \icode{/Foo\bs*\ $s$}. The first
+action to take is duplicate\footnote{The same comment applies as in
+  the case of intersection and union.} $rs_0$ and save the result as
+$rs_{ref}$. Then, still with $rs_0$ as current rule set, we run
+strategy $s$, producing rule set $rs_1$ (updated version of $rs_0$).
+$rs_1$ is then intersected with $rs_{ref}$. If $rs_{ref}$ suffers any
+changes, then strategy $s$ will be run again, this time having $rs_1$
+as the current rule set. The resulting rule set ($rs_2$) is
+intersected with $rs_{ref}$ and the process continues in a similar
+fashion. The iteration ends whenever $rs_{ref}$ suffers no changes
+after intersection with $rs_i$. When that happens, we know we have
+reached a fix point (i.e., nothing changes in the rule set from one
+iteration to the next). Since at this point $rs_{ref}$ and $rs_i$
+(with $i$ being the number of the last iteration) are identical, we
+can use any of them as the active rule set after the fix point
+iterator\footnote{For the curious reader: the implementation uses
+  $rs_i$.}. Considerations regarding generalization to multiple rule
+sets or using union as merge operation are exactly as before.
+
+\paragraph{Rule scopes and change sets.}
+
+We have indicated both in relation to intersection/union and the fix
+point iteration that rule sets are not exactly duplicated, since this
+would be extremely expensive computationally-wise. If you recall, we have
+explained earlier that each rule set is represented by a list of rule
+scopes and that each rule scope is a hash table (actually, rule scopes
+also contain a list of labels, but this is irrelevant for our
+discussion).  In order to support lightweight duplication of rule
+sets, the concept of change sets was introduced. The point of a change
+set is to temporarily store all the changes that would normally be
+committed to the rule scopes themselves. Since an understanding of how
+rule scopes and change sets work together is essential for the
+following subsections, we give a more formal explanation.
+
+Let $RS = (\alpha_1, \alpha_2, \dotsc, \alpha_n)$ be a rule set
+represented as a list of rule scopes and change sets ($\alpha_i, i =
+1..n$ stands for either); where $i < j$ implies that $\alpha_i$ is
+more inner a rule scope or change set than $\alpha_j$. Let $k$ be the
+smallest value for which $\alpha_k$ is a change set. The semantics of
+change sets implies that if in this state any rule had to be added to,
+changed in or deleted from a rule scope from the sublist
+$(\alpha_{k+1}, \alpha_{k+2}, \dotsc, \alpha_n)$, all these
+modifications would be recorded in the change set $\alpha_k$ instead.
+However, any modification to a rule scope in the sublist $(\alpha_1,
+\alpha_2, \dotsc, \alpha_{k-1})$ would be recorded in the respective
+rule scope, whichever that may be, and not in the change set
+$\alpha_k$. Depending on the kind of operations that are invoked by
+the user, change sets can eventually either be simply dropped or first
+applied and then dropped. For example, if change set $\alpha_k$ is not
+applied, then all the changes recorded in it will be lost (i.e., none
+of the elements in sublist $(\alpha_{k+1}, \alpha_{k+2}, \dotsc,
+\alpha_n)$ will be changed).  However, if change set $\alpha_k$ is
+applied before being dropped, then the following happens: let
+$\alpha_{k'-1}, k' > k$ be the next innermost change set after
+$\alpha_k$. Then, all the changes in $\alpha_k$ that refer to a rule
+scope in the sublist $(\alpha_{k+1}, \alpha_{k+2}, \dotsc,
+\alpha_{k'})$ will be applied to the respective rule scope, while all
+the changes in $\alpha_k$ that refer to a rule scope in the sublist
+$(\alpha_{k'+1}, \alpha_{k'+2}, \dotsc, \alpha_n)$ will be copied to
+change set $\alpha_{k'}$.
+
+Implementation-wise, change sets are represented as a pair of a set and
+a hash table. The set is used to store left hand sides of rules that
+have to be deleted, while the hash table is used for storing all other
+types of changes that can be made to a dynamic rule. Both the keys in the
+hash table and the entries in the set include an identifier for the
+rule scope to which the changes have to be applied.
+
+If we go back to explaining how intersection works, we can detail now
+how the duplication of the rule set is realized. Let $RS = (\alpha_2,
+\alpha_3, \dotsc, \alpha_n)$ be the rule set that is active before the
+intersection. When duplication of this rule set has to be done, we
+actually create two empty change sets (say $\alpha_{1'}$ and
+$\alpha_{1''}$). Then we obtain the two rule sets that are needed by
+prefixing $RS$ with $\alpha_{1'}$ and $\alpha_{1''}$ respectively.
+Thus, we obtain $RS' = (\alpha_{1'}, \alpha_2, \dotsc, \alpha_n)$ and
+$RS'' = (\alpha_{1''}, \alpha_2, \dotsc, \alpha_n)$. Since we know
+that all changes to $RS'$ will be committed to $\alpha_{1'}$ and all
+changes to $RS''$ will be committed to $\alpha_{1''}$, we can safely
+share $(\alpha_2, \alpha_3, \dotsc, \alpha_n)$ between the two, thus
+avoiding any further duplication. Intersection of the two rule sets is
+achieved by simply intersecting the two change sets and committing the
+resulting change set to $RS$.
+
+\section{Strategies for non-sequential control flow}
+
+Our work in this area covers three distinct topics: library support
+for dealing with the break instruction, library support for dealing
+with the continue instruction and library support for dealing with the
+exception throwing/catching mechanism. For all three cases, we have
+only produced abstractions that can be used by forward propagation
+data-flow transformations. These are transformations that propagate
+information by analyzing a program from the beginning and advancing
+towards its end. The opposite type of transformations are backward
+propagation ones, which start the analysis at the end of a program and
+progress towards its beginning. We have also carried out some work in
+order to offer support for dealing with control flow interrupting
+statements in the context of backward propagation transformations, but
+this work was limited to supporting the break instruction. Moreover,
+our results in this area should still be considered experimental,
+despite the encouraging successful results in our tests. We present
+our efforts in this direction in the last part of the section.
+
+\subsection{Support for the break instruction}
+
+The general semantics of the break statement in programming languages
+is that it interrupts the execution of some program structure
+(usually, but not necessarily, a looping structure) and instructs that
+execution should proceed with the first statement following that
+structure. Depending on context, a break instruction may or may not
+specify a label. A break that is not followed by a label is usually
+used to indicate that the execution of the innermost loop has to be
+interrupted. A break that is followed by a label indicates that the
+execution of the particular structure labeled with the specified label
+has to be interrupted. This can be either a loop or a sequence of
+statements. The code below shows these three patterns:
+
+
+\begin{codenr}
+l1: {
+  ...
+  if (...) {
+    ...
+    break l1;
+  }
+  ...
+}
+
+l2: while (...) {
+  ...
+  if (...) {
+    break; // break l2 could have been
+  }        // used with a similar effect
+  while (...) {
+    ...
+    if (...) {
+      break;
+    } else {
+      break l2;
+    }
+    ...
+  }
+  ...
+}
+\end{codenr}
+
+The break in line 5 is an example of breaking out of a sequence of
+labeled statements, the one in line 13 is an example of breaking out
+of the outer loop, the one in line 18 indicates breaking out of the
+inner loop (the while loop in lines 15--23) and the break in line 20
+determines breaking out of the outer loop (the one labeled
+\icode{l2}). All the break instructions in our example are part of an
+if-then or if-then-else structure because it makes no sense to have an
+unguarded break instruction. If that were the case, all the statements
+following it up to the specified point of interruption would be
+useless.
+
+\paragraph{Constant propagation.}
+
+Let us explain why special handling of the break statement is needed
+by considering a specific data-flow transformation: \emph{constant
+  propagation}. \cite{bravo05dynrules} shows how Stratego can be used
+to implement intraprocedural constant propagation that supports
+sequential flow, conditional flow and iterations without interruption
+of control flow for the Tiger language. Our test implementation is
+similar, except that it is tailored for the TIL language instead of the
+Tiger language. Conceptually, however, the two are identical. We
+present the main strategy of this transformation below, along with
+support for while loops that do not contain any break statements (we
+do not actually check for this in the presented code; it is merely an
+assumption which, if broken, will determine misbehavior of the
+constant propagation transformation):
+
+\begin{strategonr}
+  propconst =
+    PropConst
+    <+ propconst-declaration
+    <+ propconst-assign
+    <+ propconst-block
+    <+ propconst-if-then
+    <+ propconst-if-then-else
+    <+ propconst-while
+    <+ propconst-for
+    <+ all(propconst); try(EvalExp)
+
+  propconst-while =
+    ?While(_, _)
+    ; (/PropConst\* While(propconst, {| PropConst: map(propconst) |}))
+\end{strategonr}
+
+The basic idea of the main \icode{propconst} strategy is that it
+performs a generic traversal of the abstract syntax tree (line 10),
+taking specific actions at the nodes where this is necessary (in our
+code, variable declaration nodes, assignment nodes and so on). The
+action taken for the while node can be seen in lines 12--14. Line 13
+matches for the while node and line 19 calls the fix point operator
+for the \icode{PropConst} dynamic rule, using congruence applied to
+the while node as the strategy. A more detailed explanation (with
+examples) about how the constant propagation strategy works can be
+found in \cite{bravo05dynrules}.
+
+To see how constant propagation is supposed to work, consider the two
+code snippets below. The code on the left contains a while loop
+without any break statements inside it. The code on the right is
+similar to the one on the left, but with a couple of modifications
+among which the introduction of a break statement.
+
+\begin{minipage}{0.5\linewidth}
+\begin{tool}
+x := 0; z := 2;
+while (file.available() > 0) do {
+  if (y % 2 = 1) {
+    x := x + 1;
+  }
+  y := file.read();
+}
+someCall(x, z);
+\end{tool}
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+\begin{tool}
+x := 0; z := 2;
+while (file.available() > 0) {
+  if (y % 2 = 1) {
+    x := x + 1;
+  }
+  else {
+    z := 1;
+    break;
+  }
+  y := file.read();
+  z := 2;
+}
+someCall(x, z);
+\end{tool}
+\end{minipage}
+
+Let us first analyze the code on the left. Before the while loop, we
+have the following rule set for the dynamic rule \icode{PropConst} (we
+are only interested in variables $x$ and $z$): $\{x\rightarrow [0],
+z\rightarrow [2]\}$\footnote{We show right hand sides as lists because
+  a left hand side can rewrite to multiple right hand sides. This is a
+  general rule; note that it would make no sense to associate multiple
+  right hand sides with the same variable in the context of the
+  \icode{PropConst} rule.}. Running the fix point operator will have
+the effect of deleting the rule that rewrites $x$ to 0. This is
+because during the first run of the strategy \icode{While(const-prop,
+  const-prop)}, as a result of the assignment \icode{x = x + 1}, the
+rule $x\rightarrow [0]$ will be replaced with the rule $x \rightarrow
+[1]$ \emph{in the duplicated rule set} and the intersection of the two
+rule sets (the one containing the rule $x\rightarrow [0]$ and the one
+containing the rule $x\rightarrow [1]$) after the first run of the
+strategy will essentially yield that $x\rightarrow []$. The meaning is
+that $x$ can no longer be propagated as a constant value after the
+loop. However, since nothing happens to $z$ during the loop, the
+propagation rule for $z$ will not be discarded. Hence, after the loop,
+the rule set for \icode{PropConst} is $\{z\rightarrow [2]\}$, which
+will result in the transformation of \icode{someCall(x, z)} to
+\icode{someCall(x, 2)}.
+
+Moving on to the code at the right, we will demonstrate that if the
+break statement is not handled in a special way, constant propagation
+will behave incorrectly. As earlier, the rule set for
+\icode{PropConst} before the loop is $\{x\rightarrow [0], z\rightarrow
+[2]\}$. During one run of the strategy \icode{While(const-prop,
+  const-prop)}, the rewrite rule for $z$ will go through a number of
+phases, but will always end up being $z\rightarrow [2]$ because of the
+assignment \icode{z = 2} at the end of the loop. The intersection of
+that with the rule $z\rightarrow [2]$, valid before the loop, will
+result in $z\rightarrow [2]$. Consequently, the rule set active after
+the while loop will again be $\{z\rightarrow [2]\}$ (since the rule
+for $x$ is dropped in exactly the same way), leading to the same
+transformation of \icode{someCall(x, z)} to \icode{someCall(x, 2)}.
+Unfortunately, in this case, the transformation is erroneous, since if
+the else branch of the if-then-else inside the while loop is taken,
+there will be a break of control flow, and the value of $z$ that goes
+out of the loop is 1.  Thus we have wrongly replaced $z$ with 2,
+although its value after the loop could be 1 as well. We thus conclude
+that the correct rule set that should have been computed after the
+loop is $\{\}$, not $\{z\rightarrow [2]\}$. The culprit, as you
+suspect, is the wrong handling (or rather, the \emph{non handling}) of
+the break statement.
+
+\paragraph{Handling break statements.}
+
+One way to handle the break statement in constant propagation would be
+to use no special library support and simply leave all administration
+to the user. Presumably, the user would have to somehow remember the
+values that are active before each break statement and manually merge
+them with the ``default'' ones that are valid after the structure that
+the break interrupts. Breaking to labels would complicate things even
+further, since then different sets of values would have to be merged
+in at different points. With enough effort, the code could be brought
+to a working state, but the process is likely to quickly discourage
+most users. Clearly, with no easy to use abstractions made available
+by the library, potential data-flow transformation writers are likely
+to have a very hard time supporting such interruptions of control
+flow.
+
+Considering this, what if instead of making users put effort into
+writing complicated code using the wrong abstractions, we tried to
+come up with the right abstractions and then have them write elegant
+code that uses them?  This, we believe, is a much more attractive
+prospect. Moreover, the same administration mechanism would no longer
+have to be reinvented and reimplemented by each separate user.
+
+The kind of abstraction that we have come up with is one that allows
+the user to communicate to the library that a break statement has been
+encountered. When this happens, the library performs all the work
+behind the scenes, thus relieving the user from the administrative
+effort. Since such a call is dynamic rule specific, we found it most
+intuitive to automatically define a strategy, \icode{break-}$L$, for
+each distinct dynamic rule $L$ that appears in a
+program.\footnote{This is the same mechanism as the one defining
+  strategies like \icode{bagof-}$L$, \icode{innermost-scope-}$L$ or
+  \icode{new-}$L$ for all dynamic rules $L$ that appear in a program;
+  see \cite{bravo05dynrules}, \cite{karina05dynrules} for details
+  about what these and other similar strategies do.} By default, we
+associate any call to \icode{break-}$L$ to the innermost run of a fix
+point operation. This means that we implicitly assume that the break
+of control flow is up to the statement immediately following the loop
+for which the innermost fix point operation was called.
+
+However, this default handling does not cover all possibilities. As we
+have explained, most programming languages also allow breaking to
+labeled loops that enclose the innermost loop or breaking out of a
+labeled sequence of instructions. This requires further support from
+the library in order to allow a sensible labeling mechanism and to
+specify breaking to such labels. Thus we have introduced additional
+versions of the \icode{dr-fix-and-intersect} and
+\icode{dr-fix-and-union} strategies that take an extra label parameter
+and we have developed two new strategies, \icode{dr-label-intersect}
+and \icode{dr-label-union}, which function similarly to the previous
+two, except that they do not run a fix-point iteration algorithm, but
+simply apply the strategy they are passed only once. Also, we needed a
+version of the \icode{break-}$L$ strategy that takes a label as a term
+argument. In a similar fashion as for \icode{break-}$L$, we
+automatically generate a new strategy called
+\icode{break-to-label-}$L$ which takes an additional label argument.
+
+With these abstractions at hand, handling of break statements becomes
+trivial from a user perspective:
+
+\begin{stratego}
+  propconst =
+    PropConst
+    <+ ...
+    <+ propconst-while
+    <+ propconst-labeled-while
+    <+ propconst-labeled-stm
+    <+ propconst-break
+    <+ propconst-break-label
+    <+ ...
+
+  propconst-while =
+    ?While(_, _)
+    ; (/PropConst\* While(propconst, {| PropConst: map(propconst) |}))
+
+  propconst-labeled-while =
+    Labeled(?label,
+      dr-fix-and-intersect(
+        While(propconst, {| PropConst: map(propconst) |})
+        | ["PropConst"], label)
+    )
+
+  propconst-labeled-stm =
+    Labeled(?label,
+      dr-label-intersect(propconst | ["PropConst"], label)
+    )
+
+  propconst-break =
+    ?Break(None)
+    ; break-PropConst
+
+  propconst-break-label =
+    ?Break(Some(label))
+    ; break-to-label-PropConst(|label)
+\end{stratego}
+
+Notice that handling of a non-labeled while loop is unchanged, while
+that for a labeled while loop simply implies a call to
+\icode{dr-fix-and-intersect}\footnote{In perspective, it would be even
+  nicer to add syntactic sugar for calling
+  \icode{dr-fix-and-intersect}. One attempt could be \icode{/label :
+    rules\bs* s}. Such syntax could simply be desugared to
+  \icode{dr-fix-and-intersect(s | rules, label)}}. Just as in the case
+of the non-labeled call, we pass the strategy to be run, the dynamic
+rule (or rules) involved and, in addition, the label. Labeled
+statements are handled in a similar fashion, with the exception of
+using \icode{dr-label-intersect} instead of
+\icode{dr-fix-and-intersect}. Thereafter, whenever we encounter a
+break we either call the \icode{break-PropConst} strategy or the
+\icode{break-to-label-PropConst} one, depending on whether or not we
+break to a label.
+
+Writing our constant propagation transformation in this way is clean
+and, we hope, reasonably intuitive. It is clear that the user will no
+longer have a hard time writing data-flow transformations that take
+interruptions of control flow into consideration (given that similar
+abstractions are also provided for the continue statement and for
+exceptions, as we explain later in this section).
+
+\paragraph{Implementation of support for break.}
+
+Now that we have explained how the abstractions for handling break
+statements work from a user's point of view, we can dive into the more
+interesting part of how they are implemented. From an implementation
+point of view union and intersection of rule sets are simply two sides
+of the same coin. In fact, the library implements a generic mechanism
+that is parameterized with a merge strategy, and the intersect and
+union versions are simply wrappers around this generic strategy that
+pass the intersection and the union, respectively, as an actual
+parameter for the merge strategy. Therefore, whenever throughout this
+exposition we refer to merge, merging and the like, you should
+understand it in this context.
+
+While the basic idea is essentially intuitive, a lot of weird quirks
+had to be put properly in place in order for the whole scheme to work.
+However, since most quirks relate to non-conceptual issues, we will
+focus on explaining the main idea. As we have described in the
+previous section, a fix point iteration (performed when looping
+structures are encountered in the analyzed code) works by creating a
+reference rule set and iteratively merging this with a rule set that
+is generated by running a user-specified strategy. This happens until
+merging no longer produces any changes. In case we have one or more
+break instructions in our loop, the result of this process has to be
+further modified so that it includes the effects of the additional
+control flow path(s) that are introduced by the break instruction(s).
+The way to do this is to merge the result of the basic fix point
+iteration (for easier reference, let us call this the \emph{FPI rule
+  set}) with one or more additional rule sets that each are valid
+right before a break instruction in the loop. So, instead of ending up
+with a rule set that only incorporates the effects of the sequential
+control flow paths through or around a loop, we now ensure that we end
+up with one that includes those effects as well as the ones of each
+control flow path that reaches a break instruction and then directly
+jumps out of the loop.
+
+Normally, a break instruction is usually guarded by an if-then or
+if-then-else construct. If the path that ends with a break is taken,
+then execution will continue after the loop. If not, execution will
+proceed normally through the loop. The question that arises is how do
+we ensure that the the effects of the branch that ends with a break
+are not taken into consideration \emph{within the loop}, \emph{after
+  the interrupted branch}. The solution is to make sure that we
+discard all the effects that are created by branches that end with a
+break. This sounds quite easy, but it was actually rather complicated
+to achieve within the Stratego model of representing rule sets.
+
+The question of what happens when \icode{break-}$L$ or
+\icode{break-to-label-}$L$ are called is probably clear by now. First
+we have to save all the effects that have been created on the control
+flow path leading to the break instruction, \emph{but} only those that
+were introduced by statements inspected \emph{after} the fix point
+iteration began \emph{or} after the beginning of the structure labeled
+with the label specified by \icode{break-to-label-}$L$. Once these
+effects are saved, we have to make sure that they will not be excluded
+from further use \emph{within} the innermost loop or labeled
+structure. They will only be picked up again and merged into the FPI
+rule set the innermost loop or labeled structure are exited.
+
+What we have explained so far are the key points of this
+implementation. What follows is a more detailed description of the
+actual code doing this. Therefore, the reader can safely skip (and is
+advised to do so) to section \ref{sec:support-continue}, unless she is
+particularly interested in these details (and is already quite
+familiar with the implementation of dynamic rules).
+
+For performance reasons, merging of rule sets in the dynamic rules
+library heavily relies on the use of change sets in order to reduce
+the effort of merging strictly to the bare minimum that is necessary.
+In principle, every time merging will be needed, two (or more) change
+sets are created in order to collect various changes independently,
+while the entire rule set up to that point is shared. We clearly
+wanted to apply the same principle in the case of the support for
+break. The problem with merging two or more change sets is that all of
+them have to be based on the same common rule set (or, in other words,
+to collect changes that apply to the exact same rule set) in order for
+the merging to be correct. This is not a problem with change sets that
+are created to deal with conditional structures or with change sets
+that are created to deal with iterative structures, because in each
+case we use exactly two change sets, both created at the same time,
+based on whatever rule set is active at that particular moment. In the
+case of break support, things get more difficult.
+
+Change sets that are merged after a fix point iteration have to be
+based on the rule set that is active before we start the fix point
+iteration. This is not a problem for the FPI change set (the change
+set corresponding to the FPI rule set that we introduced above), since
+that one can be (and actually is) created when the fix point iteration
+begins, but it is a problem for change sets that have to collect all
+effects \emph{from} the beginning of the fix point iteration \emph{up
+  to} the call to a \icode{break-}$L$ or \icode{break-to-label-}$L$.
+This is a problem because a number of rule scopes and change sets may
+be introduced in the rule set between the two points mentioned above
+(beginning of fix point iteration and call to \icode{break-}$L$), and
+we need to include all of their contents in the change set. But in
+order to be able to do that, we need to know exactly which rule scopes
+and change sets to include.
+
+In order to be able to retrieve these rule scopes and change sets, we
+need to mark the position in the rule set right before the fix point
+iteration begins. We anticipate a bit here by mentioning that this
+marking has to be done both for (labeled or non-labeled) fix point
+iterations (what we were discussing) \emph{and} for simple labeled
+structures, based on the same principle. In fact, we treat both cases
+together by simply performing this marking only in
+\icode{dr-label}\footnote{\icode{dr-label} is the generic
+  implementation on which both \icode{dr-label-intersect} and
+  \icode{dr-label-union} are based.} and making sure that
+\icode{dr-fix-and-merge}\footnote{\icode{dr-fix-and-merge} is the
+  generic implementation of the fix point iteration} wraps its own
+execution in a call to \icode{dr-label}. Marking this position has to
+be done separately for each of the dynamic rules that are specified in
+the call to \icode{dr-fix-and-merge} or \icode{dr-label}. With this
+mechanism, every call to \icode{dr-fix-and-merge} or \icode{dr-label}
+introduces a new marking for a label (or the implicit, empty string,
+label in the case of non-labeled loops) that we can later use in calls
+to \icode{break-}$L$ or \icode{break-to-label-}$L$ in order to
+generate the correct change sets. Remember, the markings tell us the
+position in a rule set from where we need to gather all the effects
+and put them all in a single change set.
+
+In this context, here is how a call to \icode{break-}$L$ or
+\icode{break-to-label-}$L$ functions: first, we retrieve the marking
+for the appropriate label (implicit or specified), we combine all the
+effects in the rule scopes and change sets starting from the marking
+into a single change set, we save this change set for later retrieval
+and, finally, we mark the the latest change set (i.e., not the one we
+just created, but the regular, last one in the current rule set) as
+ignored. We have to do this in order for its effects to no longer be
+considered active within the current structure. There are two things
+that can happen to a change set that is marked as ignored:
+
+\begin{itemize}
+\item it is (eventually) merged with a change set that is not marked
+  as ignored (this is the case when one branch of an if-then-else ends
+  with a break and the other one does not \emph{or} when we only have
+  an if-then) and in this case the merge will result in a copy of the
+  change set that is not marked as ignored, and the ignored change set
+  will simply be discarded;
+\item it is (eventually) merged with a change set that is also marked
+  as ignored (this is the case when both branches of an if-then-else
+  end with a break) and in this case the merge will randomly return
+  one of the two change sets and discard the other. In this situation
+  (after the merge) we end up committing a change set that is marked
+  as ignored, which will have the effect of marking the next change
+  set in the rule set as ignored. This behavior makes sense because
+  if both branches of an if-then-else end with a break, it is similar
+  (from an ignoring change sets point of view) with having a break
+  after the if-then-else. Sometimes, propagating the ``ignored''
+  marking upwards may eventually lead to marking the first change set
+  of the structure (loop or labeled sequence of statements) that we
+  are currently dealing with as ignored. This translates to the fact
+  that all possible paths out of that structure end with a break, so
+  we can simply ignore this change set when performing the final merge
+  after the structure (given that we will never exit the loop in a
+  ``normal'' way). This final merge is the one where we are
+  introducing the saved effects of all the paths that end with a
+  break. So, instead of merging all these effects into the FPI rule
+  set, we drop the FPI rule set altogether and replace it with the
+  result of the merge of all the saved rule sets that correspond to
+  control flow paths ending with a break.
+\end{itemize}
+
+The final merging itself is straightforward: we simply retrieve all
+the corresponding\footnote{This merge is performed in the
+  \icode{dr-label} strategy which, among other parameters, takes a
+  label as well. When we retrieve the change sets, we need to only
+  retrieve those that were associated with the particular label passed
+  to \icode{dr-label}.} change sets generated and saved as an effect
+of calls to \icode{break-}$L$ or \icode{break-to-label-}$L$ and merge
+those with the FPI change set. The resulting change set will be
+committed to the main rule set afterwards. There is one more
+particular case here, when there are no saved change sets to retrieve,
+and the FPI change set is marked as ignored. This situation occurs
+when we have all paths in a loop or labeled structure ending with a
+break \emph{and} none of those breaks breaking out of this loop or
+labeled structure, but out of an enclosing one. In this case, we
+propagate the ignored marking upwards to the next change set, as
+usual, just as if we had had a break following the entire loop or
+labeled structure.
+
+\subsection{Support for the continue instruction}
+\label{sec:support-continue}
+
+The continue instruction is in many ways related to break, therefore
+we will be presenting it by building on the similarities and pointing
+out the differences. Thus, it is advisable that you read the previous
+section before attending to this one. There are two difference that
+distinguish continue from break. The first one is that continue
+indicates just the interruption of the \emph{current iteration} of a
+loop, not of the loop altogether. Hence, execution resumes back at the
+beginning of the loop, not after it. The second one is that continue
+can only be used within a loop, and not also within a labeled
+structure (as was the case for break). This is due to the fact that
+iterations do not make sense in the context of a labeled structure.
+Just like break, continue may or may not be followed by a label. A
+label or the absence thereof is interpreted as in the case of the
+break instruction. The following example illustrates:
+
+\begin{codenr}
+l1: while (...) {
+  ...
+  if (...) {
+    continue; // continue l1 could have been
+  }           // used with a similar effect
+  while (...) {
+    ...
+    if (...) {
+     continue;
+    } else {
+      continue l1;
+    }
+    ...
+  }
+  ...
+}
+\end{codenr}
+
+The continue in line 4 will determine the execution to jump to line
+1. The same holds for the continue in line 11 (which is an example of
+continuing to a label that specifies a loop other than the innermost
+one). Finally, the continue in line 9 causes the execution to resume
+at line 6.
+
+\paragraph{Handling continue statements in constant propagation.}
+
+We go back to our constant propagation example in order to explain how
+the abstractions for continue are to be used. Just like break,
+continue has to be handled explicitly in the constant propagation
+transformation. Otherwise, we end up propagating wrong information due
+to our ignoring of the additional control flow paths introduced by the
+continue statements.
+
+The abstractions for continue as well as their use is virtually
+identical to the break case. We automatically make available two
+strategies for each dynamic rule, \icode{continue-}$L$ and
+\icode{continue-to-label-}$L$, that are designed to be used for
+indicating the presence of a simple continue or of a continue to a
+label, respectively. These two strategies also have to be used within
+the context of a call to \icode{dr-fix-and-intersect} or
+\icode{dr-fix-and-union}, either with or without a label argument.
+This is because \icode{dr-fix-and-merge} and
+\icode{continue-[to-label-]}$L$ work hand in hand. The former needs to
+put the proper mechanism in place so that the latter can perform its
+action. The reverse is also true, namely that the former uses the
+effects of the latter in order to modify its behavior.
+
+Including support for continue in our constant propagation strategy
+reduces to the two extra calls that we have to make to
+\icode{continue-}$L$ and \icode{continue-to-label-}$L$ whenever we
+encounter a continue or a continue to label. Everything else
+(particularly the handling of labeled and non-labeled loops) stays the
+same.
+
+\begin{stratego}
+  propconst =
+    PropConst
+    <+ ...
+    <+ propconst-continue
+    <+ propconst-continue-label
+    <+ ...
+
+  propconst-continue =
+    ?Continue(None)
+    ; continue-PropConst
+
+  propconst-continue-label =
+    ?Continue(Some(label))
+    ; continue-to-label-PropConst(|label)
+\end{stratego}
+
+\paragraph{Implementation of support for continue.}
+
+From an implementation perspective, the support for continue still
+bears some resemblance to the one for break, but here the differences
+start to show. The main distinction is triggered by the fact that now
+we need to incorporate the effects collected by each call to
+\icode{continue-}$L$ or \icode{continue-to-label-}$L$ at the beginning
+of each fix point iteration, not just at the end of it. This is
+because we need to integrate those effects in the computation of the
+fix point of the rule set itself, and not first compute a fix point of
+the rule set which does not include those effects and then perform a
+final merge between them (as we are doing in the case of break). The
+reasoning behind that lies in the semantics of the continue
+instruction: it determines the program to jump back at the beginning
+of the loop.  Therefore, effects obtained in iteration $i-1$ are in
+place at the beginning of iteration $i$, if the path leading to a
+continue is taken. So, we need to make sure the the rule set that we
+use throughout the loop includes all the effects of paths that end
+with a continue as well. We did not have to do this in the case of
+break because there we knew that if a path leading to a break was
+taken, then the loop would no longer be run, so the effects active
+before the break only had to be considered for what came after the
+loop.
+
+This main aspect we have just discussed is in fact entirely encoded in
+the implementation of \icode{dr-fix-and-merge}, since it is there
+where the fix point iteration is performed, so it is also there where
+the incorporation of the additional effects generated on paths leading
+to continue's has to take place. Because of this, the implementation
+of \icode{continue-}$L$ and \icode{continue-to-label-}$L$ does not
+differ too much from that of \icode{break-}$L$ and
+\icode{break-to-label-}$L$. In fact, the only difference is that we
+need to save the effects under different headings so that we are later
+able to tell apart those that were generated by break statements and
+those generated by continue statements.
+
+Just as we did for break, we also need to take care that the right
+rule sets are used for transforming the code that follows the continue
+statement(s), and is still within the loop. More clearly, a continue
+will introduce effects that need to be considered at the beginning of
+a loop, but they still do not have to be considered in the part of the
+loop that follows that continue. As with break, we expect that a
+continue statement will be guarded by some condition, so that it makes
+sense to have some code following it\footnote{Of course, there is
+  nothing wrong with having no code after a (guarded) continue
+  statement in a loop. We simply do not have a problem in that case.
+  What we are discussing is the case when there is some code following
+  the continue statement \emph{and} that code stands a chance at being
+  run, i.e., it is not in the same block as the continue, but at a
+  lower nesting level.}. The solution is similar to the one we used
+with break: we cancel the effects introduced in the branch leading to
+a continue so that they are no longer active in the code that follows
+that branch.
+
+The discussion continues with some details that will probably only be
+interesting to somebody looking to understand, change or continue the
+implementation itself. Otherwise, you should probably skip to the next
+section.
+
+The entire process is similar with that for break, but there is one
+aspect that requires explaining. If you remember from the previous
+section, when a break was encountered, we marked the change set that
+was active at that point as ignored. We do the same thing for the case
+of continue. However, we make a distinction between the two types of
+ignore markings for a change set. Of course, there is only one way one
+can ignore effects (i.e., one drops them), but nevertheless it is
+important for us to be able to tell not just that a change set is
+ignored but also why it is ignored. Hence, the two different ignore
+markings.
+
+This reason is relevant only for the cases when an ignore marking is
+propagated\footnote{See the explanation for break to find out how and
+  when this propagation occurs.} up to the level of the very first
+change set that is created by a fix point iteration (the one we used
+to call the FPI change set in the previous section). It is there that
+the information about the reason why we are ignoring the change set
+becomes useful. We will proceed to discussing the implications, but
+before that, a word of advice: please bear in mind that throughout the
+remainder of this section we are only talking about loops in which
+\emph{all possible paths through the loop end either with a break or
+  with a continue}. This is the only situation in which the FPI change
+set will end up being marked as ignored.
+
+If the change set is ignored due exclusively to breaks, then we can
+cut the fix point iteration short since we know that there will never
+be more than one run of the loop when the program is
+executed.\footnote{Please mark the distinction between the fix point
+  iteration, which is the one written in Stratego and performed in the
+  body of \icode{dr-fix-and-merge} and the run of the loop, which
+  refers to the loop written in the object language.} This is because
+a change set that is ignored exclusively due to breaks indicates that
+all paths through the loop end with a break, so whichever of them is
+taken, the loop will be interrupted. On the other hand, a change set
+may be ignored due to continues. In this case, we still need to
+continue the fix point iteration, but we will handle the merge of the
+FPI rule set and the effects saved as a result of calls to
+\icode{continue-}$L$ or \icode{continue-to-label-}$L$ differently. In
+particular, we need to ignore the FPI change set when we perform this
+merge, and only consider the effects collected on the paths that end
+with a continue.
+
+You might have noticed a subtle distinction above between ``ignored
+\emph{exclusively} due to breaks'' and ``ignored due to continues''.
+The reality behind this is that it is enough to have a single path
+that ends with a continue in a loop and even if all the others end
+with a break, we still have to maintain the ``softer'' ignore of the
+change set, i.e. that due to the continue. Even if $n-1$ paths through
+the loop end with a break and just $1$ with a continue, we still
+cannot cut the fix point iteration short. In order to accommodate this,
+whenever we perform a merge in which one of the involved change sets
+is marked as ignored because of a break and the other one is marked as
+ignored because of a continue, the resulting change set will end up
+being marked as ignored due to a continue. Hence, we propagate the
+``softer'' ignore, to keep things correct.
+
+\subsection{Support for exceptions}
+\label{sec:support-exceptions}
+
+While handling of break and continue shares many similar aspects,
+exceptions need a completely different set of abstractions. Since the
+details of the exception throwing/catching mechanism differ slightly
+from one language to another (for instance, the C/C++ one does not
+have the equivalent of Java's finally clause), we will focus our
+presentation on the semantics of the Java variant. Actually, not just
+the presentation, but the library support for exceptions itself is
+built on the semantics of exceptions in Java. Thus, we will begin with
+an overview based on the language specification \cite{JLS}.
+
+\paragraph{Exceptions in Java}
+
+The mechanism for exception handling in Java is composed of a
+statement (\icode{throw}) for throwing exceptions and a construct
+(try-catch-finally) for catching them. We say that a catch clause
+catches an exception if the declared type of the clause is either the
+type of the exception or a supertype thereof.  try-catch constructs
+can be nested and the basic semantics is that an exception thrown in
+the body of a try block can be caught by any catch clause associated
+with it or by one associated with a try block that encloses the
+original one. A try-catch construct can also optionally contain a
+finally clause. The code specified by the finally block is always
+executed, regardless of whether an exception is thrown or not. Of the
+two types of exceptions that exist in Java, \emph{checked} and
+\emph{unchecked}, it is only required that the former are caught by
+some catch clause. The latter may be caught as well, but it does not
+result in a compile-time error not to do so.  Unchecked exceptions
+arise due to a violation of the Java semantics by the evaluation of an
+expression (e.g., ArrayIndexOutOfBoundsException, NullPointerException
+or ArithmeticException), due to an error in loading or linking classes
+(e.g., ClassNotFoundException), due to unavailability of resources
+(e.g., OutOfMemoryError) or due to internal errors of the virtual
+machine. All unchecked exceptions have to be instances of subclasses
+of \icode{RuntimeException} or \icode{Error}. Everything else
+(conventionally, instances of subclasses of \icode{Exception}, but not
+of \icode{RuntimeException}) is a checked exception. All the checked
+exceptions that a method can throw have to be specified in the
+signature of the method; overriding methods cannot add exceptions to
+the list of exceptions of the overridden method.
+
+Of course, what we are particularly interested in from all this are
+the control flow implications of the exception throwing/catching
+mechanism, thus we explain it here in a bit more detail. An exception
+thrown by a \icode{throw} statement determines the abrupt interruption
+of the execution of the immediately enclosing try block. If one of the
+catch clauses of the try block declares that it catches an exception
+of the same type as that of the one thrown (or a supertype thereof),
+then execution proceeds with the contents of that particular catch
+block. If this is not the case, the exception is propagated to the
+next innermost enclosing try block, even across method calls, and the
+same process is repeated. If no catch clause catches the exception,
+the method \icode{uncaughtException} of either the uncaught exception
+handler of the thread (if one is set) or the \icode{ThreadGroup} the
+thread is part of is called.\footnote{This can only happen with
+  unchecked exceptions. Checked exceptions are always guaranteed to be
+  caught by a catch clause since otherwise the program would not have
+  compiled successfully.} Before the exception is propagated up from
+any try block along the way, the code in the optional finally clause
+of that try-catch is first executed. If this code itself throws an
+exception, then the propagation of the original exception is stopped,
+and the newly thrown exception is propagated from there on.
+
+This complex mechanism raises several issues:
+
+\begin{itemize}
+
+\item exceptions can be thrown anywhere in the body of a try.  If for
+  checked exceptions and some unchecked exceptions an analysis of the
+  code in the body of the try could be made to see exactly which
+  statements might throw an exception, for certain unchecked
+  exceptions (e.g., internal Java Virtual Machine errors) this is
+  impossible. Even assuming we disregard the latter, we will still
+  have a difficult time figuring out which statements can throw
+  exceptions and what exceptions they throw, since exceptions that are
+  instances of subclasses of \icode{RuntimeException} do not have to
+  be explicitly declared in the \icode{throws} clause of a method
+  declaration.
+
+\item an exception thrown in the body of a try can be caught by a
+  catch clause corresponding to try-catch higher up in the nesting
+  hierarchy.
+
+\item if we have finally clauses, control flow is even more
+  complicated, since we could potentially execute some of the
+  statements of a try block, then those in the finally block, and
+  finally those of a catch block some levels higher in the nesting
+  hierarchy (and even a number of extra finally blocks along the way).
+  Moreover, if any code in one of the finally clauses throws an
+  exception, then control flow will continue with the catch clause
+  that catches this new exception.
+
+\item if in the case of break and continue, interruption of control
+  flow could not be interprocedural (or intermethod), in the case of
+  exceptions it can, complicating things even further.
+
+\item the structure of the program is not enough to be able to tell
+  where control flow resumes after the throwing of an exception. One
+  needs type information as well to be able to identify the catch
+  clause that catches a certain exception. Since we do not want to mix
+  dynamic library code with type inference code, it must be left to
+  the user to figure out what catch clause matches a particular
+  \icode{throw} statement.
+
+\end{itemize}
+
+\paragraph{Handling exceptions in constant propagation.}
+
+As you have probably already got used to by now, we proceed with our
+explanation in a top-down fashion, starting from showing how the
+abstractions we devised can be used and only thereafter explaining how
+they have been implemented. We continue our running example of the
+constant propagation transformation as our proof-of-concept
+implementation that employs the new abstractions.
+
+The support for exceptions has to allow the user to perform
+transformations over try-catch-finally structures in such a way that
+every additional control flow path introduced by exceptions is
+implicitly considered. In the case of break and continue all we had to
+do was merge, at the proper program points, additional rule sets that
+collected the effects active right before a break or continue. Here,
+we have to do the same thing for \icode{throw} statements and, in
+addition, prepare the right environment before each catch clause,
+before the finally clause as well as after a try-catch or
+try-catch-finally block. This is complicated due to the fact that many
+different rule sets have to be save, restored and combined at various
+program points.
+
+To illustrate, we will just dive into one example. The rule set active
+at the end of a try block has to be saved in order to be reinstated at
+the beginning of the finally block (if there is one) or after the
+try-catch block (if there is no finally block). However, in each of
+these cases, the rule set will not simply have to be reinstated, but
+also mixed with the rule sets active at the end of each separate catch
+clause in that try-catch block (and potentially even more rule sets
+active before \icode{throw} statements that throw exceptions that are
+only caught by a catch clause higher up in the nesting hierarchy).
+This complicated scenario is caused by the fact that (1) if the try
+block executes without throwing exceptions, execution has to proceed
+with the finally block, (2) if there is an exception that is caught by
+one of the catch clauses, then the catch clause is first executed,
+then the finally clause and (3) if there is an exception that is not
+caught by any of the catch clauses in this try-catch-finally block,
+then the finally clause if directly executed, and then the exception
+is thrown on. Hence, all the rule sets for the three cases have to be
+mixed together into a single rule set that will be instated at the
+beginning of the finally block.
+
+A number of strategies that we detail below have been created in order
+to support this and a number of other scenarios.
+
+\begin{itemize}
+
+\item \icode{dr-init-exception-block(has-finalize | catch-tags,
+    rulenames)}: this strategy has to be called by the user at the
+  beginning of a try-catch[-finally] block in order to allow the
+  library to set up some internal structures. \icode{has-finalize}
+  encodes whether there is a finally block associated with the
+  try-catch block, \icode{catch-tags} is a list of strings
+  (presumably, but not necessarily, the type names that catch clauses
+  declare) and \icode{rulenames} is the list of rulenames involved in
+  the exception handling mechanism.
+
+\item \icode{throw-}$L$\icode{(eq | tag)}: this (automatically
+  generated) strategy is similar in function to our \icode{break-}$L$
+  and \icode{continue-}$L$ strategies. It is meant to be used when
+  \icode{throw} statements are encountered in the code in order to
+  signal this to the library. The \icode{tag} will be compared with
+  the ones passed as part of the \icode{catch-tags} list to
+  \icode{dr-init-exception-block}. The comparison will be performed
+  using the \icode{eq} strategy which is passed to \icode{throw-}$L$.
+
+  You can see this as the equivalent mechanism of labels that we used
+  for break and continue. There, we had a label passed to
+  \icode{dr-label} or to \icode{dr-fix-and-merge} and a label passed
+  to \icode{break-to-label-}$L$ or \icode{continue-to-label-}$L$. The
+  latter would be matched (by simple equality) against the list of all
+  the labels declared up to that point. Here we have a similar
+  mechanism, except that each level can declare any number of tags
+  (since there can be any number of catch clauses associated with a
+  try block) and matching is customizable. This last difference is
+  introduced to accommodate the fact that a catch will match
+  exceptions that have the same type as \emph{or a subtype} of the
+  type declared by the catch clause. \icode{eq} should take a pair in
+  which the first element will be the throw tag and the second will be
+  the catch tag. If a subtype relationship has to be tested for, then
+  a strategy like \icode{subtype-of} could be passed.
+
+\item \icode{dr-complete-catch-(intersect|union)(s | rulenames)}:
+  instead of running a strategy (that presumably performs some
+  transformation) over each catch clause directly, the strategy should
+  instead be wrapped in a call to \icode{dr-complete-catch}. This will
+  ensure that all the administration code will be run before and after
+  the transformation proper. An important aspect from a user
+  perspective is that the order in which \icode{dr-complete-catch}
+  should be called over catch clauses has to be the same order in
+  which the catch tags were passed to \icode{dr-init-exception-block}.
+  The easiest and most natural way to achieve this is by simply using
+  the proper program order in which the catch clauses appear. Whether
+  the intersect or union version has to be used depends on the
+  semantics of the transformation.
+
+\item \icode{dr-complete-finally-(intersect|union)(s | rulenames)}:
+  this strategy is designed to serve the same purpose for the finally
+  block that the previous one serves for the catch blocks.
+  \icode{dr-complete-finally} should be called after
+  \icode{dr-complete-catch} has been called for all catch blocks.
+
+\item
+  \icode{dr-complete-exception-block-(intersect|union)(|rulenames)}:
+  this is the strategy that ends the scheme for dealing with
+  exceptions. Its purpose is to perform cleanup of the administrative
+  structures and generate the proper rule set that will be used after
+  the entire try-catch[-finally] block.
+
+\end{itemize}
+
+We provide underneath a typical example of how these strategies can be
+employed in order to manage exception throwing and catching in a
+program. With support for exceptions, our intra-procedural version of
+the constant propagation transformation is finally complete.
+
+\begin{stratego}
+  propconst =
+    PropConst
+    <+ ...
+    <+ propconst-throw
+    <+ propconst-try-catch
+    <+ propconst-try-catch-finally
+    <+ ...
+
+  propconst-throw =
+    ?Throw(TypeName(t))
+    ; throw-PropConst(eq | t)
+
+  propconst-try-catch =
+    ?Try(tblock, cclauses)
+    ; dr-init-exception-block(fail
+                             | <get-catch-tags>cclauses, ["PropConst"])
+    ; <propconst>tblock => tblock'
+    ; <map(
+        dr-complete-catch-intersect(propconst | ["PropConst"])
+      )>cclauses => cclauses'
+    ; dr-complete-exception-block-intersect(|["PropConst"])
+    ; !Try(tblock', cclauses')
+
+  propconst-try-catch-finally =
+    ?Try(tblock, cclauses, fblock)
+    ; dr-init-exception-block(id 
+                             | <get-catch-tags>cclauses, ["PropConst"])
+    ; <propconst>tblock => tblock'
+    ; <map(
+        dr-complete-catch-intersect(propconst | ["PropConst"])
+      )>cclauses => cclauses'
+    ; <dr-complete-finally-intersect(propconst 
+                                    | ["PropConst"])>fblock => fblock'
+    ; dr-complete-exception-block-intersect(|["PropConst"])
+    ; !Try(tblock', cclauses', fblock')
+
+  get-catch-tags =
+    map(?Catch(_, <id>, _))
+\end{stratego}
+
+Notice the sequence in which the strategies we presented above are
+called in the example; first we initialize the structures, then we run
+the main transformation over the try block, then we run it (wrapped in
+\icode{dr-complete-catch}) over each catch clause in turn, then, if we
+have one, over the finally clause (this time wrapped in
+\icode{dr-complete-finally}) and, in the end, call the cleanup
+procedure. Also notice our use of the types declared in the catch
+clauses as catch tags. Our handling of throw statements is
+straightforward: we extract the type of the exception thrown and use
+that as the tag to pass to \icode{throw-PropConst}. We use sheer
+equality to compare tags; in a real-language scenario this would have
+to be replaced with a strategy that would decide if one type is a
+subtype of another. Also, you may have noticed that in our TIL
+language, we do not throw exception objects, but exception classes.
+This is a simplification which allows us not to require a type
+annotation that would otherwise be necessary. In a more realistic
+context, you could imagine the line \icode{?Throw(TypeName(t))}
+replaced with something like \icode{?Throw(\_\{TypeName(t)\})}. For
+this to work, a type annotation strategy would first have to be run in
+order to annotate expressions with their type.
+
+\paragraph{Implementation of support for exceptions.}
+
+We will base our discussion of the implementation on two examples. The
+first one will be very simple and straightforward, in order to help us
+cover the basics, while the second one will be rather complicated, so
+that it gives us the chance to point out a number of scenarios that
+all have to be covered by our implementation. You should regard the
+code in both these examples as only the skeleton of what would
+normally be found in reality. Thus, we emphasize strictly the
+structures and statements that are involved in exception handling. You
+could imagine that there are gaps virtually everywhere in between the
+lines of the examples which would normally be filled with a lot of
+additional statements, structures and so on. In fact, if you do not
+imagine such additional code present, all the rule sets that we will
+be mentioning would be empty, so there would not be much use to our
+effort. We have not included such code ourselves in order to avoid
+having the reader lose focus of what we are explaining.
+
+Our first example is a typical try-catch-finally structure with a few
+\icode{throw} statements. It is a skeleton of code that is very
+commonly used in practice. Since this is a smaller example, we have
+also illustrated with \ldots all the gaps where there would normally
+be additional code. These do not only stand for statements, but also
+for conditional or repetitive structures that could enclose the
+represented code. If you recall, in TIL we throw exception classes,
+not exception objects.
+
+\begin{Verbatim}[commandchars=\\\[\]]
+try {\fbox[1]
+  ...
+  if (...) then ... \fbox[2] throw E1; end
+  ...
+  if (...) then ... \fbox[3] throw E2; end
+  ...
+  if (...) then ... \fbox[4] throw E1; end
+  ...
+\fbox[5]}
+catch (e: E1) {\fbox[6]
+  ...
+\fbox[7]}
+catch (e: E2) {\fbox[8]
+  ...
+\fbox[9]}
+finally {\fbox[10]
+  ...
+\fbox[11]}
+\end{Verbatim}
+
+We begin running a transformation over the try block with a random
+rule set, (1). This rule set gets changed as the analysis proceeds,
+depending on what the user-defined strategy does. Three different rule
+sets (2), (3) and (4) will be active before the three \icode{throw}
+statements and saved as a result of calls to \icode{throw-}$L$. Rule
+set (5) will be active at the end of the try block. (6), the rule set
+that has to be instated at the beginning of the first catch clause is
+a merge between rule sets (2) and (4). This will suffer some changes
+as the analysis runs over the catch clause and become rule set (7) at
+the end of the clause. Similarly, rule set (8) will be equal to rule
+set (3) and will turn into rule set (9) by the end of the second catch
+clause. The rule set active at the beginning of the finally clause is
+a merge of rule sets (5), (7) and (9) and will become rule set (11) by
+the end of the finally block. This last one will also be the rule set
+active after the try-catch-finally block.
+
+Let us now proceed to our second example, which, as you are about to
+see, illustrates additional difficulties. The code consists of four
+nested try-catch and try-catch-finally structures that are full of
+exception throwing statements. The exceptions are caught either at the
+same or at some higher level. We will only point out a number of
+special cases, given that the more basic administration is similar to
+that explained in our previous example.
+
+\definecolor{c1}{rgb}{1,0,0}
+\definecolor{c2}{rgb}{0,1,0}
+\definecolor{c3}{rgb}{0,0,1}
+
+\begin{Verbatim}[commandchars=\\\[\]]
+try {
+  [\color[c3]try {]
+    [\color[c3]if (...) then \fbox[1] throw E1; end]
+    [\color[c3]if (...) then \fbox[2] throw E3; end]
+    [\color[c2]try {]
+      [\color[c2]if (...) then \fbox[3] throw E1; end]
+      [\color[c2]if (...) then \fbox[4] throw E2; end]
+      [\color[c2]if (...) then \fbox[5] throw E3; end]
+      [\color[c1]try {]
+        [\color[c1]if (...) then \fbox[6] throw E1; end]
+        [\color[c1]if (...) then \fbox[7] throw E1; end]
+        [\color[c1]if (...) then \fbox[8] throw E2; end]
+        [\color[c1]if (...) then \fbox[9] throw E3; end]
+      [\color[c1]\fbox[10]}]
+      [\color[c1]catch (e: E1) {\fbox[11]]
+        [\color[c1]if (...) then \fbox[12] throw E2; end]
+      [\color[c1]\fbox[13]}]
+      [\color[c1]finally {\fbox[14]]
+        [\color[c1]if (...) then \fbox[15] throw E2; end]
+        [\color[c1]if (...) then \fbox[16] throw E3; end]
+      [\color[c1]\fbox[17]}]
+    [\color[c2]\fbox[18]}]
+    [\color[c2]catch (e: E2) {\fbox[19]]
+      [\color[c2]if (...) then \fbox[20] throw E1; end]
+      [\color[c2]if (...) then \fbox[21] throw E3; end]
+    [\color[c2]\fbox[22]}]
+  [\color[c3]\fbox[23]}]
+  [\color[c3]finally {\fbox[24]]
+    [\color[c3]if (...) then \fbox[25] throw E3; end]
+  [\color[c3]\fbox[26]}]
+\fbox[27]}
+catch (e: E1) {\fbox[28] ... \fbox[29]}
+catch (e: E3) {\fbox[30] ... \fbox[31]}
+finally {\fbox[32] ... \fbox[33]}
+\end{Verbatim}
+
+Here are the more interesting cases encountered in the code above:
+
+\begin{itemize}
+
+\item as a basic case, rule set (11) will be a merge of rule sets (6)
+  and (7).
+
+\item rule set (14) will be a merge of rule sets (10), (13), (8), (9)
+  and (12). (10) and (13) are the rule sets at the end of the red try
+  and catch blocks, respectively, while the others are all rule sets
+  active before the throwing of an exception that is caught by an
+  outer catch clause. We discussed before why these need to be
+  included in the computation of the rule set for this finally.
+
+\item rule set (19) will be a merge of rule sets (4), (15) and (17).
+  While (4) and (15) are straightforward, (17) is a bit more
+  interesting. If the finally clause for the red try-catch-finally had
+  not existed, then (19) would have been a merge of (4), (15) and (8).
+  However, since the finally clause does exist, if the exception E2 is
+  thrown in the red try, then execution will continue with the code in
+  the red finally clause and only then will it reach the green catch
+  clause we are discussing now. Hence, we merge rule sets (4) and (15)
+  not with rule set (8), but with rule set (17) in order to obtain a
+  valid rule set (19).
+
+\item rule set (24) is obtained by merging rule sets (23), (1), (2),
+  (3), (5), (16), (17), (20) and (21). (23) is the rule set at the end
+  of the try block. All the others are rule sets active before
+  throwing exceptions that will be caught by an outer catch clause
+  ((1), (2), (3), (5), (16), (20) and (21)). The only exception is
+  again (17), which (by a similar rationale as we made at the previous
+  point) now appears as the transformation that rule set (9) has
+  suffered before reaching this point.
+
+\item we compute rule set (28) as simply equal to rule set (26). If
+  the blue finally had not been there, then rule set (28) would have
+  resulted as a merge of rule sets (1), (3) and (20), but given that
+  the blue finally is actually there, all these rule sets are
+  collected at the beginning of the finally, and rule set (26) - that
+  at the end of the finally - will be a replacement for all of them.
+
+\item rule set (30) is achieved by merging rule set (26) (in this
+  case, replacing rule sets (2), (5) and (17), with (17) being in turn
+  the replacement of the original (9)) with rule set (25).
+
+\item finally, rule set (32) is the merge of rule sets (27), (29) and
+  (31). Here we no longer have rule sets corresponding to thrown
+  exceptions, since they have all been caught before having reached
+  the black finally.
+
+\end{itemize}
+
+In very, very few words, the implementation of the support for
+exceptions can be described as the code that makes sure that all these
+rule sets are saved, computed (by properly merging everything that has
+to be merged) and put in place at all the right program points. You
+can imagine that trying to explain how all this works down to the last
+detail would result in chaos, so we will only attempt to provide the
+reader with some guidelines to reading the code herself.
+
+Perhaps the most important aspect that needs to be clarified for a
+potential reader of our code is how we manage the correspondence
+between the many rule sets that are saved and the points in the
+program where they have to be retrieved. In order to do this, we make
+use of a structure that mimics that of the nesting of try-catch and
+try-catch-finally structures. For easier reference, let us convene to
+call this data structure the exception stack. The exception stack is a
+list of entries that look like this: \icode{TryBlock(pos, id, ctags,
+  ftag)}. We add a new entry for each nested try-catch or
+try-catch-finally that is encountered. The \icode{pos} stores the
+position in the active rule set of the very first change set created
+after the try-catch structure has been encountered. This position is
+needed for reasons that have already been explained when discussing
+the support for break. The \icode{id} is a unique identifier that acts
+as a label for the entire try-catch[-finally] structure. We will
+discuss its use further below.  \icode{ctags} is a list of catch tags
+and \icode{ftag} is either \icode{Finally(id)}, if we have a finally
+clause, or \icode{Finally("")}, if we do not. Again, the \icode{id} is
+a unique identifier that functions as a label for the finally block.
+Returning to \icode{ctags}, this is a list of terms of this kind:
+\icode{Catch(id, tag)}.  The \icode{tag} is the user-specified tag,
+while \icode{id} is an internal unique identifier, similar to the ones
+for the entire structure and for finally blocks.
+
+The exception stack functions both as a labeling system and as a
+provider of structural information regarding the nesting of try-catch
+structures. The main purpose of \icode{dr-init-exception-block} is to
+initialize and add the proper entries to the stack when the analysis
+encounters a new try-catch structure.
+
+The behavior of \icode{throw-}$L$ is then quite similar to that of
+\icode{break-}$L$, but adapted to the peculiarities of the exception
+handling mechanism. Thus, \icode{throw-}$L$ will need a more complex
+mechanism for determining the identifier with which the saved change
+set\footnote{Incidentally, the position (\icode{pos}) saved in our
+  exception stack is used to compute this change set so that it can be
+  merged correctly at a point in a program where a different base rule
+  set is active.  The position is essentially a marker that separates
+  that base rule set from the part that was added to it during the
+  handling of the try-catch structure.} has to be associated. This
+identifier will be one of the following two, whichever comes first in
+our exception stack, starting from the last entry: (1) the identifier
+of the catch tag that matches the tag passed to \icode{throw-}$L$
+(using the user-supplied comparison strategy as match operator) or (2)
+the identifier of the first finally clause (\icode{Finally("")} does
+not count, since its meaning is that there is no finally clause for a
+particular try-catch structure). This is in accordance with the
+control flow: if a finally clause comes before the catch clause that
+matches the exception, then execution will proceed with the code in
+the finally clause. However, even if a finally clause comes first, we
+still retrieve the identifier of the catch clause that will eventually
+catch the exception and save that along with the generated change set.
+We need it in order to allow that the change set (with some additional
+modifications introduced by the analysis of intervening finally
+clauses) will eventually be associated with the proper catch clause.
+
+\icode{dr-complete-catch} will look at the first catch tag of the last
+entry in the exception stack, retrieve all the change sets associated
+with it, merge the rule sets obtained by appending the retrieved
+change sets to the base rule set and set the result as the active rule
+set. Then the user-provided strategy is run. Afterwards,
+\icode{dr-complete-catch} will save the resulting rule set (because
+all the rule sets at the end of catch clauses have to be merged
+together with the one at the end of the try block later on, either at
+the beginning of the finally clause, if there is one, or at the end of
+the entire try-catch structure), remove the first catch tag from the
+last entry of the exception stack and reinstate the rule set that was
+active before the beginning of the strategy.
+
+\icode{dr-complete-finally} will look in the exception stack at the id
+for finally (we assume the strategy is only called if we have a
+finally block), retrieve all the change sets associated with this id,
+retrieve all the saved rule sets at the end of the try block and each
+of the catch blocks and merge everything together to obtain the rule
+set to be instated. With this resulting rule set in place, just like
+in the case of \icode{dr-complete-catch}, the user-provided strategy
+will be run.  Thereafter, modifications in the exception stack and in
+the set of saved change sets are made so that it looks like a finally
+clause had never existed.  We do this so that we can provide a single
+\icode{dr-complete-exception-block} strategy that behaves in the same
+fashion regardless of whether we have a try-catch or a
+try-catch-finally block.
+
+The last part of \icode{dr-complete-finally} is a bit more
+interesting. Exceptions that have to be caught by an outer catch, if
+thrown, will trigger the execution of the code in the finally block.
+Because of that, in \icode{throw-}$L$, we associate the change sets
+active before the \icode{throw} statements that throw such exceptions
+with the id of the finally block. If you remember, we retrieved and
+used those those change sets in the merge at the beginning of
+\icode{dr-complete-finally}.  However, we also have to ensure that the
+throwing of these exceptions is properly propagated upwards. Hence, we
+have to act just as if we had separate \icode{throw some-exception;}
+statements at the end of the finally block for all the exceptions
+thrown up to this point and not caught yet. So, in effect, we perform
+the same process that takes place in \icode{throw-}$L$ (and that we
+have already explained) for all these distinct exceptions as the last
+part of \icode{dr-complete-finally}.
+
+The last one of the library strategies that deal with exceptions was
+\icode{dr-complete-exception} \icode{-block}. The job of this one is
+fairly easy. It will simply have to drop the last entry in our
+exception stack (since the handling of the corresponding
+try-catch[-finally] block is over) and prepare the rule set that has
+to be active at this program point. This rule set is a merge of the
+rule sets at the end of the try block (for the case when execution of
+the program carries out without exceptions being thrown) and those at
+the end of every catch block in the current try-catch structure (for
+the case when an exception has been thrown and caught by one of them
+and thus triggered the execution of the code in that catch clause). In
+case we have been dealing with a try-catch-finally block, then
+\icode{dr-complete-finally} will have already done this merge and
+replaced all those rule sets with a single one -- the one that
+resulted at the end of running the user strategy over the finally
+block. In this case, the job is already done, so nothing more happens.
+
+As a final note, we should mention that management of rule sets used
+after \icode{throw} statements follows the same pattern that we used
+for break and continue. The change set that was active before the call
+to \icode{throw-}$L$ will be marked as ignored and discarded as soon
+as this makes sense. This is because a \icode{throw} statement also
+determines an interruption of control flow, so we know that if
+execution reaches the code \emph{after} a \icode{throw}, then it is
+sure that the innermost branch leading to the throw \emph{has not been
+  taken}. As such, we can safely discard the effects introduced by
+this branch.
+
+We have a special case related to ignoring of change sets due to
+\icode{throw} statements.\footnote{If you are having trouble following
+  this discussion, please have a look at the sections about break and
+  continue first. We assume knowledge introduced there.} If an ignore
+marking reaches the very first change set that was set as active
+before running the user strategy over the finally block, it means that
+all paths through the finally block end with a \icode{throw}
+statement.  What this amounts to in reality is the the throwing of any
+exception from within the try-catch-finally structure to which the
+finally block in discussion pertains will be surely interrupted and
+replaced by one or another of the exceptions thrown within the finally
+block itself. If this is the case, we make sure to no longer run the
+code that simulates \icode{throw-}$L$'s at the end of
+\icode{dr-complete-finally}, since the exceptions for which that step
+usually takes place would in this case never make it past the current
+finally block.
+
+\subsection{Support for break in backward propagation transformations}
+
+Backward propagation transformations differ from forward propagation
+ones in that they progress against the natural control flow. This
+makes all the strategies we described earlier in this section
+inapplicable. In short, all these strategies imply saving a certain
+already achieved state of a rule set and remerging it at a later point
+in a program. In the case of backwards propagation, it makes no sense
+to save an already achieved state before, say, a break statement,
+because this state is created by statements that follow that break in
+a loop and which actually never get to be executed, should the break
+statement be reached in the normal flow. What we need to do instead is
+restore a state that was active right before statements that would no
+longer be executed due to the break are analyzed.
+
+Consider the following loop:
+
+\begin{code}
+while (...) {
+  ...
+  if (...) then break;
+  ...
+}
+...
+\end{code}
+
+If execution reaches the break statement, the code that would be
+executed after that is the one following the loop. If we look at this
+in reverse, the same execution path should be followed: code leading
+to the end of the loop, then code preceding the break statement. In
+terms of rule sets, this means that the effect of a call to a library
+strategy that handles break statements for backwards analysis should
+restore the rule set that was active before beginning to analyze the
+while loop. The automatically generated strategy name for triggering
+this behavior is \icode{break-bp-}$L$ ($L$ stands for the name of the
+dynamic rule for which the rule set is to be changed). Just like
+\icode{break-}$L$, \icode{break-bp-}$L$ is only a proxy for the real
+library strategy.
+
+So this is what has to happen, in principle. However, many times
+backward propagation transformations are not entirely backwards. It
+often is the case that some smaller or larger part of the analysis is
+still forward. The problem this incurs is that the changes introduced
+by the part of the analysis pertaining to the forward propagation
+\emph{have to be kept intact}. So we have a series of changes that
+have to be reverted so that we end up with the state of the rule set
+before backwards analysis over the loop began, but we also have some
+changes to the rule set that were made after analysis over the loop
+began that nevertheless have to be maintained active.
+
+To illustrate, consider the dead code elimination transformation
+described in {\cite{bravo05dynrules}}. This is essentially a backwards
+propagation transformation that includes a small forward analysis part
+when examining sequences of statements. Whenever a sequence of
+statements is encountered, the sequence is first traversed forwardly
+in order to detect all the variable declaration statements. Each such
+declaration introduces a new rule scope for reasons that make sense in
+the context of dead code elimination. Apart from creating such rule
+scopes, also during forward analysis, entries are added to those rule
+scopes in order to create a new state for the analysis. These entries
+added during forward analysis, even though added after analysis of a
+loop has begun, still have to be active kept after a call to
+\icode{break-bp-}$L$.
+
+Presented with this issue, we had to come up with a little trick that
+would allow us to distinguish the changes that had to be kept and the
+ones that had to be reverted. The trick is to ask the user to ``mark''
+the point up to which changes have to be kept and starting from which
+changes have to be reverted in a way that we can distinguish at the
+point where \icode{break-bp-}$L$ is called. This marking takes the
+form of the introduction of an additional change set. Changes
+performed before the introduction of the additional change set will be
+kept, changed performed afterwards will be reverted. Introduction of a
+change set has the effect that all changes performed thereafter will
+be stored in the introduced change set (as opposed to before, when
+they are stored in a rule scope). In order to allow the user to easily
+introduce and then properly commit a change set, we have added a new
+strategy to the dynamic rules library called \icode{dr-transaction}.
+\icode{dr-transaction} simply takes a strategy and one or more dynamic
+rule names, creates a change set in each of the rule sets associated
+with the dynamic rule names, runs the user-provided strategy and
+commits the change sets in all the rule sets.
+
+This following code snippet illustrates how \icode{dr-transaction} is
+used in the context of the dead code elimination transformation in
+order to separate changes \emph{pertaining to a rule scope} that have
+to be kept from changes that have to be reverted by a call to
+\icode{break-bp-}$L$:
+
+\begin{strategonr}
+dce-stats-decl =
+  ?[DeclarationTyped(x, _) | _]
+  ; {| VarNeeded, VarUsed :
+       rules(
+         VarNeeded+x :- Var(x)
+         VarUsed+x   :- Var(x)
+       )
+       ; dr-transaction(
+           [id | dce-stats]
+           ; try(ElimDecl)
+         | ["VarNeeded", "VarUsed"])
+    |}
+\end{strategonr}
+
+The effects created in lines 4--7, so before the call to
+\icode{dr-transaction}, will be kept, while the ones created during
+the run of the strategy from the lines 9--10 will be reverted. Please
+note that in both cases we are only discussing about the effects that
+\emph{pertain the to rule scope being defined}. This same process
+happens for each additional rule scope that is introduced.
+
+Assuming that the user adheres to this convention, the effect of
+calling \icode{break-bp-}$L$ will be as follows. The entire rule set
+(for a specific dynamic rule) will be split in the part that has been
+created within the fix point iteration over the loop containing the
+break statement (which we shall call the fix point part) and the rest
+(which we shall call the base part). The intent is to make the entire
+rule set look like the base part, but still maintaining the changes
+that appear in the rule scopes of the fix point part. This is achieved
+by changing the last change set of the fix point part to include
+entries that cancel the changes present in all the change sets of the
+fix point part. After this, the rule set will be identical (in
+behavior, not in structure) to the base part, with the additional
+changes that exist in the rule sets of the fix point part.
+
+\paragraph{Discussion}
+
+As we mentioned at the beginning of this section, the support for
+break in backward propagation transformations is still to be regarded
+as experimental. It still seems slightly unintuitive for a regular
+user to be able to grasp. Or rather, the effort required for
+understanding how rule sets have to be set up in order for
+\icode{break-bp-}$L$ to work might be too great. We should also
+mention that we only had dead code elimination in mind when
+implementing this, so we are not entirely sure that the mechanism will
+generalize flawlessly to cover other backward propagation
+transformations as well.  Finally, it is clear that once the idea is
+further refined (and perhaps made better and easier to use), it will
+have to be extended in order to provide support for breaking to
+labels, continue statements and exceptions. We do not envisage this to
+be an easy task, especially in what exceptions are concerned.
+
+\section{Unit tests and bug fixes}
+
+Preceding and integrated with our work on the strategies for
+non-sequential control-flow, we have also developed a comprehensive
+unit test suite for verifying proper behavior of the more complicated
+strategies that make up the library. This was necessary for raising
+our level of confidence that the changes we have made to the code base
+did not break any of the previously existing functionality. Likewise,
+we also wanted to ensure that the new strategies we have developed
+properly handled all the test cases we could come up with.
+
+The unit test suite consists of unit tests for checking the following
+aspects of the library:
+
+\begin{itemize}
+
+\item proper management of dynamic rules with combinations of rule
+  scopes and change sets, together with proper lookup of rules when
+  various combinations of rule scopes and change sets are involved
+  (dr-scope-tests.str)
+
+\item intersection tests (all combinations of one level of
+  intersection and selected combinations of two levels of
+  intersection) (dr-propconst-tests-1.str)
+
+\item fix point iteration tests with intersection as the merge
+  operation (several hundred combinations of fix point intersection
+  and simple intersection and some tests with nested fix point
+  intersection) (dr-propconst-tests-1.str)
+
+\item tests for breaking out of non-iterative and iterative
+  structures, with and without using explicit labels to break to, with
+  and without multiple nesting levels of fix point iteration
+  (dr-propconst-tests-1.str)
+
+\item tests for continuing iterative structures, with and without
+  using explicit labels to continue to, with and without multiple
+  nesting levels of fix point iteration (dr-propconst-tests-1.str)
+
+\item tests for combinations of breaking and continuing within
+  iterative structures, with and without explicit labels and multiple
+  nesting levels (dr-propconst-tests-2.str)
+
+\item exception throwing/catching tests with and without multiple
+  nesting of try-catch-finally statements, checking for all the
+  scenarios that we have discussed in the section on the support for
+  exceptions (dr-propconst-tests-2.str)
+
+\item a limited number of tests for basic union, fix point iteration
+  with union as the merge operation, breaking \& continuing within
+  loops as well as exception throwing, all using union as the merge
+  operation (dr-varunion-tests.str)
+
+\end{itemize}
+
+The creation of this unit test has also lead to the discovery to a
+number of bugs (about five) in the implementation of the dynamic rules
+library. Most (if not all) of these bugs were related to the fact that
+in various strategies defined by the library the lookup of values was
+faulty for some particular cases. To correct this, aside from multiple
+small corrections, we have had to (1) introduce a new strategy,
+\icode{dr-lookup-rule-in-scope}, that looks for a definition of a key
+in a particular scope only, regardless of whether or not that
+definition is currently shadowed by a different one and (2) modify the
+strategies \icode{dr-lookup-rule} and \icode{dr-lookup-rule-pointer}
+to incorporate the contents of the removed sets of change sets into
+their lookup. We will discuss these two in turn.
+
+\icode{dr-lookup-rule-in-scope} was necessary because in many places
+lookup was performed which logically speaking required this behavior,
+but however used \icode{dr-lookup-rule} or even \icode{hashtable-get}
+(for looking up in the topmost change set or rule scope only), which
+was wrong. \icode{dr-lookup-rule-in-scope} descends into the rule set
+and retrieves the definition defined in a particular scope only,
+ignoring potential shadowing of that rule scope by higher ones. All
+the lookups in the library that wrongly used a different lookup
+strategy were modified to use \icode{dr-lookup-rule-in-scope} instead.
+
+Turning to the modifications of \icode{dr-lookup-rule} and
+\icode{dr-lookup-rule-pointer}, this was the correction of a fairly
+straightforward omission of including the effects of the entries in
+the remove sets of change sets into the lookup. In short, entries in
+the remove sets of change sets indicate the removal of a key from a
+rule scope. When performing lookup, all the keys that appear as
+removed in one change set or another do not have to be returned as the
+result of the lookup because, at an intentional level, they do not
+exist anymore.

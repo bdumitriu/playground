@@ -1,0 +1,79 @@
+\documentclass{st-thesis}
+
+\usepackage{color}
+\usepackage[pdftex]{graphicx}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage{amssymb,amsmath}
+\usepackage[english]{babel}
+\usepackage{stratego}
+
+\newcommand{\icode}[1]{{\tt #1}}
+\newcommand{\bs}{\char92}
+
+\newcommand{\mynote}[2]{
+    \fbox{\bfseries\sffamily\scriptsize#1}
+    {\small$\blacktriangleright$\textsf{\emph{#2}}$\blacktriangleleft$}}
+\newcommand\fix[1]{\mynote{FIX}{\color[rgb]{0,0.5,0.5} #1}}
+
+\lstnewenvironment{code}
+{
+  \lstset{language={}}
+}
+{}
+
+\lstnewenvironment{codenr}
+{
+  \lstset{language={},numbers=left,numberstyle=\tiny}
+}
+{}
+
+% leave as last loaded package
+% \usepackage[pdftex,pagebackref,colorlinks,citecolor=blue,pdfstartview=FitH,bookmarksnumbered]{hyperref}
+%\usepackage[pdftex,pagebackref,colorlinks,citecolor=blue,pdfstartview=XYZ,bookmarksnumbered]{hyperref}
+
+%\input{mydefs.ltx}
+
+\title{
+  Extensible and Customizable\\
+  Data-flow Transformation Strategies\\
+  for Object-Oriented Programs
+}
+
+\author{
+  Bogdan Dumitriu (0402044)\\
+  bdumitriu@bdumitriu.ro\\
+  ~\\
+  ~\\
+  Software Technology Group\\
+  Institute of Information and Computing Sciences\\
+  Utrecht University\\
+  ~\\
+  ~\\
+  Master Thesis
+}
+
+\begin{document}
+
+  \maketitle
+
+  \tableofcontents
+
+  \newpage
+
+%  \input{abstract.ltx}
+%  \input{executive-summary.ltx}
+  \input{introduction.ltx}
+  \input{project-setting.ltx}
+  \input{dynamic-rules-library.ltx}
+  \input{pointer-analysis.ltx}
+  \input{extensible-customizable-transformations.ltx}
+%  \input{planning.ltx}
+
+  \bibliographystyle{plain}
+  \bibliography{Thesis}
+
+\end{document}

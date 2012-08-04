@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# Author: Bogdan Dumitriu
+# Date: August 10th, 2004
+#
+# Replaces entries in a .srt file of the type:
+#
+# 12
+# 00:04:02,773 --> 00:04:05,412
+# Goddamn it, woman,
+# you will be the end of me.
+#
+# with entries of the type:
+#
+# (12 + $DELTA)
+# 00:04:02,773 --> 00:04:05,412
+# Goddamn it, woman,
+# you will be the end of me.
+#
+# For example, if DELTA = -11, then (12 + $DELTA) will be 1.
+#
+
+### configurable parameters ###
+### begin ###
+INFILE="testbed"
+OUTFILE="modsub.srt"
+DELTA=-11
+### end ###
+
+while read line
+do
+	pos=`expr index "$line" :`
+	
+	if [ $pos == 0 ]; then
+		result=`expr match "$line" '\([0-9][0-9]*\)'`
+		if [ "$result" != "" ]; then
+			let result=$result+$DELTA
+			echo $result >> $OUTFILE
+		else
+			echo $line >> $OUTFILE
+		fi
+	else
+		echo $line >> $OUTFILE
+	fi
+done <$INFILE

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+mkdir /home/bdumitriu/tmp-backup
+
+# create the backup
+tar -cjvf /home/bdumitriu/tmp-backup/Mail-cur.tar.bz2 /home/bdumitriu/Mail/inbox/cur >/dev/null
+tar -cjvf /home/bdumitriu/tmp-backup/addressbook.tar.bz2 /home/bdumitriu/.kde3.3/share/apps/kabc >/dev/null
+tar -cjvf /home/bdumitriu/tmp-backup/korganizer.tar.bz2 /home/bdumitriu/.kde3.3/share/apps/korganizer >/dev/null
+tar -cjvf /home/bdumitriu/tmp-backup/java-work.tar.bz2 /mnt/D/work/java >/dev/null
+tar -cjvf /home/bdumitriu/tmp-backup/univ-work.tar.bz2 /mnt/D/work/univ >/dev/null
+tar -cjvf /home/bdumitriu/tmp-backup/php-work.tar.bz2 /mnt/D/work/php/churchLedger >/dev/null
+
+tar -C /home/bdumitriu/tmp-backup -cvf /home/bdumitriu/tmp-backup/all.tar /home/bdumitriu/tmp-backup >/dev/null
+
+# copy the stuff
+scp /home/bdumitriu/tmp-backup/all.tar bdumitriu@194.105.28.101:/home/bdumitriu/laptop/all.tar
+scp /home/bdumitriu/tmp-backup/all.tar bdumitriu@193.226.5.124:/home/bdumitriu/laptop/all.tar
+
+# delete all
+rm -rf /home/bdumitriu/tmp-backup
+
+sudo tethereal -t ad -R '(tcp.port == 5050) and (ip.addr == 192.168.1.102)' -i ath0 -w /root/.mc/temp

@@ -16,89 +16,100 @@
     <ui:define name="additional-headers">
         <h:outputStylesheet library="css" name="schedule.css"/>
         <h:outputScript library="js" name="jquery-1.7.2.js" />
+        <h:outputScript library="js" name="ffp-0.1.js" />
     </ui:define>
     <ui:define name="body">
         <script type="text/javascript">
-            $(document).rready(function() {
-                $(".sch_movie_cell").mouseenter(function() {
+            $(document).ready(function() {
+                $(".sch_movie_cell").mouseover(function() {
                     $(this).find(".sch_movie_button").each(function() {
                         $(this).css("visibility", "visible");
                     });
                 });
-                $(".sch_movie_cell").mouseleave (function() {
+                $(".sch_movie_cell").mouseout(function() {
                     $(this).find(".sch_movie_button").each(function() {
                         $(this).css("visibility", "hidden");
                     });
                 });
-                $(".sch_movie_button")
-                        .mouseover(function () {
-                            var noHoverSrc = $(this).attr("src");
-                            var src = noHoverSrc.substring(0, noHoverSrc.length - 4) + "_mouse_over.png";
-                            $(this).attr("src", src);
-                        }).mouseleave(function () {
-                            var src = $(this).attr("src").replace("_mouse_over.png", ".png");
-                            $(this).attr("src", src);
-                        })
+                $(".sch_movie_button").each(function() {
+                    configure_mouse_listeners($(this));
+                });
+                $(window).scroll(function() {
+                    $('.sch_top_left_cell').each(function() {
+                        $(this).css("top", $(this).next().offset().top - $(window).scrollTop());
+                    });
+                    $('.sch_venue_cell').each(function() {
+                        $(this).css("top", $(this).next().offset().top - $(window).scrollTop());
+                    });
+                });
             });
         </script>
 
-        <h:link value="Previous" rendered="#{dayScheduleController.previousDay != null}">
-            <f:param name="day" value="#{dayScheduleController.previousDay}"/>
-        </h:link>
-        <h:outputText value=" | "/>
-        <h:link value="Next" rendered="${dayScheduleController.nextDay != null}">
-            <f:param name="day" value="${dayScheduleController.nextDay}"/>
-        </h:link>
+        <div style="position: fixed;">
+            <h:link value="#{bundle.Previous}" rendered="#{dayScheduleController.previousDay != null}">
+                <f:param name="day" value="#{dayScheduleController.previousDay}"/>
+            </h:link>
+            <h:outputText value=" | "/>
+            <h:link value="#{bundle.Next}" rendered="${dayScheduleController.nextDay != null}">
+                <f:param name="day" value="${dayScheduleController.nextDay}"/>
+            </h:link>
+        </div>
 
-        <div class="sch_container" style="width: 1200px; height: 800px; ">
-            <div style="width: 2719px; height: 30px">
-                <div style="width: 150px; height: 30px; float: left" ></div>
+        <div class="sch_container">
+            <div class="sch_header">
+                <div class="sch_top_left_cell">
+                    <div class="sch_embedded_top_left_cell" style="height: 30px">
+                        <h:outputText value="#{bundle.Time}" />
+                    </div>
+                </div>
                 <ui:repeat value="#{dayScheduleController.hours}" var="hour" varStatus="status">
-                    <div class="#{status.index == 0 ? 'sch_hour_first_cell' : 'sch_hour_cell'}">
+                    <div class="#{status.index == 0 ? 'sch_first_hour_cell' : 'sch_hour_cell'}">
                         <h:outputText value="#{hour.formatted}" styleClass="sch_hour_text"/>
                     </div>
                 </ui:repeat>
-                <h:form>
-                    <ui:repeat value="#{dayScheduleController.venues}" var="venue">
-                        <div style="width: 2719px; height: 70px">
-                            <div style="width: 150px; height: 70px; float: left">
-                                <h:outputText value="#{venue.name}"/>
-                            </div>
-                            <ui:repeat value="#{dayScheduleController.getHourSlotsFor(venue)}" var="hourSlot" varStatus="status">
-                                <h:panelGroup class="#{status.index == 0 ? 'sch_hour_first_cell' : 'sch_hour_cell'}"
-                                              style="height: 70px">
-                                    <h:panelGroup styleClass="sch_movie_cell" rendered="#{hourSlot.hasShowing()}"
-                                                  style="margin-left: #{hourSlot.getMargin(150) - 1}px; width: #{hourSlot.getWidth(150)}px;">
-                                        #{hourSlot.showing.movieBundle.originalTitle}
-                                        <h:commandButton
-                                                id="watchThis"
-                                                action="#{dayScheduleController.watchThisButtonClicked(hourSlot.showing.id)}"
-                                                image="../../resources/img/pin_16#{dayScheduleController.isWatchThisSelected(hourSlot.showing.id) ? '_mouse_over' : ''}.png" >
-                                                <!--style="visibility: #{showingController.isWatchThisSelected(hourSlot.showing.id) ? 'visible' : 'hidden'}"-->
-                                            <f:ajax execute="@form" render="watchThis watchAny maybeWatch" />
-                                        </h:commandButton>
-                                        <h:commandButton
-                                                id="watchAny"
-                                                action="#{dayScheduleController.watchAnyButtonClicked(hourSlot.showing.id)}"
-                                                image="../../resources/img/check_16#{dayScheduleController.isWatchAnySelected(hourSlot.showing.id) ? '_mouse_over' : ''}.png">
-                                        <!--style="visibility: #{showingController.isWatchAnySelected(hourSlot.showing.id) ? 'visible' : 'hidden'}"-->
-                                            <f:ajax execute="@form" render="watchThis watchAny maybeWatch" />
-                                        </h:commandButton>
-                                        <h:commandButton
-                                                id="maybeWatch"
-                                                action="#{dayScheduleController.maybeWatchButtonClicked(hourSlot.showing.id)}"
-                                                image="../../resources/img/dice_16#{dayScheduleController.isMaybeWatchSelected(hourSlot.showing.id) ? '_mouse_over' : ''}.png">
-                                        <!--style="visibility: #{showingController.isMaybeWatchSelected(hourSlot.showing.id) ? 'visible' : 'hidden'}"-->
-                                            <f:ajax execute="@form" render="watchThis watchAny maybeWatch" />
-                                        </h:commandButton>
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                            </ui:repeat>
-                        </div>
-                    </ui:repeat>
-                </h:form>
             </div>
+            <h:form>
+                <ui:repeat value="#{dayScheduleController.venues}" var="venue">
+                    <div class="sch_row">
+                        <div class="sch_venue_cell">
+                            <div class="sch_embedded_venue_cell">
+                                <h:outputText value="#{venue.name}" />
+                            </div>
+                        </div>
+                        <ui:repeat value="#{dayScheduleController.getHourSlotsFor(venue)}" var="hourSlot" varStatus="status">
+                            <h:panelGroup class="#{status.index == 0 ? 'sch_first_hour_slot' : 'sch_hour_slot'}">
+                                <h:panelGroup styleClass="sch_movie_cell" rendered="#{hourSlot.hasShowing()}"
+                                              style="margin-left: #{hourSlot.getMargin(150) - 1}px; width: #{hourSlot.getWidth(150)}px;">
+                                    #{hourSlot.showing.movieBundle.originalTitle}
+                                    <h:commandButton
+                                            id="watchThis"
+                                            action="#{dayScheduleController.watchThisButtonClicked(hourSlot.showing.id)}"
+                                            image="../../resources/img/pin_16#{dayScheduleController.isWatchThisSelected(hourSlot.showing.id) ? '_mouse_over' : ''}.png"
+                                            styleClass="sch_movie_button">
+                                        <f:ajax execute="@form" render="watchThis watchAny maybeWatch" onevent="reconfigure_mouse_listeners" />
+                                    </h:commandButton>
+                                    <h:commandButton
+                                            id="watchAny"
+                                            action="#{dayScheduleController.watchAnyButtonClicked(hourSlot.showing.id)}"
+                                            image="../../resources/img/check_16#{dayScheduleController.isWatchAnySelected(hourSlot.showing.id) ? '_mouse_over' : ''}.png"
+                                            styleClass="sch_movie_button">
+                                        <f:ajax execute="@form" render="watchThis watchAny maybeWatch" onevent="reconfigure_mouse_listeners" />
+                                    </h:commandButton>
+                                    <h:commandButton
+                                            id="maybeWatch"
+                                            action="#{dayScheduleController.maybeWatchButtonClicked(hourSlot.showing.id)}"
+                                            image="../../resources/img/dice_16#{dayScheduleController.isMaybeWatchSelected(hourSlot.showing.id) ? '_mouse_over' : ''}.png"
+                                            styleClass="sch_movie_button">
+                                        <f:ajax execute="@form" render="watchThis watchAny maybeWatch" onevent="reconfigure_mouse_listeners" />
+                                    </h:commandButton>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </ui:repeat>
+                    </div>
+                </ui:repeat>
+            </h:form>
         </div>
+
     </ui:define>
 </ui:composition>
 

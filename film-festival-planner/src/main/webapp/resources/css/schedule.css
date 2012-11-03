@@ -10,44 +10,84 @@ root {
     display: block;
 }
 
-.sch_container {
-    overflow: auto;
-    text-align: center;
-    margin: auto;
+.sch_container, .sch_header, .sch_row {
+    width: 2719px;
 }
 
-.sch_hour_cell, .sch_hour_first_cell {
-    width: 150px;
+.sch_container {
+    height: 800px;
+    padding-top: 30px;
+    font-family: Candara, serif;
+}
+
+.sch_header, .sch_row {
+    display: table-row;
+}
+
+.sch_header, .sch_top_left_cell, .sch_embedded_top_left_cell, .sch_first_hour_cell, .sch_hour_cell {
     height: 30px;
+}
+
+.sch_row, .sch_venue_cell, .sch_embedded_venue_cell, .sch_first_hour_slot, .sch_hour_slot, .sch_movie_cell {
+    height: 70px;
+}
+
+.sch_top_left_cell, .sch_venue_cell, .sch_first_hour_cell, .sch_hour_cell, .sch_first_hour_slot, .sch_hour_slot {
+    width: 150px;
     float: left;
     text-align: left;
     display: table-cell;
-    vertical-align: bottom;
-    border-right-style: solid;
+    vertical-align: top;
+    border-color: #cccccc;
     border-right-width: 1px;
-    border-bottom-style: solid;
+    border-right-style: solid;
     border-bottom-width: 1px;
+    border-bottom-style: solid;
 }
 
-.sch_hour_first_cell {
-    border-left-style: solid;
+.sch_embedded_venue_cell, .sch_embedded_top_left_cell {
+    width: 150px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-variant: small-caps;
+    background-color: #fffbff;
+}
+
+.sch_embedded_top_left_cell {
+    vertical-align: top;
+}
+
+.sch_top_left_cell, .sch_venue_cell {
+    left: 0;
+    float: none;
+    position: fixed;
+    background-color: #fffbff;
+    z-index: 100;
+}
+
+.sch_first_hour_cell, .sch_first_hour_slot {
     border-left-width: 1px;
+    border-left-style: solid;
+    margin-left: 142px;
 }
 
 .sch_hour_text {
-    font-family: Verdana;
-    font-size: 10px;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .sch_movie_cell {
-    font-family: Candara;
-    height: 70px;
+    position: relative;
     margin-top: -1px;
     float: left;
-    border-style: solid;
-    border-width: 1px;
+    border: 1px solid;
     /*border-color: #b0c4de;*/
-    opacity: 0.8;
     background-color: lightyellow;
-    border-radius: 10px;
+    border-radius: 3px;
+    box-shadow: 1px 1px 2px #888888;
+}
+
+.sch_movie_button {
+    visibility: hidden;
 }

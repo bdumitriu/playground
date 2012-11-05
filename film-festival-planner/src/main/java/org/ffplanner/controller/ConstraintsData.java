@@ -34,4 +34,17 @@ public class ConstraintsData {
         final ScheduleConstraintType scheduleConstraintType = constraints.get(showingId);
         return scheduleConstraintType != null && scheduleConstraintType == constraintType;
     }
+
+    public boolean isDifferentConstraintSelected(Long showingId, ScheduleConstraintType constraintType) {
+        final ScheduleConstraintType scheduleConstraintType = constraints.get(showingId);
+        return scheduleConstraintType != null && scheduleConstraintType != constraintType;
+    }
+
+    /**
+     * @return true if any constraint is set for {@code showingId}.
+     */
+    public boolean isConstraintSelected(Long showingId) {
+        final ScheduleConstraintType scheduleConstraintType = constraints.get(showingId);
+        return scheduleConstraintType != null;
+    }
 }

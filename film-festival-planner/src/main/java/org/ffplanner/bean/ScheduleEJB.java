@@ -40,6 +40,14 @@ public class ScheduleEJB {
         }
     }
 
+    public void toggleAnyConstraint(Long showingId, Long userId, ScheduleConstraintType constraintType) {
+        final Showing showing = showingEJB.find(showingId);
+        if (showing != null) {
+            final UserSchedule userSchedule = userEJB.getScheduleFor(userId, showing.getFestivalEdition(), false);
+            constraintsEJB.toggleAnyConstraint(showing, userSchedule, constraintType);
+        }
+    }
+
     public boolean isConstraintSelected(Long showingId, Long userId, ScheduleConstraintType constraintType) {
         final Showing showing = showingEJB.find(showingId);
         if (showing != null) {

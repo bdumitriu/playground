@@ -3,6 +3,8 @@
  */
 package org.ffplanner.bean;
 
+import org.ffplanner.bean.constraints.AnyConstraintToggler;
+import org.ffplanner.bean.constraints.SpecificConstraintToggler;
 import org.ffplanner.entity.*;
 
 import javax.ejb.LocalBean;
@@ -39,22 +41,20 @@ public class UserScheduleConstraintsEJB extends ConnectorEntityEJB<UserScheduleC
         return super.find(showingId, userScheduleId);
     }
 
+    /**
+     * If {@code constraintType} is set, it is removed. If no constraint is set or any other constraint is set,
+     * {@code constraintType} becomes the new constraint.
+     */
     public void toggleConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
-        final UserScheduleConstraints constraints = entityManager.find(
-                UserScheduleConstraints.class, new UserScheduleConstraintsId(userSchedule.getId(), showing.getId()));
-        if (constraints == null) {
-            final UserScheduleConstraints userScheduleConstraints = new UserScheduleConstraints();
-            userScheduleConstraints.setShowing(showing);
-            userScheduleConstraints.setUserSchedule(userSchedule);
-            userScheduleConstraints.setConstraintType(constraintType);
-            entityManager.persist(userScheduleConstraints);
-        } else {
-            if (constraints.getConstraintType() == constraintType) {
-                entityManager.remove(constraints);
-            } else {
-                constraints.setConstraintType(constraintType);
-            }
-        }
+        new SpecificConstraintToggler(entityManager, showing, userSchedule).toggle(constraintType);
+    }
+
+    /**
+     * If any constraint is set, it is removed. If no constraint is set, {@code constraintType} becomes the new
+     * constraint.
+     */
+    public void toggleAnyConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
+        new AnyConstraintToggler(entityManager, showing, userSchedule).toggle(constraintType);
     }
 
     public boolean hasConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {

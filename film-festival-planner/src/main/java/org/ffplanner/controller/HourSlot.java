@@ -37,25 +37,25 @@ public class HourSlot {
     }
 
     /**
-     * @param hourCellWidth
-     *            the width (in pixels) of the cell representing the hour
+     * @param hourCellHeight
+     *            the height (in pixels) of the cell representing the hour
      * @return the number of margin pixels to use in order to correctly position a div representing the showing of this
      *         slot in a cell representing the hour.
      */
-    public int getMargin(int hourCellWidth) {
+    public int getMargin(int hourCellHeight) {
         if (showing == null) {
             return 0;
         } else {
-            return showing.getMinute() * hourCellWidth / 60;
+            return showing.getMinute() * hourCellHeight / 60;
         }
     }
 
-    public int getWidth(int hourCellWidth) {
+    public int getHeight(int hourCellHeight) {
         if (showing == null) {
             return 0;
         } else {
             final int durationInMinutes = showing.getMovieBundle().getDurationInMinutes();
-            return durationInMinutes * hourCellWidth / 60;
+            return durationInMinutes * hourCellHeight / 60;
         }
     }
 }

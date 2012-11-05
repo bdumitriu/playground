@@ -74,7 +74,8 @@ public class DayScheduleController implements Serializable {
             this.day = dateTime.toDate();
         }
         dayShowingsData = new DayShowingsData(showingEJB);
-        dayShowingsData.loadFor(this.day);
+        dayShowingsData.loadFor(this.day, this.hours);
+        System.out.println("Loading Constraints Data.....................................");
         constraintsData = new ConstraintsData(userEJB);
         constraintsData.loadFor(this.user);
         log.exiting("DayScheduleController", "prepareView");
@@ -94,19 +95,8 @@ public class DayScheduleController implements Serializable {
         }
     }
 
-    public Collection<HourSlot> getHourSlotsFor(Venue venue) {
-        log.entering("DayScheduleController", "getHourSlotsFor", venue == null ? "null" : venue.getName());
-        final Map<Integer, Showing> showingsByHour = dayShowingsData.getShowingsByHoursFor(venue);
-        final Collection<HourSlot> hourSlots = new LinkedList<>();
-        for (Hour hour : getHours()) {
-            final Showing showing = showingsByHour == null ? null : showingsByHour.get(hour.getHour());
-            hourSlots.add(new HourSlot(hour, showing));
-        }
-        try {
-            return hourSlots;
-        } finally {
-            log.exiting("DayScheduleController", "getHourSlotsFor");
-        }
+    public Collection<HourSlot> getHourLineFor(Hour hour) {
+        return dayShowingsData.getHourLineFor(hour);
     }
 
     public String getPreviousDay() {
@@ -133,6 +123,10 @@ public class DayScheduleController implements Serializable {
         return day;
     }
 
+    public void movieCellClicked(Long showingId) {
+        scheduleEJB.toggleAnyConstraint(showingId, user.getId(), ScheduleConstraintType.SHOWING);
+    }
+
     public void watchThisButtonClicked(Long showingId) {
         showingButtonClicked(showingId, ScheduleConstraintType.SHOWING);
     }
@@ -153,15 +147,35 @@ public class DayScheduleController implements Serializable {
         return isConstraintSelected(showingId, ScheduleConstraintType.SHOWING);
     }
 
+    public boolean isSomethingOtherThanWatchThisSelected(Long showingId) {
+        return isDifferentConstraintSelected(showingId, ScheduleConstraintType.SHOWING);
+    }
+
     public boolean isWatchAnySelected(Long showingId) {
         return isConstraintSelected(showingId, ScheduleConstraintType.MOVIE);
+    }
+
+    public boolean isSomethingOtherThanWatchAnySelected(Long showingId) {
+        return isDifferentConstraintSelected(showingId, ScheduleConstraintType.MOVIE);
     }
 
     public boolean isMaybeWatchSelected(Long showingId) {
         return isConstraintSelected(showingId, ScheduleConstraintType.MAYBE_MOVIE);
     }
 
+    public boolean isSomethingOtherThanMaybeWatchSelected(Long showingId) {
+        return isDifferentConstraintSelected(showingId, ScheduleConstraintType.MAYBE_MOVIE);
+    }
+
     private boolean isConstraintSelected(Long showingId, ScheduleConstraintType constraintType) {
         return constraintsData.isConstraintSelected(showingId, constraintType);
+    }
+
+    private boolean isDifferentConstraintSelected(Long showingId, ScheduleConstraintType constraintType) {
+        return constraintsData.isDifferentConstraintSelected(showingId, constraintType);
+    }
+
+    public boolean isAnythingSelected(Long showingId) {
+        return constraintsData.isConstraintSelected(showingId);
     }
 }

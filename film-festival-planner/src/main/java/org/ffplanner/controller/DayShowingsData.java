@@ -13,6 +13,8 @@ public class DayShowingsData {
 
     private final ShowingEJB showingEJB;
 
+    private Map<Hour, Collection<HourSlot>> hourSlots;
+
     private Map<Venue, Map<Integer, Showing>> showingsByVenuesAndHours;
 
     private Collection<Venue> venues;
@@ -21,27 +23,31 @@ public class DayShowingsData {
         this.showingEJB = showingEJB;
     }
 
-    public void loadFor(Date day) {
+    public void loadFor(Date day, Iterable<Hour> hours) {
         final Collection<Showing> showings = showingEJB.getShowingsFor(day);
-        showingsByVenuesAndHours = new HashMap<>();
-        venues = new LinkedList<>();
-        Map<Integer, Showing> showingsByHour = new HashMap<>();
-        Venue currentVenue = null;
-        for (Showing showing : showings) {
-            if (currentVenue == null) {
-                currentVenue = showing.getVenue();
-                venues.add(currentVenue);
-            } else if (currentVenue != showing.getVenue()) {
-                showingsByVenuesAndHours.put(currentVenue, showingsByHour);
-                currentVenue = showing.getVenue();
-                venues.add(currentVenue);
-                showingsByHour = new HashMap<>();
-            }
-            final Calendar dateAndTime = new GregorianCalendar();
-            dateAndTime.setTime(showing.getDateAndTime());
-            showingsByHour.put(dateAndTime.get(Calendar.HOUR_OF_DAY), showing);
+        final DayShowingsDataLoader dayShowingsDataLoader = new DayShowingsDataLoader(showings);
+        dayShowingsDataLoader.load();
+        showingsByVenuesAndHours = dayShowingsDataLoader.getShowingsByVenuesAndHours();
+        venues = dayShowingsDataLoader.getVenues();
+        hourSlots = createHourSlots(hours);
+    }
+
+    private Map<Hour, Collection<HourSlot>> createHourSlots(Iterable<Hour> hours) {
+        final Map<Hour, Collection<HourSlot>> hourSlots = new HashMap<>();
+        for (Hour hour : hours) {
+            hourSlots.put(hour, createHourLineFor(hour));
         }
-        showingsByVenuesAndHours.put(currentVenue, showingsByHour);
+        return hourSlots;
+    }
+
+    private Collection<HourSlot> createHourLineFor(Hour hour) {
+        final Collection<HourSlot> hourLine = new LinkedList<>();
+        for (Venue venue : getVenues()) {
+            final Map<Integer, Showing> showingsByHour = getShowingsByHoursFor(venue);
+            final Showing showing = showingsByHour == null ? null : showingsByHour.get(hour.getHour());
+            hourLine.add(new HourSlot(hour, showing));
+        }
+        return hourLine;
     }
 
     public Collection<Venue> getVenues() {
@@ -50,5 +56,9 @@ public class DayShowingsData {
 
     public Map<Integer, Showing> getShowingsByHoursFor(Venue venue) {
         return showingsByVenuesAndHours.get(venue);
+    }
+
+    public Collection<HourSlot> getHourLineFor(Hour hour) {
+        return hourSlots.get(hour);
     }
 }

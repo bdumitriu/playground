@@ -1,14 +1,16 @@
+/**
+ * @author Bogdan Dumitriu
+ */
+
 function configure_mouse_listeners(elem) {
     var overSrc = get_toggled_src(elem, "_mouse_over");
     var outSrc = elem.attr("src");
     elem
         .mouseover(function() {
             $(this).attr("src", overSrc);
-//                            window.alert("over");
         })
         .mouseout(function() {
             $(this).attr("src", outSrc);
-//                            window.alert("out");
         });
 }
 

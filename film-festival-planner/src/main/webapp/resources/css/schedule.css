@@ -1,43 +1,21 @@
-/* 
-    Document   : schedule
-    Created on : Oct 19, 2011, 11:11:55 AM
-    Author     : Bogdan Dumitriu
-    Description:
-        ...
-*/
+/*
+ * Author: Bogdan Dumitriu
+ */
 
 root {
     display: block;
 }
 
-.sch_container, .sch_header, .sch_row {
-    width: 2719px;
-}
-
 .sch_container {
-    height: 800px;
-    padding-top: 30px;
     font-family: Candara, serif;
 }
 
-.sch_header, .sch_row {
-    display: table-row;
-}
-
-.sch_header, .sch_top_left_cell, .sch_embedded_top_left_cell, .sch_first_hour_cell, .sch_hour_cell {
-    height: 30px;
-}
-
-.sch_row, .sch_venue_cell, .sch_embedded_venue_cell, .sch_first_hour_slot, .sch_hour_slot, .sch_movie_cell {
-    height: 70px;
-}
-
-.sch_top_left_cell, .sch_venue_cell, .sch_first_hour_cell, .sch_hour_cell, .sch_first_hour_slot, .sch_hour_slot {
-    width: 150px;
+.sch_header_first {
+    display: inline-block;
+    width: 50px;
+    height: 60px;
     float: left;
-    text-align: left;
-    display: table-cell;
-    vertical-align: top;
+    background-color: #fffbff;
     border-color: #cccccc;
     border-right-width: 1px;
     border-right-style: solid;
@@ -45,39 +23,68 @@ root {
     border-bottom-style: solid;
 }
 
-.sch_embedded_venue_cell, .sch_embedded_top_left_cell {
+.sch_header_first_embedded {
+    width: 50px;
+    height: 60px;
+    display: table-cell;
+    vertical-align: bottom;
+    text-align: left;
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+.sch_header_rest {
+    display: inline-block;
     width: 150px;
+    height: 60px;
+    float: left;
+    background-color: #fffffb;
+    border-color: #cccccc;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+.sch_header_rest_embedded {
+    width: 150px;
+    height: 60px;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
     font-variant: small-caps;
+}
+
+.sch_row_first {
+    width: 50px;
+    height: 60px;
+    clear: both;
+    float: left;
+    border-color: #cccccc;
     background-color: #fffbff;
-}
-
-.sch_embedded_top_left_cell {
-    vertical-align: top;
-}
-
-.sch_top_left_cell, .sch_venue_cell {
-    left: 0;
-    float: none;
-    position: fixed;
-    background-color: #fffbff;
-    z-index: 100;
-}
-
-.sch_first_hour_cell, .sch_first_hour_slot {
-    border-left-width: 1px;
-    border-left-style: solid;
-    margin-left: 142px;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
 }
 
 .sch_hour_text {
-    font-size: 12px;
     font-weight: bold;
 }
 
+.sch_row_rest {
+    width: 150px;
+    height: 60px;
+    float: left;
+    border-color: #cccccc;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
 .sch_movie_cell {
+    width: 148px;
     position: relative;
     margin-top: -1px;
     float: left;
@@ -88,6 +95,30 @@ root {
     box-shadow: 1px 1px 2px #888888;
 }
 
+.sch_movie_cell_embedded {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: block;
+    text-align: center;
+    font-variant: small-caps;
+    /*background-color: #faffb5;*/
+}
+
+.sch_movie_commands {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    opacity: 0.7;
+    background-color: #faffb5;
+}
+
+.sch_constraint {
+    padding: 2px;
+    float: right;
+}
+
 .sch_movie_button {
-    visibility: hidden;
+    padding: 2px;
+    /*visibility: hidden;*/
 }

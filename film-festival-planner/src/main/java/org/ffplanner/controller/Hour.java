@@ -5,9 +5,9 @@ import java.io.Serializable;
 /**
  * @author Bogdan Dumitriu
  */
-public class Hour implements Serializable {
+public class Hour implements Serializable, Comparable<Hour> {
 
-    private int hour;
+    private final int hour;
 
     public Hour(int hour) {
         this.hour = hour;
@@ -19,5 +19,10 @@ public class Hour implements Serializable {
 
     public String getFormatted() {
         return String.format("%d:00", hour);
+    }
+
+    @Override
+    public int compareTo(Hour other) {
+        return Integer.compare(hour, other.hour);
     }
 }

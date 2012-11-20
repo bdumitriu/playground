@@ -17,29 +17,29 @@ public class UserScheduleUseHistory implements Serializable {
     @Id
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 
     @Id
     @ManyToOne
     @JoinColumn(name = "userschedule_id")
-    private UserSchedule userScheduleId;
+    private UserSchedule userSchedule;
 
     private Date lastUsed;
 
     public User getUser() {
-        return userId;
+        return user;
     }
 
     public void setUser(User user) {
-        this.userId = user;
+        this.user = user;
     }
 
     public UserSchedule getUserSchedule() {
-        return userScheduleId;
+        return userSchedule;
     }
 
     public void setUserSchedule(UserSchedule userSchedule) {
-        this.userScheduleId = userSchedule;
+        this.userSchedule = userSchedule;
     }
 
     public Date getLastUsed() {

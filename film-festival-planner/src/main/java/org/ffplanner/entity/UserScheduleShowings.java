@@ -16,10 +16,10 @@ public class UserScheduleShowings implements Serializable {
     @Id
     @ManyToOne
     @JoinColumn(name = "userschedule_id")
-    private UserSchedule userScheduleId;
+    private UserSchedule userSchedule;
 
     @Id
     @ManyToOne
     @JoinColumn(name = "showing_id")
-    private Showing showingId;
+    private Showing showing;
 }

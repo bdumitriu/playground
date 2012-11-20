@@ -25,13 +25,13 @@ public class UserSchedule implements Serializable {
     @ManyToOne
     private FestivalEdition festivalEdition;
 
-    @OneToMany(mappedBy = "userScheduleId")
+    @OneToMany(mappedBy = "userSchedule")
     private Set<UserScheduleShowings> showings = new HashSet<>();
 
-    @OneToMany(mappedBy = "userScheduleId")
+    @OneToMany(mappedBy = "userSchedule")
     private Set<UserScheduleConstraints> constraints = new HashSet<>();
 
-    @OneToMany(mappedBy = "userScheduleId")
+    @OneToMany(mappedBy = "userSchedule")
     @OrderBy("lastUsed desc")
     private List<UserScheduleUseHistory> useHistory = new LinkedList<>();
 

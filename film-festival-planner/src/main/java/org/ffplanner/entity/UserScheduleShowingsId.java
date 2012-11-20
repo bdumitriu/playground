@@ -12,9 +12,9 @@ public class UserScheduleShowingsId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long userScheduleId;
+    private Long userSchedule;
 
-    private Long showingId;
+    private Long showing;
 
     @Override
     public boolean equals(Object o) {
@@ -27,10 +27,10 @@ public class UserScheduleShowingsId implements Serializable {
 
         UserScheduleShowingsId that = (UserScheduleShowingsId) o;
 
-        if (showingId != null ? !showingId.equals(that.showingId) : that.showingId != null) {
+        if (showing != null ? !showing.equals(that.showing) : that.showing != null) {
             return false;
         }
-        if (userScheduleId != null ? !userScheduleId.equals(that.userScheduleId) : that.userScheduleId != null) {
+        if (userSchedule != null ? !userSchedule.equals(that.userSchedule) : that.userSchedule != null) {
             return false;
         }
 
@@ -39,8 +39,8 @@ public class UserScheduleShowingsId implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = userScheduleId != null ? userScheduleId.hashCode() : 0;
-        result = 31 * result + (showingId != null ? showingId.hashCode() : 0);
+        int result = userSchedule != null ? userSchedule.hashCode() : 0;
+        result = 31 * result + (showing != null ? showing.hashCode() : 0);
         return result;
     }
 }

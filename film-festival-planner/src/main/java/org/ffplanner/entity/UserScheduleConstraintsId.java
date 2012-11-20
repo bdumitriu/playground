@@ -10,16 +10,16 @@ import java.io.Serializable;
  */
 public class UserScheduleConstraintsId implements Serializable {
 
-    private Long userScheduleId;
+    private Long userSchedule;
 
-    private Long showingId;
+    private Long showing;
 
     public UserScheduleConstraintsId() {
     }
 
     public UserScheduleConstraintsId(Long userScheduleId, Long showingId) {
-        this.userScheduleId = userScheduleId;
-        this.showingId = showingId;
+        this.userSchedule = userScheduleId;
+        this.showing = showingId;
     }
 
     @Override
@@ -33,10 +33,10 @@ public class UserScheduleConstraintsId implements Serializable {
 
         UserScheduleConstraintsId that = (UserScheduleConstraintsId) o;
 
-        if (showingId != null ? !showingId.equals(that.showingId) : that.showingId != null) {
+        if (showing != null ? !showing.equals(that.showing) : that.showing != null) {
             return false;
         }
-        if (userScheduleId != null ? !userScheduleId.equals(that.userScheduleId) : that.userScheduleId != null) {
+        if (userSchedule != null ? !userSchedule.equals(that.userSchedule) : that.userSchedule != null) {
             return false;
         }
 
@@ -45,8 +45,8 @@ public class UserScheduleConstraintsId implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = userScheduleId != null ? userScheduleId.hashCode() : 0;
-        result = 31 * result + (showingId != null ? showingId.hashCode() : 0);
+        int result = userSchedule != null ? userSchedule.hashCode() : 0;
+        result = 31 * result + (showing != null ? showing.hashCode() : 0);
         return result;
     }
 }

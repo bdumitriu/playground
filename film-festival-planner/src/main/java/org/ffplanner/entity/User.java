@@ -26,7 +26,7 @@ public class User implements Serializable {
 
     private String emailAddress;
 
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(mappedBy = "user")
     @OrderBy("lastUsed desc")
     private List<UserScheduleUseHistory> schedules = new LinkedList<>();
 

@@ -27,13 +27,13 @@ public class UserScheduleConstraintsEJB extends ConnectorEntityEJB<UserScheduleC
 
     @Override
     protected Predicate getLeftCondition(Long id, CriteriaBuilder criteriaBuilder, Root<UserScheduleConstraints> root) {
-        return criteriaBuilder.equal(root.get(UserScheduleConstraints_.showingId).get(Showing_.id), id);
+        return criteriaBuilder.equal(root.get(UserScheduleConstraints_.showing).get(Showing_.id), id);
     }
 
     @Override
     protected Predicate getRightCondition(
             Long id, CriteriaBuilder criteriaBuilder, Root<UserScheduleConstraints> root) {
-        return criteriaBuilder.equal(root.get(UserScheduleConstraints_.userScheduleId).get(UserSchedule_.id), id);
+        return criteriaBuilder.equal(root.get(UserScheduleConstraints_.userSchedule).get(UserSchedule_.id), id);
     }
 
     @Override

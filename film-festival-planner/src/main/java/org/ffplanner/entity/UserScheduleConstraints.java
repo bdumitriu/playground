@@ -16,30 +16,30 @@ public class UserScheduleConstraints implements Serializable {
     @Id
     @ManyToOne
     @JoinColumn(name = "userschedule_id")
-    private UserSchedule userScheduleId;
+    private UserSchedule userSchedule;
 
     @Id
     @ManyToOne
     @JoinColumn(name = "showing_id")
-    private Showing showingId;
+    private Showing showing;
 
     @Enumerated(EnumType.STRING)
     private ScheduleConstraintType constraintType;
 
     public UserSchedule getUserSchedule() {
-        return userScheduleId;
+        return userSchedule;
     }
 
     public void setUserSchedule(UserSchedule userSchedule) {
-        this.userScheduleId = userSchedule;
+        this.userSchedule = userSchedule;
     }
 
     public Showing getShowing() {
-        return showingId;
+        return showing;
     }
 
     public void setShowing(Showing showing) {
-        this.showingId = showing;
+        this.showing = showing;
     }
 
     public ScheduleConstraintType getConstraintType() {

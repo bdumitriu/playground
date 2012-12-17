@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>Simple JSF Facelets page</title>
+    <h:outputStylesheet name="css/screen.css" />
+</h:head>
+
+<h:body>
+    <h:form prependId="false">
+        <div id="container">
+            <div id="content">
+
+                <h:dataTable value="#{shoppingBasket.productsInBasket}" var="product">
+                    <h:column>
+                        #{product.name}
+                    </h:column>
+                </h:dataTable>
+
+                <div>Total: #{shoppingBasket.total} <h:commandLink action="checkout.xhtml" value="checkout" /></div>
+                <ui:insert name="content">
+                    [Template content will be inserted here]
+                </ui:insert>
+
+            </div>
+            <div id="footer">
+                <span class="footer">1-800-CALL-DUKE</span>
+            </div>
+        </div>
+    </h:form>
+</h:body>
+
+</html>

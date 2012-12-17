@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets" template="template.xhtml">
+
+    <ui:define name="content">
+        <f:metadata>
+            <f:viewParam name="pid" value="#{productDetailsBean.pid}" />
+            <f:event type="preRenderComponent" listener="#{productDetailsBean.loadProduct}" />
+        </f:metadata>
+
+        <h:form>
+            <h1>#{productDetailsBean.product.name}</h1>
+            Price: #{productDetailsBean.product.price}
+        </h:form>
+    </ui:define>
+
+</ui:composition>

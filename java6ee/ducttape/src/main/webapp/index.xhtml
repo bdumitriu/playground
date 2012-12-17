@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets" template="template.xhtml">
+
+    <ui:define name="content">
+        <h:form>
+            <h:outputStylesheet>
+                .column {
+                    width: 200px;
+                }
+            </h:outputStylesheet>
+
+            <f:metadata>
+                <f:viewParam name="asc" value="#{productsBean.asc}" />
+            </f:metadata>
+
+            <h:inputText value="#{productsBean.filter}">
+                <f:ajax event="keyup" render="products" />
+            </h:inputText>
+            <h:commandButton value="Filter" />
+            <h:dataTable value="#{productsBean.products}" var="product" columnClasses="column" id="products">
+                <h:column>
+                    <h:graphicImage library="images" value="#{product.id}.jpg" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    #{product.name}
+                </h:column>
+                <h:column>
+                    <f:facet name="header"><h:link value="Price" outcome="index.xhtml?asc=#{!productsBean.asc}" /></f:facet>
+                    #{product.price}
+                </h:column>
+                <h:column>
+                    <h:link value="details" outcome="details.xhtml?pid=#{product.id}" />
+                    <h:commandButton value="Add to basket" action="#{shoppingBasket.add(product)}" />
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

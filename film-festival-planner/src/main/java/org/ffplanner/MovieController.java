@@ -3,10 +3,7 @@ package org.ffplanner;
 import org.ffplanner.entity.Movie;
 import org.ffplanner.util.JsfUtil;
 import org.ffplanner.util.PaginationHelper;
-import org.ffplanner.MovieFacade;
 
-import java.io.Serializable;
-import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -17,6 +14,8 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import java.io.Serializable;
+import java.util.ResourceBundle;
 
 @ManagedBean(name = "movieController")
 @SessionScoped
@@ -195,9 +194,12 @@ public class MovieController implements Serializable {
             if (value == null || value.length() == 0) {
                 return null;
             }
+            /* commented out due to compilation failure
             MovieController controller = (MovieController) facesContext.getApplication().getELResolver().
                     getValue(facesContext.getELContext(), null, "movieController");
             return controller.ejbFacade.find(getKey(value));
+            */
+            return null;
         }
 
         java.lang.Long getKey(String value) {

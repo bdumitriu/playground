@@ -17,6 +17,10 @@
 
     <repositories>
         <repository>
+            <id>JBOSS_NEXUS</id>
+            <url>http://repository.jboss.org/nexus/content/groups/public</url>
+        </repository>
+        <repository>
             <id>scala-tools.org</id>
             <name>Scala-tools Maven2 Repository</name>
             <url>http://scala-tools.org/repo-releases</url>
@@ -31,74 +35,110 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.spec</groupId>
+                <artifactId>jboss-javaee-6.0</artifactId>
+                <version>3.0.1.Final</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>4.1.9.Final</version>
+                <scope>provided</scope>
+            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.hibernate</groupId>-->
+                <!--<artifactId>hibernate-validator</artifactId>-->
+                <!--<version>4.3.0.Final</version>-->
+                <!--<scope>compile</scope>-->
+            <!--</dependency>-->
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-        <!--<dependency>
-              <groupId>org.glassfish</groupId>
-              <artifactId>javax.ejb</artifactId>
-              <version>3.1.1</version>
-              <scope>provided</scope>
-          </dependency>-->
-        <!--<dependency>
-              <groupId>javax.enterprise</groupId>
-              <artifactId>cdi-api</artifactId>
-              <version>1.0</version>
-              <scope>provided</scope>
-          </dependency>-->
         <dependency>
-            <groupId>javax.faces</groupId>
-            <artifactId>javax.faces-api</artifactId>
-            <version>2.1</version>
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_3.1_spec</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.servlet</groupId>
+            <artifactId>jboss-servlet-api_3.0_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.faces</groupId>
+            <artifactId>jboss-jsf-api_2.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.annotation</groupId>
+            <artifactId>jboss-annotations-api_1.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--
         <dependency>
             <groupId>org.glassfish.extras</groupId>
             <artifactId>glassfish-embedded-all</artifactId>
             <version>3.1.1</version>
             <scope>provided</scope>
         </dependency>
+        -->
 
         <!-- start Hibernate -->
-        <!--<dependency>
-              <groupId>org.hibernate.javax.persistence</groupId>
-              <artifactId>hibernate-jpa-2.0-api</artifactId>
-              <version>1.0.1.Final</version>
-              <scope>provided</scope>
-          </dependency>-->
+
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.1.4.Final</version>
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>antlr</groupId>-->
-                    <!--<artifactId>antlr</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.1.4.Final</version>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
             <version>1.2.0.Final</version>
-        </dependency>
-        <!-- only enable logback if you want debug info -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>0.9.30</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>0.9.30</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--<artifactId>hibernate-validator</artifactId>-->
+            <!--<scope>compile</scope>-->
+        <!--</dependency>-->
+
+        <!-- logback; to be enabled for debug info -->
+        <!--<dependency>-->
+            <!--<groupId>ch.qos.logback</groupId>-->
+            <!--<artifactId>logback-core</artifactId>-->
+            <!--<version>0.9.30</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>ch.qos.logback</groupId>-->
+            <!--<artifactId>logback-classic</artifactId>-->
+            <!--<version>0.9.30</version>-->
+        <!--</dependency>-->
+
         <!-- end Hibernate -->
 
-        <!-- start configuration for groovy scripts -->
+        <!-- start groovy scripts -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
@@ -114,15 +154,15 @@
             <artifactId>tagsoup</artifactId>
             <version>1.2</version>
         </dependency>
-        <!-- end configuration for groovy scripts -->
+        <!-- end groovy scripts -->
 
-        <!-- start configuration for scala scripts -->
+        <!-- start scala scripts -->
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>2.9.2</version>
         </dependency>
-        <!-- end configuration for scala scripts -->
+        <!-- end scala scripts -->
 
         <dependency>
             <groupId>joda-time</groupId>
@@ -148,7 +188,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.9</version>
+            <version>4.10</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -162,6 +202,7 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <encoding>UTF-8</encoding>
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
@@ -175,6 +216,7 @@
                 <version>2.1.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <webappDirectory>${project.build.directory}/${project.build.finalName}.war</webappDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -252,14 +294,14 @@
             <plugin>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
-                <version>2.0.2</version>
+                <version>2.1.0</version>
                 <executions>
                     <execution>
                         <id>process</id>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>process</goal>
                         </goals>
-                        <phase>generate-sources</phase>
                         <configuration>
                             <outputDirectory>${project.build.directory}/generated-sources/metamodel/</outputDirectory>
                             <processors>
@@ -268,6 +310,13 @@
                         </configuration>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-jpamodelgen</artifactId>
+                        <version>1.2.0.Final</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

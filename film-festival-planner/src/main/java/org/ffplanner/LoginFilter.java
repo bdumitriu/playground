@@ -4,7 +4,9 @@
 package org.ffplanner;
 
 import org.ffplanner.controller.AuthController;
+import org.ffplanner.entity.User;
 
+import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,9 @@ import java.io.IOException;
 @WebFilter("/faces/auth/*")
 public class LoginFilter implements Filter {
 
+    @Inject
+    private AuthController authController;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -28,9 +33,9 @@ public class LoginFilter implements Filter {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         final HttpSession session = request.getSession();
-        final AuthController auth = (AuthController) session.getAttribute("auth");
 
-        if (auth == null || auth.getUser() == null) {
+        final User user = authController.getUser();
+        if (user == null) {
             final String queryString = request.getQueryString();
             final StringBuffer requestURL = request.getRequestURL();
             if (requestURL != null) {

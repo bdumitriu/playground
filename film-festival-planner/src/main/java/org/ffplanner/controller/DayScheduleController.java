@@ -4,13 +4,16 @@ import org.ffplanner.bean.ScheduleEJB;
 import org.ffplanner.bean.ShowingEJB;
 import org.ffplanner.bean.UserEJB;
 import org.ffplanner.converter.DayConverter;
-import org.ffplanner.entity.*;
+import org.ffplanner.entity.ScheduleConstraintType;
+import org.ffplanner.entity.User;
+import org.ffplanner.entity.Venue;
+import org.ffplanner.qualifier.LoggedInUser;
 import org.joda.time.DateTime;
 
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Logger;
@@ -20,15 +23,15 @@ import static org.joda.time.DateTimeConstants.JUNE;
 /**
  * @author Bogdan Dumitriu
  */
-@ManagedBean
-@ViewScoped
+@Named
+@SessionScoped
 public class DayScheduleController implements Serializable {
 
     private static final long serialVersionUID = 868645927823933930L;
 
     private final Logger log = Logger.getLogger(DayScheduleController.class.getName());
 
-    @ManagedProperty(value = "#{auth.user}")
+    @Inject @LoggedInUser
     private User user;
 
     @EJB

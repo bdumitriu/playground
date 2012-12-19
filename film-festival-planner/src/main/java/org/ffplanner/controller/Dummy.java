@@ -3,8 +3,8 @@
  */
 package org.ffplanner.controller;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.enterprise.context.ConversationScoped;
+import javax.inject.Named;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,8 +14,8 @@ import java.util.Map;
 /**
  * @author Bogdan Dumitriu
  */
-@ManagedBean
-@ViewScoped
+@Named
+@ConversationScoped
 public class Dummy implements Serializable {
 
     private final Collection<Integer> hours;

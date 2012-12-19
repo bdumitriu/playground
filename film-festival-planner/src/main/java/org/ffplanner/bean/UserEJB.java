@@ -5,9 +5,11 @@ package org.ffplanner.bean;
 
 import org.ffplanner.controller.auth.AuthData;
 import org.ffplanner.entity.*;
+import org.ffplanner.qualifier.Messages;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -25,6 +27,9 @@ import java.util.ResourceBundle;
 public class UserEJB extends BasicEntityEJB<User> implements Serializable {
 
     private static final long serialVersionUID = -1563393265561085150L;
+
+    @Inject @Messages
+    private transient ResourceBundle bundle;
 
     @Override
     protected SingularAttribute<User, Long> getIdAttribute() {
@@ -80,14 +85,13 @@ public class UserEJB extends BasicEntityEJB<User> implements Serializable {
         final UserSchedule userSchedule;
         if (userSchedules.isEmpty()) {
             userSchedule = new UserSchedule();
-            userSchedule.setScheduleName(ResourceBundle.getBundle("/Bundle").getString("MySchedule"));
+            userSchedule.setScheduleName(bundle.getString("MySchedule"));
             userSchedule.setFestivalEdition(festivalEdition);
             final UserScheduleUseHistory userScheduleUseHistory = new UserScheduleUseHistory();
             userScheduleUseHistory.setUser(user);
             userScheduleUseHistory.setUserSchedule(userSchedule);
             entityManager.persist(userSchedule);
             entityManager.persist(userScheduleUseHistory);
-            entityManager.refresh(userSchedule);
         } else {
             userSchedule = userSchedules.get(0).getUserSchedule();
         }

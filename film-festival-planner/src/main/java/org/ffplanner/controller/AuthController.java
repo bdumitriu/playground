@@ -7,15 +7,17 @@ import org.ffplanner.bean.UserEJB;
 import org.ffplanner.controller.auth.AuthData;
 import org.ffplanner.controller.auth.RegistrationService;
 import org.ffplanner.entity.User;
+import org.ffplanner.qualifier.LoggedInUser;
 import org.ffplanner.util.Logging;
 import org.openid4java.discovery.DiscoveryInformation;
 import org.openid4java.message.AuthRequest;
 
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Produces;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,7 +27,7 @@ import java.util.logging.Logger;
 /**
  * @author Bogdan Dumitriu
  */
-@ManagedBean(name = "auth")
+@Named(value = "auth")
 @SessionScoped
 public class AuthController implements Serializable {
 
@@ -46,6 +48,7 @@ public class AuthController implements Serializable {
     @EJB
     private UserEJB userEJB;
 
+    @Produces @LoggedInUser
     private User user;
 
     public void logOut() {

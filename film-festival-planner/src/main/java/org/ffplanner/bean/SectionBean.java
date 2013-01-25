@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Stateless
 @LocalBean
-public class SectionEJB extends BasicEntityEJB<Section> {
+public class SectionBean extends BasicEntityBean<Section> {
 
     @Override
     protected Class<Section> getEntityClass() {
@@ -76,7 +76,7 @@ public class SectionEJB extends BasicEntityEJB<Section> {
     public static void forceLazyLoad(Section section) {
         final List<MovieBundle> movieBundles = section.getMovieBundles();
         for (MovieBundle movieBundle : movieBundles) {
-            MovieBundleEJB.forceLazyLoad(movieBundle);
+            MovieBundleBean.forceLazyLoad(movieBundle);
         }
     }
 }

@@ -1,8 +1,8 @@
 package org.ffplanner.scripts.tiff2011
 
-import org.ffplanner.bean.ShowingEJB
-import org.ffplanner.bean.MovieEJB
-import org.ffplanner.bean.MovieBundleEJB
+import org.ffplanner.bean.ShowingBean
+import org.ffplanner.bean.MovieBean
+import org.ffplanner.bean.MovieBundleBean
 import static org.ffplanner.scripts.Utils.download
 
 /**
@@ -14,11 +14,11 @@ class TiffDownloader {
 
     private TiffMovies tiffShowings
 
-    ShowingEJB showingEJB
+    ShowingBean showingBean
 
-    def workYourMagic(ShowingEJB showingEJB, MovieEJB movieEJB, MovieBundleEJB movieBundleEJB) {
-        this.showingEJB = showingEJB
-        tiffShowings = new TiffMovies(also_download, movieEJB, movieBundleEJB)
+    def workYourMagic(ShowingBean showingBean, MovieBean movieBean, MovieBundleBean movieBundleBean) {
+        this.showingBean = showingBean
+        tiffShowings = new TiffMovies(also_download, movieBean, movieBundleBean)
 
         def file
         if (also_download && !(new File("tiff.html").exists())) {
@@ -42,7 +42,7 @@ class TiffDownloader {
         def section = showingNode.td[3].text()
         def movieBundle = tiffShowings.getMovieBundle(getMovieLink(showingNode), section)
         def showingHour = showingNode.td[0].text()
-        showingEJB.addShowing(movieBundle, day, showingHour, venue)
+        showingBean.addShowing(movieBundle, day, showingHour, venue)
     }
 
     def getMovieLink(showingNode) {

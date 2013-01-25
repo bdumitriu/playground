@@ -13,7 +13,7 @@ import javax.persistence.criteria.Root;
 /**
  * @author Bogdan Dumitriu
  */
-public abstract class ConnectorEntityEJB<T> extends EntityEJB<T> {
+public abstract class ConnectorEntityBean<T> extends EntityBean<T> {
 
     public T find(Long idLeft, Long idRight) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

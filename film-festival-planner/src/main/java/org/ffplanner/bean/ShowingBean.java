@@ -23,10 +23,10 @@ import java.util.*;
  */
 @Stateless
 @LocalBean
-public class ShowingEJB extends BasicEntityEJB<Showing> {
+public class ShowingBean extends BasicEntityBean<Showing> {
 
     @EJB
-    private VenueEJB venueEJB;
+    private VenueBean venueBean;
 
     @Override
     protected Class<Showing> getEntityClass() {
@@ -53,7 +53,7 @@ public class ShowingEJB extends BasicEntityEJB<Showing> {
     public void addShowing(MovieBundle movieBundle, String day, String time, String venueName) throws ParseException {
         final Showing showing = new Showing();
         showing.setDateAndTime(day, time);
-        showing.setVenue(venueEJB.getVenue(venueName));
+        showing.setVenue(venueBean.getVenue(venueName));
         showing.setMovieBundle(movieBundle);
         entityManager.persist(showing);
     }
@@ -73,7 +73,7 @@ public class ShowingEJB extends BasicEntityEJB<Showing> {
     public void addShowing(MovieBundle movieBundle, Date day, String time, String venueName) throws ParseException {
         final Showing showing = new Showing();
         showing.setDateAndTime(day, time);
-        showing.setVenue(venueEJB.getVenue(venueName));
+        showing.setVenue(venueBean.getVenue(venueName));
         showing.setMovieBundle(movieBundle);
         entityManager.persist(showing);
     }

@@ -1,6 +1,6 @@
 package org.ffplanner.scripts
 
-import org.ffplanner.bean.{MovieBundleEJB, MovieEJB, ShowingEJB}
+import org.ffplanner.bean.{MovieBundleBean, MovieBean, ShowingBean}
 import org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl
 import java.nio.file._
 import java.text.SimpleDateFormat
@@ -13,14 +13,14 @@ import java.nio.charset.StandardCharsets
  *
  * @author Bogdan Dumitriu
  */
-class TiffDownloader(showingEJB: ShowingEJB) {
+class TiffDownloader(showingBean: ShowingBean) {
 
   private val alsoDownload = true
 
   private var tiffMovies: TiffMovies = _
 
-  def fillDatabaseFromSite(movieEJB: MovieEJB, movieBundleEJB: MovieBundleEJB) {
-    tiffMovies = new TiffMovies(alsoDownload, movieEJB, movieBundleEJB)
+  def fillDatabaseFromSite(movieBean: MovieBean, movieBundleBean: MovieBundleBean) {
+    tiffMovies = new TiffMovies(alsoDownload, movieBean, movieBundleBean)
 
     val path = Paths.get("tiff.html")
     if (alsoDownload && !Files.isRegularFile(path)) {
@@ -53,7 +53,7 @@ class TiffDownloader(showingEJB: ShowingEJB) {
       val section = cells(3).text.trim
       val movieBundle = tiffMovies.getMovieBundle(getMovieLink(cells(1)), section)
       if (movieBundle.isDefined) {
-        showingEJB.addShowing(movieBundle.get, day, showingHour, venue)
+        showingBean.addShowing(movieBundle.get, day, showingHour, venue)
       }
     }
   }

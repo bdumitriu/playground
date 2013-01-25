@@ -3,7 +3,7 @@
  */
 package org.ffplanner.converter;
 
-import org.ffplanner.bean.BasicEntityEJB;
+import org.ffplanner.bean.BasicEntityBean;
 import org.ffplanner.util.Logging;
 
 import javax.faces.component.UIComponent;
@@ -28,11 +28,11 @@ public abstract class BasicEntityConverter<T> implements Converter {
             try {
                 final InitialContext initialContext = new InitialContext();
                 try {
-                    final BasicEntityEJB<T> entityEJB =
-                            (BasicEntityEJB<T>) initialContext.lookup(getEntityEjbJndiName());
+                    final BasicEntityBean<T> entityBean =
+                            (BasicEntityBean<T>) initialContext.lookup(getEntityEjbJndiName());
                     try {
                         final Long entityId = Long.valueOf(value);
-                        return entityEJB.find(entityId);
+                        return entityBean.find(entityId);
                     } catch (NumberFormatException ignored) {
                         return null;
                     }
@@ -40,7 +40,7 @@ public abstract class BasicEntityConverter<T> implements Converter {
                     initialContext.close();
                 }
             } catch (NamingException e) {
-                Logging.getInstance().log(logger, "Failed to find EJB in converter: ", e);
+                Logging.getInstance().log(logger, "Failed to find bean in converter: ", e);
                 return null;
             }
         }

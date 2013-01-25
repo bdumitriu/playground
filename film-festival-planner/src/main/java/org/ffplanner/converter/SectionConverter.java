@@ -15,7 +15,7 @@ public class SectionConverter extends BasicEntityConverter<Section> {
 
     @Override
     protected String getEntityEjbJndiName() {
-        return "java:module/SectionEJB";
+        return "java:module/SectionBean";
     }
 
     @Override

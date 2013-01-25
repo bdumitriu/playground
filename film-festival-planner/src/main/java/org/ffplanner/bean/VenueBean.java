@@ -3,8 +3,8 @@
  */
 package org.ffplanner.bean;
 
-import org.ffplanner.entity.Country;
-import org.ffplanner.entity.Country_;
+import org.ffplanner.entity.Venue;
+import org.ffplanner.entity.Venue_;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -21,25 +21,25 @@ import java.util.List;
  */
 @Stateless
 @LocalBean
-public class CountryEJB {
+public class VenueBean {
 
     @PersistenceContext(unitName = "ffp")
     private EntityManager entityManager;
 
-    public Country getCountry(String countryName) {
+    public Venue getVenue(String venueName) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Country> query = criteriaBuilder.createQuery(Country.class);
-        final Root<Country> root = query.from(Country.class);
-        query.where(criteriaBuilder.equal(root.get(Country_.name), countryName));
-        final TypedQuery<Country> countryQuery = entityManager.createQuery(query);
-        final List<Country> result = countryQuery.getResultList();
-        final Country country;
+        final CriteriaQuery<Venue> query = criteriaBuilder.createQuery(Venue.class);
+        final Root<Venue> root = query.from(Venue.class);
+        query.where(criteriaBuilder.equal(root.get(Venue_.name), venueName));
+        final TypedQuery<Venue> venueQuery = entityManager.createQuery(query);
+        final List<Venue> result = venueQuery.getResultList();
+        final Venue venue;
         if (result.isEmpty()) {
-            country = new Country(countryName);
+            venue = new Venue(venueName);
         } else {
             assert result.size() == 1;
-            country = result.get(0);
+            venue = result.get(0);
         }
-        return country;
+        return venue;
     }
 }

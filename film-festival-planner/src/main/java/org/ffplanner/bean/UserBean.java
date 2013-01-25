@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
  */
 @Stateless
 @LocalBean
-public class UserEJB extends BasicEntityEJB<User> implements Serializable {
+public class UserBean extends BasicEntityBean<User> implements Serializable {
 
     private static final long serialVersionUID = -1563393265561085150L;
 

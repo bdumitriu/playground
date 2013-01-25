@@ -1,6 +1,6 @@
 package org.ffplanner.scripts
 
-import org.ffplanner.bean.{MovieBundleEJB, MovieEJB}
+import org.ffplanner.bean.{MovieBundleBean, MovieBean}
 import java.nio.file.{Files, Paths, Path}
 import org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl
 import xml.{XML, Node}
@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets
  *
  * @author Bogdan Dumitriu
  */
-class TiffMovies(alsoDownload: Boolean, movieEJB: MovieEJB, movieBundleEJB: MovieBundleEJB) {
+class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleBean: MovieBundleBean) {
 
   private val TitleAndCountries = """(.*) \((.*)\)""".r
 
@@ -91,7 +91,7 @@ class TiffMovies(alsoDownload: Boolean, movieEJB: MovieEJB, movieBundleEJB: Movi
       movieBundle.setOriginalTitle(movieBundleOriginalTitle)
     }
     movieBundle.addMovies(JavaConversions.asJavaCollection(movies))
-    movieBundleEJB.addShowing(movieBundle, section)
+    movieBundleBean.addShowing(movieBundle, section)
     movieBundle
   }
 
@@ -126,7 +126,7 @@ class TiffMovies(alsoDownload: Boolean, movieEJB: MovieEJB, movieBundleEJB: Movi
       case e: util.NoSuchElementException =>
     }
 
-    movieEJB.addMovie(movie, toIterable(movieDirectors), toIterable(movieCast), toIterable(movieCountries))
+    movieBean.addMovie(movie, toIterable(movieDirectors), toIterable(movieCast), toIterable(movieCountries))
     movie
   }
 

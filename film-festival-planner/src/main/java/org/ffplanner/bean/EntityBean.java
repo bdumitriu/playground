@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 /**
  * @author Bogdan Dumitriu
  */
-public abstract class EntityEJB<T> {
+public abstract class EntityBean<T> {
 
     @PersistenceContext(unitName = "ffp")
     protected EntityManager entityManager;

@@ -8,7 +8,7 @@ import javax.persistence.metamodel.SingularAttribute;
 /**
  * @author Bogdan Dumitriu
  */
-public abstract class BasicEntityEJB<T> extends EntityEJB<T> {
+public abstract class BasicEntityBean<T> extends EntityBean<T> {
 
     public T find(Long id) {
         return entityManager.find(getEntityClass(), id);

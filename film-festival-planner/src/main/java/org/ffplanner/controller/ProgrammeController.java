@@ -3,8 +3,8 @@
  */
 package org.ffplanner.controller;
 
-import org.ffplanner.bean.MovieEJB;
-import org.ffplanner.bean.SectionEJB;
+import org.ffplanner.bean.MovieBean;
+import org.ffplanner.bean.SectionBean;
 import org.ffplanner.entity.Movie;
 import org.ffplanner.entity.MovieBundle;
 import org.ffplanner.entity.Section;
@@ -26,10 +26,10 @@ public class ProgrammeController implements Serializable {
     private final Logger log = Logger.getLogger(ProgrammeController.class.getName());
 
     @EJB
-    private SectionEJB sectionEJB;
+    private SectionBean sectionBean;
 
     @EJB
-    private MovieEJB movieEJB;
+    private MovieBean movieBean;
 
     private List<Section> sections;
 
@@ -41,7 +41,7 @@ public class ProgrammeController implements Serializable {
 
     public List<Section> getSections() {
         if (sections == null) {
-            sections = sectionEJB.getSections();
+            sections = sectionBean.getSections();
         }
         return sections;
     }

@@ -17,13 +17,13 @@ import javax.persistence.metamodel.SingularAttribute;
  */
 @Stateless
 @LocalBean
-public class MovieBundleEJB extends BasicEntityEJB<MovieBundle> {
+public class MovieBundleBean extends BasicEntityBean<MovieBundle> {
 
     @EJB
-    private SectionEJB sectionEJB;
+    private SectionBean sectionBean;
 
     @EJB
-    private MovieEJB movieEJB;
+    private MovieBean movieBean;
 
     @Override
     protected Class<MovieBundle> getEntityClass() {
@@ -45,7 +45,7 @@ public class MovieBundleEJB extends BasicEntityEJB<MovieBundle> {
     }
 
     public void addShowing(MovieBundle movieBundle, String sectionName) {
-        movieBundle.setSection(sectionEJB.getSection(sectionName));
+        movieBundle.setSection(sectionBean.getSection(sectionName));
         entityManager.persist(movieBundle);
     }
 

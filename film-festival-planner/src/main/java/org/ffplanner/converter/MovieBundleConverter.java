@@ -15,7 +15,7 @@ public class MovieBundleConverter extends BasicEntityConverter<MovieBundle> {
 
     @Override
     protected String getEntityEjbJndiName() {
-        return "java:module/MovieBundleEJB";
+        return "java:module/MovieBundleBean";
     }
 
     @Override

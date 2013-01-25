@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Stateless
 @LocalBean
-public class PersonEJB {
+public class PersonBean {
 
     @PersistenceContext(unitName = "ffp")
     private EntityManager entityManager;

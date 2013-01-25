@@ -10,7 +10,6 @@ import org.ffplanner.entity.Person;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
@@ -21,32 +20,32 @@ import java.util.Collection;
  */
 @Stateless
 @LocalBean
-public class MovieEJB {
+public class MovieBean {
 
     @PersistenceContext(unitName = "ffp")
     private EntityManager entityManager;
 
     @EJB
-    private CountryEJB countryEJB;
+    private CountryBean countryBean;
 
     @EJB
-    private PersonEJB personEJB;
+    private PersonBean personBean;
 
     public void addMovie(Movie movie,
                          Iterable<String> directorNames, Iterable<String> actorNames, Iterable<String> countryNames) {
         final Collection<Country> countries = new ArrayList<>();
         for (String country : countryNames) {
-            countries.add(countryEJB.getCountry(country));
+            countries.add(countryBean.getCountry(country));
         }
         movie.addCountries(countries);
         final Collection<Person> actors = new ArrayList<>();
         for (String actorName : actorNames) {
-            actors.add(personEJB.addOrGetActor(actorName));
+            actors.add(personBean.addOrGetActor(actorName));
         }
         movie.addActors(actors);
         final Collection<Person> directors = new ArrayList<>();
         for (String directorName : directorNames) {
-            directors.add(personEJB.addOrGetDirector(directorName));
+            directors.add(personBean.addOrGetDirector(directorName));
         }
         movie.addDirectors(directors);
         entityManager.persist(movie);

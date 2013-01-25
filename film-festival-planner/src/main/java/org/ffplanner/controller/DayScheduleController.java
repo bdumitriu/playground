@@ -1,8 +1,8 @@
 package org.ffplanner.controller;
 
-import org.ffplanner.bean.ScheduleEJB;
-import org.ffplanner.bean.ShowingEJB;
-import org.ffplanner.bean.UserEJB;
+import org.ffplanner.bean.ScheduleBean;
+import org.ffplanner.bean.ShowingBean;
+import org.ffplanner.bean.UserBean;
 import org.ffplanner.converter.DayConverter;
 import org.ffplanner.entity.ScheduleConstraintType;
 import org.ffplanner.entity.User;
@@ -35,13 +35,13 @@ public class DayScheduleController implements Serializable {
     private User user;
 
     @EJB
-    private UserEJB userEJB;
+    private UserBean userBean;
 
     @EJB
-    private ScheduleEJB scheduleEJB;
+    private ScheduleBean scheduleBean;
 
     @EJB
-    private ShowingEJB showingEJB;
+    private ShowingBean showingBean;
 
     private final Collection<Hour> hours;
 
@@ -76,10 +76,10 @@ public class DayScheduleController implements Serializable {
             final DateTime dateTime = new DateTime(2012, JUNE, 1, 0, 0);
             this.day = dateTime.toDate();
         }
-        dayShowingsData = new DayShowingsData(showingEJB);
+        dayShowingsData = new DayShowingsData(showingBean);
         dayShowingsData.loadFor(this.day, this.hours);
         System.out.println("Loading Constraints Data.....................................");
-        constraintsData = new ConstraintsData(userEJB);
+        constraintsData = new ConstraintsData(userBean);
         constraintsData.loadFor(this.user);
         log.exiting("DayScheduleController", "prepareView");
     }
@@ -127,7 +127,7 @@ public class DayScheduleController implements Serializable {
     }
 
     public void movieCellClicked(Long showingId) {
-        scheduleEJB.toggleAnyConstraint(showingId, user.getId(), ScheduleConstraintType.SHOWING);
+        scheduleBean.toggleAnyConstraint(showingId, user.getId(), ScheduleConstraintType.SHOWING);
     }
 
     public void watchThisButtonClicked(Long showingId) {
@@ -143,7 +143,7 @@ public class DayScheduleController implements Serializable {
     }
 
     private void showingButtonClicked(Long showingId, ScheduleConstraintType constraintType) {
-        scheduleEJB.toggleConstraint(showingId, user.getId(), constraintType);
+        scheduleBean.toggleConstraint(showingId, user.getId(), constraintType);
     }
 
     public boolean isWatchThisSelected(Long showingId) {

@@ -1,6 +1,6 @@
 package org.ffplanner.controller;
 
-import org.ffplanner.bean.ShowingEJB;
+import org.ffplanner.bean.ShowingBean;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.Venue;
 
@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class DayShowingsData {
 
-    private final ShowingEJB showingEJB;
+    private final ShowingBean showingBean;
 
     private Map<Hour, Collection<HourSlot>> hourSlots;
 
@@ -19,12 +19,12 @@ public class DayShowingsData {
 
     private Collection<Venue> venues;
 
-    public DayShowingsData(ShowingEJB showingEJB) {
-        this.showingEJB = showingEJB;
+    public DayShowingsData(ShowingBean showingBean) {
+        this.showingBean = showingBean;
     }
 
     public void loadFor(Date day, Iterable<Hour> hours) {
-        final Collection<Showing> showings = showingEJB.getShowingsFor(day);
+        final Collection<Showing> showings = showingBean.getShowingsFor(day);
         final DayShowingsDataLoader dayShowingsDataLoader = new DayShowingsDataLoader(showings);
         dayShowingsDataLoader.load();
         showingsByVenuesAndHours = dayShowingsDataLoader.getShowingsByVenuesAndHours();

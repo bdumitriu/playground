@@ -18,41 +18,41 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 @LocalBean
-public class ScheduleEJB {
+public class ScheduleBean {
 
     @PersistenceContext(unitName = "ffp")
     private EntityManager entityManager;
 
     @EJB
-    private UserEJB userEJB;
+    private UserBean userBean;
 
     @EJB
-    private ShowingEJB showingEJB;
+    private ShowingBean showingBean;
 
     @EJB
-    private UserScheduleConstraintsEJB constraintsEJB;
+    private UserScheduleConstraintsBean constraintsBean;
 
     public void toggleConstraint(Long showingId, Long userId, ScheduleConstraintType constraintType) {
-        final Showing showing = showingEJB.find(showingId);
+        final Showing showing = showingBean.find(showingId);
         if (showing != null) {
-            final UserSchedule userSchedule = userEJB.getScheduleFor(userId, showing.getFestivalEdition(), false);
-            constraintsEJB.toggleConstraint(showing, userSchedule, constraintType);
+            final UserSchedule userSchedule = userBean.getScheduleFor(userId, showing.getFestivalEdition(), false);
+            constraintsBean.toggleConstraint(showing, userSchedule, constraintType);
         }
     }
 
     public void toggleAnyConstraint(Long showingId, Long userId, ScheduleConstraintType constraintType) {
-        final Showing showing = showingEJB.find(showingId);
+        final Showing showing = showingBean.find(showingId);
         if (showing != null) {
-            final UserSchedule userSchedule = userEJB.getScheduleFor(userId, showing.getFestivalEdition(), false);
-            constraintsEJB.toggleAnyConstraint(showing, userSchedule, constraintType);
+            final UserSchedule userSchedule = userBean.getScheduleFor(userId, showing.getFestivalEdition(), false);
+            constraintsBean.toggleAnyConstraint(showing, userSchedule, constraintType);
         }
     }
 
     public boolean isConstraintSelected(Long showingId, Long userId, ScheduleConstraintType constraintType) {
-        final Showing showing = showingEJB.find(showingId);
+        final Showing showing = showingBean.find(showingId);
         if (showing != null) {
-            final UserSchedule userSchedule = userEJB.getScheduleFor(userId, showing.getFestivalEdition(), false);
-            return constraintsEJB.hasConstraint(showing, userSchedule, constraintType);
+            final UserSchedule userSchedule = userBean.getScheduleFor(userId, showing.getFestivalEdition(), false);
+            return constraintsBean.hasConstraint(showing, userSchedule, constraintType);
         } else {
             return false;
         }

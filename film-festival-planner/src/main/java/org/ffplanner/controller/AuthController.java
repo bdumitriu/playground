@@ -3,7 +3,7 @@
  */
 package org.ffplanner.controller;
 
-import org.ffplanner.bean.UserEJB;
+import org.ffplanner.bean.UserBean;
 import org.ffplanner.controller.auth.AuthData;
 import org.ffplanner.controller.auth.RegistrationService;
 import org.ffplanner.entity.User;
@@ -46,7 +46,7 @@ public class AuthController implements Serializable {
     private AuthData authData;
 
     @EJB
-    private UserEJB userEJB;
+    private UserBean userBean;
 
     @Produces @LoggedInUser
     private User user;
@@ -96,7 +96,7 @@ public class AuthController implements Serializable {
                     Logging.getInstance().log(logger, "Redirect failed: ", e);
                 }
             } else {
-                final User user = userEJB.getUserWithOpenId(authData.getOpenId());
+                final User user = userBean.getUserWithOpenId(authData.getOpenId());
                 if (user != null) {
                     authData = null;
                     setUser(user);
@@ -118,7 +118,7 @@ public class AuthController implements Serializable {
 
     public String createNewAccount() {
         if (user == null && authData != null) {
-            user = userEJB.addUser(authData);
+            user = userBean.addUser(authData);
             authData = null;
             if (redirectPath != null) {
                 try {

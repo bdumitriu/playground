@@ -1,8 +1,8 @@
 package org.ffplanner;
 
-import org.ffplanner.bean.MovieBundleEJB;
-import org.ffplanner.bean.MovieEJB;
-import org.ffplanner.bean.ShowingEJB;
+import org.ffplanner.bean.MovieBean;
+import org.ffplanner.bean.MovieBundleBean;
+import org.ffplanner.bean.ShowingBean;
 import org.ffplanner.scripts.TiffDownloader;
 
 import javax.ejb.EJB;
@@ -15,15 +15,15 @@ import javax.jws.WebService;
 public class ScriptTrigger {
 
     @EJB
-    private ShowingEJB showingEJB;
+    private ShowingBean showingBean;
 
     @EJB
-    private MovieEJB movieEJB;
+    private MovieBean movieBean;
 
     @EJB
-    private MovieBundleEJB movieBundleEJB;
+    private MovieBundleBean movieBundleBean;
 
     public void triggerTiffDownload() {
-        new TiffDownloader(showingEJB).fillDatabaseFromSite(movieEJB, movieBundleEJB);
+        new TiffDownloader(showingBean).fillDatabaseFromSite(movieBean, movieBundleBean);
     }
 }

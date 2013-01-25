@@ -1,7 +1,7 @@
 package org.ffplanner.scripts.tiff2011
 
-import org.ffplanner.bean.MovieBundleEJB
-import org.ffplanner.bean.MovieEJB
+import org.ffplanner.bean.MovieBundleBean
+import org.ffplanner.bean.MovieBean
 import org.ffplanner.entity.Movie
 import org.ffplanner.entity.MovieBundle
 import static org.ffplanner.scripts.Utils.download
@@ -17,14 +17,14 @@ class TiffMovies {
 
     final def movieMap = [:]
 
-    MovieEJB movieEJB
+    MovieBean movieBean
 
-    MovieBundleEJB movieBundleEJB
+    MovieBundleBean movieBundleBean
 
-    def TiffMovies(also_download, MovieEJB movieEJB, MovieBundleEJB movieBundleEJB) {
+    def TiffMovies(also_download, MovieBean movieBean, MovieBundleBean movieBundleBean) {
         this.also_download = also_download
-        this.movieEJB = movieEJB
-        this.movieBundleEJB = movieBundleEJB
+        this.movieBean = movieBean
+        this.movieBundleBean = movieBundleBean
     }
 
     def getMovieBundle(movieBundleLink, section) {
@@ -73,7 +73,7 @@ class TiffMovies {
             movieBundle.setOriginalTitle(movieBundleOriginalTitle)
         }
         movieBundle.addMovies(movies)
-        movieBundleEJB.addShowing(movieBundle, section)
+        movieBundleBean.addShowing(movieBundle, section)
         return movieBundle
     }
 
@@ -93,7 +93,7 @@ class TiffMovies {
         movie.setYear(movieYear)
         movie.setDescription(movieDescription)
         movie.setDuration(movieDuration)
-        movieEJB.addMovie(movie, Arrays.asList(movieDirectors), Arrays.asList(movieCast), movieCountries)
+        movieBean.addMovie(movie, Arrays.asList(movieDirectors), Arrays.asList(movieCast), movieCountries)
         return movie
     }
 

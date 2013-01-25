@@ -1,6 +1,6 @@
 package org.ffplanner.controller;
 
-import org.ffplanner.bean.UserEJB;
+import org.ffplanner.bean.UserBean;
 import org.ffplanner.entity.ScheduleConstraintType;
 import org.ffplanner.entity.User;
 import org.ffplanner.entity.UserSchedule;
@@ -14,12 +14,12 @@ import java.util.Map;
  */
 public class ConstraintsData {
 
-    private final UserEJB userEJB;
+    private final UserBean userBean;
 
     private Map<Long, ScheduleConstraintType> constraints;
 
-    public ConstraintsData(UserEJB userEJB) {
-        this.userEJB = userEJB;
+    public ConstraintsData(UserBean userBean) {
+        this.userBean = userBean;
     }
 
     public int size() {
@@ -28,7 +28,7 @@ public class ConstraintsData {
 
     public void loadFor(User user) {
         constraints = new HashMap<>();
-        final UserSchedule userSchedule = userEJB.getScheduleFor(user.getId(), null);
+        final UserSchedule userSchedule = userBean.getScheduleFor(user.getId(), null);
         for (UserScheduleConstraints userScheduleConstraints : userSchedule.getConstraints()) {
             constraints.put(userScheduleConstraints.getShowing().getId(), userScheduleConstraints.getConstraintType());
         }

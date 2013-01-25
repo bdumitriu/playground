@@ -18,7 +18,7 @@ import javax.persistence.criteria.Root;
  */
 @Stateless
 @LocalBean
-public class UserScheduleConstraintsEJB extends ConnectorEntityEJB<UserScheduleConstraints> {
+public class UserScheduleConstraintsBean extends ConnectorEntityBean<UserScheduleConstraints> {
 
     @Override
     protected Class<UserScheduleConstraints> getEntityClass() {

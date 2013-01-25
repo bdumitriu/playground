@@ -12,11 +12,11 @@ import org.ffplanner.util.Logging;
 import org.openid4java.discovery.DiscoveryInformation;
 import org.openid4java.message.AuthRequest;
 
-import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class AuthController implements Serializable {
 
     private AuthData authData;
 
-    @EJB
+    @Inject
     private UserBean userBean;
 
     @Produces @LoggedInUser

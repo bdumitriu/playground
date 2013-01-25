@@ -7,29 +7,32 @@ import org.ffplanner.entity.ScheduleConstraintType;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.UserSchedule;
 
-import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.Serializable;
 
 /**
  * @author Bogdan Dumitriu
  */
 @Stateless
 @LocalBean
-public class ScheduleBean {
+public class ScheduleBean implements Serializable {
+
+    private static final long serialVersionUID = 4498112316395205031L;
 
     @PersistenceContext(unitName = "ffp")
     private EntityManager entityManager;
 
-    @EJB
+    @Inject
     private UserBean userBean;
 
-    @EJB
+    @Inject
     private ShowingBean showingBean;
 
-    @EJB
+    @Inject
     private UserScheduleConstraintsBean constraintsBean;
 
     public void toggleConstraint(Long showingId, Long userId, ScheduleConstraintType constraintType) {

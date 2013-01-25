@@ -10,7 +10,6 @@ import org.ffplanner.entity.Venue;
 import org.ffplanner.qualifier.LoggedInUser;
 import org.joda.time.DateTime;
 
-import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -34,13 +33,13 @@ public class DayScheduleController implements Serializable {
     @Inject @LoggedInUser
     private User user;
 
-    @EJB
+    @Inject
     private UserBean userBean;
 
-    @EJB
+    @Inject
     private ScheduleBean scheduleBean;
 
-    @EJB
+    @Inject
     private ShowingBean showingBean;
 
     private final Collection<Hour> hours;

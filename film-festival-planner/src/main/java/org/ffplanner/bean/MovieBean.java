@@ -7,9 +7,9 @@ import org.ffplanner.entity.Country;
 import org.ffplanner.entity.Movie;
 import org.ffplanner.entity.Person;
 
-import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
@@ -25,10 +25,10 @@ public class MovieBean {
     @PersistenceContext(unitName = "ffp")
     private EntityManager entityManager;
 
-    @EJB
+    @Inject
     private CountryBean countryBean;
 
-    @EJB
+    @Inject
     private PersonBean personBean;
 
     public void addMovie(Movie movie,

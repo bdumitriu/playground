@@ -9,8 +9,8 @@ import org.ffplanner.entity.Movie;
 import org.ffplanner.entity.MovieBundle;
 import org.ffplanner.entity.Section;
 
-import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
@@ -25,10 +25,10 @@ public class ProgrammeController implements Serializable {
 
     private final Logger log = Logger.getLogger(ProgrammeController.class.getName());
 
-    @EJB
+    @Inject
     private SectionBean sectionBean;
 
-    @EJB
+    @Inject
     private MovieBean movieBean;
 
     private List<Section> sections;

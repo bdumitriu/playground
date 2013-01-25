@@ -5,7 +5,7 @@ import org.ffplanner.bean.MovieBundleBean;
 import org.ffplanner.bean.ShowingBean;
 import org.ffplanner.scripts.TiffDownloader;
 
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.jws.WebService;
 
 /**
@@ -14,13 +14,13 @@ import javax.jws.WebService;
 @WebService
 public class ScriptTrigger {
 
-    @EJB
+    @Inject
     private ShowingBean showingBean;
 
-    @EJB
+    @Inject
     private MovieBean movieBean;
 
-    @EJB
+    @Inject
     private MovieBundleBean movieBundleBean;
 
     public void triggerTiffDownload() {

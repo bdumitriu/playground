@@ -4,7 +4,6 @@ import org.ffplanner.entity.Movie;
 import org.ffplanner.util.JsfUtil;
 import org.ffplanner.util.PaginationHelper;
 
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
@@ -14,6 +13,7 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ResourceBundle;
 
@@ -25,7 +25,7 @@ public class MovieController implements Serializable {
 
     private DataModel items = null;
 
-    @EJB
+    @Inject
     private org.ffplanner.MovieFacade ejbFacade;
 
     private PaginationHelper pagination;

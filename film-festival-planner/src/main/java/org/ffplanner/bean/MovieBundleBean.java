@@ -7,9 +7,9 @@ import org.ffplanner.entity.Movie;
 import org.ffplanner.entity.MovieBundle;
 import org.ffplanner.entity.MovieBundle_;
 
-import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.metamodel.SingularAttribute;
 
 /**
@@ -19,10 +19,10 @@ import javax.persistence.metamodel.SingularAttribute;
 @LocalBean
 public class MovieBundleBean extends BasicEntityBean<MovieBundle> {
 
-    @EJB
+    @Inject
     private SectionBean sectionBean;
 
-    @EJB
+    @Inject
     private MovieBean movieBean;
 
     @Override

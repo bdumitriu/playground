@@ -7,14 +7,15 @@ import org.ffplanner.entity.MovieBundle;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.Showing_;
 
-import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.*;
 
@@ -23,9 +24,11 @@ import java.util.*;
  */
 @Stateless
 @LocalBean
-public class ShowingBean extends BasicEntityBean<Showing> {
+public class ShowingBean extends BasicEntityBean<Showing> implements Serializable {
 
-    @EJB
+    private static final long serialVersionUID = -8687692892092346109L;
+
+    @Inject
     private VenueBean venueBean;
 
     @Override

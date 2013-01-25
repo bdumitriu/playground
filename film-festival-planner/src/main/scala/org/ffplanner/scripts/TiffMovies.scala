@@ -126,7 +126,7 @@ class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleBean: M
       case e: util.NoSuchElementException =>
     }
 
-    movieBean.addMovie(movie, toIterable(movieDirectors), toIterable(movieCast), toIterable(movieCountries))
+    movieBean.createWith(movie, toIterable(movieDirectors), toIterable(movieCast), toIterable(movieCountries))
     movie
   }
 

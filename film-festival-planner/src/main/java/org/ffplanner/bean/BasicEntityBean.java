@@ -24,5 +24,9 @@ public abstract class BasicEntityBean<T> extends EntityBean<T> {
         }*/
     }
 
+    public T getReference(Long id) {
+        return entityManager.getReference(getEntityClass(), id);
+    }
+
     protected abstract SingularAttribute<T, Long> getIdAttribute();
 }

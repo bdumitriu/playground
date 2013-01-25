@@ -53,7 +53,7 @@ class TiffDownloader(showingBean: ShowingBean) {
       val section = cells(3).text.trim
       val movieBundle = tiffMovies.getMovieBundle(getMovieLink(cells(1)), section)
       if (movieBundle.isDefined) {
-        showingBean.addShowing(movieBundle.get, day, showingHour, venue)
+        showingBean.createWith(movieBundle.get, day, showingHour, venue)
       }
     }
   }

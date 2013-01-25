@@ -53,7 +53,7 @@ public class ShowingBean extends BasicEntityBean<Showing> implements Serializabl
      * @throws ParseException
      *         if the {@code duration} is not in the correct format
      */
-    public void addShowing(MovieBundle movieBundle, String day, String time, String venueName) throws ParseException {
+    public void createWith(MovieBundle movieBundle, String day, String time, String venueName) throws ParseException {
         final Showing showing = new Showing();
         showing.setDateAndTime(day, time);
         showing.setVenue(venueBean.getVenue(venueName));
@@ -73,7 +73,7 @@ public class ShowingBean extends BasicEntityBean<Showing> implements Serializabl
      * @throws ParseException
      *         if the {@code duration} is not in the correct format
      */
-    public void addShowing(MovieBundle movieBundle, Date day, String time, String venueName) throws ParseException {
+    public void createWith(MovieBundle movieBundle, Date day, String time, String venueName) throws ParseException {
         final Showing showing = new Showing();
         showing.setDateAndTime(day, time);
         showing.setVenue(venueBean.getVenue(venueName));

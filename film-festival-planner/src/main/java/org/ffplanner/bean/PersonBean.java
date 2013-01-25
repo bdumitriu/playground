@@ -26,15 +26,15 @@ public class PersonBean {
     @PersistenceContext(unitName = "ffp")
     private EntityManager entityManager;
 
-    public Person addOrGetActor(String actorName) {
-        return getPerson(actorName);
+    public Person findOrCreateActorBy(String actorName) {
+        return findOrCreateBy(actorName);
     }
 
-    public Person addOrGetDirector(String directorName) {
-        return getPerson(directorName);
+    public Person findOrCreateDirectorBy(String directorName) {
+        return findOrCreateBy(directorName);
     }
 
-    private Person getPerson(String personName) {
+    private Person findOrCreateBy(String personName) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Person> query = criteriaBuilder.createQuery(Person.class);
         final Root<Person> root = query.from(Person.class);

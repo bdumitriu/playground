@@ -1,8 +1,8 @@
 package org.ffplanner.controller;
 
-import org.ffplanner.bean.ScheduleBean;
+import org.ffplanner.bean.FestivalEditionBean;
 import org.ffplanner.bean.ShowingBean;
-import org.ffplanner.bean.UserBean;
+import org.ffplanner.bean.UserScheduleBean;
 import org.ffplanner.converter.DayConverter;
 import org.ffplanner.entity.ScheduleConstraintType;
 import org.ffplanner.entity.User;
@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID;
 import static org.joda.time.DateTimeConstants.JUNE;
 
 /**
@@ -34,13 +35,13 @@ public class DayScheduleController implements Serializable {
     private User user;
 
     @Inject
-    private UserBean userBean;
-
-    @Inject
-    private ScheduleBean scheduleBean;
+    private UserScheduleBean userScheduleBean;
 
     @Inject
     private ShowingBean showingBean;
+
+    @Inject
+    private FestivalEditionBean festivalEditionBean;
 
     private final Collection<Hour> hours;
 
@@ -78,7 +79,7 @@ public class DayScheduleController implements Serializable {
         dayShowingsData = new DayShowingsData(showingBean);
         dayShowingsData.loadFor(this.day, this.hours);
         System.out.println("Loading Constraints Data.....................................");
-        constraintsData = new ConstraintsData(userBean);
+        constraintsData = new ConstraintsData(userScheduleBean, festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID));
         constraintsData.loadFor(this.user);
         log.exiting("DayScheduleController", "prepareView");
     }
@@ -126,7 +127,7 @@ public class DayScheduleController implements Serializable {
     }
 
     public void movieCellClicked(Long showingId) {
-        scheduleBean.toggleAnyConstraint(showingId, user.getId(), ScheduleConstraintType.SHOWING);
+        userScheduleBean.toggleAnyConstraint(showingId, user.getId(), ScheduleConstraintType.SHOWING);
     }
 
     public void watchThisButtonClicked(Long showingId) {
@@ -142,7 +143,7 @@ public class DayScheduleController implements Serializable {
     }
 
     private void showingButtonClicked(Long showingId, ScheduleConstraintType constraintType) {
-        scheduleBean.toggleConstraint(showingId, user.getId(), constraintType);
+        userScheduleBean.toggleConstraint(showingId, user.getId(), constraintType);
     }
 
     public boolean isWatchThisSelected(Long showingId) {

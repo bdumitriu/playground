@@ -96,7 +96,7 @@ public class AuthController implements Serializable {
                     Logging.getInstance().log(logger, "Redirect failed: ", e);
                 }
             } else {
-                final User user = userBean.getUserWithOpenId(authData.getOpenId());
+                final User user = userBean.findBy(authData.getOpenId());
                 if (user != null) {
                     authData = null;
                     setUser(user);
@@ -118,7 +118,7 @@ public class AuthController implements Serializable {
 
     public String createNewAccount() {
         if (user == null && authData != null) {
-            user = userBean.addUser(authData);
+            user = userBean.createWith(authData);
             authData = null;
             if (redirectPath != null) {
                 try {

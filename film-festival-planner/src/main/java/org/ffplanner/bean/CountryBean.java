@@ -26,7 +26,7 @@ public class CountryBean {
     @PersistenceContext(unitName = "ffp")
     private EntityManager entityManager;
 
-    public Country getCountry(String countryName) {
+    public Country findBy(String countryName) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Country> query = criteriaBuilder.createQuery(Country.class);
         final Root<Country> root = query.from(Country.class);

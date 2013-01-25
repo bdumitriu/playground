@@ -42,7 +42,7 @@ public class SectionBean extends BasicEntityBean<Section> {
         return section;
     }
 
-    public Section getSection(String sectionName) {
+    public Section findBy(String sectionName) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Section> query = criteriaBuilder.createQuery(Section.class);
         final Root<Section> root = query.from(Section.class);

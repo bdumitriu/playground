@@ -52,7 +52,7 @@ public class ProgrammeController implements Serializable {
 
     public Section getSection() {
 //        log.setLevel(Level.ALL);
-        log.entering("ProgrammeController", "getSection");
+        log.entering("ProgrammeController", "findBy");
         try {
             if (section == null) {
                 final List<Section> sections = getSections();
@@ -60,7 +60,7 @@ public class ProgrammeController implements Serializable {
             }
             return section;
         } finally {
-            log.exiting("ProgrammeController", "getSection");
+            log.exiting("ProgrammeController", "findBy");
         }
     }
 

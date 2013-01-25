@@ -45,7 +45,7 @@ public class MovieBundleBean extends BasicEntityBean<MovieBundle> {
     }
 
     public void addShowing(MovieBundle movieBundle, String sectionName) {
-        movieBundle.setSection(sectionBean.getSection(sectionName));
+        movieBundle.setSection(sectionBean.findBy(sectionName));
         entityManager.persist(movieBundle);
     }
 

@@ -31,21 +31,21 @@ public class MovieBean {
     @Inject
     private PersonBean personBean;
 
-    public void addMovie(Movie movie,
-                         Iterable<String> directorNames, Iterable<String> actorNames, Iterable<String> countryNames) {
+    public void createWith(
+            Movie movie, Iterable<String> directorNames, Iterable<String> actorNames, Iterable<String> countryNames) {
         final Collection<Country> countries = new ArrayList<>();
         for (String country : countryNames) {
-            countries.add(countryBean.getCountry(country));
+            countries.add(countryBean.findBy(country));
         }
         movie.addCountries(countries);
         final Collection<Person> actors = new ArrayList<>();
         for (String actorName : actorNames) {
-            actors.add(personBean.addOrGetActor(actorName));
+            actors.add(personBean.findOrCreateActorBy(actorName));
         }
         movie.addActors(actors);
         final Collection<Person> directors = new ArrayList<>();
         for (String directorName : directorNames) {
-            directors.add(personBean.addOrGetDirector(directorName));
+            directors.add(personBean.findOrCreateDirectorBy(directorName));
         }
         movie.addDirectors(directors);
         entityManager.persist(movie);

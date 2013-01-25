@@ -5,9 +5,8 @@ package org.ffplanner.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,17 +22,18 @@ public class UserSchedule implements Serializable {
     private String scheduleName;
 
     @ManyToOne
+    private User user;
+
+    @ManyToOne
     private FestivalEdition festivalEdition;
+
+    private Date lastUsed;
 
     @OneToMany(mappedBy = "userSchedule")
     private Set<UserScheduleShowings> showings = new HashSet<>();
 
     @OneToMany(mappedBy = "userSchedule")
     private Set<UserScheduleConstraints> constraints = new HashSet<>();
-
-    @OneToMany(mappedBy = "userSchedule")
-    @OrderBy("lastUsed desc")
-    private List<UserScheduleUseHistory> useHistory = new LinkedList<>();
 
     public Long getId() {
         return id;
@@ -51,6 +51,14 @@ public class UserSchedule implements Serializable {
         this.scheduleName = scheduleName;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public FestivalEdition getFestivalEdition() {
         return festivalEdition;
     }
@@ -59,15 +67,19 @@ public class UserSchedule implements Serializable {
         this.festivalEdition = festivalEdition;
     }
 
+    public Date getLastUsed() {
+        return lastUsed;
+    }
+
+    public void setLastUsed(Date lastUsed) {
+        this.lastUsed = lastUsed;
+    }
+
     public Set<UserScheduleShowings> getShowings() {
         return showings;
     }
 
     public Set<UserScheduleConstraints> getConstraints() {
         return constraints;
-    }
-
-    public List<UserScheduleUseHistory> getUseHistory() {
-        return useHistory;
     }
 }

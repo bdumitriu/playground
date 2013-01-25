@@ -1,10 +1,7 @@
 package org.ffplanner.controller;
 
-import org.ffplanner.bean.UserBean;
-import org.ffplanner.entity.ScheduleConstraintType;
-import org.ffplanner.entity.User;
-import org.ffplanner.entity.UserSchedule;
-import org.ffplanner.entity.UserScheduleConstraints;
+import org.ffplanner.bean.UserScheduleBean;
+import org.ffplanner.entity.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,12 +11,15 @@ import java.util.Map;
  */
 public class ConstraintsData {
 
-    private final UserBean userBean;
+    private final UserScheduleBean userScheduleBean;
+
+    private final FestivalEdition festivalEdition;
 
     private Map<Long, ScheduleConstraintType> constraints;
 
-    public ConstraintsData(UserBean userBean) {
-        this.userBean = userBean;
+    public ConstraintsData(UserScheduleBean userScheduleBean, FestivalEdition festivalEdition) {
+        this.userScheduleBean = userScheduleBean;
+        this.festivalEdition = festivalEdition;
     }
 
     public int size() {
@@ -28,7 +28,7 @@ public class ConstraintsData {
 
     public void loadFor(User user) {
         constraints = new HashMap<>();
-        final UserSchedule userSchedule = userBean.getScheduleFor(user.getId(), null);
+        final UserSchedule userSchedule = userScheduleBean.findOrCreateBy(user.getId(), festivalEdition);
         for (UserScheduleConstraints userScheduleConstraints : userSchedule.getConstraints()) {
             constraints.put(userScheduleConstraints.getShowing().getId(), userScheduleConstraints.getConstraintType());
         }

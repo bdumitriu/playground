@@ -79,7 +79,7 @@
                                                styleClass="sch_movie_cell_embedded">
                                     <f:ajax execute="@form" render="@form" />
                                 </h:commandLink>
-                                <h:panelGroup styleClass="sch_movie_commands" rendered="#{dayScheduleController.isAnythingSelected(hourSlot.showing.id)}">
+                                <h:panelGroup styleClass="sch_movie_commands" rendered="#{dayScheduleController.isAnyConstraintSelectedFor(hourSlot.showing.id)}">
                                     <h:commandButton
                                             id="watchThis"
                                             rendered="#{dayScheduleController.isSomethingOtherThanWatchThisSelected(hourSlot.showing.id)}"
@@ -115,7 +115,7 @@
                                     </h:commandButton>
                                     <h:commandButton
                                             id="clear"
-                                            rendered="#{dayScheduleController.isAnythingSelected(hourSlot.showing.id)}"
+                                            rendered="#{dayScheduleController.isAnyConstraintSelectedFor(hourSlot.showing.id)}"
                                             title="#{bundle.RemoveInterestTitle}"
                                             action="#{dayScheduleController.movieCellClicked(hourSlot.showing.id)}"
                                             image="../../resources/img/delete_16.png"

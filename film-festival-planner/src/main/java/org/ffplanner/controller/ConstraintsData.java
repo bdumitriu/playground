@@ -22,6 +22,10 @@ public class ConstraintsData {
         this.userEJB = userEJB;
     }
 
+    public int size() {
+        return constraints.size();
+    }
+
     public void loadFor(User user) {
         constraints = new HashMap<>();
         final UserSchedule userSchedule = userEJB.getScheduleFor(user.getId(), null);
@@ -43,7 +47,7 @@ public class ConstraintsData {
     /**
      * @return true if any constraint is set for {@code showingId}.
      */
-    public boolean isConstraintSelected(Long showingId) {
+    public boolean isAnyConstraintSelected(Long showingId) {
         final ScheduleConstraintType scheduleConstraintType = constraints.get(showingId);
         return scheduleConstraintType != null;
     }

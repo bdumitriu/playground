@@ -178,7 +178,7 @@ public class DayScheduleController implements Serializable {
         return constraintsData.isDifferentConstraintSelected(showingId, constraintType);
     }
 
-    public boolean isAnythingSelected(Long showingId) {
-        return constraintsData.isConstraintSelected(showingId);
+    public boolean isAnyConstraintSelectedFor(Long showingId) {
+        return constraintsData.isAnyConstraintSelected(showingId);
     }
 }

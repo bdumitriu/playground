@@ -1,61 +1,32 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.converter;
 
 import org.ffplanner.bean.BasicEntityBean;
-import org.ffplanner.util.Logging;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.util.logging.Logger;
 
 /**
  * @author Bogdan Dumitriu
  */
-public abstract class BasicEntityConverter<T> implements Converter {
-
-    private static final Logger logger = Logger.getLogger(BasicEntityConverter.class.getName());
+public abstract class BasicEntityConverter<T> extends EntityConverter<T> {
 
     @Override
-    public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        if (value == null) {
-            return null;
-        } else {
-            try {
-                final InitialContext initialContext = new InitialContext();
-                try {
-                    final BasicEntityBean<T> entityBean =
-                            (BasicEntityBean<T>) initialContext.lookup(getEntityEjbJndiName());
-                    try {
-                        final Long entityId = Long.valueOf(value);
-                        return entityBean.find(entityId);
-                    } catch (NumberFormatException ignored) {
-                        return null;
-                    }
-                } finally {
-                    initialContext.close();
-                }
-            } catch (NamingException e) {
-                Logging.getInstance().log(logger, "Failed to find bean in converter: ", e);
-                return null;
-            }
-        }
-    }
-
-    @Override
-    public String getAsString(FacesContext context, UIComponent component, Object value) {
-        if (getClass().isInstance(value)) {
-            return String.valueOf(getId(value));
-        } else {
+    protected T getAsObject(String value, InitialContext initialContext) throws NamingException {
+        final BasicEntityBean<T> entityBean = (BasicEntityBean<T>) initialContext.lookup(getEntityEjbJndiName());
+        try {
+            final Long entityId = Long.valueOf(value);
+            return entityBean.find(entityId);
+        } catch (NumberFormatException ignored) {
             return null;
         }
     }
 
-    protected abstract Long getId(Object value);
+    @Override
+    public String getAsString(T value) {
+        return String.valueOf(getId(value));
+    }
 
     protected abstract String getEntityEjbJndiName();
+
+    protected abstract Long getId(T value);
 }

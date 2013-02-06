@@ -1,7 +1,7 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.util;
+
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,5 +45,10 @@ public class DateUtils {
         final GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(time);
         return calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
+    }
+
+    public static Interval getDayInterval(Date date) {
+        final DateTime dateTime = new DateTime(date);
+        return dateTime.toDateMidnight().toInterval();
     }
 }

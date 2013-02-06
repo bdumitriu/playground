@@ -1,17 +1,15 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.bean;
 
 import org.ffplanner.entity.Country;
 import org.ffplanner.entity.Movie;
+import org.ffplanner.entity.Movie_;
 import org.ffplanner.entity.Person;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.metamodel.SingularAttribute;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -20,16 +18,25 @@ import java.util.Collection;
  */
 @Stateless
 @LocalBean
-public class MovieBean {
+public class MovieBean extends BasicEntityBean<Movie> implements Serializable {
 
-    @PersistenceContext(unitName = "ffp")
-    private EntityManager entityManager;
+    private static final long serialVersionUID = 1L;
 
     @Inject
     private CountryBean countryBean;
 
     @Inject
     private PersonBean personBean;
+
+    @Override
+    protected Class<Movie> getEntityClass() {
+        return Movie.class;
+    }
+
+    @Override
+    protected SingularAttribute<Movie, Long> getIdAttribute() {
+        return Movie_.id;
+    }
 
     public void createWith(
             Movie movie, Iterable<String> directorNames, Iterable<String> actorNames, Iterable<String> countryNames) {

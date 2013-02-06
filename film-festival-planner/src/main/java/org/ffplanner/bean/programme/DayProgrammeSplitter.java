@@ -1,4 +1,4 @@
-package org.ffplanner.controller;
+package org.ffplanner.bean.programme;
 
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.Venue;
@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * @author Bogdan Dumitriu
  */
-public class DayShowingsDataLoader {
+public class DayProgrammeSplitter {
 
     private final Collection<Showing> showings;
 
@@ -20,8 +20,9 @@ public class DayShowingsDataLoader {
 
     private Venue venue;
 
-    public DayShowingsDataLoader(Collection<Showing> showings) {
+    public DayProgrammeSplitter(Collection<Showing> showings) {
         this.showings = showings;
+        splitByVenueAndHour();
     }
 
     public Collection<Venue> getVenues() {
@@ -32,7 +33,7 @@ public class DayShowingsDataLoader {
         return showingsByVenuesAndHours;
     }
 
-    public void load() {
+    private void splitByVenueAndHour() {
         for (Showing showing : showings) {
             if (noCurrentVenue()) {
                 changeVenueToThatOf(showing);
@@ -63,7 +64,9 @@ public class DayShowingsDataLoader {
     }
 
     private void saveVenueShowings() {
-        showingsByVenuesAndHours.put(venue, showingsByHour);
-        showingsByHour = new HashMap<>();
+        if (!noCurrentVenue()) {
+            showingsByVenuesAndHours.put(venue, showingsByHour);
+            showingsByHour = new HashMap<>();
+        }
     }
 }

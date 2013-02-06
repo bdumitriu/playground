@@ -1,6 +1,3 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.bean;
 
 import org.ffplanner.entity.Venue;
@@ -8,12 +5,12 @@ import org.ffplanner.entity.Venue_;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.SingularAttribute;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -21,10 +18,19 @@ import java.util.List;
  */
 @Stateless
 @LocalBean
-public class VenueBean {
+public class VenueBean extends BasicEntityBean<Venue> implements Serializable {
 
-    @PersistenceContext(unitName = "ffp")
-    private EntityManager entityManager;
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected Class<Venue> getEntityClass() {
+        return Venue.class;
+    }
+
+    @Override
+    protected SingularAttribute<Venue, Long> getIdAttribute() {
+        return Venue_.id;
+    }
 
     public Venue getVenue(String venueName) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

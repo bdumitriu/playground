@@ -1,20 +1,21 @@
 package org.ffplanner.scripts
 
-import org.ffplanner.bean.{MovieBundleBean, MovieBean}
+import org.ffplanner.bean.{MovieBundleInFestivalBean, MovieBean}
 import java.nio.file.{Files, Paths, Path}
 import org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl
 import xml.{XML, Node}
 import collection.JavaConversions
 import java.lang.Iterable
-import org.ffplanner.entity.{Country, Person, Movie, MovieBundle}
+import org.ffplanner.entity.{Movie, MovieBundle}
 import java.util
 import java.nio.charset.StandardCharsets
+import org.ffplanner.util.ConstantsToGetRidOf
 
 /**
  *
  * @author Bogdan Dumitriu
  */
-class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleBean: MovieBundleBean) {
+class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleInFestivalBean: MovieBundleInFestivalBean) {
 
   private val TitleAndCountries = """(.*) \((.*)\)""".r
 
@@ -91,7 +92,7 @@ class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleBean: M
       movieBundle.setOriginalTitle(movieBundleOriginalTitle)
     }
     movieBundle.addMovies(JavaConversions.asJavaCollection(movies))
-    movieBundleBean.addShowing(movieBundle, section)
+    movieBundleInFestivalBean.addShowing(movieBundle, ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID, section)
     movieBundle
   }
 

@@ -1,11 +1,6 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.bean;
 
-import org.ffplanner.entity.MovieBundle;
-import org.ffplanner.entity.Showing;
-import org.ffplanner.entity.Showing_;
+import org.ffplanner.entity.*;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -13,11 +8,15 @@ import javax.inject.Inject;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+
+import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID;
 
 /**
  * @author Bogdan Dumitriu
@@ -26,10 +25,13 @@ import java.util.*;
 @LocalBean
 public class ShowingBean extends BasicEntityBean<Showing> implements Serializable {
 
-    private static final long serialVersionUID = -8687692892092346109L;
+    private static final long serialVersionUID = 1L;
 
     @Inject
     private VenueBean venueBean;
+
+    @Inject
+    private MovieBundleInFestivalBean movieBundleInFestivalBean;
 
     @Override
     protected Class<Showing> getEntityClass() {
@@ -45,9 +47,9 @@ public class ShowingBean extends BasicEntityBean<Showing> implements Serializabl
      * @param movieBundle
      *         the movie bundle being shown
      * @param day
-     *         expected in the format "9 Jun 2011"
+     *         the day of the showing, expected in the format "9 Jun 2011"
      * @param time
-     *         expected in the format "16:00"
+     *         the time of the showing, expected in the format "16:00"
      * @param venueName
      *         where the showing takes places
      * @throws ParseException
@@ -57,7 +59,13 @@ public class ShowingBean extends BasicEntityBean<Showing> implements Serializabl
         final Showing showing = new Showing();
         showing.setDateAndTime(day, time);
         showing.setVenue(venueBean.getVenue(venueName));
-        showing.setMovieBundle(movieBundle);
+        final List<MovieBundleInFestival> movieBundlesInFestival =
+                movieBundleInFestivalBean.findAll(movieBundle.getId(), DEFAULT_FESTIVAL_EDITION_ID);
+        if (movieBundlesInFestival.size() == 1) {
+            showing.setMovieBundleInFestival(movieBundlesInFestival.get(0));
+        } else {
+            throw new RuntimeException("Not implemented: the same movie is shown under multiple sections.");
+        }
         entityManager.persist(showing);
     }
 
@@ -65,9 +73,9 @@ public class ShowingBean extends BasicEntityBean<Showing> implements Serializabl
      * @param movieBundle
      *         the movie bundle being shown
      * @param day
-     *         expected in the format "9 Jun 2011"
+     *         the day of the showing
      * @param time
-     *         expected in the format "16:00"
+     *         the time of the showing, expected in the format "16:00"
      * @param venueName
      *         where the showing takes places
      * @throws ParseException
@@ -77,30 +85,28 @@ public class ShowingBean extends BasicEntityBean<Showing> implements Serializabl
         final Showing showing = new Showing();
         showing.setDateAndTime(day, time);
         showing.setVenue(venueBean.getVenue(venueName));
-        showing.setMovieBundle(movieBundle);
+        final List<MovieBundleInFestival> movieBundlesInFestival =
+                movieBundleInFestivalBean.findAll(movieBundle.getId(), DEFAULT_FESTIVAL_EDITION_ID);
+        if (movieBundlesInFestival.size() == 1) {
+            showing.setMovieBundleInFestival(movieBundlesInFestival.get(0));
+        } else {
+            throw new RuntimeException("Not implemented: the same movie is shown under multiple sections.");
+        }
         entityManager.persist(showing);
     }
 
-    public Collection<Showing> getShowingsFor(Date day) {
+    public List<Showing> findBy(FestivalEdition festivalEdition) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Showing> query = criteriaBuilder.createQuery(Showing.class);
-        final Root<Showing> root = query.from(Showing.class);
-        query.where(criteriaBuilder.greaterThanOrEqualTo(root.get(Showing_.dateAndTime), day),
-                criteriaBuilder.lessThanOrEqualTo(root.get(Showing_.dateAndTime), getDayAfter(day)));
+        final Root<Showing> showingRoot = query.from(Showing.class);
+        final Join<Showing, MovieBundleInFestival> movieBundleInFestivalRoot =
+                showingRoot.join(Showing_.movieBundleInFestival);
+        query.where(criteriaBuilder.and(criteriaBuilder.equal(
+                movieBundleInFestivalRoot.get(MovieBundleInFestival_.festivalEditionId), festivalEdition.getId())));
         query.orderBy(
-                criteriaBuilder.asc(root.get(Showing_.venue)), criteriaBuilder.asc(root.get(Showing_.dateAndTime)));
-        final TypedQuery<Showing> showings = entityManager.createQuery(query);
-        final List<Showing> xList = showings.getResultList();
-        for (Showing showing : xList) {
-            showing.getMovieBundle().getMovies().size();
-        }
-        return xList;
-    }
-
-    private static Date getDayAfter(Date day) {
-        final Calendar calendar = new GregorianCalendar();
-        calendar.setTime(day);
-        calendar.roll(Calendar.DAY_OF_MONTH, true);
-        return calendar.getTime();
+                criteriaBuilder.asc(showingRoot.get(Showing_.venue)),
+                criteriaBuilder.asc(showingRoot.get(Showing_.dateAndTime)));
+        final TypedQuery<Showing> typedQuery = entityManager.createQuery(query);
+        return typedQuery.getResultList();
     }
 }

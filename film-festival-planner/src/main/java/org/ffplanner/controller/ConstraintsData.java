@@ -29,8 +29,8 @@ public class ConstraintsData {
     public void loadFor(User user) {
         constraints = new HashMap<>();
         final UserSchedule userSchedule = userScheduleBean.findOrCreateBy(user.getId(), festivalEdition);
-        for (UserScheduleConstraints userScheduleConstraints : userSchedule.getConstraints()) {
-            constraints.put(userScheduleConstraints.getShowing().getId(), userScheduleConstraints.getConstraintType());
+        for (UserScheduleConstraint userScheduleConstraint : userSchedule.getConstraints()) {
+            constraints.put(userScheduleConstraint.getShowing().getId(), userScheduleConstraint.getConstraintType());
         }
     }
 

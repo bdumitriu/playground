@@ -1,12 +1,10 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Bogdan Dumitriu
@@ -14,7 +12,7 @@ import java.io.Serializable;
 @Entity
 public class User implements Serializable {
 
-    private static final long serialVersionUID = -3332755932464496941L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
@@ -56,5 +54,22 @@ public class User implements Serializable {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(emailAddress);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        return Objects.equals(this.emailAddress, other.emailAddress);
     }
 }

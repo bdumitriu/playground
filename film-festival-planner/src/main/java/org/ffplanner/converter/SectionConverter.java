@@ -1,6 +1,3 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.converter;
 
 import org.ffplanner.entity.Section;
@@ -14,12 +11,17 @@ import javax.faces.convert.FacesConverter;
 public class SectionConverter extends BasicEntityConverter<Section> {
 
     @Override
+    protected Class<Section> getEntityClass() {
+        return Section.class;
+    }
+
+    @Override
     protected String getEntityEjbJndiName() {
         return "java:module/SectionBean";
     }
 
     @Override
-    protected Long getId(Object value) {
-        return ((Section) value).getId();
+    protected Long getId(Section value) {
+        return value.getId();
     }
 }

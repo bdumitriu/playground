@@ -1,6 +1,3 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.bean;
 
 import org.ffplanner.entity.Person;
@@ -8,12 +5,12 @@ import org.ffplanner.entity.Person_;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.SingularAttribute;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -21,10 +18,19 @@ import java.util.List;
  */
 @Stateless
 @LocalBean
-public class PersonBean {
+public class PersonBean extends BasicEntityBean<Person> implements Serializable {
 
-    @PersistenceContext(unitName = "ffp")
-    private EntityManager entityManager;
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected Class<Person> getEntityClass() {
+        return Person.class;
+    }
+
+    @Override
+    protected SingularAttribute<Person, Long> getIdAttribute() {
+        return Person_.id;
+    }
 
     public Person findOrCreateActorBy(String actorName) {
         return findOrCreateBy(actorName);

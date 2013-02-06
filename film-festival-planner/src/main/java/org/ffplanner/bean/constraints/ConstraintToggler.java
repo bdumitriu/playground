@@ -22,7 +22,7 @@ public abstract class ConstraintToggler {
     }
 
     public void toggle(ScheduleConstraintType constraintType) {
-        final UserScheduleConstraints constraints = getConstraints();
+        final UserScheduleConstraint constraints = getConstraints();
         if (constraints == null) {
             createConstraint(showing, userSchedule, constraintType);
         } else {
@@ -30,18 +30,18 @@ public abstract class ConstraintToggler {
         }
     }
 
-    protected abstract void foo(ScheduleConstraintType constraintType, UserScheduleConstraints constraints);
+    protected abstract void foo(ScheduleConstraintType constraintType, UserScheduleConstraint constraints);
 
-    private UserScheduleConstraints getConstraints() {
-        return entityManager.find(UserScheduleConstraints.class,
-                new UserScheduleConstraintsId(userSchedule.getId(), showing.getId()));
+    private UserScheduleConstraint getConstraints() {
+        return entityManager.find(UserScheduleConstraint.class,
+                new UserScheduleConstraintId(userSchedule.getId(), showing.getId()));
     }
 
     private void createConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
-        final UserScheduleConstraints userScheduleConstraints = new UserScheduleConstraints();
-        userScheduleConstraints.setShowing(showing);
-        userScheduleConstraints.setUserSchedule(userSchedule);
-        userScheduleConstraints.setConstraintType(constraintType);
-        entityManager.persist(userScheduleConstraints);
+        final UserScheduleConstraint userScheduleConstraint = new UserScheduleConstraint();
+        userScheduleConstraint.setShowing(showing);
+        userScheduleConstraint.setUserSchedule(userSchedule);
+        userScheduleConstraint.setConstraintType(constraintType);
+        entityManager.persist(userScheduleConstraint);
     }
 }

@@ -1,6 +1,3 @@
-/*
- * Copyright 2012 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.bean;
 
 import org.ffplanner.bean.constraints.AnyConstraintToggler;
@@ -12,33 +9,36 @@ import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.Serializable;
 
 /**
  * @author Bogdan Dumitriu
  */
 @Stateless
 @LocalBean
-public class UserScheduleConstraintsBean extends ConnectorEntityBean<UserScheduleConstraints> {
+public class UserScheduleConstraintsBean extends ConnectorEntityBean<UserScheduleConstraint> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Override
-    protected Class<UserScheduleConstraints> getEntityClass() {
-        return UserScheduleConstraints.class;
+    public UserScheduleConstraint find(Long showingId, Long userScheduleId) {
+        return super.find(showingId, userScheduleId);
     }
 
     @Override
-    protected Predicate getLeftCondition(Long id, CriteriaBuilder criteriaBuilder, Root<UserScheduleConstraints> root) {
+    protected Class<UserScheduleConstraint> getEntityClass() {
+        return UserScheduleConstraint.class;
+    }
+
+    @Override
+    protected Predicate getLeftCondition(Long id, CriteriaBuilder criteriaBuilder, Root<UserScheduleConstraint> root) {
         return criteriaBuilder.equal(root.get(UserScheduleConstraints_.showing).get(Showing_.id), id);
     }
 
     @Override
     protected Predicate getRightCondition(
-            Long id, CriteriaBuilder criteriaBuilder, Root<UserScheduleConstraints> root) {
+            Long id, CriteriaBuilder criteriaBuilder, Root<UserScheduleConstraint> root) {
         return criteriaBuilder.equal(root.get(UserScheduleConstraints_.userSchedule).get(UserSchedule_.id), id);
-    }
-
-    @Override
-    public UserScheduleConstraints find(Long showingId, Long userScheduleId) {
-        return super.find(showingId, userScheduleId);
     }
 
     /**
@@ -58,8 +58,8 @@ public class UserScheduleConstraintsBean extends ConnectorEntityBean<UserSchedul
     }
 
     public boolean hasConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
-        final UserScheduleConstraints constraints = entityManager.find(
-                UserScheduleConstraints.class, new UserScheduleConstraintsId(userSchedule.getId(), showing.getId()));
+        final UserScheduleConstraint constraints = entityManager.find(
+                UserScheduleConstraint.class, new UserScheduleConstraintId(userSchedule.getId(), showing.getId()));
         return constraints != null && constraints.getConstraintType() == constraintType;
     }
 }

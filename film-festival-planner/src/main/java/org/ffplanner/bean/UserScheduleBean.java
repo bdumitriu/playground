@@ -1,6 +1,3 @@
-/*
- * Copyright 2012 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.bean;
 
 import org.ffplanner.entity.*;
@@ -9,12 +6,11 @@ import org.ffplanner.qualifier.Messages;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.SingularAttribute;
 import java.io.Serializable;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -24,12 +20,9 @@ import java.util.ResourceBundle;
  */
 @Stateless
 @LocalBean
-public class UserScheduleBean implements Serializable {
+public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements Serializable {
 
-    private static final long serialVersionUID = 4498112316395205031L;
-
-    @PersistenceContext(unitName = "ffp")
-    private EntityManager entityManager;
+    private static final long serialVersionUID = 1L;
 
     @Inject @Messages
     private transient ResourceBundle bundle;
@@ -42,6 +35,16 @@ public class UserScheduleBean implements Serializable {
 
     @Inject
     private UserScheduleConstraintsBean constraintsBean;
+
+    @Override
+    protected Class<UserSchedule> getEntityClass() {
+        return UserSchedule.class;
+    }
+
+    @Override
+    protected SingularAttribute<UserSchedule, Long> getIdAttribute() {
+        return UserSchedule_.id;
+    }
 
     public UserSchedule findOrCreateBy(Long userId, FestivalEdition festivalEdition) {
         return findOrCreateBy(userId, festivalEdition, true);
@@ -62,7 +65,7 @@ public class UserScheduleBean implements Serializable {
         } else {
             final UserSchedule userSchedule = userSchedules.get(0);
             if (forceLazyLoad) {
-                forceLazyLoad(userSchedule);
+                userSchedule.loadLazyFields();
             }
             return userSchedule;
         }
@@ -114,10 +117,5 @@ public class UserScheduleBean implements Serializable {
         } else {
             return false;
         }
-    }
-
-    private static void forceLazyLoad(UserSchedule userSchedule) {
-        userSchedule.getShowings().iterator();
-        userSchedule.getConstraints().iterator();
     }
 }

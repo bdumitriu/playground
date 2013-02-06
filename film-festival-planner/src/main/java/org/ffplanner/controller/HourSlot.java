@@ -2,6 +2,8 @@ package org.ffplanner.controller;
 
 import org.ffplanner.entity.Showing;
 
+import static org.joda.time.DateTimeConstants.MINUTES_PER_HOUR;
+
 /**
  * @author Bogdan Dumitriu
  */
@@ -46,7 +48,7 @@ public class HourSlot {
         if (showing == null) {
             return 0;
         } else {
-            return showing.getMinute() * hourCellHeight / 60;
+            return showing.getMinute() * hourCellHeight / MINUTES_PER_HOUR;
         }
     }
 
@@ -54,8 +56,8 @@ public class HourSlot {
         if (showing == null) {
             return 0;
         } else {
-            final int durationInMinutes = showing.getMovieBundle().getDurationInMinutes();
-            return durationInMinutes * hourCellHeight / 60;
+            final int durationInMinutes = showing.getMovieBundleInFestival().getMovieBundle().getDurationInMinutes();
+            return durationInMinutes * hourCellHeight / MINUTES_PER_HOUR;
         }
     }
 }

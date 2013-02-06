@@ -1,6 +1,6 @@
 package org.ffplanner.scripts
 
-import org.ffplanner.bean.{MovieBundleBean, MovieBean, ShowingBean}
+import org.ffplanner.bean.{MovieBundleInFestivalBean, MovieBundleBean, MovieBean, ShowingBean}
 import org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl
 import java.nio.file._
 import java.text.SimpleDateFormat
@@ -19,8 +19,8 @@ class TiffDownloader(showingBean: ShowingBean) {
 
   private var tiffMovies: TiffMovies = _
 
-  def fillDatabaseFromSite(movieBean: MovieBean, movieBundleBean: MovieBundleBean) {
-    tiffMovies = new TiffMovies(alsoDownload, movieBean, movieBundleBean)
+  def fillDatabaseFromSite(movieBean: MovieBean, movieBundleInFestivalBean: MovieBundleInFestivalBean) {
+    tiffMovies = new TiffMovies(alsoDownload, movieBean, movieBundleInFestivalBean)
 
     val path = Paths.get("tiff.html")
     if (alsoDownload && !Files.isRegularFile(path)) {

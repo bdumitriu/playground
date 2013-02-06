@@ -3,7 +3,7 @@ package org.ffplanner.bean.constraints;
 import org.ffplanner.entity.ScheduleConstraintType;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.UserSchedule;
-import org.ffplanner.entity.UserScheduleConstraints;
+import org.ffplanner.entity.UserScheduleConstraint;
 
 import javax.persistence.EntityManager;
 
@@ -17,7 +17,7 @@ public class AnyConstraintToggler extends ConstraintToggler {
     }
 
     @Override
-    protected void foo(ScheduleConstraintType constraintType, UserScheduleConstraints constraints) {
+    protected void foo(ScheduleConstraintType constraintType, UserScheduleConstraint constraints) {
         entityManager.remove(constraints);
     }
 }

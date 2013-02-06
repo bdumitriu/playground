@@ -75,7 +75,7 @@
                             <h:panelGroup id="movie_cell" styleClass="sch_movie_cell" rendered="#{hourSlot.hasShowing()}"
                                           style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
                                 <h:commandLink action="#{dayScheduleController.movieCellClicked(hourSlot.showing.id)}"
-                                               value="#{hourSlot.showing.movieBundle.originalTitle}"
+                                               value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle}"
                                                styleClass="sch_movie_cell_embedded">
                                     <f:ajax execute="@form" render="@form" />
                                 </h:commandLink>

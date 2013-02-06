@@ -1,6 +1,3 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner;
 
 import org.ffplanner.controller.AuthController;

@@ -5,11 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:converters="http://ffplanner.org/converters">
 
 <f:metadata>
-    <f:viewParam name="section" value="#{programmeController.section}" converter="sectionConverter"/>
-    <f:viewParam name="movieBundle" value="#{programmeController.movieBundle}" converter="movieBundleConverter"/>
+    <f:viewParam name="section" value="#{programmeController.section}" converter="festivalEditionSectionConverter"/>
+    <f:viewParam name="movieBundle" value="#{programmeController.movieBundle}" converter="movieBundleInFestivalConverter"/>
 </f:metadata>
 
 <ui:composition template="layout.xhtml">
@@ -17,25 +18,25 @@
     <ui:define name="body">
         <h:panelGroup layout="block" style="float: left">
             <ui:repeat value="#{programmeController.sections}" var="section">
-                <h:outputText value="#{section.name}" rendered="#{section == programmeController.section}"/>
-                <h:link value="#{section.name}" outcome="Programme" rendered="#{section != programmeController.section}">
-                    <f:param name="section" value="#{section.id}"/>
+                <h:outputText value="#{section.section.name}" rendered="#{section == programmeController.section}"/>
+                <h:link value="#{section.section.name}" outcome="Programme" rendered="#{section != programmeController.section}">
+                    <f:param name="section" value="#{converters:convertSection(section)}"/>
                 </h:link>
                 <br/>
             </ui:repeat>
         </h:panelGroup>
         <h:panelGroup layout="block" style="float: left; margin-left: 50px" rendered="#{programmeController.section != null}">
             <ui:repeat value="#{programmeController.section.movieBundles}" var="movieBundle">
-                <h:outputText value="#{movieBundle.englishTitle}" rendered="#{movieBundle == programmeController.movieBundle}"/>
-                <h:link value="#{movieBundle.englishTitle}" outcome="Programme" rendered="#{movieBundle != programmeController.movieBundle}">
-                    <f:param name="section" value="#{programmeController.section.id}"/>
-                    <f:param name="movieBundle" value="#{movieBundle.id}"/>
+                <h:outputText value="#{movieBundle.movieBundle.englishTitle}" rendered="#{movieBundle == programmeController.movieBundle}"/>
+                <h:link value="#{movieBundle.movieBundle.englishTitle}" outcome="Programme" rendered="#{movieBundle != programmeController.movieBundle}">
+                    <f:param name="section" value="#{converters:convertSection(programmeController.section)}"/>
+                    <f:param name="movieBundle" value="#{converters:convertMovieBundleInFestival(movieBundle)}"/>
                 </h:link>
                 <br/>
             </ui:repeat>
         </h:panelGroup>
         <h:panelGroup layout="block" style="float: left; margin-left: 50px; width: 300px" rendered="#{programmeController.movie != null}">
-            <b><h:outputLink value="http://www.imdb.com/title/#{programmeController.movie.imdbId}" target="new"><h:outputText value="#{programmeController.movie.originalTitle}"/></h:outputLink> </b>
+            <span style="font-weight: bold;"><h:outputLink value="http://www.imdb.com/title/#{programmeController.movie.imdbId}" target="new"><h:outputText value="#{programmeController.movie.originalTitle}"/></h:outputLink></span>
             <br/>
             <h:outputText value="#{programmeController.movie.englishTitle}"/>
             <br/>
@@ -50,14 +51,14 @@
             <h:outputText value="#{programmeController.movie.description}"/>
         </h:panelGroup>
         <h:panelGroup layout="block" style="float: left; margin-left: 50px; width: 300px" rendered="#{programmeController.movie == null}">
-            <b><h:outputText value="#{programmeController.movieBundle.originalTitle}"/></b>
+            <span style="font-weight: bold;"><h:outputText value="#{programmeController.movieBundle.movieBundle.originalTitle}"/></span>
             <br/>
-            <h:outputText value="#{programmeController.movieBundle.englishTitle}"/>
+            <h:outputText value="#{programmeController.movieBundle.movieBundle.englishTitle}"/>
             <br/>
-            <h:outputText value="#{programmeController.movieBundle.formattedDuration}"/>
+            <h:outputText value="#{programmeController.movieBundle.movieBundle.formattedDuration}"/>
             <br/>
             <br/>
-            <ui:repeat value="#{programmeController.movieBundle.movies}" var="movie">
+            <ui:repeat value="#{programmeController.movieBundle.movieBundle.movies}" var="movie">
                 <h:outputText value="#{movie.originalTitle}"/>
                 <br/>
                 <h:outputText value="#{movie.year}"/>

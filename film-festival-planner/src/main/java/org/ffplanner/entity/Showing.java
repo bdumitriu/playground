@@ -1,7 +1,8 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.entity;
+
+import org.ffplanner.util.DateUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 import static java.util.Calendar.HOUR_OF_DAY;
 import static java.util.Calendar.MINUTE;
@@ -26,21 +28,29 @@ public class Showing implements Serializable {
 
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("H:m");
 
-    @GeneratedValue
     @Id
+    @GeneratedValue
     private Long id;
-
-    @ManyToOne
-    private FestivalEdition festivalEdition;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateAndTime;
 
+    @Column(name = "venue_id", insertable = false, updatable = false)
+    private Long venueId;
+
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "venue_id")
     private Venue venue;
 
+    @Column(name = "movieBundleInFestival_id", insertable = false, updatable = false)
+    private Long movieBundleInFestivalId;
+
     @ManyToOne
-    private MovieBundle movieBundle;
+    private MovieBundleInFestival movieBundleInFestival;
+
+    public void loadLazyFields() {
+        movieBundleInFestival.loadLazyFields();
+    }
 
     public Long getId() {
         return id;
@@ -51,11 +61,7 @@ public class Showing implements Serializable {
     }
 
     public FestivalEdition getFestivalEdition() {
-        return festivalEdition;
-    }
-
-    public void setFestivalEdition(FestivalEdition festivalEdition) {
-        this.festivalEdition = festivalEdition;
+        return movieBundleInFestival.getFestivalEditionSection().getFestivalEdition();
     }
 
     public Date getDateAndTime() {
@@ -66,10 +72,12 @@ public class Showing implements Serializable {
         this.dateAndTime = dateAndTime;
     }
 
+    public Interval getDayInterval() {
+        return DateUtils.getDayInterval(getDateAndTime());
+    }
+
     public int getHour() {
-        final Calendar calendar = new GregorianCalendar();
-        calendar.setTime(dateAndTime);
-        return calendar.get(HOUR_OF_DAY);
+        return new DateTime(dateAndTime).getHourOfDay();
     }
 
     public int getMinute() {
@@ -107,11 +115,29 @@ public class Showing implements Serializable {
         this.venue = venue;
     }
 
-    public MovieBundle getMovieBundle() {
-        return movieBundle;
+    public MovieBundleInFestival getMovieBundleInFestival() {
+        return movieBundleInFestival;
     }
 
-    public void setMovieBundle(MovieBundle movieBundle) {
-        this.movieBundle = movieBundle;
+    public void setMovieBundleInFestival(MovieBundleInFestival movieBundleInFestival) {
+        this.movieBundleInFestival = movieBundleInFestival;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(movieBundleInFestivalId, dateAndTime, venueId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Showing other = (Showing) obj;
+        return Objects.equals(this.movieBundleInFestivalId, other.movieBundleInFestivalId)
+                && Objects.equals(this.dateAndTime, other.dateAndTime) && Objects.equals(this.venueId, other.venueId);
     }
 }

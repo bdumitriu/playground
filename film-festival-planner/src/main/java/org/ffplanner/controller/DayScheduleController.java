@@ -3,7 +3,10 @@ package org.ffplanner.controller;
 import org.ffplanner.bean.FestivalEditionBean;
 import org.ffplanner.bean.ShowingBean;
 import org.ffplanner.bean.UserScheduleBean;
+import org.ffplanner.bean.programme.DayProgramme;
+import org.ffplanner.bean.programme.FestivalProgrammeBean;
 import org.ffplanner.converter.DayConverter;
+import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.ScheduleConstraintType;
 import org.ffplanner.entity.User;
 import org.ffplanner.entity.Venue;
@@ -27,12 +30,15 @@ import static org.joda.time.DateTimeConstants.JUNE;
 @SessionScoped
 public class DayScheduleController implements Serializable {
 
-    private static final long serialVersionUID = 868645927823933930L;
+    private static final long serialVersionUID = 1L;
 
     private final Logger log = Logger.getLogger(DayScheduleController.class.getName());
 
     @Inject @LoggedInUser
     private User user;
+
+    @Inject
+    private FestivalProgrammeBean festivalProgrammeBean;
 
     @Inject
     private UserScheduleBean userScheduleBean;
@@ -43,22 +49,17 @@ public class DayScheduleController implements Serializable {
     @Inject
     private FestivalEditionBean festivalEditionBean;
 
-    private final Collection<Hour> hours;
+    private final Hour[] hours;
 
     private Date day;
 
-    private DayShowingsData dayShowingsData;
+    private DayProgramme dayProgramme;
 
     private ConstraintsData constraintsData;
 
     public DayScheduleController() {
         log.entering("DayScheduleController", "init");
-        hours = new ArrayList<>();
-        for (int i = 9; i < 24; i++) {
-            hours.add(new Hour(i));
-        }
-        hours.add(new Hour(0));
-        hours.add(new Hour(1));
+        hours = Hour.hoursFrom(9, 2);
     }
 
     public User getUser() {
@@ -76,21 +77,23 @@ public class DayScheduleController implements Serializable {
             final DateTime dateTime = new DateTime(2012, JUNE, 1, 0, 0);
             this.day = dateTime.toDate();
         }
-        dayShowingsData = new DayShowingsData(showingBean);
-        dayShowingsData.loadFor(this.day, this.hours);
+        final FestivalEdition festivalEdition = festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID);
+        dayProgramme = festivalProgrammeBean.getProgrammeFor(festivalEdition).getDayProgramme(this.day);
+
         System.out.println("Loading Constraints Data.....................................");
-        constraintsData = new ConstraintsData(userScheduleBean, festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID));
+        constraintsData = new ConstraintsData(userScheduleBean, festivalEdition);
         constraintsData.loadFor(this.user);
+
         log.exiting("DayScheduleController", "prepareView");
     }
 
-    public Collection<Hour> getHours() {
+    public Hour[] getHours() {
         return hours;
     }
 
     public Collection<Venue> getVenues() {
         log.entering("DayScheduleController", "getVenues");
-        final Collection<Venue> venues = dayShowingsData.getVenues();
+        final Collection<Venue> venues = dayProgramme.getVenues();
         try {
             return venues;
         } finally {
@@ -99,7 +102,7 @@ public class DayScheduleController implements Serializable {
     }
 
     public Collection<HourSlot> getHourLineFor(Hour hour) {
-        return dayShowingsData.getHourLineFor(hour);
+        return dayProgramme.getHourLineFor(hour);
     }
 
     public String getPreviousDay() {

@@ -1,6 +1,3 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.controller.auth;
 
 import java.io.Serializable;
@@ -11,7 +8,7 @@ import java.io.Serializable;
 
 public class AuthData implements Serializable {
 
-    private static final long serialVersionUID = -8667859852129851575L;
+    private static final long serialVersionUID = 1L;
 
     private String openId;
 

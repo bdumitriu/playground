@@ -1,6 +1,3 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.entity;
 
 import org.ffplanner.util.DateUtils;
@@ -25,12 +22,25 @@ public class MovieBundle implements Serializable {
 
     private String originalTitle;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Section section;
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "moviebundle_movie",
+            joinColumns = {@JoinColumn(name = "movieBundle_id")},
+            inverseJoinColumns = {@JoinColumn(name = "movie_id")}
+    )
     @OrderBy
-    private List<Movie> movies;
+    private List<Movie> movies = new LinkedList<>();
+
+    @Transient
+    private boolean lazyFieldsLoaded;
+
+    public synchronized void loadLazyFields() {
+        if (!lazyFieldsLoaded) {
+            for (Movie movie : movies) {
+                movie.loadLazyFields();
+            }
+            lazyFieldsLoaded = true;
+        }
+    }
 
     public Long getId() {
         return id;
@@ -56,14 +66,6 @@ public class MovieBundle implements Serializable {
         this.originalTitle = originalTitle;
     }
 
-    public Section getSection() {
-        return section;
-    }
-
-    public void setSection(Section section) {
-        this.section = section;
-    }
-
     public void addMovies(Collection<Movie> movies) {
         if (this.movies == null) {
             this.movies = new LinkedList<>();
@@ -85,32 +87,5 @@ public class MovieBundle implements Serializable {
             totalDuration += movie.getDurationInMinutes();
         }
         return totalDuration;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MovieBundle that = (MovieBundle) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "MovieBundle{" +
-                "englishTitle='" + englishTitle + '\'' +
-                ", originalTitle='" + originalTitle + '\'' +
-                ", section=" + section +
-                ", movies=" + movies +
-                '}';
     }
 }

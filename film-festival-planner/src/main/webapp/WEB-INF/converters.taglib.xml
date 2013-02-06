@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<facelet-taglib version="2.0"
+                xmlns="http://java.sun.com/xml/ns/javaee"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd">
+
+    <namespace>http://ffplanner.org/converters</namespace>
+
+    <function>
+        <function-name>convertSection</function-name>
+        <function-class>org.ffplanner.converter.Converters</function-class>
+        <function-signature>java.lang.String convertSection(org.ffplanner.entity.FestivalEditionSection)</function-signature>
+    </function>
+    <function>
+        <function-name>convertMovieBundleInFestival</function-name>
+        <function-class>org.ffplanner.converter.Converters</function-class>
+        <function-signature>java.lang.String convertMovieBundleInFestival(org.ffplanner.entity.MovieBundleInFestival)
+        </function-signature>
+    </function>
+
+</facelet-taglib>

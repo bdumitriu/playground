@@ -5,18 +5,15 @@ import org.ffplanner.util.DateUtils;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Movie implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @GeneratedValue
     @Id
+    @GeneratedValue
     private Long id;
 
     private String englishTitle;
@@ -31,21 +28,37 @@ public class Movie implements Serializable {
     @Column(length = 2000)
     private String description;
 
-    @JoinTable(name = "movie_actor")
+    @JoinTable(name = "movie_actor",
+            joinColumns = {@JoinColumn(name = "movie_id")},
+            inverseJoinColumns = {@JoinColumn(name = "actor_id")}
+    )
     @ManyToMany(cascade = CascadeType.ALL)
     @OrderBy
-    private List<Person> actors;
+    private List<Person> actors = new LinkedList<>();
 
-    @JoinTable(name = "movie_director")
+    @JoinTable(name = "movie_director",
+            joinColumns = {@JoinColumn(name = "movie_id")},
+            inverseJoinColumns = {@JoinColumn(name = "director_id")}
+    )
     @ManyToMany(cascade = CascadeType.ALL)
     @OrderBy
-    private List<Person> directors;
+    private List<Person> directors = new LinkedList<>();
 
+    @JoinTable(name = "movie_country",
+            joinColumns = {@JoinColumn(name = "movie_id")},
+            inverseJoinColumns = {@JoinColumn(name = "country_id")}
+    )
     @ManyToMany(cascade = CascadeType.ALL)
     @OrderBy
-    private List<Country> countries;
+    private List<Country> countries = new LinkedList<>();
 
     private String imdbId;
+
+    public void loadLazyFields() {
+        getCountries().iterator();
+        getDirectors().iterator();
+        getActors().iterator();
+    }
 
     public Long getId() {
         return id;
@@ -153,17 +166,19 @@ public class Movie implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "Movie{" +
-                "englishTitle='" + englishTitle + '\'' +
-                ", originalTitle='" + originalTitle + '\'' +
-                ", year='" + year + '\'' +
-                ", duration=" + duration +
-                ", description='" + description + '\'' +
-                ", actors=" + actors +
-                ", directors=" + directors +
-                ", countries=" + countries +
-                ", imdbID=" + imdbId +
-                '}';
+    public int hashCode() {
+        return Objects.hash(originalTitle, year);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Movie other = (Movie) obj;
+        return Objects.equals(this.originalTitle, other.originalTitle) && Objects.equals(this.year, other.year);
     }
 }

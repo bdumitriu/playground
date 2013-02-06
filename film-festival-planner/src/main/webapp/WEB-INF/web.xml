@@ -14,6 +14,10 @@
         <param-name>com.sun.faces.writeStateAtFormEnd</param-name>
         <param-value>false</param-value>
     </context-param>
+    <context-param>
+        <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+        <param-value>/WEB-INF/converters.taglib.xml</param-value>
+    </context-param>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -30,4 +34,5 @@
     <welcome-file-list>
         <welcome-file>faces/auth/index.xhtml</welcome-file>
     </welcome-file-list>
+
 </web-app>

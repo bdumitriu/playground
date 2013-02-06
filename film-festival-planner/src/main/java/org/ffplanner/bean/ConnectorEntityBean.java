@@ -1,6 +1,3 @@
-/*
- * Copyright 2012 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.bean;
 
 import javax.persistence.NoResultException;

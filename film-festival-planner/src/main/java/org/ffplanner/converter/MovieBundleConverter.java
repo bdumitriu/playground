@@ -1,6 +1,3 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.converter;
 
 import org.ffplanner.entity.MovieBundle;
@@ -14,12 +11,17 @@ import javax.faces.convert.FacesConverter;
 public class MovieBundleConverter extends BasicEntityConverter<MovieBundle> {
 
     @Override
+    protected Class<MovieBundle> getEntityClass() {
+        return MovieBundle.class;
+    }
+
+    @Override
     protected String getEntityEjbJndiName() {
         return "java:module/MovieBundleBean";
     }
 
     @Override
-    protected Long getId(Object value) {
-        return ((MovieBundle) value).getId();
+    protected Long getId(MovieBundle value) {
+        return value.getId();
     }
 }

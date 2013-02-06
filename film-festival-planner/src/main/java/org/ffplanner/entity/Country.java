@@ -1,6 +1,3 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.entity;
 
 import javax.persistence.Column;
@@ -8,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Bogdan Dumitriu
@@ -36,9 +34,19 @@ public class Country implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "Country{" +
-                "name='" + name + '\'' +
-                '}';
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Country other = (Country) obj;
+        return Objects.equals(this.name, other.name);
     }
 }

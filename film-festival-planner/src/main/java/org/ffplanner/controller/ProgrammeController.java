@@ -1,20 +1,18 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.controller;
 
-import org.ffplanner.bean.MovieBean;
-import org.ffplanner.bean.SectionBean;
+import org.ffplanner.bean.programme.FestivalEditionProgramme;
+import org.ffplanner.bean.programme.FestivalProgrammeBean;
+import org.ffplanner.entity.FestivalEditionSection;
 import org.ffplanner.entity.Movie;
-import org.ffplanner.entity.MovieBundle;
-import org.ffplanner.entity.Section;
+import org.ffplanner.entity.MovieBundleInFestival;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Logger;
+
+import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID;
 
 /**
  * @author Bogdan Dumitriu
@@ -23,85 +21,81 @@ import java.util.logging.Logger;
 @RequestScoped
 public class ProgrammeController implements Serializable {
 
-    private final Logger log = Logger.getLogger(ProgrammeController.class.getName());
+    private static final long serialVersionUID = 1L;
 
     @Inject
-    private SectionBean sectionBean;
+    private FestivalProgrammeBean festivalProgrammeBean;
 
-    @Inject
-    private MovieBean movieBean;
+    private FestivalEditionSection[] sections;
 
-    private List<Section> sections;
+    private FestivalEditionSection section;
 
-    private Section section;
-
-    private MovieBundle movieBundle;
+    private MovieBundleInFestival movieBundle;
 
     private Movie movie;
 
-    public List<Section> getSections() {
+    public FestivalEditionSection[] getSections() {
         if (sections == null) {
-            sections = sectionBean.getSections();
+            final FestivalEditionProgramme programme =
+                    festivalProgrammeBean.getProgrammeFor(DEFAULT_FESTIVAL_EDITION_ID);
+            final List<FestivalEditionSection> festivalSections = programme.getSections();
+            sections = festivalSections.toArray(new FestivalEditionSection[festivalSections.size()]);
         }
         return sections;
     }
 
-    public void setSection(Section section) {
-        this.section = section;
-    }
-
-    public Section getSection() {
-//        log.setLevel(Level.ALL);
-        log.entering("ProgrammeController", "findBy");
-        try {
-            if (section == null) {
-                final List<Section> sections = getSections();
-                section = sections.isEmpty() ? null : sections.get(0);
+    public void setSection(FestivalEditionSection festivalEditionSection) {
+        for (FestivalEditionSection section : sections) {
+            if (section.equals(festivalEditionSection)) {
+                this.section = section;
+                return;
             }
-            return section;
-        } finally {
-            log.exiting("ProgrammeController", "findBy");
         }
     }
 
-    public void setMovieBundle(MovieBundle movieBundle) {
-        this.movieBundle = movieBundle;
+    public FestivalEditionSection getSection() {
+        if (section == null) {
+            final FestivalEditionSection[] sections = getSections();
+            if (sections.length > 0) {
+                section = sections[0];
+            }
+        }
+        return section;
     }
 
-    public MovieBundle getMovieBundle() {
-        log.entering("ProgrammeController", "getMovieBundle");
-        try {
-            if (movieBundle == null) {
-                final Section section = getSection();
-                if (section != null) {
-                    final List<MovieBundle> movieBundles = section.getMovieBundles();
-                    movieBundle = movieBundles.isEmpty() ? null : movieBundles.get(0);
+    public void setMovieBundle(MovieBundleInFestival movieBundleInFestival) {
+        final FestivalEditionSection section = getSection();
+        if (section != null) {
+            for (MovieBundleInFestival movieBundle : section.getMovieBundles()) {
+                if (movieBundle.equals(movieBundleInFestival)) {
+                    this.movieBundle = movieBundle;
+                    return;
                 }
             }
-            return movieBundle;
-        } finally {
-            log.exiting("ProgrammeController", "getMovieBundle");
         }
+    }
+
+    public MovieBundleInFestival getMovieBundle() {
+        if (movieBundle == null) {
+            final FestivalEditionSection section = getSection();
+            if (section != null) {
+                final List<MovieBundleInFestival> movieBundles = section.getMovieBundles();
+                if (!movieBundles.isEmpty()) {
+                    movieBundle = movieBundles.get(0);
+                }
+            }
+        }
+        return movieBundle;
     }
 
     public Movie getMovie() {
-        log.entering("ProgrammeController", "getMovie");
-        try {
-            if (movie == null) {
-                final MovieBundle movieBundle = getMovieBundle();
-                if (movieBundle != null) {
-                    final List<Movie> movies = movieBundle.getMovies();
-                    movie = movies.size() == 1 ? movies.get(0) : null;
-                    if (movie != null) {
-                        movie.getCountries().iterator();
-                        movie.getDirectors().iterator();
-                        movie.getActors().iterator();
-                    }
-                }
+        if (movie == null) {
+            final MovieBundleInFestival movieBundleInFestival = getMovieBundle();
+            if (movieBundleInFestival != null) {
+                final List<Movie> movies = movieBundleInFestival.getMovieBundle().getMovies();
+                movie = movies.size() == 1 ? movies.get(0) : null;
             }
-            return movie;
-        } finally {
-            log.exiting("ProgrammeController", "getMovie");
         }
+        return movie;
     }
 }

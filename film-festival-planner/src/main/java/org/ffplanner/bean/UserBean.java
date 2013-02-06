@@ -1,6 +1,3 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.bean;
 
 import org.ffplanner.controller.auth.AuthData;
@@ -23,16 +20,16 @@ import java.util.List;
 @LocalBean
 public class UserBean extends BasicEntityBean<User> implements Serializable {
 
-    private static final long serialVersionUID = -1563393265561085150L;
-
-    @Override
-    protected SingularAttribute<User, Long> getIdAttribute() {
-        return User_.id;
-    }
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected Class<User> getEntityClass() {
         return User.class;
+    }
+
+    @Override
+    protected SingularAttribute<User, Long> getIdAttribute() {
+        return User_.id;
     }
 
     public User findBy(String openId) {

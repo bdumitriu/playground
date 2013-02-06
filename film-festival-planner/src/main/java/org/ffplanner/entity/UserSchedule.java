@@ -1,12 +1,10 @@
-/*
- * Copyright 2012 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -15,14 +13,22 @@ import java.util.Set;
 @Entity
 public class UserSchedule implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue
     private Long id;
 
     private String scheduleName;
 
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Long userId;
+
     @ManyToOne
     private User user;
+
+    @Column(name = "festivalEdition_id", insertable = false, updatable = false)
+    private Long festivalEditionId;
 
     @ManyToOne
     private FestivalEdition festivalEdition;
@@ -30,10 +36,15 @@ public class UserSchedule implements Serializable {
     private Date lastUsed;
 
     @OneToMany(mappedBy = "userSchedule")
-    private Set<UserScheduleShowings> showings = new HashSet<>();
+    private Set<UserScheduleShowing> showings = new HashSet<>();
 
     @OneToMany(mappedBy = "userSchedule")
-    private Set<UserScheduleConstraints> constraints = new HashSet<>();
+    private Set<UserScheduleConstraint> constraints = new HashSet<>();
+
+    public void loadLazyFields() {
+        showings.iterator();
+        constraints.iterator();
+    }
 
     public Long getId() {
         return id;
@@ -75,11 +86,29 @@ public class UserSchedule implements Serializable {
         this.lastUsed = lastUsed;
     }
 
-    public Set<UserScheduleShowings> getShowings() {
+    public Set<UserScheduleShowing> getShowings() {
         return showings;
     }
 
-    public Set<UserScheduleConstraints> getConstraints() {
+    public Set<UserScheduleConstraint> getConstraints() {
         return constraints;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(scheduleName, userId, festivalEditionId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final UserSchedule other = (UserSchedule) obj;
+        return Objects.equals(this.scheduleName, other.scheduleName) && Objects.equals(this.userId, other.userId)
+                && Objects.equals(this.festivalEditionId, other.festivalEditionId);
     }
 }

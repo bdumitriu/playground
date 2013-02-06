@@ -1,6 +1,3 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.controller;
 
 import javax.enterprise.context.ConversationScoped;
@@ -17,6 +14,8 @@ import java.util.Map;
 @Named
 @ConversationScoped
 public class Dummy implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final Collection<Integer> hours;
 

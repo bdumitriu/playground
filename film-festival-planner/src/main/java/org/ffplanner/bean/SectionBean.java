@@ -1,9 +1,5 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.bean;
 
-import org.ffplanner.entity.MovieBundle;
 import org.ffplanner.entity.Section;
 import org.ffplanner.entity.Section_;
 
@@ -14,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -21,7 +18,9 @@ import java.util.List;
  */
 @Stateless
 @LocalBean
-public class SectionBean extends BasicEntityBean<Section> {
+public class SectionBean extends BasicEntityBean<Section> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected Class<Section> getEntityClass() {
@@ -31,15 +30,6 @@ public class SectionBean extends BasicEntityBean<Section> {
     @Override
     protected SingularAttribute<Section, Long> getIdAttribute() {
         return Section_.id;
-    }
-
-    @Override
-    public Section find(Long id) {
-        final Section section = super.find(id);
-        if (section != null) {
-            forceLazyLoad(section);
-        }
-        return section;
     }
 
     public Section findBy(String sectionName) {
@@ -56,7 +46,6 @@ public class SectionBean extends BasicEntityBean<Section> {
             assert result.size() == 1;
             section = result.get(0);
         }
-        forceLazyLoad(section);
         return section;
     }
 
@@ -65,18 +54,6 @@ public class SectionBean extends BasicEntityBean<Section> {
         final CriteriaQuery<Section> query = criteriaBuilder.createQuery(Section.class);
         query.from(Section.class);
         final TypedQuery<Section> sectionQuery = entityManager.createQuery(query);
-        final List<Section> resultList = sectionQuery.getResultList();
-        if (!resultList.isEmpty()) {
-            final Section section = resultList.get(0);
-            forceLazyLoad(section);
-        }
-        return resultList;
-    }
-
-    public static void forceLazyLoad(Section section) {
-        final List<MovieBundle> movieBundles = section.getMovieBundles();
-        for (MovieBundle movieBundle : movieBundles) {
-            MovieBundleBean.forceLazyLoad(movieBundle);
-        }
+        return sectionQuery.getResultList();
     }
 }

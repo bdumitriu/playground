@@ -1,12 +1,11 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Bogdan Dumitriu
@@ -14,10 +13,13 @@ import java.io.Serializable;
 @Entity
 public class UserToken implements Serializable {
 
-    private static final long serialVersionUID = -8495089061944184132L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     private String token;
+
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Long userId;
 
     @ManyToOne
     private User user;
@@ -36,5 +38,22 @@ public class UserToken implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(token, userId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final UserToken other = (UserToken) obj;
+        return Objects.equals(this.token, other.token) && Objects.equals(this.userId, other.userId);
     }
 }

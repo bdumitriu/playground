@@ -1,12 +1,10 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Bogdan Dumitriu
@@ -53,5 +51,22 @@ public class Venue implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, address);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Venue other = (Venue) obj;
+        return Objects.equals(this.name, other.name) && Objects.equals(this.address, other.address);
     }
 }

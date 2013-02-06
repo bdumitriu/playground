@@ -1,6 +1,3 @@
-/*
- * Copyright 2011 QTronic GmbH. All rights reserved.
- */
 package org.ffplanner.controller;
 
 import org.ffplanner.bean.UserBean;
@@ -31,7 +28,7 @@ import java.util.logging.Logger;
 @SessionScoped
 public class AuthController implements Serializable {
 
-    private static final long serialVersionUID = -6304509374050562162L;
+    private static final long serialVersionUID = 1L;
 
     private static final Logger logger = Logger.getLogger(AuthController.class.getName());
 

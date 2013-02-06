@@ -9,9 +9,10 @@
         <!--<jta-data-source>jdbc/ffp</jta-data-source>-->
         <jta-data-source>java:jboss/datasources/ffp</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <!--<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>-->
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="update" />
-            <!--<property name="hibernate.show_sql" value="true"/>-->
+            <property name="hibernate.show_sql" value="true"/>
             <!--<property name="hibernate.format_sql" value="true"/>-->
             <!--<property name="hibernate.transaction.flush_before_completion" value="true"/>-->
             <!-- no other properties needed here to get UTF-8 -->

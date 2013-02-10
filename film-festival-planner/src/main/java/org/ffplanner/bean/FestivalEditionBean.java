@@ -15,7 +15,7 @@ import java.io.Serializable;
 @LocalBean
 public class FestivalEditionBean extends BasicEntityBean<FestivalEdition> implements Serializable {
 
-    private static final long serialVersionUID = -9047566575453952764L;
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected Class<FestivalEdition> getEntityClass() {

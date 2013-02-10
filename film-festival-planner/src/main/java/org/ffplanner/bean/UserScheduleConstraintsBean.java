@@ -32,13 +32,13 @@ public class UserScheduleConstraintsBean extends ConnectorEntityBean<UserSchedul
 
     @Override
     protected Predicate getLeftCondition(Long id, CriteriaBuilder criteriaBuilder, Root<UserScheduleConstraint> root) {
-        return criteriaBuilder.equal(root.get(UserScheduleConstraints_.showing).get(Showing_.id), id);
+        return criteriaBuilder.equal(root.get(UserScheduleConstraint_.showing).get(Showing_.id), id);
     }
 
     @Override
     protected Predicate getRightCondition(
             Long id, CriteriaBuilder criteriaBuilder, Root<UserScheduleConstraint> root) {
-        return criteriaBuilder.equal(root.get(UserScheduleConstraints_.userSchedule).get(UserSchedule_.id), id);
+        return criteriaBuilder.equal(root.get(UserScheduleConstraint_.userSchedule).get(UserSchedule_.id), id);
     }
 
     /**

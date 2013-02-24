@@ -139,7 +139,6 @@ class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleInFesti
       "here you can purchase your tickets").foldLeft(synopsis)({
       cutBefore(_, _)
     })
-    cutSynopsis
     cutSynopsis.replaceAll("\\s+", " ").trim
   }
 

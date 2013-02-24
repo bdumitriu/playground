@@ -1,8 +1,16 @@
 # QTronic
 admin_cj
+iga
 public
 python25
 python26
+qtronicutil
+software_dev
+
+# Others
+IRI CD
+java-libraries-sources
+vm
 
 # IDE
 .idea/
@@ -17,3 +25,4 @@ workspace/
 # Generated
 derby.log
 target/
+.forge_settings

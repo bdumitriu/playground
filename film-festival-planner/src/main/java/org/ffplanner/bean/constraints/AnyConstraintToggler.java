@@ -17,7 +17,7 @@ public class AnyConstraintToggler extends ConstraintToggler {
     }
 
     @Override
-    protected void foo(ScheduleConstraintType constraintType, UserScheduleConstraint constraints) {
+    protected void toggleConstraint(ScheduleConstraintType constraintType, UserScheduleConstraint constraints) {
         entityManager.remove(constraints);
     }
 }

@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -98,6 +99,8 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
         if (showing != null) {
             final UserSchedule userSchedule = findOrCreateBy(userId, showing.getFestivalEdition(), false);
             constraintsBean.toggleConstraint(showing, userSchedule, constraintType);
+            userSchedule.setLastModified(new Date());
+            entityManager.merge(userSchedule);
         }
     }
 
@@ -106,6 +109,8 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
         if (showing != null) {
             final UserSchedule userSchedule = findOrCreateBy(userId, showing.getFestivalEdition(), false);
             constraintsBean.toggleAnyConstraint(showing, userSchedule, constraintType);
+            userSchedule.setLastModified(new Date());
+            entityManager.merge(userSchedule);
         }
     }
 

@@ -15,13 +15,19 @@
     <ui:insert name="additional-headers"/>
 </h:head>
 
-<h:body>
-    <div class="overlay" id="overlay">
-        <h:form>
-            <h:commandLink action="#{auth.logOut}" styleClass="logout">Logout</h:commandLink>
-        </h:form>
+<h:body style="margin: 0">
+    <div class="header">
+        <div class="left_header">
+            <ui:insert name="buttons"/>
+        </div>
+        <div class="right_header">
+            <h:form styleClass="header_form">
+                <h:commandLink action="#{auth.logOut}" styleClass="header_button">#{bundle.Logout}</h:commandLink>
+            </h:form>
+        </div>
     </div>
-    <div class="body" style="margin-top: 41px">
+    <div style="clear: both"/>
+    <div class="body">
         <ui:insert name="body"/>
     </div>
 </h:body>

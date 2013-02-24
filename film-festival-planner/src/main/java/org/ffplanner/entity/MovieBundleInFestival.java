@@ -1,5 +1,7 @@
 package org.ffplanner.entity;
 
+import org.ffplanner.def.MovieDefinition;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -9,7 +11,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "moviebundle_festivaledition_section")
-public class MovieBundleInFestival implements Serializable {
+public class MovieBundleInFestival implements Serializable, MovieDefinition {
 
     private static final long serialVersionUID = 1L;
 
@@ -44,6 +46,11 @@ public class MovieBundleInFestival implements Serializable {
 
     public void loadLazyFields() {
         movieBundle.loadLazyFields();
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 
     public MovieBundle getMovieBundle() {

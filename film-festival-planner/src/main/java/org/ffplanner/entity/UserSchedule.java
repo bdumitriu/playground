@@ -35,6 +35,8 @@ public class UserSchedule implements Serializable {
 
     private Date lastUsed;
 
+    private Date lastModified;
+
     @OneToMany(mappedBy = "userSchedule")
     private Set<UserScheduleShowing> showings = new HashSet<>();
 
@@ -84,6 +86,14 @@ public class UserSchedule implements Serializable {
 
     public void setLastUsed(Date lastUsed) {
         this.lastUsed = lastUsed;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
     }
 
     public Set<UserScheduleShowing> getShowings() {

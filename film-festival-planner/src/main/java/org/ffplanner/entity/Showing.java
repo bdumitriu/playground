@@ -1,5 +1,7 @@
 package org.ffplanner.entity;
 
+import org.ffplanner.def.MovieDefinition;
+import org.ffplanner.def.ShowingDefinition;
 import org.ffplanner.util.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -20,7 +22,7 @@ import static java.util.Calendar.MINUTE;
  * @author Bogdan Dumitriu
  */
 @Entity
-public class Showing implements Serializable {
+public class Showing implements Serializable, ShowingDefinition {
 
     private static final long serialVersionUID = 1L;
 
@@ -52,6 +54,7 @@ public class Showing implements Serializable {
         movieBundleInFestival.loadLazyFields();
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -70,6 +73,11 @@ public class Showing implements Serializable {
 
     public void setDateAndTime(Date dateAndTime) {
         this.dateAndTime = dateAndTime;
+    }
+
+    @Override
+    public DateTime getDateTime() {
+        return new DateTime(dateAndTime);
     }
 
     public Interval getDayInterval() {
@@ -113,6 +121,11 @@ public class Showing implements Serializable {
 
     public void setVenue(Venue venue) {
         this.venue = venue;
+    }
+
+    @Override
+    public MovieDefinition getMovie() {
+        return movieBundleInFestival;
     }
 
     public MovieBundleInFestival getMovieBundleInFestival() {

@@ -1,26 +1,57 @@
-.overlay {
+.header {
     position: fixed;
-    background-color: #9acd32;
-    padding: 10px;
     top: 0;
-    right: 0;
+    background-color: #effbfe;
+    width: 100%;
+    overflow: hidden; /* without this, the div will not "contain" the embedded div's */
     z-index: 100;
 }
 
-a, a:visited {
+.left_header {
+    float: left;
+}
+
+.right_header {
+    float: right;
+}
+
+.header_form {
+    display: inline;
+}
+
+.header_button {
+    -moz-box-shadow: inset 1px 1px 20px 1px #ffffff;
+    -webkit-box-shadow: inset 1px 1px 20px 1px #ffffff;
+    box-shadow: inset 1px 1px 20px 1px #ffffff;
+    background-color: transparent;
+    border: 1px solid #dcdcdc;
+    display: inline-block;
+    color: #777777;
+    font-family: Arial, serif;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 5px 10px;
+    margin: 3px;
     text-decoration: none;
-    color: blue;
+    text-shadow: 1px 1px 0 #ffffff;
 }
 
-a:hover {
-    color: red;
+.header_button:active {
+    position: relative;
+    top: 1px;
 }
 
-a.logout, a.logout:visited {
-    text-decoration: none;
-    color: black;
+.header_text {
+    padding-left: 10px;
+    font-family: Garamond, serif;
+    font-variant: small-caps;
 }
 
-a.logout:hover {
-    color: white;
+.header_instruction {
+    font-family: Garamond, serif;
+    color: #a52a2a;
+}
+
+.body {
+    margin-top: 34px;
 }

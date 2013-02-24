@@ -95,6 +95,9 @@ public class ShowingBean extends BasicEntityBean<Showing> implements Serializabl
         entityManager.persist(showing);
     }
 
+    /**
+     * @return all the movie showings of {@code festivalEdition}, sorted by venue and datetime.
+     */
     public List<Showing> findBy(FestivalEdition festivalEdition) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Showing> query = criteriaBuilder.createQuery(Showing.class);

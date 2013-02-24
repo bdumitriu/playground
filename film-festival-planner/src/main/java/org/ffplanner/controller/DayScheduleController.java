@@ -1,5 +1,7 @@
 package org.ffplanner.controller;
 
+import org.ffplanner.Schedule;
+import org.ffplanner.ScheduleBuilder;
 import org.ffplanner.bean.FestivalEditionBean;
 import org.ffplanner.bean.ShowingBean;
 import org.ffplanner.bean.UserScheduleBean;
@@ -17,7 +19,10 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.logging.Logger;
 
 import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID;
@@ -57,6 +62,8 @@ public class DayScheduleController implements Serializable {
 
     private ConstraintsData constraintsData;
 
+    private Schedule schedule;
+
     public DayScheduleController() {
         log.entering("DayScheduleController", "init");
         hours = Hour.hoursFrom(9, 2);
@@ -80,9 +87,12 @@ public class DayScheduleController implements Serializable {
         final FestivalEdition festivalEdition = festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID);
         dayProgramme = festivalProgrammeBean.getProgrammeFor(festivalEdition).getDayProgramme(this.day);
 
-        System.out.println("Loading Constraints Data.....................................");
-        constraintsData = new ConstraintsData(userScheduleBean, festivalEdition);
-        constraintsData.loadFor(this.user);
+        if (constraintsData == null) {
+            constraintsData = new ConstraintsData(userScheduleBean, festivalEdition);
+            constraintsData.loadFor(this.user);
+        } else if (constraintsData.reloadNeeded()) {
+            constraintsData.loadFor(this.user);
+        }
 
         log.exiting("DayScheduleController", "prepareView");
     }
@@ -130,7 +140,7 @@ public class DayScheduleController implements Serializable {
     }
 
     public void movieCellClicked(Long showingId) {
-        userScheduleBean.toggleAnyConstraint(showingId, user.getId(), ScheduleConstraintType.SHOWING);
+        userScheduleBean.toggleAnyConstraint(showingId, user.getId(), ScheduleConstraintType.MOVIE);
     }
 
     public void watchThisButtonClicked(Long showingId) {
@@ -147,6 +157,31 @@ public class DayScheduleController implements Serializable {
 
     private void showingButtonClicked(Long showingId, ScheduleConstraintType constraintType) {
         userScheduleBean.toggleConstraint(showingId, user.getId(), constraintType);
+    }
+
+    public boolean hasSchedule() {
+        return schedule != null;
+    }
+
+    public void suggestSchedule() {
+        final ScheduleBuilder scheduleBuilder = festivalProgrammeBean.getScheduleBuilder(DEFAULT_FESTIVAL_EDITION_ID);
+        schedule = scheduleBuilder.getPossibleSchedulesJ(constraintsData.asScheduleDefinition()).get(0);
+    }
+
+    public void acceptSchedule() {
+        // ???
+    }
+
+    public void discardSchedule() {
+        schedule = null;
+    }
+
+    public boolean hasConstraints() {
+        return constraintsData.size() > 0;
+    }
+
+    public boolean isScheduled(Long showingId) {
+        return hasSchedule() && schedule.showingsJ().contains(showingId);
     }
 
     public boolean isWatchThisSelected(Long showingId) {

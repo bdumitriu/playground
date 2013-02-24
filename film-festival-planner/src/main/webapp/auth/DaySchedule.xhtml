@@ -12,12 +12,51 @@
 </f:metadata>
 
 <ui:composition template="layout.xhtml">
+
     <ui:define name="title">Day Schedule</ui:define>
+
     <ui:define name="additional-headers">
         <h:outputStylesheet library="css" name="schedule.css"/>
         <h:outputScript library="js" name="jquery-1.7.2.js" />
         <h:outputScript library="js" name="ffp-0.1.js" />
     </ui:define>
+
+    <ui:define name="buttons">
+        <h:panelGroup id="buttons">
+            <span class="header_text">#{bundle.Day} </span>
+            <h:link value="#{bundle.Previous}" rendered="#{dayScheduleController.previousDay != null}" styleClass="header_button">
+                <f:param name="day" value="#{dayScheduleController.previousDay}"/>
+            </h:link>
+            <h:link value="#{bundle.Next}" rendered="${dayScheduleController.nextDay != null}" styleClass="header_button">
+                <f:param name="day" value="${dayScheduleController.nextDay}"/>
+            </h:link>
+            <span class="header_text">#{bundle.Schedule} </span>
+            <h:form id="buttons_form" styleClass="header_form">
+                <h:outputText value="#{bundle.SelectMoviesFirst}"
+                              rendered="#{not dayScheduleController.hasConstraints() and not dayScheduleController.hasSchedule()}"
+                              styleClass="header_instruction"/>
+                <h:commandLink action="#{dayScheduleController.suggestSchedule}"
+                               value="#{bundle.Suggest}"
+                               rendered="#{dayScheduleController.hasConstraints() and not dayScheduleController.hasSchedule()}"
+                               styleClass="header_button">
+                    <f:ajax execute="@form :sch_form" render="@form :sch_form" />
+                </h:commandLink>
+                <h:commandLink action="#{dayScheduleController.acceptSchedule}"
+                               value="#{bundle.Accept}"
+                               rendered="#{dayScheduleController.hasSchedule()}"
+                               styleClass="header_button">
+                    <f:ajax execute="@form :sch_form" render="@form :sch_form" />
+                </h:commandLink>
+                <h:commandLink action="#{dayScheduleController.discardSchedule}"
+                               value="#{bundle.Discard}"
+                               rendered="#{dayScheduleController.hasSchedule()}"
+                               styleClass="header_button">
+                    <f:ajax execute="@form :sch_form" render="@form :sch_form" />
+                </h:commandLink>
+            </h:form>
+        </h:panelGroup>
+    </ui:define>
+
     <ui:define name="body">
         <script type="text/javascript">
             $(document).ready(function() {
@@ -42,16 +81,6 @@
             });
         </script>
 
-        <div>
-            <h:link value="#{bundle.Previous}" rendered="#{dayScheduleController.previousDay != null}">
-                <f:param name="day" value="#{dayScheduleController.previousDay}"/>
-            </h:link>
-            <h:outputText value=" | "/>
-            <h:link value="#{bundle.Next}" rendered="${dayScheduleController.nextDay != null}">
-                <f:param name="day" value="${dayScheduleController.nextDay}"/>
-            </h:link>
-        </div>
-
         <div class="sch_container">
             <div class="sch_header_first">
                 <div class="sch_header_first_embedded">
@@ -65,21 +94,28 @@
                     </div>
                 </div>
             </ui:repeat>
-            <h:form>
+            <h:form id="sch_form">
                 <ui:repeat value="#{dayScheduleController.hours}" var="hour" varStatus="status">
                     <div class="sch_row_first">
                         <h:outputText value="#{hour.formatted}" styleClass="sch_hour_text"/>
                     </div>
                     <ui:repeat value="#{dayScheduleController.getHourLineFor(hour)}" var="hourSlot">
                         <div class="sch_row_rest">
-                            <h:panelGroup id="movie_cell" styleClass="sch_movie_cell" rendered="#{hourSlot.hasShowing()}"
+                            <h:panelGroup id="movie_cell"
+                                          styleClass="sch_movie_cell#{dayScheduleController.isScheduled(hourSlot.showing.id) ? ' sch_movie_cell_scheduled' : ''}"
+                                          rendered="#{hourSlot.hasShowing()}"
                                           style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
+                                <h:outputText rendered="#{dayScheduleController.isScheduled(hourSlot.showing.id)}"
+                                              value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle}"
+                                              styleClass="sch_movie_cell_embedded"/>
                                 <h:commandLink action="#{dayScheduleController.movieCellClicked(hourSlot.showing.id)}"
+                                               rendered="#{not dayScheduleController.isScheduled(hourSlot.showing.id)}"
                                                value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle}"
                                                styleClass="sch_movie_cell_embedded">
-                                    <f:ajax execute="@form" render="@form" />
+                                    <f:ajax execute="@form :buttons" render="@form :buttons_form" />
                                 </h:commandLink>
-                                <h:panelGroup styleClass="sch_movie_commands" rendered="#{dayScheduleController.isAnyConstraintSelectedFor(hourSlot.showing.id)}">
+                                <h:panelGroup styleClass="sch_movie_commands"
+                                              rendered="#{dayScheduleController.isAnyConstraintSelectedFor(hourSlot.showing.id) and not dayScheduleController.isScheduled(hourSlot.showing.id)}">
                                     <h:commandButton
                                             id="watchThis"
                                             rendered="#{dayScheduleController.isSomethingOtherThanWatchThisSelected(hourSlot.showing.id)}"
@@ -123,7 +159,7 @@
                                             styleClass="sch_movie_button"
                                             onmouseover="$(this).attr('src', '../../resources/img/delete_16_mouse_over.png');"
                                             onmouseout="$(this).attr('src', '../../resources/img/delete_16.png');">
-                                        <f:ajax execute="@form" render="movie_cell" />
+                                        <f:ajax execute="@form" render="movie_cell :buttons_form" />
                                     </h:commandButton>
                                     <h:graphicImage
                                             value="../../resources/img/pin_16_mouse_over.png"

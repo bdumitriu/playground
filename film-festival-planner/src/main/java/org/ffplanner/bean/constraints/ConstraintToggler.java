@@ -26,11 +26,11 @@ public abstract class ConstraintToggler {
         if (constraints == null) {
             createConstraint(showing, userSchedule, constraintType);
         } else {
-            foo(constraintType, constraints);
+            toggleConstraint(constraintType, constraints);
         }
     }
 
-    protected abstract void foo(ScheduleConstraintType constraintType, UserScheduleConstraint constraints);
+    protected abstract void toggleConstraint(ScheduleConstraintType constraintType, UserScheduleConstraint constraints);
 
     private UserScheduleConstraint getConstraints() {
         return entityManager.find(UserScheduleConstraint.class,

@@ -17,7 +17,7 @@ public class SpecificConstraintToggler extends ConstraintToggler {
     }
 
     @Override
-    protected void foo(ScheduleConstraintType constraintToRemoveOrSet, UserScheduleConstraint constraints) {
+    protected void toggleConstraint(ScheduleConstraintType constraintToRemoveOrSet, UserScheduleConstraint constraints) {
         if (constraints.getConstraintType() == constraintToRemoveOrSet) {
             entityManager.remove(constraints);
         } else {

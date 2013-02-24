@@ -26,6 +26,7 @@ root {
 .sch_header_first_embedded {
     width: 50px;
     height: 60px;
+    padding-left: 5px;
     display: table-cell;
     vertical-align: bottom;
     text-align: left;
@@ -70,6 +71,7 @@ root {
 
 .sch_hour_text {
     font-weight: bold;
+    padding-left: 5px;
 }
 
 .sch_row_rest {
@@ -93,6 +95,11 @@ root {
     background-color: lightyellow;
     border-radius: 3px;
     box-shadow: 1px 1px 2px #888888;
+    z-index: 99;
+}
+
+.sch_movie_cell_scheduled {
+    background-color: lightpink;
 }
 
 .sch_movie_cell_embedded {
@@ -103,6 +110,15 @@ root {
     text-align: center;
     font-variant: small-caps;
     /*background-color: #faffb5;*/
+}
+
+a.sch_movie_cell_embedded, a.sch_movie_cell_embedded:visited {
+    text-decoration: none;
+    color: blue;
+}
+
+a.sch_movie_cell_embedded:hover {
+    color: red;
 }
 
 .sch_movie_commands {

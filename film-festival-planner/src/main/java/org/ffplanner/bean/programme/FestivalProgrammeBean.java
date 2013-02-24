@@ -1,7 +1,10 @@
 package org.ffplanner.bean.programme;
 
+import org.ffplanner.ScheduleBuilder;
 import org.ffplanner.bean.FestivalEditionBean;
 import org.ffplanner.bean.ShowingBean;
+import org.ffplanner.def.FestivalProgrammeDefinition;
+import org.ffplanner.def.ShowingDefinition;
 import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.Showing;
 
@@ -10,6 +13,7 @@ import javax.ejb.*;
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +36,8 @@ public class FestivalProgrammeBean implements Serializable {
 
     private final Map<FestivalEdition, FestivalEditionProgramme> programmes = new HashMap<>();
 
+    private final Map<FestivalEdition, ScheduleBuilder> scheduleBuilders = new HashMap<>();
+
     @PostConstruct
     public void initialize() {
         final List<FestivalEdition> festivalEditions = festivalEditionBean.findAll();
@@ -39,7 +45,24 @@ public class FestivalProgrammeBean implements Serializable {
             festivalEdition.loadLazyFields();
             final List<Showing> festivalShowings = loadFestivalShowings(festivalEdition);
             programmes.put(festivalEdition, new FestivalEditionProgramme(festivalEdition, festivalShowings));
+            scheduleBuilders.put(festivalEdition, new ScheduleBuilder(getFestivalProgrammeDefinition(festivalShowings)));
         }
+    }
+
+    public FestivalEditionProgramme getProgrammeFor(Long festivalEditionId) {
+        return getProgrammeFor(festivalEditionBean.find(festivalEditionId));
+    }
+
+    public FestivalEditionProgramme getProgrammeFor(FestivalEdition festivalEdition) {
+        return programmes.get(festivalEdition);
+    }
+
+    public ScheduleBuilder getScheduleBuilder(Long festivalEditionId) {
+        return getScheduleBuilder(festivalEditionBean.find(festivalEditionId));
+    }
+
+    private ScheduleBuilder getScheduleBuilder(FestivalEdition festivalEdition) {
+        return scheduleBuilders.get(festivalEdition);
     }
 
     private List<Showing> loadFestivalShowings(FestivalEdition festivalEdition) {
@@ -50,11 +73,21 @@ public class FestivalProgrammeBean implements Serializable {
         return festivalShowings;
     }
 
-    public FestivalEditionProgramme getProgrammeFor(Long festivalEditionId) {
-        return getProgrammeFor(festivalEditionBean.find(festivalEditionId));
-    }
+    private FestivalProgrammeDefinition getFestivalProgrammeDefinition(final List<Showing> festivalShowings) {
+        return new FestivalProgrammeDefinition() {
 
-    public FestivalEditionProgramme getProgrammeFor(FestivalEdition festivalEdition) {
-        return programmes.get(festivalEdition);
+            private List<ShowingDefinition> showingDefinitions;
+
+            @Override
+            public List<ShowingDefinition> getShowings() {
+                if (showingDefinitions == null) {
+                    showingDefinitions = new LinkedList<>();
+                    for (Showing festivalShowing : festivalShowings) {
+                        showingDefinitions.add(festivalShowing);
+                    }
+                }
+                return showingDefinitions;
+            }
+        };
     }
 }

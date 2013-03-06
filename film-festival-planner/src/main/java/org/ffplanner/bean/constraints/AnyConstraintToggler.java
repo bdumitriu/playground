@@ -8,6 +8,9 @@ import org.ffplanner.entity.UserScheduleConstraint;
 import javax.persistence.EntityManager;
 
 /**
+ * If any constraint is set, it is removed. If no constraint is set, the {@code constraintType} passed to
+ * {@link #toggle(ScheduleConstraintType) toggle} becomes the new constraint.
+ *
  * @author Bogdan Dumitriu
  */
 public class AnyConstraintToggler extends ConstraintToggler {

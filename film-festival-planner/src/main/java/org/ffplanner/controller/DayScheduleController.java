@@ -19,12 +19,11 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 import java.util.logging.Logger;
 
+import static org.ffplanner.entity.ScheduleConstraintType.MOVIE;
+import static org.ffplanner.entity.ScheduleConstraintType.SHOWING;
 import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID;
 import static org.joda.time.DateTimeConstants.JUNE;
 
@@ -58,11 +57,13 @@ public class DayScheduleController implements Serializable {
 
     private Date day;
 
+    private int priority;
+
     private DayProgramme dayProgramme;
 
     private ConstraintsData constraintsData;
 
-    private Schedule schedule;
+    private List<Long> scheduledShowings;
 
     public DayScheduleController() {
         log.entering("DayScheduleController", "init");
@@ -139,20 +140,36 @@ public class DayScheduleController implements Serializable {
         return day;
     }
 
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
     public void movieCellClicked(Long showingId) {
-        userScheduleBean.toggleAnyConstraint(showingId, user.getId(), ScheduleConstraintType.MOVIE);
+        userScheduleBean.toggleAnyConstraint(showingId, user.getId(), MOVIE);
+        /* TODO: temporary */
+        if (hasSchedule()) {
+            scheduledShowings.remove(showingId);
+        }
     }
 
     public void watchThisButtonClicked(Long showingId) {
-        showingButtonClicked(showingId, ScheduleConstraintType.SHOWING);
+        userScheduleBean.toggleFallbackConstraint(showingId, user.getId(), SHOWING, MOVIE);
     }
 
     public void watchAnyButtonClicked(Long showingId) {
-        showingButtonClicked(showingId, ScheduleConstraintType.MOVIE);
+        showingButtonClicked(showingId, MOVIE);
     }
 
     public void maybeWatchButtonClicked(Long showingId) {
         showingButtonClicked(showingId, ScheduleConstraintType.MAYBE_MOVIE);
+    }
+
+    public void assignPriority(Long showingId) {
+        // TODO: save priority
     }
 
     private void showingButtonClicked(Long showingId, ScheduleConstraintType constraintType) {
@@ -160,44 +177,57 @@ public class DayScheduleController implements Serializable {
     }
 
     public boolean hasSchedule() {
-        return schedule != null;
+        return scheduledShowings != null;
     }
 
     public void suggestSchedule() {
         final ScheduleBuilder scheduleBuilder = festivalProgrammeBean.getScheduleBuilder(DEFAULT_FESTIVAL_EDITION_ID);
-        schedule = scheduleBuilder.getPossibleSchedulesJ(constraintsData.asScheduleDefinition()).get(0);
-    }
-
-    public void acceptSchedule() {
-        // ???
+        final Schedule schedule = scheduleBuilder.getPossibleSchedulesJ(constraintsData.asScheduleDefinition()).get(0);
+        scheduledShowings = new LinkedList<>();
+        scheduledShowings.addAll(schedule.showingsJ());
     }
 
     public void discardSchedule() {
-        schedule = null;
+        scheduledShowings = null;
     }
 
     public boolean hasConstraints() {
         return constraintsData.size() > 0;
     }
 
+    public String getMovieStyleClass(Long showingId) {
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("sch_movie_cell");
+        if (isWatchThisSelected(showingId)) {
+            stringBuilder.append(" sch_movie_cell_watch_this");
+        } else if (isScheduled(showingId)) {
+            stringBuilder.append(" sch_movie_cell_scheduled");
+        } else if (isWatchAnySelected(showingId)) {
+            stringBuilder.append(" sch_movie_cell_watch_any");
+        } else if (isMaybeWatchSelected(showingId)) {
+            stringBuilder.append(" sch_movie_cell_maybe_watch");
+        }
+        return stringBuilder.toString();
+    }
+
     public boolean isScheduled(Long showingId) {
-        return hasSchedule() && schedule.showingsJ().contains(showingId);
+        return hasSchedule() && scheduledShowings.contains(showingId);
     }
 
     public boolean isWatchThisSelected(Long showingId) {
-        return isConstraintSelected(showingId, ScheduleConstraintType.SHOWING);
+        return isConstraintSelected(showingId, SHOWING);
     }
 
     public boolean isSomethingOtherThanWatchThisSelected(Long showingId) {
-        return isDifferentConstraintSelected(showingId, ScheduleConstraintType.SHOWING);
+        return isDifferentConstraintSelected(showingId, SHOWING);
     }
 
     public boolean isWatchAnySelected(Long showingId) {
-        return isConstraintSelected(showingId, ScheduleConstraintType.MOVIE);
+        return isConstraintSelected(showingId, MOVIE);
     }
 
     public boolean isSomethingOtherThanWatchAnySelected(Long showingId) {
-        return isDifferentConstraintSelected(showingId, ScheduleConstraintType.MOVIE);
+        return isDifferentConstraintSelected(showingId, MOVIE);
     }
 
     public boolean isMaybeWatchSelected(Long showingId) {

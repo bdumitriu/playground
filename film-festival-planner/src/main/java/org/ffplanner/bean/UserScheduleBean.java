@@ -94,24 +94,44 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
         return userSchedule;
     }
 
-    public void toggleConstraint(Long showingId, Long userId, ScheduleConstraintType constraintType) {
-        final Showing showing = showingBean.find(showingId);
-        if (showing != null) {
-            final UserSchedule userSchedule = findOrCreateBy(userId, showing.getFestivalEdition(), false);
-            constraintsBean.toggleConstraint(showing, userSchedule, constraintType);
-            userSchedule.setLastModified(new Date());
-            entityManager.merge(userSchedule);
-        }
+    /**
+     * If {@code constraintType} is set, it is removed. If no constraint is set or any other constraint is set,
+     * {@code constraintType} becomes the new constraint.
+     */
+    public void toggleConstraint(Long showingId, Long userId, final ScheduleConstraintType constraintType) {
+        new ConstraintToggler() {
+            @Override
+            protected void toggle(Showing showing, UserSchedule userSchedule) {
+                constraintsBean.toggleConstraint(showing, userSchedule, constraintType);
+            }
+        }.toggleConstraint(showingId, userId);
     }
 
-    public void toggleAnyConstraint(Long showingId, Long userId, ScheduleConstraintType constraintType) {
-        final Showing showing = showingBean.find(showingId);
-        if (showing != null) {
-            final UserSchedule userSchedule = findOrCreateBy(userId, showing.getFestivalEdition(), false);
-            constraintsBean.toggleAnyConstraint(showing, userSchedule, constraintType);
-            userSchedule.setLastModified(new Date());
-            entityManager.merge(userSchedule);
-        }
+    /**
+     * If any constraint is set, it is removed. If no constraint is set, {@code constraintType} becomes the new
+     * constraint.
+     */
+    public void toggleAnyConstraint(Long showingId, Long userId, final ScheduleConstraintType constraintType) {
+        new ConstraintToggler() {
+            @Override
+            protected void toggle(Showing showing, UserSchedule userSchedule) {
+                constraintsBean.toggleAnyConstraint(showing, userSchedule, constraintType);
+            }
+        }.toggleConstraint(showingId, userId);
+    }
+
+    /**
+     * If {@code constraintType} is set, it replaced with {@code baseConstraintType}. If no constraint is set or any
+     * other constraint is set, {@code constraintType} becomes the new constraint.
+     */
+    public void toggleFallbackConstraint(Long showingId, Long userId, final ScheduleConstraintType constraintType,
+            final ScheduleConstraintType baseConstraintType) {
+        new ConstraintToggler() {
+            @Override
+            protected void toggle(Showing showing, UserSchedule userSchedule) {
+                constraintsBean.toggleFallbackConstraint(showing, userSchedule, constraintType, baseConstraintType);
+            }
+        }.toggleConstraint(showingId, userId);
     }
 
     public boolean isConstraintSelected(Long showingId, Long userId, ScheduleConstraintType constraintType) {
@@ -122,5 +142,20 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
         } else {
             return false;
         }
+    }
+
+    private abstract class ConstraintToggler {
+
+        protected void toggleConstraint(Long showingId, Long userId) {
+            final Showing showing = showingBean.find(showingId);
+            if (showing != null) {
+                final UserSchedule userSchedule = findOrCreateBy(userId, showing.getFestivalEdition(), false);
+                toggle(showing, userSchedule);
+                userSchedule.setLastModified(new Date());
+                entityManager.merge(userSchedule);
+            }
+        }
+
+        protected abstract void toggle(Showing showing, UserSchedule userSchedule);
     }
 }

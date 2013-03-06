@@ -8,13 +8,13 @@ root {
 
 .sch_container {
     font-family: Candara, serif;
+    white-space: nowrap;
 }
 
 .sch_header_first {
     display: inline-block;
     width: 50px;
     height: 60px;
-    float: left;
     background-color: #fffbff;
     border-color: #cccccc;
     border-right-width: 1px;
@@ -38,7 +38,6 @@ root {
     display: inline-block;
     width: 150px;
     height: 60px;
-    float: left;
     background-color: #fffffb;
     border-color: #cccccc;
     border-right-width: 1px;
@@ -54,6 +53,10 @@ root {
     vertical-align: middle;
     text-align: center;
     font-variant: small-caps;
+}
+
+.sch_table_body {
+    white-space: normal;
 }
 
 .sch_row_first {
@@ -91,21 +94,39 @@ root {
     margin-top: -1px;
     float: left;
     border: 1px solid;
-    /*border-color: #b0c4de;*/
-    background-color: lightyellow;
+    /*border-color: #B0C4DE;*/
+    background-color: #FFFFE0;
     border-radius: 3px;
     box-shadow: 1px 1px 2px #888888;
     z-index: 99;
 }
 
 .sch_movie_cell_scheduled {
-    background-color: lightpink;
+    /*background-color: #FF9999;*/
+    /*background-color: #FAFAFA;*/
+    /*background-color: #F2F2F2;*/
+    background-color: #FFE5E5;
+}
+
+.sch_movie_cell_watch_this {
+    background-color: #FFE5E5;
+}
+
+.sch_movie_cell_watch_any {
+    background-color: #F0FFF0;
+}
+
+.sch_movie_cell_maybe_watch {
+}
+
+.sch_movie_cell_background {
 }
 
 .sch_movie_cell_embedded {
-    width: 100%;
+    width: 110px;
     height: 100%;
     position: relative;
+    margin-left: 19px;
     display: block;
     text-align: center;
     font-variant: small-caps;
@@ -121,20 +142,128 @@ a.sch_movie_cell_embedded:hover {
     color: red;
 }
 
-.sch_movie_commands {
-    width: 100%;
+a.sch_movie_cell_embedded:active {
+    border: none;
+}
+
+.sch_uncheck {
     position: absolute;
-    bottom: 0;
-    opacity: 0.7;
-    background-color: #faffb5;
+    width: 19px;
+    height: 19px;
+    top: -1px;
+    display: block;
+    background: transparent url('../../resources/img/check_16_mouse_over.png') center top no-repeat;
 }
 
-.sch_constraint {
-    padding: 2px;
-    float: right;
+.sch_uncheck:hover {
+    background-image: url('../../resources/img/check_16.png');
 }
 
-.sch_movie_button {
-    padding: 2px;
-    /*visibility: hidden;*/
+.sch_check {
+    position: absolute;
+    width: 19px;
+    height: 19px;
+    top: -1px;
+    visibility: hidden;
+    display: block;
+    background: transparent url('../../resources/img/check_16.png') center top no-repeat;
+}
+
+.sch_check:hover {
+    background-image: url('../../resources/img/check_16_mouse_over.png');
+}
+
+.sch_pin_user, .sch_unpin_user, .sch_pin_system {
+    position: absolute;
+    width: 19px;
+    height: 19px;
+    top: 3px;
+    right: -2px;
+    display: block;
+    background: transparent no-repeat center;
+}
+
+.sch_pin_user {
+    visibility: hidden;
+    background-image: url('../../resources/img/pin_user_button_16.png');
+}
+
+.sch_pin_user:hover {
+    background-image: url('../../resources/img/pin_user_button_16_mouse_over.png');
+}
+
+.sch_unpin_user {
+    background-image: url('../../resources/img/pin_user_16.png');
+}
+
+.sch_unpin_user:hover {
+    top: 1px;
+    background-image: url('../../resources/img/pin_user_16_mouse_over.png');
+}
+
+.sch_pin_system {
+    background-image: url('../../resources/img/pin_system_16.png');
+}
+
+.sch_pin_system:hover {
+    background-image: url('../../resources/img/pin_system_16_mouse_over.png');
+}
+
+.sch_priority_wrapper {
+    position: absolute;
+    width: 100px;
+    height: 10px;
+    font-size: 10px;
+    bottom: 5px;
+    right: 24px;
+    opacity: 0.5;
+}
+
+.ui-slider-range {
+    background: #DDEEFF;
+}
+
+#tooltip {
+    position: absolute;
+    visibility: hidden;
+    z-index: 100;
+    min-width: 100px;
+    padding: 5px;
+    font-size: 14px;
+    text-align: center;
+    /*color: rgb(113, 157, 171);*/
+    background: #DDEEFF;
+    border: 1px solid;
+    border-radius: 5px;
+    text-shadow: rgba(0, 0, 0, 0.1) 1px 1px 1px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 1px 2px 0;
+}
+
+#tooltip:after, #tooltip:before {
+    bottom: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+}
+
+#tooltip:after {
+    border-color: rgba(221, 238, 255, 0);
+    border-bottom-color: #DDEEFF;
+    border-width: 5px;
+    left: 50%;
+    margin-left: -5px;
+}
+
+#tooltip:before {
+    border-color: rgba(0, 0, 0, 0);
+    border-bottom-color: #000000;
+    border-width: 6px;
+    left: 50%;
+    margin-left: -6px;
+}
+
+#tooltip-text {
+    margin: 0;
 }

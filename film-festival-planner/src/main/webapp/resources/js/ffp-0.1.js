@@ -2,16 +2,75 @@
  * @author Bogdan Dumitriu
  */
 
-function configure_mouse_listeners(elem) {
-    var overSrc = get_toggled_src(elem, "_mouse_over");
-    var outSrc = elem.attr("src");
-    elem
-        .mouseover(function() {
-            $(this).attr("src", overSrc);
-        })
-        .mouseout(function() {
-            $(this).attr("src", outSrc);
+function finalizeMovieCell(data) {
+    if (data.status == "success") {
+        addSliders();
+    }
+}
+
+function configureMovieCellControls() {
+    $(".sch_container").on("mouseenter", ".sch_movie_cell", function() {
+        $(this).find(".sch_check, .sch_pin_user, .sch_priority_wrapper").each(function() {
+            $(this).css({visibility: "visible"});
         });
+    }).on("mouseenter", ".sch_priority_wrapper", function() {
+        $(this).css({opacity: "1.0"});
+    }).on("mouseleave", ".sch_movie_cell", function() {
+        $(this).find(".sch_check, .sch_pin_user, .sch_priority_wrapper").each(function() {
+            $(this).css({visibility: "hidden"});
+        });
+    }).on("mouseleave", ".sch_priority_wrapper", function() {
+        $(this).css({opacity: "0.5"});
+    });
+}
+
+function removeEmptyHeaderText() {
+    $(".sch_header_first, .sch_header_rest").each(function() {
+        var maybeEmptyTextNode = $(this).get(0).nextSibling;
+        var wsRegexp = new RegExp(/^\s*$/);
+        if (maybeEmptyTextNode.nodeType == 3 && wsRegexp.test(maybeEmptyTextNode.nodeValue)) {
+            $(maybeEmptyTextNode).remove();
+        }
+    });
+}
+
+function resizeTableBody() {
+    var totalWidth = 0;
+    $(".sch_header_first, .sch_header_rest").each(function() {
+        totalWidth += $(this).outerWidth();
+    });
+    $(".sch_table_body").width(totalWidth + 4); // adding 4 to avoid problems at all zoom levels
+}
+
+function addSliders() {
+    $(".sch_priority:not(.ui-slider)").slider({
+        orientation: "horizontal",
+        range: "min",
+        min: 0,
+        max: 2,
+        value: 2,
+        start: function(event, ui) {
+            setTimeout(function() {showTooltip(ui)}, 10);
+        },
+        slide: function(event, ui) {
+            setTimeout(function() {showTooltip(ui)}, 10);
+        },
+        stop: function(event, ui) {
+            $("#tooltip").css({visibility: "hidden"});
+            $("#sch_form").find("input[id*='priority'][type=hidden]").val(ui.value);
+            $(ui.handle).parents(".sch_priority_wrapper").find(".priorityButton").click();
+        }
+    });
+    $(".sch_priority_wrapper").each(function() {
+        $(this).css({visibility: "hidden"});
+    });
+}
+
+function showTooltip(ui) {
+    var tooltip = $("#tooltip");
+    var offset = $(ui.handle).offset();
+    tooltip.offset({top: offset.top + 40, left: offset.left - (tooltip.outerWidth() - $(ui.handle).outerWidth()) / 2});
+    tooltip.css({visibility: "visible"});
 }
 
 /**
@@ -29,14 +88,6 @@ function get_toggled_src(elem, textBeforeExtension) {
     return get_toggled_file_name(nameAndExtension, textBeforeExtension);
 }
 
-function reconfigure_mouse_listeners(data) {
-    if (data.status =="success") {
-        $(data.source).parent().find(".sch_movie_button").each(function() {
-            configure_mouse_listeners($(this));
-        });
-    }
-}
-
 /**
  * Returns "foo_suffix.ext" for input "foo.ext" and vice-versa.
  *
@@ -49,8 +100,7 @@ function reconfigure_mouse_listeners(data) {
  */
 function get_toggled_file_name(nameAndExtension, textBeforeExtension) {
     if (endsWith(nameAndExtension.name, textBeforeExtension)) {
-        return nameAndExtension.name.substring(0, nameAndExtension.name.length - textBeforeExtension.length)
-            + nameAndExtension.extension;
+        return nameAndExtension.name.substring(0, nameAndExtension.name.length - textBeforeExtension.length) + nameAndExtension.extension;
     } else {
         return nameAndExtension.name + textBeforeExtension + nameAndExtension.extension;
     }

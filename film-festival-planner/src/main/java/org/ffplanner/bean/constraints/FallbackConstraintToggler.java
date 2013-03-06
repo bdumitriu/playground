@@ -8,22 +8,27 @@ import org.ffplanner.entity.UserScheduleConstraint;
 import javax.persistence.EntityManager;
 
 /**
- * If the {@code constraintType} passed to {@link #toggle(ScheduleConstraintType)} is set, it is removed. If no
- * constraint is set or any other constraint is set, {@code constraintType} becomes the new constraint.
+ * If the {@code constraintType} passed to {@link #toggle(ScheduleConstraintType)} is set, it replaced with a
+ * preconfigured, different {@code baseConstraintType}. If no constraint is set or any other constraint is set,
+ * {@code constraintType} becomes the new constraint.
  *
  * @author Bogdan Dumitriu
  */
-public class SpecificConstraintToggler extends ConstraintToggler {
+public class FallbackConstraintToggler extends ConstraintToggler {
 
-    public SpecificConstraintToggler(EntityManager entityManager, Showing showing, UserSchedule userSchedule) {
+    private final ScheduleConstraintType baseConstraintType;
+
+    public FallbackConstraintToggler(EntityManager entityManager, Showing showing, UserSchedule userSchedule,
+            ScheduleConstraintType baseConstraintType) {
         super(entityManager, showing, userSchedule);
+        this.baseConstraintType = baseConstraintType;
     }
 
     @Override
     protected void toggleConstraint(
             ScheduleConstraintType constraintToRemoveOrSet, UserScheduleConstraint constraints) {
         if (constraints.getConstraintType() == constraintToRemoveOrSet) {
-            entityManager.remove(constraints);
+            constraints.setConstraintType(baseConstraintType);
         } else {
             constraints.setConstraintType(constraintToRemoveOrSet);
         }

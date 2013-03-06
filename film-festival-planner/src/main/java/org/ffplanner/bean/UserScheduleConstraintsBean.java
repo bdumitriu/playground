@@ -1,6 +1,7 @@
 package org.ffplanner.bean;
 
 import org.ffplanner.bean.constraints.AnyConstraintToggler;
+import org.ffplanner.bean.constraints.FallbackConstraintToggler;
 import org.ffplanner.bean.constraints.SpecificConstraintToggler;
 import org.ffplanner.entity.*;
 
@@ -55,6 +56,15 @@ public class UserScheduleConstraintsBean extends ConnectorEntityBean<UserSchedul
      */
     public void toggleAnyConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
         new AnyConstraintToggler(entityManager, showing, userSchedule).toggle(constraintType);
+    }
+
+    /**
+     * If {@code constraintType} is set, it replaced with {@code baseConstraintType}. If no constraint is set or any
+     * other constraint is set, {@code constraintType} becomes the new constraint.
+     */
+    public void toggleFallbackConstraint(Showing showing, UserSchedule userSchedule,
+            ScheduleConstraintType constraintType, ScheduleConstraintType baseConstraintType) {
+        new FallbackConstraintToggler(entityManager, showing, userSchedule, baseConstraintType).toggle(constraintType);
     }
 
     public boolean hasConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {

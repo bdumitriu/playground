@@ -16,8 +16,10 @@
     <ui:define name="title">Day Schedule</ui:define>
 
     <ui:define name="additional-headers">
+        <h:outputStylesheet name="css/base/jquery-ui.min.css" />
         <h:outputStylesheet library="css" name="schedule.css"/>
-        <h:outputScript library="js" name="jquery-1.7.2.js" />
+        <h:outputScript library="js" name="jquery-1.9.1.js" />
+        <h:outputScript library="js" name="jquery-ui-1.10.1.custom.js" />
         <h:outputScript library="js" name="ffp-0.1.js" />
     </ui:define>
 
@@ -27,31 +29,34 @@
             <h:link value="#{bundle.Previous}" rendered="#{dayScheduleController.previousDay != null}" styleClass="header_button">
                 <f:param name="day" value="#{dayScheduleController.previousDay}"/>
             </h:link>
-            <h:link value="#{bundle.Next}" rendered="${dayScheduleController.nextDay != null}" styleClass="header_button">
+            <h:link value="#{bundle.Next}" rendered="#{dayScheduleController.nextDay != null}" styleClass="header_button">
                 <f:param name="day" value="${dayScheduleController.nextDay}"/>
             </h:link>
-            <span class="header_text">#{bundle.Schedule} </span>
+            <span class="header_text">#{bundle.Schedule}</span>
             <h:form id="buttons_form" styleClass="header_form">
                 <h:outputText value="#{bundle.SelectMoviesFirst}"
                               rendered="#{not dayScheduleController.hasConstraints() and not dayScheduleController.hasSchedule()}"
                               styleClass="header_instruction"/>
                 <h:commandLink action="#{dayScheduleController.suggestSchedule}"
                                value="#{bundle.Suggest}"
+                               title="#{bundle.SuggestTooltip}"
                                rendered="#{dayScheduleController.hasConstraints() and not dayScheduleController.hasSchedule()}"
                                styleClass="header_button">
-                    <f:ajax execute="@form :sch_form" render="@form :sch_form" />
+                    <f:ajax render="@form :sch_form" onevent="finalizeMovieCell" />
                 </h:commandLink>
-                <h:commandLink action="#{dayScheduleController.acceptSchedule}"
-                               value="#{bundle.Accept}"
+                <h:commandLink action="#{dayScheduleController.suggestSchedule}"
+                               value="#{bundle.SuggestNew}"
+                               title="#{bundle.SuggestNewTooltip}"
                                rendered="#{dayScheduleController.hasSchedule()}"
                                styleClass="header_button">
-                    <f:ajax execute="@form :sch_form" render="@form :sch_form" />
+                    <f:ajax render="@form :sch_form" onevent="finalizeMovieCell" />
                 </h:commandLink>
                 <h:commandLink action="#{dayScheduleController.discardSchedule}"
                                value="#{bundle.Discard}"
+                               title="#{bundle.DiscardTooltip}"
                                rendered="#{dayScheduleController.hasSchedule()}"
                                styleClass="header_button">
-                    <f:ajax execute="@form :sch_form" render="@form :sch_form" />
+                    <f:ajax render="@form :sch_form" onevent="finalizeMovieCell" />
                 </h:commandLink>
             </h:form>
         </h:panelGroup>
@@ -60,41 +65,37 @@
     <ui:define name="body">
         <script type="text/javascript">
             $(document).ready(function() {
-//                $(".sch_movie_cell").mouseover(function() {
-//                    $(this).find(".sch_movie_button").each(function() {
-//                        $(this).css("visibility", "visible");
-//                    });
-//                });
-//                $(".sch_movie_cell").mouseout(function() {
-//                    $(this).find(".sch_movie_button").each(function() {
-//                        $(this).css("visibility", "hidden");
-//                    });
-//                });
-//                $(".sch_movie_button").each(function() {
-//                    configure_mouse_listeners($(this));
-//                });
-                var totalWidth = 0;
-                $(".sch_header_first, .sch_header_rest").each(function() {
-                    totalWidth += $(this).width() + 1;
-                });
-                $(".sch_container").width(totalWidth);
+                configureMovieCellControls();
+                removeEmptyHeaderText();
+                resizeTableBody();
+                addSliders();
             });
+            $(window).resize(resizeTableBody);
         </script>
 
+        <div id="tooltip">
+            <p id="tooltip-text">#{bundle.Priority}</p>
+        </div>
+
         <div class="sch_container">
-            <div class="sch_header_first">
-                <div class="sch_header_first_embedded">
-                    <h:outputText value="#{bundle.Time}" />
-                </div>
-            </div>
-            <ui:repeat value="#{dayScheduleController.venues}" var="venue">
-                <div class="sch_header_rest">
-                    <div class="sch_header_rest_embedded">
-                        <h:outputText value="#{venue.name}" />
+            <div class="sch_header">
+                <div class="sch_header_first">
+                    <div class="sch_header_first_embedded">
+                        <h:outputText value="#{bundle.Time}" />
                     </div>
                 </div>
-            </ui:repeat>
-            <h:form id="sch_form">
+                <ui:repeat value="#{dayScheduleController.venues}" var="venue">
+                    <div class="sch_header_rest">
+                        <div class="sch_header_rest_embedded">
+                            <h:outputText value="#{venue.name}" />
+                        </div>
+                    </div>
+                </ui:repeat>
+            </div>
+            <h:form id="sch_form" class="sch_table_body">
+
+                <h:inputHidden id="priority" value="#{dayScheduleController.priority}" />
+
                 <ui:repeat value="#{dayScheduleController.hours}" var="hour" varStatus="status">
                     <div class="sch_row_first">
                         <h:outputText value="#{hour.formatted}" styleClass="sch_hour_text"/>
@@ -102,84 +103,78 @@
                     <ui:repeat value="#{dayScheduleController.getHourLineFor(hour)}" var="hourSlot">
                         <div class="sch_row_rest">
                             <h:panelGroup id="movie_cell"
-                                          styleClass="sch_movie_cell#{dayScheduleController.isScheduled(hourSlot.showing.id) ? ' sch_movie_cell_scheduled' : ''}"
+                                          styleClass="#{dayScheduleController.getMovieStyleClass(hourSlot.showing.id)}"
                                           rendered="#{hourSlot.hasShowing()}"
                                           style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
-                                <h:outputText rendered="#{dayScheduleController.isScheduled(hourSlot.showing.id)}"
+                                <h:outputText rendered="#{true or dayScheduleController.isScheduled(hourSlot.showing.id)}"
                                               value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle}"
                                               styleClass="sch_movie_cell_embedded"/>
+
+                                <ui:remove>
                                 <h:commandLink action="#{dayScheduleController.movieCellClicked(hourSlot.showing.id)}"
                                                rendered="#{not dayScheduleController.isScheduled(hourSlot.showing.id)}"
                                                value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle}"
                                                styleClass="sch_movie_cell_embedded">
-                                    <f:ajax execute="@form :buttons" render="@form :buttons_form" />
+                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                    <f:ajax execute="@form" render="movie_cell :buttons_form" onevent="finalizeMovieCell" />
                                 </h:commandLink>
-                                <h:panelGroup styleClass="sch_movie_commands"
-                                              rendered="#{dayScheduleController.isAnyConstraintSelectedFor(hourSlot.showing.id) and not dayScheduleController.isScheduled(hourSlot.showing.id)}">
+                                </ui:remove>
+
+                                <h:commandLink
+                                        title="#{bundle.WatchAnyTooltip}"
+                                        rendered="#{not dayScheduleController.isAnyConstraintSelectedFor(hourSlot.showing.id)}"
+                                        action="#{dayScheduleController.watchAnyButtonClicked(hourSlot.showing.id)}"
+                                        styleClass="sch_check">
+                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                    <f:ajax execute="@form" render="movie_cell :buttons_form" onevent="finalizeMovieCell" />
+                                </h:commandLink>
+                                <h:commandLink
+                                        title="#{bundle.RemoveInterestTooltip}"
+                                        rendered="#{dayScheduleController.isAnyConstraintSelectedFor(hourSlot.showing.id)}"
+                                        action="#{dayScheduleController.movieCellClicked(hourSlot.showing.id)}"
+                                        styleClass="sch_uncheck">
+                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                    <f:ajax execute="@form" render="movie_cell :buttons_form" onevent="finalizeMovieCell" />
+                                </h:commandLink>
+                                <h:panelGroup
+                                        rendered="#{dayScheduleController.isAnyConstraintSelectedFor(hourSlot.showing.id)}"
+                                        styleClass="sch_priority_wrapper">
+                                    <div class="sch_priority"/>
                                     <h:commandButton
-                                            id="watchThis"
-                                            rendered="#{dayScheduleController.isSomethingOtherThanWatchThisSelected(hourSlot.showing.id)}"
-                                            title="#{bundle.WatchThisTitle}"
-                                            action="#{dayScheduleController.watchThisButtonClicked(hourSlot.showing.id)}"
-                                            image="../../resources/img/pin_16.png"
-                                            styleClass="sch_movie_button"
-                                            onmouseover="$(this).attr('src', '../../resources/img/pin_16_mouse_over.png');"
-                                            onmouseout="$(this).attr('src', '../../resources/img/pin_16.png');">
-                                        <f:ajax execute="@form" render="movie_cell" />
+                                            style="display: none"
+                                            styleClass="priorityButton"
+                                            action="#{dayScheduleController.assignPriority(hourSlot.showing.id)}">
+                                        <f:ajax execute="@form" />
                                     </h:commandButton>
-                                    <h:commandButton
-                                            id="watchAny"
-                                            rendered="#{dayScheduleController.isSomethingOtherThanWatchAnySelected(hourSlot.showing.id)}"
-                                            title="#{bundle.WatchAnyTitle}"
-                                            action="#{dayScheduleController.watchAnyButtonClicked(hourSlot.showing.id)}"
-                                            image="../../resources/img/check_16.png"
-                                            styleClass="sch_movie_button"
-                                            onmouseover="$(this).attr('src', '../../resources/img/check_16_mouse_over.png');"
-                                            onmouseout="$(this).attr('src', '../../resources/img/check_16.png');">
-                                        <f:ajax execute="@form" render="movie_cell" />
-                                    </h:commandButton>
-                                    <h:commandButton
-                                            id="maybeWatch"
-                                            rendered="#{dayScheduleController.isSomethingOtherThanMaybeWatchSelected(hourSlot.showing.id)}"
-                                            title="#{bundle.MaybeWatchTitle}"
-                                            action="#{dayScheduleController.maybeWatchButtonClicked(hourSlot.showing.id)}"
-                                            image="../../resources/img/dice_16.png"
-                                            styleClass="sch_movie_button"
-                                            onmouseover="$(this).attr('src', '../../resources/img/dice_16_mouse_over.png');"
-                                            onmouseout="$(this).attr('src', '../../resources/img/dice_16.png');">
-                                        <f:ajax execute="@form" render="movie_cell" />
-                                    </h:commandButton>
-                                    <h:commandButton
-                                            id="clear"
-                                            rendered="#{dayScheduleController.isAnyConstraintSelectedFor(hourSlot.showing.id)}"
-                                            title="#{bundle.RemoveInterestTitle}"
-                                            action="#{dayScheduleController.movieCellClicked(hourSlot.showing.id)}"
-                                            image="../../resources/img/delete_16.png"
-                                            style="padding-left: 3px"
-                                            styleClass="sch_movie_button"
-                                            onmouseover="$(this).attr('src', '../../resources/img/delete_16_mouse_over.png');"
-                                            onmouseout="$(this).attr('src', '../../resources/img/delete_16.png');">
-                                        <f:ajax execute="@form" render="movie_cell :buttons_form" />
-                                    </h:commandButton>
-                                    <h:graphicImage
-                                            value="../../resources/img/pin_16_mouse_over.png"
-                                            rendered="#{dayScheduleController.isWatchThisSelected(hourSlot.showing.id)}"
-                                            title="#{bundle.WatchThisTitle}"
-                                            styleClass="sch_constraint" />
-                                    <h:graphicImage
-                                            value="../../resources/img/check_16_mouse_over.png"
-                                            rendered="#{dayScheduleController.isWatchAnySelected(hourSlot.showing.id)}"
-                                            title="#{bundle.WatchAnyTitle}"
-                                            styleClass="sch_constraint" />
-                                    <h:graphicImage
-                                            value="../../resources/img/dice_16_mouse_over.png"
-                                            rendered="#{dayScheduleController.isMaybeWatchSelected(hourSlot.showing.id)}"
-                                            title="#{bundle.MaybeWatchTitle}"
-                                            styleClass="sch_constraint" />
                                 </h:panelGroup>
+                                <h:commandLink
+                                        title="#{bundle.WatchThisTooltip}"
+                                        rendered="#{dayScheduleController.isWatchAnySelected(hourSlot.showing.id) and not dayScheduleController.isWatchThisSelected(hourSlot.showing.id)}"
+                                        action="#{dayScheduleController.watchThisButtonClicked(hourSlot.showing.id)}"
+                                        styleClass="sch_pin_user">
+                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                    <f:ajax execute="@form" render="movie_cell" onevent="finalizeMovieCell" />
+                                </h:commandLink>
+                                <h:commandLink
+                                        title="#{bundle.WatchThisSelectedUser}"
+                                        rendered="#{dayScheduleController.isWatchThisSelected(hourSlot.showing.id)}"
+                                        action="#{dayScheduleController.watchThisButtonClicked(hourSlot.showing.id)}"
+                                        styleClass="sch_unpin_user">
+                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                    <f:ajax execute="@form" render="movie_cell" onevent="finalizeMovieCell" />
+                                </h:commandLink>
+                                <h:commandLink
+                                        title="#{bundle.WatchThisSelectedSystem}"
+                                        rendered="#{not dayScheduleController.isWatchThisSelected(hourSlot.showing.id) and dayScheduleController.isScheduled(hourSlot.showing.id)}"
+                                        action="#{dayScheduleController.watchThisButtonClicked(hourSlot.showing.id)}"
+                                        styleClass="sch_pin_system">
+                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                    <f:ajax execute="@form" render="movie_cell" onevent="finalizeMovieCell" />
+                                </h:commandLink>
                             </h:panelGroup>
                         </div>
                     </ui:repeat>
+                    <br />
                 </ui:repeat>
             </h:form>
         </div>

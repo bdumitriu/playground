@@ -32,12 +32,12 @@ public abstract class ConstraintToggler {
 
     protected abstract void toggleConstraint(ScheduleConstraintType constraintType, UserScheduleConstraint constraints);
 
-    private UserScheduleConstraint getConstraints() {
+    protected UserScheduleConstraint getConstraints() {
         return entityManager.find(UserScheduleConstraint.class,
                 new UserScheduleConstraintId(userSchedule.getId(), showing.getId()));
     }
 
-    private void createConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
+    protected void createConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
         final UserScheduleConstraint userScheduleConstraint = new UserScheduleConstraint();
         userScheduleConstraint.setShowing(showing);
         userScheduleConstraint.setUserSchedule(userSchedule);

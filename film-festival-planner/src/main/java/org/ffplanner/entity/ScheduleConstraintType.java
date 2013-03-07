@@ -1,6 +1,6 @@
 package org.ffplanner.entity;
 
-import org.ffplanner.def.ScheduleDefinition;
+import org.ffplanner.def.ConstraintDefinition.WatchType;
 
 import java.io.Serializable;
 
@@ -10,21 +10,18 @@ import java.io.Serializable;
 public enum ScheduleConstraintType implements Serializable {
 
     // want to watch exactly this showing
-    SHOWING(ScheduleDefinition.WatchType.SHOWING),
+    SHOWING(WatchType.SHOWING),
 
     // want to watch the movie, on this or some other showing
-    MOVIE(ScheduleDefinition.WatchType.MOVIE),
+    MOVIE(WatchType.MOVIE);
 
-    // watch this movie, if possible
-    MAYBE_MOVIE(ScheduleDefinition.WatchType.MAYBE_MOVIE);
+    private final WatchType watchType;
 
-    private final ScheduleDefinition.WatchType watchType;
-
-    ScheduleConstraintType(ScheduleDefinition.WatchType watchType) {
+    ScheduleConstraintType(WatchType watchType) {
         this.watchType = watchType;
     }
 
-    public ScheduleDefinition.WatchType getWatchType() {
+    public WatchType getWatchType() {
         return watchType;
     }
 }

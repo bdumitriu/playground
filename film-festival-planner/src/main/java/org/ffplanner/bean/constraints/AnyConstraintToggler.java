@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 
 /**
  * If any constraint is set, it is removed. If no constraint is set, the {@code constraintType} passed to
- * {@link #toggle(ScheduleConstraintType) toggle} becomes the new constraint.
+ * {@link #change(ScheduleConstraintType) toggle} becomes the new constraint.
  *
  * @author Bogdan Dumitriu
  */
@@ -20,7 +20,7 @@ public class AnyConstraintToggler extends ConstraintToggler {
     }
 
     @Override
-    protected void toggleConstraint(ScheduleConstraintType constraintType, UserScheduleConstraint constraints) {
-        entityManager.remove(constraints);
+    protected void toggleConstraint(ScheduleConstraintType constraintType, UserScheduleConstraint constraint) {
+        entityManager.remove(constraint);
     }
 }

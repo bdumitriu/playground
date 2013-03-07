@@ -57,7 +57,7 @@ public class DayScheduleController implements Serializable {
 
     private Date day;
 
-    private int priority;
+    private Short priority;
 
     private DayProgramme dayProgramme;
 
@@ -140,11 +140,11 @@ public class DayScheduleController implements Serializable {
         return day;
     }
 
-    public int getPriority() {
+    public Short getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(Short priority) {
         this.priority = priority;
     }
 
@@ -164,12 +164,8 @@ public class DayScheduleController implements Serializable {
         showingButtonClicked(showingId, MOVIE);
     }
 
-    public void maybeWatchButtonClicked(Long showingId) {
-        showingButtonClicked(showingId, ScheduleConstraintType.MAYBE_MOVIE);
-    }
-
     public void assignPriority(Long showingId) {
-        // TODO: save priority
+        userScheduleBean.setConstraintPriority(showingId, user.getId(), priority);
     }
 
     private void showingButtonClicked(Long showingId, ScheduleConstraintType constraintType) {
@@ -204,8 +200,6 @@ public class DayScheduleController implements Serializable {
             stringBuilder.append(" sch_movie_cell_scheduled");
         } else if (isWatchAnySelected(showingId)) {
             stringBuilder.append(" sch_movie_cell_watch_any");
-        } else if (isMaybeWatchSelected(showingId)) {
-            stringBuilder.append(" sch_movie_cell_maybe_watch");
         }
         return stringBuilder.toString();
     }
@@ -218,35 +212,20 @@ public class DayScheduleController implements Serializable {
         return isConstraintSelected(showingId, SHOWING);
     }
 
-    public boolean isSomethingOtherThanWatchThisSelected(Long showingId) {
-        return isDifferentConstraintSelected(showingId, SHOWING);
-    }
-
     public boolean isWatchAnySelected(Long showingId) {
         return isConstraintSelected(showingId, MOVIE);
-    }
-
-    public boolean isSomethingOtherThanWatchAnySelected(Long showingId) {
-        return isDifferentConstraintSelected(showingId, MOVIE);
-    }
-
-    public boolean isMaybeWatchSelected(Long showingId) {
-        return isConstraintSelected(showingId, ScheduleConstraintType.MAYBE_MOVIE);
-    }
-
-    public boolean isSomethingOtherThanMaybeWatchSelected(Long showingId) {
-        return isDifferentConstraintSelected(showingId, ScheduleConstraintType.MAYBE_MOVIE);
     }
 
     private boolean isConstraintSelected(Long showingId, ScheduleConstraintType constraintType) {
         return constraintsData.isConstraintSelected(showingId, constraintType);
     }
 
-    private boolean isDifferentConstraintSelected(Long showingId, ScheduleConstraintType constraintType) {
-        return constraintsData.isDifferentConstraintSelected(showingId, constraintType);
-    }
-
     public boolean isAnyConstraintSelectedFor(Long showingId) {
         return constraintsData.isAnyConstraintSelected(showingId);
+    }
+
+    public short getShowingPriority(Long showingId) {
+        final Short priorityObject = constraintsData.getConstraintPriority(showingId);
+        return priorityObject == null ? -1 : priorityObject;
     }
 }

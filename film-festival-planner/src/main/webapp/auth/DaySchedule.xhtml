@@ -139,7 +139,10 @@
                                 <h:panelGroup
                                         rendered="#{dayScheduleController.isAnyConstraintSelectedFor(hourSlot.showing.id)}"
                                         styleClass="sch_priority_wrapper">
-                                    <div class="sch_priority"/>
+                                    <div class="sch_priority" />
+                                    <h:outputText
+                                            style="display: none"
+                                            value="#{dayScheduleController.getShowingPriority(hourSlot.showing.id)}" />
                                     <h:commandButton
                                             style="display: none"
                                             styleClass="priorityButton"

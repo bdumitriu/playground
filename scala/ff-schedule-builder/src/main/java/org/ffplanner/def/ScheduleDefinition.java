@@ -1,6 +1,6 @@
 package org.ffplanner.def;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  *
@@ -9,11 +9,7 @@ import java.util.List;
  */
 public interface ScheduleDefinition {
 
-    enum WatchType {
-        SHOWING,
-        MOVIE,
-        MAYBE_MOVIE
-    }
+    Collection<Long> getShowingIds();
 
-    List<Long> getShowingIds(WatchType watchType);
+    ConstraintDefinition getConstraint(Long showingId);
 }

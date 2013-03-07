@@ -2,6 +2,7 @@ package org.ffplanner.bean;
 
 import org.ffplanner.bean.constraints.AnyConstraintToggler;
 import org.ffplanner.bean.constraints.FallbackConstraintToggler;
+import org.ffplanner.bean.constraints.PriorityChanger;
 import org.ffplanner.bean.constraints.SpecificConstraintToggler;
 import org.ffplanner.entity.*;
 
@@ -47,7 +48,7 @@ public class UserScheduleConstraintsBean extends ConnectorEntityBean<UserSchedul
      * {@code constraintType} becomes the new constraint.
      */
     public void toggleConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
-        new SpecificConstraintToggler(entityManager, showing, userSchedule).toggle(constraintType);
+        new SpecificConstraintToggler(entityManager, showing, userSchedule).change(constraintType);
     }
 
     /**
@@ -55,7 +56,7 @@ public class UserScheduleConstraintsBean extends ConnectorEntityBean<UserSchedul
      * constraint.
      */
     public void toggleAnyConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
-        new AnyConstraintToggler(entityManager, showing, userSchedule).toggle(constraintType);
+        new AnyConstraintToggler(entityManager, showing, userSchedule).change(constraintType);
     }
 
     /**
@@ -64,7 +65,11 @@ public class UserScheduleConstraintsBean extends ConnectorEntityBean<UserSchedul
      */
     public void toggleFallbackConstraint(Showing showing, UserSchedule userSchedule,
             ScheduleConstraintType constraintType, ScheduleConstraintType baseConstraintType) {
-        new FallbackConstraintToggler(entityManager, showing, userSchedule, baseConstraintType).toggle(constraintType);
+        new FallbackConstraintToggler(entityManager, showing, userSchedule, baseConstraintType).change(constraintType);
+    }
+
+    public void setConstraintPriority(Showing showing, UserSchedule userSchedule, Short priority) {
+        new PriorityChanger(entityManager, showing, userSchedule).change(priority);
     }
 
     public boolean hasConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {

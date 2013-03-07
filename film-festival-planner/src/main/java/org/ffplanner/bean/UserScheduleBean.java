@@ -99,12 +99,12 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
      * {@code constraintType} becomes the new constraint.
      */
     public void toggleConstraint(Long showingId, Long userId, final ScheduleConstraintType constraintType) {
-        new ConstraintToggler() {
+        new ConstraintChanger() {
             @Override
-            protected void toggle(Showing showing, UserSchedule userSchedule) {
+            protected void change(Showing showing, UserSchedule userSchedule) {
                 constraintsBean.toggleConstraint(showing, userSchedule, constraintType);
             }
-        }.toggleConstraint(showingId, userId);
+        }.changeConstraint(showingId, userId);
     }
 
     /**
@@ -112,12 +112,12 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
      * constraint.
      */
     public void toggleAnyConstraint(Long showingId, Long userId, final ScheduleConstraintType constraintType) {
-        new ConstraintToggler() {
+        new ConstraintChanger() {
             @Override
-            protected void toggle(Showing showing, UserSchedule userSchedule) {
+            protected void change(Showing showing, UserSchedule userSchedule) {
                 constraintsBean.toggleAnyConstraint(showing, userSchedule, constraintType);
             }
-        }.toggleConstraint(showingId, userId);
+        }.changeConstraint(showingId, userId);
     }
 
     /**
@@ -126,12 +126,12 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
      */
     public void toggleFallbackConstraint(Long showingId, Long userId, final ScheduleConstraintType constraintType,
             final ScheduleConstraintType baseConstraintType) {
-        new ConstraintToggler() {
+        new ConstraintChanger() {
             @Override
-            protected void toggle(Showing showing, UserSchedule userSchedule) {
+            protected void change(Showing showing, UserSchedule userSchedule) {
                 constraintsBean.toggleFallbackConstraint(showing, userSchedule, constraintType, baseConstraintType);
             }
-        }.toggleConstraint(showingId, userId);
+        }.changeConstraint(showingId, userId);
     }
 
     public boolean isConstraintSelected(Long showingId, Long userId, ScheduleConstraintType constraintType) {
@@ -144,18 +144,27 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
         }
     }
 
-    private abstract class ConstraintToggler {
+    public void setConstraintPriority(Long showingId, Long userId, final Short priority) {
+        new ConstraintChanger() {
+            @Override
+            protected void change(Showing showing, UserSchedule userSchedule) {
+                constraintsBean.setConstraintPriority(showing, userSchedule, priority);
+            }
+        }.changeConstraint(showingId, userId);
+    }
 
-        protected void toggleConstraint(Long showingId, Long userId) {
+    private abstract class ConstraintChanger {
+
+        protected void changeConstraint(Long showingId, Long userId) {
             final Showing showing = showingBean.find(showingId);
             if (showing != null) {
                 final UserSchedule userSchedule = findOrCreateBy(userId, showing.getFestivalEdition(), false);
-                toggle(showing, userSchedule);
+                change(showing, userSchedule);
                 userSchedule.setLastModified(new Date());
                 entityManager.merge(userSchedule);
             }
         }
 
-        protected abstract void toggle(Showing showing, UserSchedule userSchedule);
+        protected abstract void change(Showing showing, UserSchedule userSchedule);
     }
 }

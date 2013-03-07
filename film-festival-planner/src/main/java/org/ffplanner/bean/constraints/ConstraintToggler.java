@@ -1,47 +1,31 @@
 package org.ffplanner.bean.constraints;
 
-import org.ffplanner.entity.*;
+import org.ffplanner.entity.ScheduleConstraintType;
+import org.ffplanner.entity.Showing;
+import org.ffplanner.entity.UserSchedule;
+import org.ffplanner.entity.UserScheduleConstraint;
 
 import javax.persistence.EntityManager;
+
+import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_PRIORITY;
 
 /**
  * @author Bogdan Dumitriu
  */
-public abstract class ConstraintToggler {
-
-    protected final EntityManager entityManager;
-
-    protected final Showing showing;
-
-    protected final UserSchedule userSchedule;
+public abstract class ConstraintToggler extends ConstraintChanger {
 
     protected ConstraintToggler(EntityManager entityManager, Showing showing, UserSchedule userSchedule) {
-        this.entityManager = entityManager;
-        this.showing = showing;
-        this.userSchedule = userSchedule;
+        super(entityManager, showing, userSchedule);
     }
 
-    public void toggle(ScheduleConstraintType constraintType) {
-        final UserScheduleConstraint constraints = getConstraints();
-        if (constraints == null) {
-            createConstraint(showing, userSchedule, constraintType);
+    public void change(ScheduleConstraintType constraintType) {
+        final UserScheduleConstraint constraint = getConstraint();
+        if (constraint == null) {
+            createConstraint(showing, userSchedule, constraintType, DEFAULT_PRIORITY);
         } else {
-            toggleConstraint(constraintType, constraints);
+            toggleConstraint(constraintType, constraint);
         }
     }
 
-    protected abstract void toggleConstraint(ScheduleConstraintType constraintType, UserScheduleConstraint constraints);
-
-    protected UserScheduleConstraint getConstraints() {
-        return entityManager.find(UserScheduleConstraint.class,
-                new UserScheduleConstraintId(userSchedule.getId(), showing.getId()));
-    }
-
-    protected void createConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
-        final UserScheduleConstraint userScheduleConstraint = new UserScheduleConstraint();
-        userScheduleConstraint.setShowing(showing);
-        userScheduleConstraint.setUserSchedule(userSchedule);
-        userScheduleConstraint.setConstraintType(constraintType);
-        entityManager.persist(userScheduleConstraint);
-    }
+    protected abstract void toggleConstraint(ScheduleConstraintType constraintType, UserScheduleConstraint constraint);
 }

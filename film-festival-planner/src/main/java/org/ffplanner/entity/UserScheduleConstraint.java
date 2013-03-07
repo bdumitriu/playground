@@ -33,6 +33,8 @@ public class UserScheduleConstraint implements Serializable {
     @Enumerated(EnumType.STRING)
     private ScheduleConstraintType constraintType;
 
+    private Short priority;
+
     public UserSchedule getUserSchedule() {
         return userSchedule;
     }
@@ -57,9 +59,17 @@ public class UserScheduleConstraint implements Serializable {
         this.constraintType = constraintType;
     }
 
+    public Short getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Short priority) {
+        this.priority = priority;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(userScheduleId, showingId, constraintType);
+        return Objects.hash(userScheduleId, showingId, constraintType, priority);
     }
 
     @Override
@@ -73,6 +83,7 @@ public class UserScheduleConstraint implements Serializable {
         final UserScheduleConstraint other = (UserScheduleConstraint) obj;
         return Objects.equals(this.userScheduleId, other.userScheduleId)
                 && Objects.equals(this.showingId, other.showingId)
-                && Objects.equals(this.constraintType, other.constraintType);
+                && Objects.equals(this.constraintType, other.constraintType)
+                && Objects.equals(this.priority, other.priority);
     }
 }

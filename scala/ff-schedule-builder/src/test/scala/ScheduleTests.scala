@@ -1,5 +1,6 @@
 import java.util
-import org.ffplanner.`def`.{ShowingDefinition, ScheduleDefinition, FestivalProgrammeDefinition}
+import org.ffplanner.`def`.ConstraintDefinition.WatchType
+import org.ffplanner.`def`.{ConstraintDefinition, ShowingDefinition, ScheduleDefinition, FestivalProgrammeDefinition}
 import org.ffplanner.{Schedule, Movie, Showing, ScheduleBuilder}
 import org.joda.time.DateTime
 import org.scalatest.FunSuite
@@ -23,16 +24,10 @@ class ScheduleTests extends FunSuite {
         showings
       }
     }
-    val scheduleDefinition1: ScheduleDefinition = new CodeScheduleDefinition(
-      List.empty,
-      List.empty,
-      List.empty
-    )
-    val scheduleDefinition2: ScheduleDefinition = new CodeScheduleDefinition(
-      List.empty,
-      List(25),
-      List.empty
-    )
+    val scheduleDefinition1: ScheduleDefinition = new TestScheduleDefinition(Map.empty)
+    val scheduleDefinition2: ScheduleDefinition = new TestScheduleDefinition(Map[java.lang.Long, ConstraintDefinition](
+      long2Long(25) -> new TestConstraint(WatchType.MOVIE, 2)
+    ))
   }
 
   test("no movies") {

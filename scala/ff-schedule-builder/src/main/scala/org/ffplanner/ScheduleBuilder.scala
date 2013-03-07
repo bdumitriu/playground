@@ -1,9 +1,9 @@
 package org.ffplanner
 
+import `def`.ConstraintDefinition.WatchType._
 import `def`.{ScheduleDefinition, FestivalProgrammeDefinition}
 import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.JavaConversions.collectionAsScalaIterable
-import ScheduleDefinition.WatchType
 
 /**
  *
@@ -19,9 +19,10 @@ class ScheduleBuilder(festivalProgrammeDefinition: FestivalProgrammeDefinition) 
   }
 
   def getPossibleSchedules(scheduleDefinition: ScheduleDefinition): List[Schedule] = {
-    val showingIds: List[Long] = scheduleDefinition.getShowingIds(WatchType.MOVIE).toList.map(Long2long(_))
+    val showingIds: List[Long] = scheduleDefinition.getShowingIds.toList.map(Long2long(_))
+    val movieOnlyShowingIds: List[Long] = showingIds.filter(scheduleDefinition.getConstraint(_).getWatchType == MOVIE)
     List(
-      new Schedule(showingIds.map(festivalProgramme.getMovie(_)).map(festivalProgramme.showingsOf(_)(0).id), List.empty)
+      new Schedule(movieOnlyShowingIds.map(festivalProgramme.getMovie(_)).map(festivalProgramme.showingsOf(_)(0).id), List.empty)
     )
   }
 }

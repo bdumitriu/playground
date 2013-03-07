@@ -18,7 +18,7 @@ public class ConstraintsData {
 
     private final FestivalEdition festivalEdition;
 
-    private final Map<Long, ScheduleConstraintType> constraints;
+    private final Map<Long, QualifiedConstraint> constraints;
 
     private UserSchedule userSchedule;
 
@@ -38,7 +38,9 @@ public class ConstraintsData {
         constraints.clear();
         userSchedule = userScheduleBean.findOrCreateBy(user.getId(), festivalEdition);
         for (UserScheduleConstraint userScheduleConstraint : userSchedule.getConstraints()) {
-            constraints.put(userScheduleConstraint.getShowing().getId(), userScheduleConstraint.getConstraintType());
+            final QualifiedConstraint qualifiedConstraint = new QualifiedConstraint(
+                    userScheduleConstraint.getConstraintType(), userScheduleConstraint.getPriority());
+            constraints.put(userScheduleConstraint.getShowing().getId(), qualifiedConstraint);
         }
         constraintsDefinition = null;
     }
@@ -70,20 +72,29 @@ public class ConstraintsData {
     }
 
     public boolean isConstraintSelected(Long showingId, ScheduleConstraintType constraintType) {
-        final ScheduleConstraintType scheduleConstraintType = constraints.get(showingId);
-        return scheduleConstraintType != null && scheduleConstraintType == constraintType;
-    }
-
-    public boolean isDifferentConstraintSelected(Long showingId, ScheduleConstraintType constraintType) {
-        final ScheduleConstraintType scheduleConstraintType = constraints.get(showingId);
-        return scheduleConstraintType != null && scheduleConstraintType != constraintType;
+        final QualifiedConstraint qualifiedConstraint = constraints.get(showingId);
+        if (qualifiedConstraint != null) {
+            final ScheduleConstraintType scheduleConstraintType = qualifiedConstraint.getScheduleConstraintType();
+            return scheduleConstraintType == constraintType;
+        } else {
+            return false;
+        }
     }
 
     /**
      * @return true if any constraint is set for {@code showingId}.
      */
     public boolean isAnyConstraintSelected(Long showingId) {
-        final ScheduleConstraintType scheduleConstraintType = constraints.get(showingId);
-        return scheduleConstraintType != null;
+        final QualifiedConstraint qualifiedConstraint = constraints.get(showingId);
+        return qualifiedConstraint != null;
+    }
+
+    public Short getConstraintPriority(Long showingId) {
+        final QualifiedConstraint qualifiedConstraint = constraints.get(showingId);
+        if (qualifiedConstraint != null) {
+            return qualifiedConstraint.getPriority();
+        } else {
+            return null;
+        }
     }
 }

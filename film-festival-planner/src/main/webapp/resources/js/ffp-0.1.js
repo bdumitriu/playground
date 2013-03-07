@@ -43,7 +43,8 @@ function resizeTableBody() {
 }
 
 function addSliders() {
-    $(".sch_priority:not(.ui-slider)").slider({
+    var sliderDiv = $(".sch_priority:not(.ui-slider)");
+    sliderDiv.slider({
         orientation: "horizontal",
         range: "min",
         min: 0,
@@ -60,6 +61,9 @@ function addSliders() {
             $("#sch_form").find("input[id*='priority'][type=hidden]").val(ui.value);
             $(ui.handle).parents(".sch_priority_wrapper").find(".priorityButton").click();
         }
+    });
+    sliderDiv.each(function() {
+        $(this).slider("option", "value", parseInt($(this).next("span").text()));
     });
     $(".sch_priority_wrapper").each(function() {
         $(this).css({visibility: "hidden"});

@@ -14,12 +14,14 @@ function configureMovieCellControls() {
             $(this).css({visibility: "visible"});
         });
     }).on("mouseenter", ".sch_priority_wrapper", function() {
+        showTooltip($(this).find(".ui-slider-handle").eq(0));
         $(this).css({opacity: "1.0"});
     }).on("mouseleave", ".sch_movie_cell", function() {
         $(this).find(".sch_check, .sch_pin_user, .sch_priority_wrapper").each(function() {
             $(this).css({visibility: "hidden"});
         });
     }).on("mouseleave", ".sch_priority_wrapper", function() {
+        $("#tooltip").css({visibility: "hidden"});
         $(this).css({opacity: "0.5"});
     });
 }
@@ -51,13 +53,12 @@ function addSliders() {
         max: 2,
         value: 2,
         start: function(event, ui) {
-            setTimeout(function() {showTooltip(ui)}, 10);
+            setTimeout(function() {showTooltip($(ui.handle))}, 10);
         },
         slide: function(event, ui) {
-            setTimeout(function() {showTooltip(ui)}, 10);
+            setTimeout(function() {showTooltip($(ui.handle))}, 10);
         },
         stop: function(event, ui) {
-            $("#tooltip").css({visibility: "hidden"});
             $("#sch_form").find("input[id*='priority'][type=hidden]").val(ui.value);
             $(ui.handle).parents(".sch_priority_wrapper").find(".priorityButton").click();
         }
@@ -70,10 +71,13 @@ function addSliders() {
     });
 }
 
-function showTooltip(ui) {
+/**
+ * @param sliderHandle the jQuery object representing the slider's handle
+ */
+function showTooltip(sliderHandle) {
     var tooltip = $("#tooltip");
-    var offset = $(ui.handle).offset();
-    tooltip.offset({top: offset.top + 40, left: offset.left - (tooltip.outerWidth() - $(ui.handle).outerWidth()) / 2});
+    var offset = sliderHandle.offset();
+    tooltip.offset({top: offset.top + 40, left: offset.left - (tooltip.outerWidth() - sliderHandle.outerWidth()) / 2});
     tooltip.css({visibility: "visible"});
 }
 

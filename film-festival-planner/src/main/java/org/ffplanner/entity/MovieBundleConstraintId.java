@@ -6,33 +6,33 @@ import java.util.Objects;
 /**
  * @author Bogdan Dumitriu
  */
-public class UserScheduleConstraintId implements Serializable {
+public class MovieBundleConstraintId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long userSchedule;
 
-    private Long showing;
+    private Long movieBundle;
 
-    public UserScheduleConstraintId() {
+    public MovieBundleConstraintId() {
     }
 
-    public UserScheduleConstraintId(Long userScheduleId, Long showingId) {
+    public MovieBundleConstraintId(Long userScheduleId, Long movieBundleId) {
         this.userSchedule = userScheduleId;
-        this.showing = showingId;
+        this.movieBundle = movieBundleId;
     }
 
     public Long getUserScheduleId() {
         return userSchedule;
     }
 
-    public Long getShowingId() {
-        return showing;
+    public Long getMovieBundleId() {
+        return movieBundle;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userSchedule, showing);
+        return Objects.hash(userSchedule, movieBundle);
     }
 
     @Override
@@ -43,7 +43,8 @@ public class UserScheduleConstraintId implements Serializable {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final UserScheduleConstraintId other = (UserScheduleConstraintId) obj;
-        return Objects.equals(this.userSchedule, other.userSchedule) && Objects.equals(this.showing, other.showing);
+        final MovieBundleConstraintId other = (MovieBundleConstraintId) obj;
+        return Objects.equals(this.userSchedule, other.userSchedule)
+                && Objects.equals(this.movieBundle, other.movieBundle);
     }
 }

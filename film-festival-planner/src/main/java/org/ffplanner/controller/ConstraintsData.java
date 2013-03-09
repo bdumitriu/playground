@@ -2,12 +2,16 @@ package org.ffplanner.controller;
 
 import com.google.common.base.Objects;
 import org.ffplanner.bean.UserScheduleBean;
+import org.ffplanner.bean.programme.FestivalEditionProgramme;
 import org.ffplanner.def.ScheduleDefinition;
 import org.ffplanner.entity.*;
 
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.ffplanner.entity.ScheduleConstraintType.*;
 
 /**
  * @author Bogdan Dumitriu
@@ -16,7 +20,7 @@ public class ConstraintsData {
 
     private final UserScheduleBean userScheduleBean;
 
-    private final FestivalEdition festivalEdition;
+    private final FestivalEditionProgramme festivalProgramme;
 
     private final Map<Long, QualifiedConstraint> constraints;
 
@@ -24,9 +28,9 @@ public class ConstraintsData {
 
     private ConstraintsDefinition constraintsDefinition;
 
-    public ConstraintsData(UserScheduleBean userScheduleBean, FestivalEdition festivalEdition) {
+    public ConstraintsData(UserScheduleBean userScheduleBean, FestivalEditionProgramme festivalProgramme) {
         this.userScheduleBean = userScheduleBean;
-        this.festivalEdition = festivalEdition;
+        this.festivalProgramme = festivalProgramme;
         this.constraints = new HashMap<>();
     }
 
@@ -36,13 +40,53 @@ public class ConstraintsData {
 
     public void loadFor(User user) {
         constraints.clear();
-        userSchedule = userScheduleBean.findOrCreateBy(user.getId(), festivalEdition);
-        for (UserScheduleConstraint userScheduleConstraint : userSchedule.getConstraints()) {
-            final QualifiedConstraint qualifiedConstraint = new QualifiedConstraint(
-                    userScheduleConstraint.getConstraintType(), userScheduleConstraint.getPriority());
-            constraints.put(userScheduleConstraint.getShowing().getId(), qualifiedConstraint);
-        }
+        userSchedule = userScheduleBean.findOrCreateBy(user.getId(), festivalProgramme.getFestivalEdition());
+        addMovieConstraints();
+        addShowingConstraints();
+        addShowingElsewhereConstraints();
         constraintsDefinition = null;
+    }
+
+    private void addMovieConstraints() {
+        for (MovieBundleConstraint movieConstraint : userSchedule.getMovieConstraints()) {
+            addConstraintsBasedOn(movieConstraint);
+        }
+    }
+
+    private void addConstraintsBasedOn(MovieBundleConstraint movieConstraint) {
+        for (Showing showing : festivalProgramme.getShowingsFor(movieConstraint.getMovieBundle())) {
+            final QualifiedConstraint qualifiedConstraint =
+                    new QualifiedConstraint(MOVIE, movieConstraint.getPriority());
+            constraints.put(showing.getId(), qualifiedConstraint);
+        }
+    }
+
+    private void addShowingConstraints() {
+        for (ShowingConstraint showingConstraint : userSchedule.getShowingConstraints()) {
+            addConstraint(showingConstraint);
+        }
+    }
+
+    private void addConstraint(ShowingConstraint showingConstraint) {
+        final QualifiedConstraint qualifiedConstraint =
+                new QualifiedConstraint(SHOWING, showingConstraint.getPriority());
+        constraints.put(showingConstraint.getShowing().getId(), qualifiedConstraint);
+    }
+
+    private void addShowingElsewhereConstraints() {
+        for (ShowingConstraint showingConstraint : userSchedule.getShowingConstraints()) {
+            addConstraintsBasedOn(showingConstraint);
+        }
+    }
+
+    private void addConstraintsBasedOn(ShowingConstraint showingConstraint) {
+        for (Showing showing : festivalProgramme.getShowingsForSameMovieAs(showingConstraint.getShowing())) {
+            QualifiedConstraint qualifiedConstraint = constraints.get(showing.getId());
+            if (qualifiedConstraint == null || qualifiedConstraint.getScheduleConstraintType() == MOVIE) {
+                qualifiedConstraint = new QualifiedConstraint(SHOWING_ELSEWHERE, null);
+                constraints.put(showing.getId(), qualifiedConstraint);
+            }
+        }
     }
 
     public boolean reloadNeeded() {
@@ -82,11 +126,31 @@ public class ConstraintsData {
     }
 
     /**
-     * @return true if any constraint is set for {@code showingId}.
+     * @return true if one of the {@link ScheduleConstraintType#WEAK_CONSTRAINTS WEAK_CONSTRAINTS} is selected as a
+     * constraint for {@code showingId}.
      */
-    public boolean isAnyConstraintSelected(Long showingId) {
+    public boolean hasWeakConstraintFor(Long showingId) {
+        return isConstraintSelected(showingId, WEAK_CONSTRAINTS);
+    }
+
+    /**
+     * @return true if one of the {@link ScheduleConstraintType#USER_CONSTRAINTS USER_CONSTRAINTS} is selected as a
+     * constraint for {@code showingId}.
+     */
+    public boolean hasUserConstraintFor(Long showingId) {
+        return isConstraintSelected(showingId, USER_CONSTRAINTS);
+    }
+
+    private boolean isConstraintSelected(Long showingId, EnumSet<ScheduleConstraintType> constraintsSet) {
         final QualifiedConstraint qualifiedConstraint = constraints.get(showingId);
-        return qualifiedConstraint != null;
+        return qualifiedConstraint != null && constraintsSet.contains(qualifiedConstraint.getScheduleConstraintType());
+    }
+
+    /**
+     * @return true if no constraint is set for {@code showingId}.
+     */
+    public boolean hasNoConstraintFor(Long showingId) {
+        return constraints.get(showingId) == null;
     }
 
     public Short getConstraintPriority(Long showingId) {

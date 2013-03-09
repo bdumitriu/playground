@@ -41,11 +41,15 @@ public class UserSchedule implements Serializable {
     private Set<UserScheduleShowing> showings = new HashSet<>();
 
     @OneToMany(mappedBy = "userSchedule")
-    private Set<UserScheduleConstraint> constraints = new HashSet<>();
+    private Set<MovieBundleConstraint> movieConstraints = new HashSet<>();
+
+    @OneToMany(mappedBy = "userSchedule")
+    private Set<ShowingConstraint> showingConstraints = new HashSet<>();
 
     public void loadLazyFields() {
         showings.iterator();
-        constraints.iterator();
+        movieConstraints.iterator();
+        showingConstraints.iterator();
     }
 
     public Long getId() {
@@ -100,8 +104,12 @@ public class UserSchedule implements Serializable {
         return showings;
     }
 
-    public Set<UserScheduleConstraint> getConstraints() {
-        return constraints;
+    public Set<MovieBundleConstraint> getMovieConstraints() {
+        return movieConstraints;
+    }
+
+    public Set<ShowingConstraint> getShowingConstraints() {
+        return showingConstraints;
     }
 
     @Override

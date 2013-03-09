@@ -8,9 +8,9 @@ import java.util.Objects;
  * @author Bogdan Dumitriu
  */
 @Entity
-@Table(name = "userschedule_constraint")
-@IdClass(UserScheduleConstraintId.class)
-public class UserScheduleConstraint implements Serializable {
+@Table(name = "moviebundle_constraint")
+@IdClass(MovieBundleConstraintId.class)
+public class MovieBundleConstraint implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,16 +22,13 @@ public class UserScheduleConstraint implements Serializable {
     @JoinColumn(name = "userSchedule_id")
     private UserSchedule userSchedule;
 
-    @Column(name = "showing_id", insertable = false, updatable = false)
-    private Long showingId;
+    @Column(name = "movieBundle_id", insertable = false, updatable = false)
+    private Long movieBundleId;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "showing_id")
-    private Showing showing;
-
-    @Enumerated(EnumType.STRING)
-    private ScheduleConstraintType constraintType;
+    @JoinColumn(name = "movieBundle_id")
+    private MovieBundleInFestival movieBundle;
 
     private Short priority;
 
@@ -43,20 +40,12 @@ public class UserScheduleConstraint implements Serializable {
         this.userSchedule = userSchedule;
     }
 
-    public Showing getShowing() {
-        return showing;
+    public MovieBundleInFestival getMovieBundle() {
+        return movieBundle;
     }
 
-    public void setShowing(Showing showing) {
-        this.showing = showing;
-    }
-
-    public ScheduleConstraintType getConstraintType() {
-        return constraintType;
-    }
-
-    public void setConstraintType(ScheduleConstraintType constraintType) {
-        this.constraintType = constraintType;
+    public void setMovieBundle(MovieBundleInFestival movieBundle) {
+        this.movieBundle = movieBundle;
     }
 
     public Short getPriority() {
@@ -69,7 +58,7 @@ public class UserScheduleConstraint implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userScheduleId, showingId, constraintType, priority);
+        return Objects.hash(userScheduleId, movieBundleId, priority);
     }
 
     @Override
@@ -80,10 +69,9 @@ public class UserScheduleConstraint implements Serializable {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final UserScheduleConstraint other = (UserScheduleConstraint) obj;
+        final MovieBundleConstraint other = (MovieBundleConstraint) obj;
         return Objects.equals(this.userScheduleId, other.userScheduleId)
-                && Objects.equals(this.showingId, other.showingId)
-                && Objects.equals(this.constraintType, other.constraintType)
+                && Objects.equals(this.movieBundleId, other.movieBundleId)
                 && Objects.equals(this.priority, other.priority);
     }
 }

@@ -108,18 +108,16 @@ root {
     background-color: #FFE5E5;
 }
 
-.sch_movie_cell_watch_this {
+.sch_movie_cell_watch_showing {
     background-color: #FFE5E5;
 }
 
-.sch_movie_cell_watch_any {
+.sch_movie_cell_watch_movie {
     background-color: #F0FFF0;
 }
 
-.sch_movie_cell_maybe_watch {
-}
-
-.sch_movie_cell_background {
+.sch_movie_cell_watch_elsewhere {
+    background-color: #FAFAFA;
 }
 
 .sch_movie_cell_embedded {

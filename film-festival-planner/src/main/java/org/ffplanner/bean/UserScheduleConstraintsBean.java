@@ -1,80 +1,86 @@
 package org.ffplanner.bean;
 
-import org.ffplanner.bean.constraints.AnyConstraintToggler;
-import org.ffplanner.bean.constraints.FallbackConstraintToggler;
+import org.ffplanner.bean.constraints.ShowingConstraintToggler;
+import org.ffplanner.bean.constraints.MovieConstraintToggler;
 import org.ffplanner.bean.constraints.PriorityChanger;
-import org.ffplanner.bean.constraints.SpecificConstraintToggler;
+import org.ffplanner.bean.programme.FestivalEditionProgramme;
+import org.ffplanner.bean.programme.FestivalProgrammeBean;
 import org.ffplanner.entity.*;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Bogdan Dumitriu
  */
 @Stateless
 @LocalBean
-public class UserScheduleConstraintsBean extends ConnectorEntityBean<UserScheduleConstraint> implements Serializable {
+public class UserScheduleConstraintsBean extends ConnectorEntityBean<ShowingConstraint> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Inject
+    private FestivalProgrammeBean festivalProgrammeBean;
+
     @Override
-    public UserScheduleConstraint find(Long showingId, Long userScheduleId) {
+    public ShowingConstraint find(Long showingId, Long userScheduleId) {
         return super.find(showingId, userScheduleId);
     }
 
     @Override
-    protected Class<UserScheduleConstraint> getEntityClass() {
-        return UserScheduleConstraint.class;
+    protected Class<ShowingConstraint> getEntityClass() {
+        return ShowingConstraint.class;
     }
 
     @Override
-    protected Predicate getLeftCondition(Long id, CriteriaBuilder criteriaBuilder, Root<UserScheduleConstraint> root) {
+    protected Predicate getLeftCondition(Long id, CriteriaBuilder criteriaBuilder, Root<ShowingConstraint> root) {
         return criteriaBuilder.equal(root.get(UserScheduleConstraint_.showing).get(Showing_.id), id);
     }
 
     @Override
     protected Predicate getRightCondition(
-            Long id, CriteriaBuilder criteriaBuilder, Root<UserScheduleConstraint> root) {
+            Long id, CriteriaBuilder criteriaBuilder, Root<ShowingConstraint> root) {
         return criteriaBuilder.equal(root.get(UserScheduleConstraint_.userSchedule).get(UserSchedule_.id), id);
     }
 
-    /**
-     * If {@code constraintType} is set, it is removed. If no constraint is set or any other constraint is set,
-     * {@code constraintType} becomes the new constraint.
-     */
-    public void toggleConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
-        new SpecificConstraintToggler(entityManager, showing, userSchedule).change(constraintType);
+    private List<Showing> getShowingsForSameMovieAs(Showing showing) {
+        final FestivalEditionProgramme programme = festivalProgrammeBean.getProgrammeFor(showing.getFestivalEdition());
+        return programme.getShowingsForSameMovieAs(showing);
     }
 
     /**
-     * If any constraint is set, it is removed. If no constraint is set, {@code constraintType} becomes the new
-     * constraint.
+     * Toggles the movie constraint for the movie of {@code showing} as described in {@link MovieConstraintToggler}.
      */
-    public void toggleAnyConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
-        new AnyConstraintToggler(entityManager, showing, userSchedule).change(constraintType);
+    public void toggleMovieConstraint(Showing showing, UserSchedule userSchedule) {
+        new MovieConstraintToggler(entityManager, showing, getShowingsForSameMovieAs(showing), userSchedule).change();
     }
 
     /**
-     * If {@code constraintType} is set, it replaced with {@code baseConstraintType}. If no constraint is set or any
-     * other constraint is set, {@code constraintType} becomes the new constraint.
+     * Toggles the showing constraint for {@code showing} as described in {@link ShowingConstraintToggler}.
      */
-    public void toggleFallbackConstraint(Showing showing, UserSchedule userSchedule,
-            ScheduleConstraintType constraintType, ScheduleConstraintType baseConstraintType) {
-        new FallbackConstraintToggler(entityManager, showing, userSchedule, baseConstraintType).change(constraintType);
+    public void toggleShowingConstraint(Showing showing, UserSchedule userSchedule) {
+        new ShowingConstraintToggler(entityManager, showing, getShowingsForSameMovieAs(showing), userSchedule).change();
     }
 
     public void setConstraintPriority(Showing showing, UserSchedule userSchedule, Short priority) {
-        new PriorityChanger(entityManager, showing, userSchedule).change(priority);
+        new PriorityChanger(entityManager, showing, getShowingsForSameMovieAs(showing), userSchedule).change(priority);
     }
 
-    public boolean hasConstraint(Showing showing, UserSchedule userSchedule, ScheduleConstraintType constraintType) {
-        final UserScheduleConstraint constraints = entityManager.find(
-                UserScheduleConstraint.class, new UserScheduleConstraintId(userSchedule.getId(), showing.getId()));
-        return constraints != null && constraints.getConstraintType() == constraintType;
+    public boolean hasMovieConstraint(Showing showing, UserSchedule userSchedule) {
+        final MovieBundleConstraint movieConstraint = entityManager.find(MovieBundleConstraint.class,
+                new MovieBundleConstraintId(userSchedule.getId(), showing.getMovieBundleInFestival().getId()));
+        return movieConstraint != null;
+    }
+
+    public boolean hasShowingConstraint(Showing showing, UserSchedule userSchedule) {
+        final ShowingConstraint showingConstraint = entityManager.find(
+                ShowingConstraint.class, new ShowingConstraintId(userSchedule.getId(), showing.getId()));
+        return showingConstraint != null;
     }
 }

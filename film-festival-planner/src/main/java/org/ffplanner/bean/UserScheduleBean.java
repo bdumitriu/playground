@@ -1,5 +1,7 @@
 package org.ffplanner.bean;
 
+import org.ffplanner.bean.constraints.MovieConstraintToggler;
+import org.ffplanner.bean.constraints.ShowingConstraintToggler;
 import org.ffplanner.entity.*;
 import org.ffplanner.qualifier.Messages;
 
@@ -95,50 +97,44 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
     }
 
     /**
-     * If {@code constraintType} is set, it is removed. If no constraint is set or any other constraint is set,
-     * {@code constraintType} becomes the new constraint.
+     * Toggles the movie constraint for the movie of {@code showing} as described in {@link MovieConstraintToggler}.
      */
-    public void toggleConstraint(Long showingId, Long userId, final ScheduleConstraintType constraintType) {
+    public void toggleMovieConstraint(Long showingId, Long userId) {
         new ConstraintChanger() {
             @Override
             protected void change(Showing showing, UserSchedule userSchedule) {
-                constraintsBean.toggleConstraint(showing, userSchedule, constraintType);
+                constraintsBean.toggleMovieConstraint(showing, userSchedule);
             }
         }.changeConstraint(showingId, userId);
     }
 
     /**
-     * If any constraint is set, it is removed. If no constraint is set, {@code constraintType} becomes the new
-     * constraint.
+     * Toggles the showing constraint for {@code showing} as described in {@link ShowingConstraintToggler}.
      */
-    public void toggleAnyConstraint(Long showingId, Long userId, final ScheduleConstraintType constraintType) {
+    public void toggleShowingConstraint(Long showingId, Long userId) {
         new ConstraintChanger() {
             @Override
             protected void change(Showing showing, UserSchedule userSchedule) {
-                constraintsBean.toggleAnyConstraint(showing, userSchedule, constraintType);
+                constraintsBean.toggleShowingConstraint(showing, userSchedule);
             }
         }.changeConstraint(showingId, userId);
     }
 
-    /**
-     * If {@code constraintType} is set, it replaced with {@code baseConstraintType}. If no constraint is set or any
-     * other constraint is set, {@code constraintType} becomes the new constraint.
-     */
-    public void toggleFallbackConstraint(Long showingId, Long userId, final ScheduleConstraintType constraintType,
-            final ScheduleConstraintType baseConstraintType) {
-        new ConstraintChanger() {
-            @Override
-            protected void change(Showing showing, UserSchedule userSchedule) {
-                constraintsBean.toggleFallbackConstraint(showing, userSchedule, constraintType, baseConstraintType);
-            }
-        }.changeConstraint(showingId, userId);
-    }
-
-    public boolean isConstraintSelected(Long showingId, Long userId, ScheduleConstraintType constraintType) {
+    public boolean isMovieConstraintSelected(Long showingId, Long userId) {
         final Showing showing = showingBean.find(showingId);
         if (showing != null) {
             final UserSchedule userSchedule = findOrCreateBy(userId, showing.getFestivalEdition(), false);
-            return constraintsBean.hasConstraint(showing, userSchedule, constraintType);
+            return constraintsBean.hasMovieConstraint(showing, userSchedule);
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isShowingConstraintSelected(Long showingId, Long userId) {
+        final Showing showing = showingBean.find(showingId);
+        if (showing != null) {
+            final UserSchedule userSchedule = findOrCreateBy(userId, showing.getFestivalEdition(), false);
+            return constraintsBean.hasShowingConstraint(showing, userSchedule);
         } else {
             return false;
         }

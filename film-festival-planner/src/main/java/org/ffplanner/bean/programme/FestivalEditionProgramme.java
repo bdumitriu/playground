@@ -1,8 +1,11 @@
 package org.ffplanner.bean.programme;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import org.ffplanner.def.ScheduleDefinition;
 import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.FestivalEditionSection;
+import org.ffplanner.entity.MovieBundleInFestival;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.util.DateUtils;
 import org.joda.time.Interval;
@@ -18,14 +21,29 @@ public class FestivalEditionProgramme {
 
     private final FestivalEdition festivalEdition;
 
+    private final ListMultimap<MovieBundleInFestival, Showing> movieShowings;
+
     private final Map<Interval, DayProgramme> dayProgrammes;
 
     private final List<FestivalEditionSection> sectionMovies;
 
     public FestivalEditionProgramme(FestivalEdition festivalEdition, List<Showing> festivalShowings) {
         this.festivalEdition = festivalEdition;
+        this.movieShowings = createMovieShowings(festivalShowings);
         this.dayProgrammes = new DayProgrammesLoader(festivalShowings).getDayProgrammes();
         this.sectionMovies = festivalEdition.getSections();
+    }
+
+    private static ListMultimap<MovieBundleInFestival, Showing> createMovieShowings(List<Showing> festivalShowings) {
+        final ListMultimap<MovieBundleInFestival, Showing> multimap = ArrayListMultimap.create();
+        for (Showing showing : festivalShowings) {
+            multimap.put(showing.getMovieBundleInFestival(), showing);
+        }
+        return multimap;
+    }
+
+    public FestivalEdition getFestivalEdition() {
+        return festivalEdition;
     }
 
     public DayProgramme getDayProgramme(Date date) {
@@ -43,5 +61,14 @@ public class FestivalEditionProgramme {
 
     public ScheduleDefinition getShowings() {
         return null;
+    }
+
+    public List<Showing> getShowingsFor(MovieBundleInFestival movieBundle) {
+        return movieShowings.get(movieBundle);
+    }
+
+    public List<Showing> getShowingsForSameMovieAs(Showing showing) {
+        final MovieBundleInFestival movieBundleInFestival = showing.getMovieBundleInFestival();
+        return getShowingsFor(movieBundleInFestival);
     }
 }

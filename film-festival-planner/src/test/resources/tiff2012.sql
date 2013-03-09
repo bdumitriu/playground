@@ -313,6 +313,34 @@ INSERT INTO `moviebundle` VALUES (1,NULL,NULL),(2,NULL,NULL),(3,NULL,NULL),(4,NU
 UNLOCK TABLES;
 
 --
+-- Table structure for table `moviebundle_constraint`
+--
+
+DROP TABLE IF EXISTS `moviebundle_constraint`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `moviebundle_constraint` (
+  `movieBundle_id` bigint(20) NOT NULL DEFAULT '0',
+  `userSchedule_id` bigint(20) NOT NULL DEFAULT '0',
+  `priority` smallint(6) DEFAULT NULL,
+  PRIMARY KEY (`movieBundle_id`,`userSchedule_id`),
+  KEY `FK17CA3C8A470685B2` (`movieBundle_id`),
+  KEY `FK17CA3C8A5E586A7F` (`userSchedule_id`),
+  CONSTRAINT `FK17CA3C8A5E586A7F` FOREIGN KEY (`userSchedule_id`) REFERENCES `userschedule` (`id`),
+  CONSTRAINT `FK17CA3C8A470685B2` FOREIGN KEY (`movieBundle_id`) REFERENCES `moviebundle_festivaledition_section` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `moviebundle_constraint`
+--
+
+LOCK TABLES `moviebundle_constraint` WRITE;
+/*!40000 ALTER TABLE `moviebundle_constraint` DISABLE KEYS */;
+/*!40000 ALTER TABLE `moviebundle_constraint` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `moviebundle_festivaledition_section`
 --
 
@@ -448,6 +476,34 @@ INSERT INTO `showing` VALUES (1,'2012-06-01 11:00:00',1,1),(2,'2012-06-01 13:00:
 UNLOCK TABLES;
 
 --
+-- Table structure for table `showing_constraint`
+--
+
+DROP TABLE IF EXISTS `showing_constraint`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `showing_constraint` (
+  `showing_id` bigint(20) NOT NULL DEFAULT '0',
+  `userSchedule_id` bigint(20) NOT NULL DEFAULT '0',
+  `priority` smallint(6) DEFAULT NULL,
+  PRIMARY KEY (`showing_id`,`userSchedule_id`),
+  KEY `FK140BCE9762619C95` (`showing_id`),
+  KEY `FK140BCE975E586A7F` (`userSchedule_id`),
+  CONSTRAINT `FK140BCE975E586A7F` FOREIGN KEY (`userSchedule_id`) REFERENCES `userschedule` (`id`),
+  CONSTRAINT `FK140BCE9762619C95` FOREIGN KEY (`showing_id`) REFERENCES `showing` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `showing_constraint`
+--
+
+LOCK TABLES `showing_constraint` WRITE;
+/*!40000 ALTER TABLE `showing_constraint` DISABLE KEYS */;
+/*!40000 ALTER TABLE `showing_constraint` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -486,12 +542,13 @@ CREATE TABLE `userschedule` (
   `festivalEdition_id` bigint(20) DEFAULT NULL,
   `lastUsed` datetime DEFAULT NULL,
   `user_id` bigint(20) DEFAULT NULL,
+  `lastModified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKB26C3BA2A9538DD5` (`festivalEdition_id`),
   KEY `FKB26C3BA2D61976BF` (`user_id`),
   CONSTRAINT `FKB26C3BA2A9538DD5` FOREIGN KEY (`festivalEdition_id`) REFERENCES `festivaledition` (`id`),
   CONSTRAINT `FKB26C3BA2D61976BF` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -500,37 +557,8 @@ CREATE TABLE `userschedule` (
 
 LOCK TABLES `userschedule` WRITE;
 /*!40000 ALTER TABLE `userschedule` DISABLE KEYS */;
-INSERT INTO `userschedule` VALUES (1,'My Schedule',1,NULL,8),(9,'My Schedule',1,NULL,8);
+INSERT INTO `userschedule` VALUES (2,'My Schedule',1,NULL,8,'2013-03-09 19:35:30');
 /*!40000 ALTER TABLE `userschedule` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `userschedule_constraint`
---
-
-DROP TABLE IF EXISTS `userschedule_constraint`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `userschedule_constraint` (
-  `showing_id` bigint(20) NOT NULL DEFAULT '0',
-  `userSchedule_id` bigint(20) NOT NULL DEFAULT '0',
-  `constraintType` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`showing_id`,`userSchedule_id`),
-  KEY `FKD2A056DA62619C95` (`showing_id`),
-  KEY `FKD2A056DA5E586A7F` (`userSchedule_id`),
-  CONSTRAINT `FKD2A056DA5E586A7F` FOREIGN KEY (`userSchedule_id`) REFERENCES `userschedule` (`id`),
-  CONSTRAINT `FKD2A056DA62619C95` FOREIGN KEY (`showing_id`) REFERENCES `showing` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `userschedule_constraint`
---
-
-LOCK TABLES `userschedule_constraint` WRITE;
-/*!40000 ALTER TABLE `userschedule_constraint` DISABLE KEYS */;
-INSERT INTO `userschedule_constraint` VALUES (7,1,'SHOWING'),(7,9,'MAYBE_MOVIE'),(8,1,'SHOWING'),(8,9,'SHOWING'),(9,1,'SHOWING'),(10,1,'SHOWING'),(13,1,'SHOWING'),(13,9,'MAYBE_MOVIE'),(14,1,'SHOWING'),(15,1,'MOVIE'),(15,9,'SHOWING'),(16,1,'SHOWING'),(19,1,'SHOWING'),(20,1,'SHOWING'),(23,1,'SHOWING'),(24,1,'SHOWING'),(26,1,'SHOWING'),(30,1,'MAYBE_MOVIE'),(45,1,'SHOWING'),(60,1,'SHOWING');
-/*!40000 ALTER TABLE `userschedule_constraint` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -620,4 +648,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-02-06 18:49:17
+-- Dump completed on 2013-03-09 19:40:26

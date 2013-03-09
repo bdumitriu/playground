@@ -6,6 +6,7 @@ import org.ffplanner.bean.FestivalEditionBean;
 import org.ffplanner.bean.ShowingBean;
 import org.ffplanner.bean.UserScheduleBean;
 import org.ffplanner.bean.programme.DayProgramme;
+import org.ffplanner.bean.programme.FestivalEditionProgramme;
 import org.ffplanner.bean.programme.FestivalProgrammeBean;
 import org.ffplanner.converter.DayConverter;
 import org.ffplanner.entity.FestivalEdition;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
 
 import static org.ffplanner.entity.ScheduleConstraintType.MOVIE;
 import static org.ffplanner.entity.ScheduleConstraintType.SHOWING;
+import static org.ffplanner.entity.ScheduleConstraintType.SHOWING_ELSEWHERE;
 import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID;
 import static org.joda.time.DateTimeConstants.JUNE;
 
@@ -86,10 +88,11 @@ public class DayScheduleController implements Serializable {
             this.day = dateTime.toDate();
         }
         final FestivalEdition festivalEdition = festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID);
-        dayProgramme = festivalProgrammeBean.getProgrammeFor(festivalEdition).getDayProgramme(this.day);
+        final FestivalEditionProgramme festivalProgramme = festivalProgrammeBean.getProgrammeFor(festivalEdition);
+        dayProgramme = festivalProgramme.getDayProgramme(this.day);
 
         if (constraintsData == null) {
-            constraintsData = new ConstraintsData(userScheduleBean, festivalEdition);
+            constraintsData = new ConstraintsData(userScheduleBean, festivalProgramme);
             constraintsData.loadFor(this.user);
         } else if (constraintsData.reloadNeeded()) {
             constraintsData.loadFor(this.user);
@@ -148,28 +151,24 @@ public class DayScheduleController implements Serializable {
         this.priority = priority;
     }
 
-    public void movieCellClicked(Long showingId) {
-        userScheduleBean.toggleAnyConstraint(showingId, user.getId(), MOVIE);
+    public void removeInterestClicked(Long showingId) {
+        userScheduleBean.toggleMovieConstraint(showingId, user.getId());
         /* TODO: temporary */
         if (hasSchedule()) {
             scheduledShowings.remove(showingId);
         }
     }
 
-    public void watchThisButtonClicked(Long showingId) {
-        userScheduleBean.toggleFallbackConstraint(showingId, user.getId(), SHOWING, MOVIE);
+    public void watchMovieButtonClicked(Long showingId) {
+        userScheduleBean.toggleMovieConstraint(showingId, user.getId());
     }
 
-    public void watchAnyButtonClicked(Long showingId) {
-        showingButtonClicked(showingId, MOVIE);
+    public void watchShowingButtonClicked(Long showingId) {
+        userScheduleBean.toggleShowingConstraint(showingId, user.getId());
     }
 
     public void assignPriority(Long showingId) {
         userScheduleBean.setConstraintPriority(showingId, user.getId(), priority);
-    }
-
-    private void showingButtonClicked(Long showingId, ScheduleConstraintType constraintType) {
-        userScheduleBean.toggleConstraint(showingId, user.getId(), constraintType);
     }
 
     public boolean hasSchedule() {
@@ -194,12 +193,14 @@ public class DayScheduleController implements Serializable {
     public String getMovieStyleClass(Long showingId) {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("sch_movie_cell");
-        if (isWatchThisSelected(showingId)) {
-            stringBuilder.append(" sch_movie_cell_watch_this");
+        if (isWatchShowingSelected(showingId)) {
+            stringBuilder.append(" sch_movie_cell_watch_showing");
         } else if (isScheduled(showingId)) {
             stringBuilder.append(" sch_movie_cell_scheduled");
-        } else if (isWatchAnySelected(showingId)) {
-            stringBuilder.append(" sch_movie_cell_watch_any");
+        } else if (isWatchMovieSelected(showingId)) {
+            stringBuilder.append(" sch_movie_cell_watch_movie");
+        } else if (isWatchElsewhereSelected(showingId)) {
+            stringBuilder.append(" sch_movie_cell_watch_elsewhere");
         }
         return stringBuilder.toString();
     }
@@ -208,20 +209,32 @@ public class DayScheduleController implements Serializable {
         return hasSchedule() && scheduledShowings.contains(showingId);
     }
 
-    public boolean isWatchThisSelected(Long showingId) {
+    public boolean isWatchMovieSelected(Long showingId) {
+        return isConstraintSelected(showingId, MOVIE);
+    }
+
+    public boolean isWatchShowingSelected(Long showingId) {
         return isConstraintSelected(showingId, SHOWING);
     }
 
-    public boolean isWatchAnySelected(Long showingId) {
-        return isConstraintSelected(showingId, MOVIE);
+    public boolean isWatchElsewhereSelected(Long showingId) {
+        return isConstraintSelected(showingId, SHOWING_ELSEWHERE);
     }
 
     private boolean isConstraintSelected(Long showingId, ScheduleConstraintType constraintType) {
         return constraintsData.isConstraintSelected(showingId, constraintType);
     }
 
-    public boolean isAnyConstraintSelectedFor(Long showingId) {
-        return constraintsData.isAnyConstraintSelected(showingId);
+    public boolean hasWeakConstraintFor(Long showingId) {
+        return constraintsData.hasWeakConstraintFor(showingId);
+    }
+
+    public boolean hasUserConstraintFor(Long showingId) {
+        return constraintsData.hasUserConstraintFor(showingId);
+    }
+
+    public boolean isNoConstraintSelectedFor(Long showingId) {
+        return constraintsData.hasNoConstraintFor(showingId);
     }
 
     public short getShowingPriority(Long showingId) {

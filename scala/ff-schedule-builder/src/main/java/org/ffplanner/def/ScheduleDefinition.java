@@ -2,6 +2,8 @@ package org.ffplanner.def;
 
 import java.util.Collection;
 
+import static java.util.Collections.emptyList;
+
 /**
  *
  *
@@ -9,7 +11,24 @@ import java.util.Collection;
  */
 public interface ScheduleDefinition {
 
-    Collection<Long> getShowingIds();
+    ScheduleDefinition EMPTY = new Empty();
 
-    ConstraintDefinition getConstraint(Long showingId);
+    class Empty implements ScheduleDefinition {
+
+        private Empty() {}
+
+        @Override
+        public Collection<ConstraintDefinition.Showing> getShowingConstraints() {
+            return emptyList();
+        }
+
+        @Override
+        public Collection<ConstraintDefinition.Movie> getMovieConstraints() {
+            return emptyList();
+        }
+    }
+
+    Collection<ConstraintDefinition.Showing> getShowingConstraints();
+
+    Collection<ConstraintDefinition.Movie> getMovieConstraints();
 }

@@ -1,28 +1,31 @@
 package org.ffplanner
 
-import `def`.ConstraintDefinition.WatchType._
-import `def`.{ScheduleDefinition, FestivalProgrammeDefinition}
+import `def`.{ConstraintDefinition, ScheduleDefinition, FestivalProgrammeDefinition}
 import scala.collection.JavaConversions.seqAsJavaList
-import scala.collection.JavaConversions.collectionAsScalaIterable
+
 
 /**
  *
  *
  * @author Bogdan Dumitriu
  */
-class ScheduleBuilder(festivalProgrammeDefinition: FestivalProgrammeDefinition) {
+class ScheduleBuilder(val festivalProgrammeDefinition: FestivalProgrammeDefinition) {
 
-  val festivalProgramme: FestivalProgramme = new FestivalProgramme(festivalProgrammeDefinition)
+  val festivalProgramme: FestivalProgramme = new FestivalProgramme(
+    Option(festivalProgrammeDefinition).getOrElse(FestivalProgrammeDefinition.EMPTY))
 
   def getPossibleSchedulesJ(scheduleDefinition: ScheduleDefinition): java.util.List[Schedule] = {
     getPossibleSchedules(scheduleDefinition)
   }
 
   def getPossibleSchedules(scheduleDefinition: ScheduleDefinition): List[Schedule] = {
-    val showingIds: List[Long] = scheduleDefinition.getShowingIds.toList.map(Long2long(_))
-    val movieOnlyShowingIds: List[Long] = showingIds.filter(scheduleDefinition.getConstraint(_).getWatchType == MOVIE)
+    val scheduleDef: ScheduleDefinition = Option(scheduleDefinition).getOrElse(ScheduleDefinition.EMPTY)
+    val movieConstraints: List[ConstraintDefinition.Movie] = Utils.ensureNonNull(scheduleDef.getMovieConstraints)
+    val showingConstraints: List[ConstraintDefinition.Showing] = Utils.ensureNonNull(scheduleDef.getShowingConstraints)
+    val movieIds: List[Long] = movieConstraints map { s => Long2long(s.getMovieId) }
+    val showingIds: List[Long] = showingConstraints map { s => Long2long(s.getShowingId) }
     List(
-      new Schedule(movieOnlyShowingIds.map(festivalProgramme.getMovie(_)).map(festivalProgramme.showingsOf(_)(0).id), List.empty)
+      new Schedule(movieIds.map(new Movie(_)).map(festivalProgramme.showingsOf(_)(0).id), List.empty)
     )
   }
 }

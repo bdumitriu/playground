@@ -1,4 +1,4 @@
-package org.ffplanner.controller;
+package org.ffplanner.controller.constraints;
 
 import com.google.common.base.Objects;
 import org.ffplanner.bean.UserScheduleBean;
@@ -54,10 +54,13 @@ public class ConstraintsData {
     }
 
     private void addConstraintsBasedOn(MovieBundleConstraint movieConstraint) {
-        for (Showing showing : festivalProgramme.getShowingsFor(movieConstraint.getMovieBundle())) {
+        final MovieBundleInFestival movieBundle = movieConstraint.getMovieBundle();
+        final Long movieBundleId = movieBundle.getId();
+        for (Showing showing : festivalProgramme.getShowingsFor(movieBundle)) {
+            final Long showingId = showing.getId();
             final QualifiedConstraint qualifiedConstraint =
-                    new QualifiedConstraint(MOVIE, movieConstraint.getPriority());
-            constraints.put(showing.getId(), qualifiedConstraint);
+                    new QualifiedMovieConstraint(showingId, movieBundleId, movieConstraint.getPriority());
+            constraints.put(showingId, qualifiedConstraint);
         }
     }
 
@@ -68,9 +71,10 @@ public class ConstraintsData {
     }
 
     private void addConstraint(ShowingConstraint showingConstraint) {
+        final Long showingId = showingConstraint.getShowing().getId();
         final QualifiedConstraint qualifiedConstraint =
-                new QualifiedConstraint(SHOWING, showingConstraint.getPriority());
-        constraints.put(showingConstraint.getShowing().getId(), qualifiedConstraint);
+                new QualifiedShowingConstraint(showingId, showingConstraint.getPriority());
+        constraints.put(showingId, qualifiedConstraint);
     }
 
     private void addShowingElsewhereConstraints() {
@@ -81,10 +85,11 @@ public class ConstraintsData {
 
     private void addConstraintsBasedOn(ShowingConstraint showingConstraint) {
         for (Showing showing : festivalProgramme.getShowingsForSameMovieAs(showingConstraint.getShowing())) {
-            QualifiedConstraint qualifiedConstraint = constraints.get(showing.getId());
+            final Long showingId = showing.getId();
+            QualifiedConstraint qualifiedConstraint = constraints.get(showingId);
             if (qualifiedConstraint == null || qualifiedConstraint.getScheduleConstraintType() == MOVIE) {
-                qualifiedConstraint = new QualifiedConstraint(SHOWING_ELSEWHERE, null);
-                constraints.put(showing.getId(), qualifiedConstraint);
+                qualifiedConstraint = new QualifiedShowingElsewhereConstraint(showingId);
+                constraints.put(showingId, qualifiedConstraint);
             }
         }
     }

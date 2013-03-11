@@ -8,6 +8,7 @@ import org.ffplanner.bean.UserScheduleBean;
 import org.ffplanner.bean.programme.DayProgramme;
 import org.ffplanner.bean.programme.FestivalEditionProgramme;
 import org.ffplanner.bean.programme.FestivalProgrammeBean;
+import org.ffplanner.controller.constraints.ConstraintsData;
 import org.ffplanner.converter.DayConverter;
 import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.ScheduleConstraintType;

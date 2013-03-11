@@ -1,7 +1,6 @@
-import java.util
-import org.ffplanner.`def`.ConstraintDefinition.WatchType
-import org.ffplanner.`def`.{ConstraintDefinition, ShowingDefinition, ScheduleDefinition, FestivalProgrammeDefinition}
-import org.ffplanner.{Schedule, Movie, Showing, ScheduleBuilder}
+package org.ffplanner
+
+import `def`._
 import org.joda.time.DateTime
 import org.scalatest.FunSuite
 import org.junit.runner.RunWith
@@ -17,17 +16,17 @@ class ScheduleTests extends FunSuite {
 
   trait TestScheduleDefinitions {
     val festivalProgramme: FestivalProgrammeDefinition = new FestivalProgrammeDefinition {
-      def getShowings: util.List[ShowingDefinition] = {
-        val showings: util.LinkedList[ShowingDefinition] = new util.LinkedList[ShowingDefinition]()
+      def getShowings: java.util.List[ShowingDefinition] = {
+        val showings: java.util.LinkedList[ShowingDefinition] = new java.util.LinkedList[ShowingDefinition]()
         showings.add(new Showing(15, DateTime.now, new Movie(10)))
         showings.add(new Showing(25, DateTime.now, new Movie(10)))
         showings
       }
     }
-    val scheduleDefinition1: ScheduleDefinition = new TestScheduleDefinition(Map.empty)
-    val scheduleDefinition2: ScheduleDefinition = new TestScheduleDefinition(Map[java.lang.Long, ConstraintDefinition](
-      long2Long(25) -> new TestConstraint(WatchType.MOVIE, 2)
-    ))
+    val scheduleDefinition1: ScheduleDefinition = new TestScheduleDefinition(List.empty, List.empty)
+    val scheduleDefinition2: ScheduleDefinition = new TestScheduleDefinition(
+      List[ConstraintDefinition.Movie](new TestMovieConstraint(10, 2)),
+      List[ConstraintDefinition.Showing]())
   }
 
   test("no movies") {

@@ -45,7 +45,8 @@ public class FestivalProgrammeBean implements Serializable {
             festivalEdition.loadLazyFields();
             final List<Showing> festivalShowings = loadFestivalShowings(festivalEdition);
             programmes.put(festivalEdition, new FestivalEditionProgramme(festivalEdition, festivalShowings));
-            scheduleBuilders.put(festivalEdition, new ScheduleBuilder(getFestivalProgrammeDefinition(festivalShowings)));
+            scheduleBuilders.put(
+                    festivalEdition, new ScheduleBuilder(getFestivalProgrammeDefinition(festivalShowings)));
         }
     }
 

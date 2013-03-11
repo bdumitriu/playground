@@ -5,12 +5,13 @@ package org.ffplanner.def;
  */
 public interface ConstraintDefinition {
 
-    enum WatchType {
-        SHOWING,
-        MOVIE
+    Short getPriority();
+
+    public interface Movie extends ConstraintDefinition {
+        Long getMovieId();
     }
 
-    WatchType getWatchType();
-
-    Short getPriority();
+    public interface Showing extends ConstraintDefinition {
+        Long getShowingId();
+    }
 }

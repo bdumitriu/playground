@@ -107,7 +107,7 @@
                                           rendered="#{hourSlot.hasShowing()}"
                                           style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
                                 <h:outputText rendered="#{true or dayScheduleController.isScheduled(hourSlot.showing.id)}"
-                                              value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle}"
+                                              value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle} (#{hourSlot.showing.movieBundleInFestival.movieBundle.durationInMinutes})"
                                               styleClass="sch_movie_cell_embedded"/>
 
                                 <ui:remove>

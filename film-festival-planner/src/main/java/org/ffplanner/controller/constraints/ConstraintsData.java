@@ -3,7 +3,7 @@ package org.ffplanner.controller.constraints;
 import com.google.common.base.Objects;
 import org.ffplanner.bean.UserScheduleBean;
 import org.ffplanner.bean.programme.FestivalEditionProgramme;
-import org.ffplanner.def.ScheduleDefinition;
+import org.ffplanner.def.ScheduleConstraints;
 import org.ffplanner.entity.*;
 
 import java.util.Date;
@@ -109,10 +109,10 @@ public class ConstraintsData {
     }
 
     /**
-     * @return a {@link ScheduleDefinition} based on the current state of the constraints. This result is not updated
+     * @return a {@link ScheduleConstraints} based on the current state of the constraints. This result is not updated
      *         automatically if the constraints change.
      */
-    public ScheduleDefinition asScheduleDefinition() {
+    public ScheduleConstraints asScheduleConstraints() {
         if (constraintsDefinition == null) {
             constraintsDefinition = new ConstraintsDefinition();
             constraintsDefinition.initializeFrom(constraints);

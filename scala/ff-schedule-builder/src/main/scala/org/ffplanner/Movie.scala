@@ -1,6 +1,7 @@
 package org.ffplanner
 
 import `def`.MovieDefinition
+import org.joda.time.{DateTimeConstants, Period}
 
 /**
  * Wrapper around [[org.ffplanner.def.MovieDefinition MovieDefinition]] that ensures proper definition of
@@ -8,11 +9,11 @@ import `def`.MovieDefinition
  *
  * @author Bogdan Dumitriu
  */
-class Movie(val id: Long) extends MovieDefinition {
+class Movie(val id: Long, val duration: Period) {
 
-  def this(movieDefinition: MovieDefinition) = this(movieDefinition.getId)
+  def this(movieDefinition: MovieDefinition) = this(movieDefinition.getId, movieDefinition.getDuration)
 
-  def getId: java.lang.Long = id
+  def this(id: Long) = this(id, Period.minutes(DateTimeConstants.MINUTES_PER_HOUR))
 
   def canEqual(other: Any): Boolean = other.isInstanceOf[Movie]
 

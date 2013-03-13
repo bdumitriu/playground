@@ -19,9 +19,9 @@ class FestivalProgramme(festivalProgrammeDefinition: FestivalProgrammeDefinition
     Utils.ensureNonNull(festivalProgrammeDefinition.getShowings) map { new Showing(_) }
 
   private val movieShowings: Map[Movie, List[Showing]] =
-    showingDefinitions.sortBy(_.getDateTime)(DateTimeOrdering) groupBy { _.getMovie }
+    showingDefinitions.sortBy(_.dateTime)(DateTimeOrdering) groupBy { _.movie }
 
-  private val showings: Map[Long, Showing] = showingDefinitions.map(s => (Long2long(s.getId), s)).toMap
+  private val showings: Map[Long, Showing] = showingDefinitions.map(s => (Long2long(s.id), s)).toMap
 
   def showingsOf(movieId: Long): List[Showing] = showingsOf(new Movie(movieId))
 
@@ -29,7 +29,7 @@ class FestivalProgramme(festivalProgrammeDefinition: FestivalProgrammeDefinition
 
   def getShowing(showingId: Long): Showing = showings(showingId)
 
-  def getMovieOfShowing(showingId: Long): Movie = getShowing(showingId).getMovie
+  def getMovieOfShowing(showingId: Long): Movie = getShowing(showingId).movie
 
-  def getMovieIdOfShowing(showingId: Long): Long = getShowing(showingId).getMovie.id
+  def getMovieIdOfShowing(showingId: Long): Long = getShowing(showingId).movie.id
 }

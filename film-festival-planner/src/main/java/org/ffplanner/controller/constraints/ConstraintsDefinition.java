@@ -1,16 +1,18 @@
 package org.ffplanner.controller.constraints;
 
 import org.ffplanner.def.ConstraintDefinition;
-import org.ffplanner.def.ScheduleDefinition;
+import org.ffplanner.def.ScheduleConstraints;
+import org.joda.time.Interval;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 
 /**
  * @author Bogdan Dumitriu
  */
-public class ConstraintsDefinition implements ScheduleDefinition {
+public class ConstraintsDefinition implements ScheduleConstraints {
 
     private Collection<ConstraintDefinition.Showing> showingConstraints;
 
@@ -36,5 +38,11 @@ public class ConstraintsDefinition implements ScheduleDefinition {
     @Override
     public Collection<ConstraintDefinition.Movie> getMovieConstraints() {
         return movieConstraints;
+    }
+
+    @Override
+    public Collection<Interval> getTimeConstraints() {
+        /** todo: handle time constraints */
+        return Collections.singleton(new Interval(Long.MIN_VALUE, Long.MAX_VALUE));
     }
 }

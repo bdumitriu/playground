@@ -124,6 +124,11 @@ public class Showing implements Serializable, ShowingDefinition {
     }
 
     @Override
+    public Long getVenueId() {
+        return venue.getId();
+    }
+
+    @Override
     public MovieDefinition getMovie() {
         return movieBundleInFestival;
     }

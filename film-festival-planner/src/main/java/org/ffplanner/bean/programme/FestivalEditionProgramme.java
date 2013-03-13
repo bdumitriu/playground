@@ -2,7 +2,6 @@ package org.ffplanner.bean.programme;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import org.ffplanner.def.ScheduleDefinition;
 import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.FestivalEditionSection;
 import org.ffplanner.entity.MovieBundleInFestival;
@@ -57,10 +56,6 @@ public class FestivalEditionProgramme {
 
     public List<FestivalEditionSection> getSections() {
         return sectionMovies;
-    }
-
-    public ScheduleDefinition getShowings() {
-        return null;
     }
 
     public List<Showing> getShowingsFor(MovieBundleInFestival movieBundle) {

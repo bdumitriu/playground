@@ -1,6 +1,10 @@
 package org.ffplanner.def;
 
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+
 import java.util.Collection;
+import java.util.Collections;
 
 import static java.util.Collections.emptyList;
 
@@ -9,11 +13,11 @@ import static java.util.Collections.emptyList;
  *
  * @author Bogdan Dumitriu
  */
-public interface ScheduleDefinition {
+public interface ScheduleConstraints {
 
-    ScheduleDefinition EMPTY = new Empty();
+    ScheduleConstraints EMPTY = new Empty();
 
-    class Empty implements ScheduleDefinition {
+    class Empty implements ScheduleConstraints {
 
         private Empty() {}
 
@@ -26,9 +30,19 @@ public interface ScheduleDefinition {
         public Collection<ConstraintDefinition.Movie> getMovieConstraints() {
             return emptyList();
         }
+
+        @Override
+        public Collection<Interval> getTimeConstraints() {
+            return Collections.singleton(new Interval(new DateTime(Long.MIN_VALUE), new DateTime(Long.MAX_VALUE)));
+        }
     }
 
     Collection<ConstraintDefinition.Showing> getShowingConstraints();
 
     Collection<ConstraintDefinition.Movie> getMovieConstraints();
+
+    /**
+     * @return the time interval(s) when shows can be scheduled.
+     */
+    Collection<Interval> getTimeConstraints();
 }

@@ -1,6 +1,7 @@
 package org.ffplanner.entity;
 
 import org.ffplanner.def.MovieDefinition;
+import org.joda.time.Period;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -59,6 +60,11 @@ public class MovieBundleInFestival implements Serializable, MovieDefinition {
 
     public FestivalEditionSection getFestivalEditionSection() {
         return festivalEditionSection;
+    }
+
+    @Override
+    public Period getDuration() {
+        return Period.minutes(movieBundle.getDurationInMinutes());
     }
 
     @Override

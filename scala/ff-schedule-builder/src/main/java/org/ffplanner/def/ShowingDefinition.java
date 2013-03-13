@@ -9,6 +9,8 @@ public interface ShowingDefinition {
 
     Long getId();
 
+    Long getVenueId();
+
     DateTime getDateTime();
 
     MovieDefinition getMovie();

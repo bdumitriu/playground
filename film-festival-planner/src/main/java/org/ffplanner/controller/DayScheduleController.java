@@ -178,9 +178,9 @@ public class DayScheduleController implements Serializable {
 
     public void suggestSchedule() {
         final ScheduleBuilder scheduleBuilder = festivalProgrammeBean.getScheduleBuilder(DEFAULT_FESTIVAL_EDITION_ID);
-        final Schedule schedule = scheduleBuilder.getPossibleSchedulesJ(constraintsData.asScheduleDefinition()).get(0);
+        final Schedule schedule = scheduleBuilder.getPossibleSchedulesJ(constraintsData.asScheduleConstraints()).get(0);
         scheduledShowings = new LinkedList<>();
-        scheduledShowings.addAll(schedule.showingsJ());
+        scheduledShowings.addAll(schedule.showingIdsJ());
     }
 
     public void discardSchedule() {

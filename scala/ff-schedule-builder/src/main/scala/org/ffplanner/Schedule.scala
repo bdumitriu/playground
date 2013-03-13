@@ -7,13 +7,13 @@ import collection.JavaConversions.seqAsJavaList
  *
  * @author Bogdan Dumitriu
  */
-class Schedule(val showings: List[Long], val missedMovies: List[Long]) {
+class Schedule(val showingIds: List[Long], val missedMovieIds: List[Long]) {
 
-  val cachedShowingsJ: java.util.List[java.lang.Long] = showings.map {Long.box(_)}
+  val cachedShowingIdsJ: java.util.List[java.lang.Long] = showingIds.map {Long.box(_)}
 
-  val cachedMissedMoviesJ: java.util.List[java.lang.Long] = missedMovies.map {Long.box(_)}
+  val cachedMissedMovieIdsJ: java.util.List[java.lang.Long] = missedMovieIds.map {Long.box(_)}
 
-  def showingsJ: java.util.List[java.lang.Long] = cachedShowingsJ
+  def showingIdsJ: java.util.List[java.lang.Long] = cachedShowingIdsJ
 
-  def missedMoviesJ: java.util.List[java.lang.Long] = cachedMissedMoviesJ
+  def missedMovieIdsJ: java.util.List[java.lang.Long] = cachedMissedMovieIdsJ
 }

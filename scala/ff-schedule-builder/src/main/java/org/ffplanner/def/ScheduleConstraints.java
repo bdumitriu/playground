@@ -1,10 +1,10 @@
 package org.ffplanner.def;
 
+import com.google.common.collect.ImmutableRangeSet;
+import com.google.common.collect.Range;
 import org.joda.time.DateTime;
-import org.joda.time.Interval;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import static java.util.Collections.emptyList;
 
@@ -32,8 +32,8 @@ public interface ScheduleConstraints {
         }
 
         @Override
-        public Collection<Interval> getTimeConstraints() {
-            return Collections.singleton(new Interval(new DateTime(Long.MIN_VALUE), new DateTime(Long.MAX_VALUE)));
+        public ImmutableRangeSet<DateTime> getTimeConstraints() {
+            return ImmutableRangeSet.of(Range.closedOpen(new DateTime(Long.MIN_VALUE), new DateTime(Long.MAX_VALUE)));
         }
     }
 
@@ -44,5 +44,5 @@ public interface ScheduleConstraints {
     /**
      * @return the time interval(s) when shows can be scheduled.
      */
-    Collection<Interval> getTimeConstraints();
+    ImmutableRangeSet<DateTime> getTimeConstraints();
 }

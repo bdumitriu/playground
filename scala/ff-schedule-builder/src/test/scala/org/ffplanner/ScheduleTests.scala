@@ -1,11 +1,12 @@
 package org.ffplanner
 
 import `def`._
-import org.joda.time.{DateTimeConstants, Period, DateTime}
+import org.joda.time.{Period, DateTime}
 import org.scalatest.FunSuite
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import com.google.common.collect.{TreeRangeSet, RangeSet}
+import org.scalatest.matchers.ShouldMatchers
 
 /**
  *
@@ -13,9 +14,9 @@ import com.google.common.collect.{TreeRangeSet, RangeSet}
  * @author Bogdan Dumitriu
  */
 @RunWith(classOf[JUnitRunner])
-class ScheduleTests extends FunSuite {
+class ScheduleTests extends FunSuite with ShouldMatchers {
 
-  trait TestSuite1 {
+  trait TestFixture1 {
 
     val festivalProgrammeDefinition: FestivalProgrammeDefinition = new FestivalProgrammeDefinition {
       def getShowings: java.util.List[ShowingDefinition] = {
@@ -29,7 +30,7 @@ class ScheduleTests extends FunSuite {
     val scheduleBuilder: ScheduleBuilder = new ScheduleBuilder(festivalProgrammeDefinition)
   }
 
-  trait TestSuite2 {
+  trait TestFixture2 {
 
     val festivalProgrammeDefinition: FestivalProgrammeDefinition = new FestivalProgrammeDefinition {
 
@@ -70,27 +71,27 @@ class ScheduleTests extends FunSuite {
   }
 
   test("no movies") {
-    new TestSuite1 {
-      val scheduleConstraints: ScheduleConstraints = new TestScheduleConstraints(List.empty, List.empty)
+    new TestFixture1 {
+      val scheduleConstraints: TestScheduleConstraints = new TestScheduleConstraints(Set.empty, Set.empty)
       assert(scheduleBuilder.getPossibleSchedules(scheduleConstraints)(0).showingIds.size === 0)
     }
   }
 
   test("one movie") {
-    new TestSuite1 {
-      val scheduleConstraints: ScheduleConstraints = new TestScheduleConstraints(
-        List[ConstraintDefinition.Movie](new TestMovieConstraint(10, 2)),
-        List[ConstraintDefinition.Showing]())
+    new TestFixture1 {
+      val scheduleConstraints: TestScheduleConstraints = new TestScheduleConstraints(
+        Set[TestMovieConstraint](new TestMovieConstraint(10, 2)),
+        Set[TestShowingConstraint]())
       val schedules: List[Schedule] = scheduleBuilder.getPossibleSchedules(scheduleConstraints)
       assert(schedules.size === 1)
-      assert(schedules(0).showingIds(0) == 15 || schedules(0).showingIds(0) == 25, "Non existing showing id selected.")
+      assert(schedules(0).showingIds.head == 15 || schedules(0).showingIds.head == 25, "Non existing showing id selected.")
     }
   }
 
   test("no overlap") {
-    new TestSuite2 {
-      val scheduleConstraints: ScheduleConstraints = new TestScheduleConstraints(
-        List[ConstraintDefinition.Movie](
+    new TestFixture2 {
+      val scheduleConstraints: TestScheduleConstraints = new TestScheduleConstraints(
+        Set[TestMovieConstraint](
           new TestMovieConstraint(1, 2),
           new TestMovieConstraint(2, 2),
           new TestMovieConstraint(3, 2),
@@ -104,24 +105,106 @@ class ScheduleTests extends FunSuite {
           new TestMovieConstraint(11, 2),
           new TestMovieConstraint(12, 2)
         ),
-        List[ConstraintDefinition.Showing]()
+        Set[TestShowingConstraint]()
       )
       val schedules: List[Schedule] = scheduleBuilder.getPossibleSchedules(scheduleConstraints)
 
       for (schedule <- schedules) {
-        assertNoOverlap(schedule, scheduleBuilder.festivalProgramme)
+        assertBasicScheduleInvariants(schedule, scheduleConstraints, scheduleBuilder.festivalProgramme)
       }
     }
   }
 
-  def assertNoOverlap(schedule: Schedule, festivalProgramme: FestivalProgramme) {
-    val rangeSet: RangeSet[DateTime] = TreeRangeSet.create[DateTime]()
+  test("showings have priority over movies") {
+    new TestFixture2 {
+      val scheduleConstraints: TestScheduleConstraints = new TestScheduleConstraints(
+        Set[TestMovieConstraint](
+          new TestMovieConstraint(1, 2),
+          new TestMovieConstraint(2, 2),
+          new TestMovieConstraint(4, 2),
+          new TestMovieConstraint(5, 2),
+          new TestMovieConstraint(6, 2),
+          new TestMovieConstraint(8, 2),
+          new TestMovieConstraint(9, 2),
+          new TestMovieConstraint(10, 2),
+          new TestMovieConstraint(12, 2)
+        ),
+        Set[TestShowingConstraint](
+          new TestShowingConstraint(1003, 2),
+          new TestShowingConstraint(1007, 2),
+          new TestShowingConstraint(1011, 2)
+        )
+      )
+      val schedules: List[Schedule] = scheduleBuilder.getPossibleSchedules(scheduleConstraints)
+
+      for (schedule <- schedules) {
+        assertBasicScheduleInvariants(schedule, scheduleConstraints, scheduleBuilder.festivalProgramme)
+      }
+    }
+  }
+
+  private def assertBasicScheduleInvariants(
+    schedule: Schedule, scheduleConstraints: TestScheduleConstraints, festivalProgramme: FestivalProgramme) {
+    assertNoOverlap(schedule, festivalProgramme)
+    assertAllShowingsScheduled(schedule, scheduleConstraints, festivalProgramme)
+    assertNoMissedSchedulingOpportunities(schedule, scheduleConstraints, festivalProgramme)
+    assertMissedMoviesComputedCorrectly(schedule, scheduleConstraints, festivalProgramme)
+  }
+
+  private def assertNoOverlap(schedule: Schedule, festivalProgramme: FestivalProgramme) {
+    val intervals: RangeSet[DateTime] = TreeRangeSet.create[DateTime]()
     for (showingId <- schedule.showingIds) {
       val showing = festivalProgramme.getShowing(showingId)
-      val showingInterval = showing.interval
-      assert(rangeSet.subRangeSet(showingInterval).isEmpty, "Scheduled showing "+showingId+
-        " overlaps another scheduled showing:\n\t\t"+showingInterval+" @ venue "+showing.venueId)
-      rangeSet.add(showingInterval)
+      assert(!showing.overlapsWith(intervals), "Scheduled showing\n\t\t"+showing+"overlaps another scheduled showing.")
+      intervals.add(showing.interval)
     }
+  }
+
+  private def assertAllShowingsScheduled(
+    schedule: Schedule, scheduleConstraints: TestScheduleConstraints, festivalProgramme: FestivalProgramme) {
+    val showingIds: Set[Long] = schedule.showingIds
+    for (showingConstraint <- scheduleConstraints.showingConstraints) {
+      showingIds should contain (showingConstraint.showingId)
+    }
+  }
+
+  private def assertNoMissedSchedulingOpportunities(
+    schedule: Schedule, scheduleConstraints: TestScheduleConstraints, festivalProgramme: FestivalProgramme) {
+    val intervals: RangeSet[DateTime] = schedule.getShowingsIntervals(festivalProgramme)
+    for (missedMovieId <- schedule.missedMovieIds) {
+      for (movieShowing <- festivalProgramme.showingsOf(missedMovieId)) {
+        assert(movieShowing.overlapsWith(intervals) || !movieShowing.within(scheduleConstraints),
+          "Unscheduled movie "+missedMovieId+" could have been scheduled in the slot:\n\t\t"+movieShowing)
+      }
+    }
+  }
+
+  def assertMissedMoviesComputedCorrectly(
+    schedule: Schedule, scheduleConstraints: TestScheduleConstraints, festivalProgramme: FestivalProgramme) {
+    assertNoScheduledShowingInMissedMovies(schedule)
+    assertNoMissedMovieInScheduledShowings(schedule, festivalProgramme)
+    assertAllMovieConstraintsEitherScheduledOrUnscheduled(schedule, scheduleConstraints, festivalProgramme)
+  }
+
+  def assertNoScheduledShowingInMissedMovies(schedule: Schedule) {
+    for (showingId <- schedule.showingIds) {
+      schedule.missedMovieIds should not contain (showingId)
+    }
+  }
+
+  def assertNoMissedMovieInScheduledShowings(schedule: Schedule, festivalProgramme: FestivalProgramme) {
+    for (missedMovieId <- schedule.missedMovieIds) {
+      for (movieShowing <- festivalProgramme.showingsOf(missedMovieId)) {
+        schedule.showingIds should not contain (movieShowing.id)
+      }
+    }
+  }
+
+  def assertAllMovieConstraintsEitherScheduledOrUnscheduled(
+    schedule: Schedule, scheduleConstraints: TestScheduleConstraints, festivalProgramme: FestivalProgramme) {
+    val movieIdConstraints = scheduleConstraints.movieConstraints.map(_.movieId) --
+      schedule.showingIds.map(festivalProgramme.getShowing(_).movie.id) --
+      schedule.missedMovieIds
+    movieIdConstraints should be ('empty)
   }
 }

@@ -1,8 +1,8 @@
 package org.ffplanner.bean;
 
-import org.ffplanner.bean.constraints.ShowingConstraintToggler;
 import org.ffplanner.bean.constraints.MovieConstraintToggler;
 import org.ffplanner.bean.constraints.PriorityChanger;
+import org.ffplanner.bean.constraints.ShowingConstraintToggler;
 import org.ffplanner.bean.programme.FestivalEditionProgramme;
 import org.ffplanner.bean.programme.FestivalProgrammeBean;
 import org.ffplanner.entity.*;
@@ -10,9 +10,8 @@ import org.ffplanner.entity.*;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.List;
 
@@ -21,33 +20,15 @@ import java.util.List;
  */
 @Stateless
 @LocalBean
-public class UserScheduleConstraintsBean extends ConnectorEntityBean<ShowingConstraint> implements Serializable {
+public class UserScheduleConstraintsBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @PersistenceContext(unitName = "ffp")
+    private EntityManager entityManager;
+
     @Inject
     private FestivalProgrammeBean festivalProgrammeBean;
-
-    @Override
-    public ShowingConstraint find(Long showingId, Long userScheduleId) {
-        return super.find(showingId, userScheduleId);
-    }
-
-    @Override
-    protected Class<ShowingConstraint> getEntityClass() {
-        return ShowingConstraint.class;
-    }
-
-    @Override
-    protected Predicate getLeftCondition(Long id, CriteriaBuilder criteriaBuilder, Root<ShowingConstraint> root) {
-        return criteriaBuilder.equal(root.get(UserScheduleConstraint_.showing).get(Showing_.id), id);
-    }
-
-    @Override
-    protected Predicate getRightCondition(
-            Long id, CriteriaBuilder criteriaBuilder, Root<ShowingConstraint> root) {
-        return criteriaBuilder.equal(root.get(UserScheduleConstraint_.userSchedule).get(UserSchedule_.id), id);
-    }
 
     private List<Showing> getShowingsForSameMovieAs(Showing showing) {
         final FestivalEditionProgramme programme = festivalProgrammeBean.getProgrammeFor(showing.getFestivalEdition());

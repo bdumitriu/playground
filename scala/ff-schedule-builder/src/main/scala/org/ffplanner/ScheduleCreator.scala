@@ -1,42 +1,48 @@
 package org.ffplanner
 
-import `def`.{ConstraintDefinition, ScheduleConstraints}
-import com.google.common.collect.{TreeRangeSet, RangeSet}
+import `def`.ScheduleConstraints
+import com.google.common.collect.TreeRangeSet
 import org.joda.time.DateTime
+import collection.SortedSet
 
 /**
  *
  *
  * @author Bogdan Dumitriu
  */
-class ScheduleCreator(val scheduleBuilder: ScheduleBuilder, private val constraints: ScheduleConstraints) {
+class ScheduleCreator(val scheduleBuilder: ScheduleBuilder, private val constraints: ScheduleConstraints)
+  extends ScheduleOperations {
 
-  val scheduleConstraints: ScheduleConstraints =
-    Option(constraints).getOrElse(ScheduleConstraints.EMPTY)
+  val festivalProgramme: FestivalProgramme = scheduleBuilder.festivalProgramme
 
-  val movieConstraints: List[MovieConstraint] =
-    Utils.ensureNonNull(scheduleConstraints.getMovieConstraints).map(new MovieConstraint(_)).distinct
+  val scheduleConstraints: ScheduleConstraints = Option(constraints).getOrElse(ScheduleConstraints.EMPTY)
 
-  val showingConstraints: List[ShowingConstraint] =
-    Utils.ensureNonNull(scheduleConstraints.getShowingConstraints).map(new ShowingConstraint(_)).distinct
+  val movieConstraints: Set[MovieConstraint] =
+    Utils.ensureNonNull(scheduleConstraints.getMovieConstraints).map(new MovieConstraint(_)).toSet
 
-  val movieConstraintIds: List[Long] = movieConstraints map { s => Long2long(s.movieId) }
+  val showingConstraints: Set[ShowingConstraint] =
+    Utils.ensureNonNull(scheduleConstraints.getShowingConstraints).map(new ShowingConstraint(_)).toSet
 
-  val showingConstraintIds: List[Long] = showingConstraints map { s => Long2long(s.showingId) }
+  val movieConstraintIds: Set[Long] = movieConstraints map { s => Long2long(s.movieId) }
 
-  private val rangeSet: RangeSet[DateTime] = TreeRangeSet.create[DateTime]()
+  val showingConstraintIds: Set[Long] = showingConstraints map { s => Long2long(s.showingId) }
 
   def getSchedules: List[Schedule] = {
-    val showingIds: List[Long] =
-      movieConstraints.foldLeft((List[Long](), TreeRangeSet.create[DateTime]()))(addShowing)._1
-    List(new Schedule(showingIds, List.empty))
+    def addShowing(acc: (Set[Long], TreeRangeSet[DateTime]), movieConstraintId: Long) = {
+      val movieShowings: SortedSet[Showing] = festivalProgramme.showingsOf(movieConstraintId)
+      movieShowings.find(showing => acc._2.subRangeSet(showing.interval).isEmpty) match {
+        case Some(showing) => { acc._2.add(showing.interval); (acc._1 + showing.id, acc._2) }
+        case None => (acc._1, acc._2)
+      }
+    }
+
+    val showingIds: Set[Long] =
+      movieConstraintIds.foldLeft((showingConstraintIds, getShowingsIntervals))(addShowing)._1
+    List(new Schedule(showingIds, movieConstraintIds -- showingIds.map(festivalProgramme.getShowing(_).movie.id)))
   }
 
-  private def addShowing(acc: (List[Long], TreeRangeSet[DateTime]), movieConstraint: MovieConstraint) = {
-    val showings: List[Showing] = scheduleBuilder.festivalProgramme.showingsOf(movieConstraint.movieId)
-    showings.find(showing => acc._2.subRangeSet(showing.interval).isEmpty) match {
-      case Some(showing) => { acc._2.add(showing.interval); (showing.id :: acc._1, acc._2) }
-      case None => (acc._1, acc._2)
-    }
-  }
+  /**
+   * @return a range set covering the intervals of all the showings imposed via the `showingsConstraints`.
+   */
+  def getShowingsIntervals = getIntervalsOf(showingConstraintIds, festivalProgramme)
 }

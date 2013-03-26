@@ -2,8 +2,8 @@ package org.ffplanner
 
 import org.ffplanner.`def`.{ConstraintDefinition, ScheduleConstraints}
 import scala.collection.JavaConversions.asJavaCollection
-import java.util
-import org.joda.time.Interval
+import org.joda.time.DateTime
+import com.google.common.collect.{Range, ImmutableRangeSet}
 
 /**
  *
@@ -11,13 +11,18 @@ import org.joda.time.Interval
  * @author Bogdan Dumitriu
  */
 class TestScheduleConstraints(
-    val movies: List[ConstraintDefinition.Movie],
-    val showings: List[ConstraintDefinition.Showing])
-  extends ScheduleConstraints {
+    val movieConstraints: Set[TestMovieConstraint],
+    val showingConstraints: Set[TestShowingConstraint])
+  extends ScheduleConstraints with ScheduleOperations {
 
-  def getShowingConstraints: java.util.Collection[ConstraintDefinition.Showing] = showings
+  def getShowingConstraints: java.util.Collection[ConstraintDefinition.Showing] = showingConstraints
 
-  def getMovieConstraints: java.util.Collection[ConstraintDefinition.Movie] = movies
+  def getMovieConstraints: java.util.Collection[ConstraintDefinition.Movie] = movieConstraints
 
-  def getTimeConstraints: util.Collection[Interval] = ???
+  def getTimeConstraints: ImmutableRangeSet[DateTime] =
+    ImmutableRangeSet.of(
+      Range.closedOpen(new DateTime(java.lang.Long.MIN_VALUE), new DateTime(java.lang.Long.MAX_VALUE)))
+
+  def getShowingsIntervals(festivalProgramme: FestivalProgramme) =
+    getIntervalsOf(showingConstraints.map { showingConstraint => showingConstraint.showingId }, festivalProgramme)
 }

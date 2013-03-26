@@ -1,11 +1,12 @@
 package org.ffplanner.controller.constraints;
 
+import com.google.common.collect.ImmutableRangeSet;
+import com.google.common.collect.Range;
 import org.ffplanner.def.ConstraintDefinition;
 import org.ffplanner.def.ScheduleConstraints;
-import org.joda.time.Interval;
+import org.joda.time.DateTime;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -41,8 +42,8 @@ public class ConstraintsDefinition implements ScheduleConstraints {
     }
 
     @Override
-    public Collection<Interval> getTimeConstraints() {
+    public ImmutableRangeSet<DateTime> getTimeConstraints() {
         /** todo: handle time constraints */
-        return Collections.singleton(new Interval(Long.MIN_VALUE, Long.MAX_VALUE));
+        return ImmutableRangeSet.of(Range.closedOpen(new DateTime(Long.MIN_VALUE), new DateTime(Long.MAX_VALUE)));
     }
 }

@@ -20,5 +20,5 @@ class ShowingConstraint(val showingId: Long, val priority: Short) {
     case _ => false
   }
 
-  override def hashCode(): Int = showingId.hashCode
+  override def hashCode: Int = showingId.hashCode
 }

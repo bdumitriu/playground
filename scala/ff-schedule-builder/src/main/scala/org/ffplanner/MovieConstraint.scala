@@ -19,5 +19,5 @@ class MovieConstraint(val movieId: Long, val priority: Short) {
     case _ => false
   }
 
-  override def hashCode(): Int = movieId.hashCode
+  override def hashCode: Int = movieId.hashCode
 }

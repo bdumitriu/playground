@@ -1,8 +1,8 @@
 package org.ffplanner
 
-import `def`.{ShowingDefinition, MovieDefinition, FestivalProgrammeDefinition}
-import scala.collection.JavaConversions.collectionAsScalaIterable
+import `def`.{ShowingDefinition, FestivalProgrammeDefinition}
 import org.joda.time.DateTime
+import collection.SortedSet
 
 /**
  *
@@ -11,21 +11,19 @@ import org.joda.time.DateTime
  */
 class FestivalProgramme(festivalProgrammeDefinition: FestivalProgrammeDefinition) {
 
-  object DateTimeOrdering extends Ordering[DateTime] {
-    def compare(x: DateTime, y: DateTime): Int = x.compareTo(y)
-  }
+  private val showingDefinitions: SortedSet[Showing] =
+    SortedSet(wrap(festivalProgrammeDefinition.getShowings): _*)(Ordering.fromLessThan(_.dateTime isBefore _.dateTime))
 
-  private val showingDefinitions: List[Showing] =
-    Utils.ensureNonNull(festivalProgrammeDefinition.getShowings) map { new Showing(_) }
-
-  private val movieShowings: Map[Movie, List[Showing]] =
-    showingDefinitions.sortBy(_.dateTime)(DateTimeOrdering) groupBy { _.movie }
+  private val movieShowings: Map[Movie, SortedSet[Showing]] = showingDefinitions groupBy { _.movie }
 
   private val showings: Map[Long, Showing] = showingDefinitions.map(s => (Long2long(s.id), s)).toMap
 
-  def showingsOf(movieId: Long): List[Showing] = showingsOf(new Movie(movieId))
+  private def wrap(showings: java.util.List[ShowingDefinition]): List[Showing] =
+    Utils.ensureNonNull(showings).map(new Showing(_))
 
-  def showingsOf(movie: Movie): List[Showing] = movieShowings(movie)
+  def showingsOf(movieId: Long): SortedSet[Showing] = showingsOf(new Movie(movieId))
+
+  def showingsOf(movie: Movie): SortedSet[Showing] = movieShowings(movie)
 
   def getShowing(showingId: Long): Showing = showings(showingId)
 

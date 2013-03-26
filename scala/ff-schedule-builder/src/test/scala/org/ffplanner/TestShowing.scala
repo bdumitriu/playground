@@ -20,4 +20,13 @@ class TestShowing(val id: Long, val venueId: Long, val dateTime: DateTime, val m
   def getDateTime: DateTime = dateTime
 
   def getMovie: MovieDefinition = movieDefinition
+
+  def canEqual(other: Any): Boolean = other.isInstanceOf[TestShowing]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: TestShowing => this.canEqual(that) && this.id == that.id
+    case _ => false
+  }
+
+  override def hashCode: Int = id.hashCode
 }

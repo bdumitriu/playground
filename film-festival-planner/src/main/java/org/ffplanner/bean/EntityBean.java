@@ -12,4 +12,8 @@ public abstract class EntityBean<T> {
     protected EntityManager entityManager;
 
     protected abstract Class<T> getEntityClass();
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }

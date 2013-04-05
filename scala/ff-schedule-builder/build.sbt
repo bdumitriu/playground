@@ -18,4 +18,6 @@ libraryDependencies += "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test" wit
 
 libraryDependencies += "junit" % "junit" % "4.11" % "test" withSources()
 
+libraryDependencies += "org.scala-lang" % "scala-actors" % "2.10.0" % "test" withSources()
+
 publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath + "/.m2/repository")))

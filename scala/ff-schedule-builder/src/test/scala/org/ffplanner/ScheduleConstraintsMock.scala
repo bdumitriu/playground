@@ -6,13 +6,11 @@ import org.joda.time.DateTime
 import com.google.common.collect.{Range, ImmutableRangeSet}
 
 /**
- *
- *
- * @author Bogdan Dumitriu
- */
-class TestScheduleConstraints(
-    val movieConstraints: Set[TestMovieConstraint],
-    val showingConstraints: Set[TestShowingConstraint])
+  * @author Bogdan Dumitriu
+  */
+class ScheduleConstraintsMock(
+    val movieConstraints: Set[MovieConstraintMock],
+    val showingConstraints: Set[ShowingConstraintMock])
   extends ScheduleConstraints with ScheduleOperations {
 
   def getShowingConstraints: java.util.Collection[ConstraintDefinition.Showing] = showingConstraints

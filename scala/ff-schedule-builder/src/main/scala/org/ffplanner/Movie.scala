@@ -23,4 +23,6 @@ class Movie(val id: Long, val duration: Period) {
   }
 
   override def hashCode: Int = id.hashCode
+
+  override def toString: String = "M["+id+"]"
 }

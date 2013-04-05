@@ -6,11 +6,9 @@ import com.google.common.collect.Range
 import java.lang
 
 /**
- *
- *
- * @author Bogdan Dumitriu
- */
-class TestShowing(val id: Long, val venueId: Long, val dateTime: DateTime, val movieDefinition: MovieDefinition)
+  * @author Bogdan Dumitriu
+  */
+class ShowingMock(val id: Long, val venueId: Long, val dateTime: DateTime, val movieDefinition: MovieDefinition)
   extends ShowingDefinition {
 
   def getId: lang.Long = id
@@ -21,10 +19,10 @@ class TestShowing(val id: Long, val venueId: Long, val dateTime: DateTime, val m
 
   def getMovie: MovieDefinition = movieDefinition
 
-  def canEqual(other: Any): Boolean = other.isInstanceOf[TestShowing]
+  def canEqual(other: Any): Boolean = other.isInstanceOf[ShowingMock]
 
   override def equals(other: Any): Boolean = other match {
-    case that: TestShowing => this.canEqual(that) && this.id == that.id
+    case that: ShowingMock => this.canEqual(that) && this.id == that.id
     case _ => false
   }
 

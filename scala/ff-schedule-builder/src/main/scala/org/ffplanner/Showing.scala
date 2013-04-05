@@ -19,6 +19,9 @@ class Showing(val id: Long, val venueId: Long, val dateTime: DateTime, val movie
 
   def within(scheduleConstraints: ScheduleConstraints) = scheduleConstraints.getTimeConstraints.encloses(interval)
 
+  def overlapsWith(showing: Showing) =
+    interval.isConnected(showing.interval) && !interval.intersection(showing.interval).isEmpty
+
   def overlapsWith(intervals: RangeSet[DateTime]) = !intervals.subRangeSet(interval).isEmpty
 
   def canEqual(other: Any): Boolean = other.isInstanceOf[Showing]
@@ -31,7 +34,7 @@ class Showing(val id: Long, val venueId: Long, val dateTime: DateTime, val movie
   override def hashCode: Int = id.hashCode
 
   override def toString: String = {
-    "S"+id+" M["+movie.id+"] @ ["+toString(interval.lowerEndpoint)+"-"+toString(interval.upperEndpoint)+") @ "+venueId
+    "S"+id+" "+movie+"@ ["+toString(interval.lowerEndpoint)+"-"+toString(interval.upperEndpoint)+") @ "+venueId
   }
 
   private def toString(dateTime: DateTime) =

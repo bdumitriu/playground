@@ -1,0 +1,3590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<festival-programme>
+  <movies>
+    <movie>
+      <id>1</id>
+      <duration>76</duration>
+      <title>Le tableau</title>
+    </movie>
+    <movie>
+      <id>2</id>
+      <duration>104</duration>
+      <title>Hail</title>
+    </movie>
+    <movie>
+      <id>3</id>
+      <duration>99</duration>
+      <title>Celal Tan ve Ailesinin Aşırı Acıklı Hikayesi</title>
+    </movie>
+    <movie>
+      <id>4</id>
+      <duration>121</duration>
+      <title>Poongsan</title>
+    </movie>
+    <movie>
+      <id>5</id>
+      <duration>93</duration>
+      <title>La fée</title>
+    </movie>
+    <movie>
+      <id>6</id>
+      <duration>76</duration>
+      <title>Thale</title>
+    </movie>
+    <movie>
+      <id>7</id>
+      <duration>135</duration>
+      <title>Aftershock</title>
+    </movie>
+    <movie>
+      <id>8</id>
+      <duration>105</duration>
+      <title>Scurtmetraje ZFR - Partea 1</title>
+    </movie>
+    <movie>
+      <id>9</id>
+      <duration>84</duration>
+      <title>La demora</title>
+    </movie>
+    <movie>
+      <id>10</id>
+      <duration>97</duration>
+      <title>Weekend</title>
+    </movie>
+    <movie>
+      <id>11</id>
+      <duration>116</duration>
+      <title>Dirch</title>
+    </movie>
+    <movie>
+      <id>12</id>
+      <duration>88</duration>
+      <title>Beast</title>
+    </movie>
+    <movie>
+      <id>13</id>
+      <duration>88</duration>
+      <title>Ako sa varia dejiny</title>
+    </movie>
+    <movie>
+      <id>14</id>
+      <duration>100</duration>
+      <title>Paziraie sadeh</title>
+    </movie>
+    <movie>
+      <id>15</id>
+      <duration>74</duration>
+      <title>Reacciones adversas</title>
+    </movie>
+    <movie>
+      <id>16</id>
+      <duration>96</duration>
+      <title>Babycall</title>
+    </movie>
+    <movie>
+      <id>17</id>
+      <duration>110</duration>
+      <title>The Bengali Detective</title>
+    </movie>
+    <movie>
+      <id>18</id>
+      <duration>161</duration>
+      <title>Spartacus</title>
+    </movie>
+    <movie>
+      <id>19</id>
+      <duration>92</duration>
+      <title>Prag</title>
+    </movie>
+    <movie>
+      <id>20</id>
+      <duration>113</duration>
+      <title>Dai - nihonjin</title>
+    </movie>
+    <movie>
+      <id>21</id>
+      <duration>82</duration>
+      <title>Las acacias</title>
+    </movie>
+    <movie>
+      <id>22</id>
+      <duration>88</duration>
+      <title>The Other Side of Sleep</title>
+    </movie>
+    <movie>
+      <id>23</id>
+      <duration>95</duration>
+      <title>Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb</title>
+    </movie>
+    <movie>
+      <id>24</id>
+      <duration>86</duration>
+      <title>Csak a szél</title>
+    </movie>
+    <movie>
+      <id>25</id>
+      <duration>152</duration>
+      <title>Lolita</title>
+    </movie>
+    <movie>
+      <id>26</id>
+      <duration>80</duration>
+      <title>Crawl</title>
+    </movie>
+    <movie>
+      <id>27</id>
+      <duration>87</duration>
+      <title>Little Matador</title>
+    </movie>
+    <movie>
+      <id>28</id>
+      <duration>99</duration>
+      <title>Side By Side</title>
+    </movie>
+    <movie>
+      <id>29</id>
+      <duration>96</duration>
+      <title>Michael</title>
+    </movie>
+    <movie>
+      <id>30</id>
+      <duration>106</duration>
+      <title>Revision</title>
+    </movie>
+    <movie>
+      <id>31</id>
+      <duration>89</duration>
+      <title>The Other Chelsea: A Story from Donetsk</title>
+    </movie>
+    <movie>
+      <id>32</id>
+      <duration>82</duration>
+      <title>Nebe Peklo</title>
+    </movie>
+    <movie>
+      <id>33</id>
+      <duration>90</duration>
+      <title>Gut</title>
+    </movie>
+    <movie>
+      <id>34</id>
+      <duration>102</duration>
+      <title>The Hunter</title>
+    </movie>
+    <movie>
+      <id>35</id>
+      <duration>90</duration>
+      <title>Shut Up Little Man! An Audio Misadventure</title>
+    </movie>
+    <movie>
+      <id>36</id>
+      <duration>97</duration>
+      <title>Death of a Superhero</title>
+    </movie>
+    <movie>
+      <id>37</id>
+      <duration>118</duration>
+      <title>Tao jie</title>
+    </movie>
+    <movie>
+      <id>38</id>
+      <duration>101</duration>
+      <title>Sleeping Beauty</title>
+    </movie>
+    <movie>
+      <id>39</id>
+      <duration>93</duration>
+      <title>En Kærlighedshistorie</title>
+    </movie>
+    <movie>
+      <id>40</id>
+      <duration>127</duration>
+      <title>Diaz: Don't Clean Up This Blood</title>
+    </movie>
+    <movie>
+      <id>41</id>
+      <duration>184</duration>
+      <title>Barry Lyndon</title>
+    </movie>
+    <movie>
+      <id>42</id>
+      <duration>88</duration>
+      <title>Paths of Glory</title>
+    </movie>
+    <movie>
+      <id>43</id>
+      <duration>144</duration>
+      <title>Marley</title>
+    </movie>
+    <movie>
+      <id>44</id>
+      <duration>129</duration>
+      <title>Himizu</title>
+    </movie>
+    <movie>
+      <id>45</id>
+      <duration>67</duration>
+      <title>Killer's Kiss</title>
+    </movie>
+    <movie>
+      <id>46</id>
+      <duration>111</duration>
+      <title>Scurtmetraje ZFR - Partea 2</title>
+    </movie>
+    <movie>
+      <id>47</id>
+      <duration>87</duration>
+      <title>The Light in Her Eyes</title>
+    </movie>
+    <movie>
+      <id>48</id>
+      <duration>104</duration>
+      <title>Oslo, 31. august</title>
+    </movie>
+    <movie>
+      <id>49</id>
+      <duration>101</duration>
+      <title>Le moine</title>
+    </movie>
+    <movie>
+      <id>50</id>
+      <duration>97</duration>
+      <title>Yoru ga owaru basho</title>
+    </movie>
+    <movie>
+      <id>52</id>
+      <duration>90</duration>
+      <title>Magi i luften</title>
+    </movie>
+    <movie>
+      <id>53</id>
+      <duration>90</duration>
+      <title>The Substance: Albert Hofmann's LSD</title>
+    </movie>
+    <movie>
+      <id>54</id>
+      <duration>82</duration>
+      <title>El Año del Tigre</title>
+    </movie>
+    <movie>
+      <id>55</id>
+      <duration>81</duration>
+      <title>Zero Killed</title>
+    </movie>
+    <movie>
+      <id>56</id>
+      <duration>112</duration>
+      <title>Masks</title>
+    </movie>
+    <movie>
+      <id>57</id>
+      <duration>99</duration>
+      <title>Beyrouth hôtel</title>
+    </movie>
+    <movie>
+      <id>58</id>
+      <duration>118</duration>
+      <title>Play</title>
+    </movie>
+    <movie>
+      <id>59</id>
+      <duration>99</duration>
+      <title>SuperClásico</title>
+    </movie>
+    <movie>
+      <id>60</id>
+      <duration>88</duration>
+      <title>Dreileben - etwas besseres als den tod</title>
+    </movie>
+    <movie>
+      <id>61</id>
+      <duration>104</duration>
+      <title>Kompani Orheim</title>
+    </movie>
+    <movie>
+      <id>62</id>
+      <duration>116</duration>
+      <title>Full Metal Jacket</title>
+    </movie>
+    <movie>
+      <id>63</id>
+      <duration>134</duration>
+      <title>Crazy Horse</title>
+    </movie>
+    <movie>
+      <id>64</id>
+      <duration>101</duration>
+      <title>Porfirio</title>
+    </movie>
+    <movie>
+      <id>65</id>
+      <duration>87</duration>
+      <title>Login 2 Life</title>
+    </movie>
+    <movie>
+      <id>66</id>
+      <duration>75</duration>
+      <title>Italy: Love It, or Leave It</title>
+    </movie>
+    <movie>
+      <id>67</id>
+      <duration>131</duration>
+      <title>Shaolin</title>
+    </movie>
+    <movie>
+      <id>68</id>
+      <duration>93</duration>
+      <title>Ambassadøren</title>
+    </movie>
+    <movie>
+      <id>69</id>
+      <duration>111</duration>
+      <title>Beul-la-in-deu</title>
+    </movie>
+    <movie>
+      <id>70</id>
+      <duration>82</duration>
+      <title>Swoon</title>
+    </movie>
+    <movie>
+      <id>71</id>
+      <duration>113</duration>
+      <title>Taxi Driver</title>
+    </movie>
+    <movie>
+      <id>72</id>
+      <duration>103</duration>
+      <title>Saya - zamurai</title>
+    </movie>
+    <movie>
+      <id>73</id>
+      <duration>75</duration>
+      <title>In film nist</title>
+    </movie>
+    <movie>
+      <id>74</id>
+      <duration>119</duration>
+      <title>Gang de qin</title>
+    </movie>
+    <movie>
+      <id>75</id>
+      <duration>106</duration>
+      <title>Go-hyang-i: Jook-eum-eul Bo-neun Doo Gae-eui Noon</title>
+    </movie>
+    <movie>
+      <id>76</id>
+      <duration>100</duration>
+      <title>Cigan</title>
+    </movie>
+    <movie>
+      <id>77</id>
+      <duration>113</duration>
+      <title>Le Skylab</title>
+    </movie>
+    <movie>
+      <id>78</id>
+      <duration>94</duration>
+      <title>Bichir Lazhar</title>
+    </movie>
+    <movie>
+      <id>79</id>
+      <duration>126</duration>
+      <title>Hugo</title>
+    </movie>
+    <movie>
+      <id>80</id>
+      <duration>96</duration>
+      <title>Electrick Children</title>
+    </movie>
+    <movie>
+      <id>81</id>
+      <duration>136</duration>
+      <title>Hwanghae</title>
+    </movie>
+    <movie>
+      <id>82</id>
+      <duration>115</duration>
+      <title>L'exercice de l'État</title>
+    </movie>
+    <movie>
+      <id>83</id>
+      <duration>113</duration>
+      <title>Animal Kingdom</title>
+    </movie>
+    <movie>
+      <id>84</id>
+      <duration>109</duration>
+      <title>Tom Sawyer</title>
+    </movie>
+    <movie>
+      <id>85</id>
+      <duration>107</duration>
+      <title>Scurtmetraje ZFR - Partea 3</title>
+    </movie>
+    <movie>
+      <id>86</id>
+      <duration>119</duration>
+      <title>The Snowtown Murders</title>
+    </movie>
+    <movie>
+      <id>87</id>
+      <duration>80</duration>
+      <title>David</title>
+    </movie>
+    <movie>
+      <id>88</id>
+      <duration>99</duration>
+      <title>Teddy Bear</title>
+    </movie>
+    <movie>
+      <id>89</id>
+      <duration>85</duration>
+      <title>The Killing</title>
+    </movie>
+    <movie>
+      <id>90</id>
+      <duration>126</duration>
+      <title>Les nuits fauves</title>
+    </movie>
+    <movie>
+      <id>91</id>
+      <duration>90</duration>
+      <title>Veljekset</title>
+    </movie>
+    <movie>
+      <id>92</id>
+      <duration>73</duration>
+      <title>Labrador</title>
+    </movie>
+    <movie>
+      <id>93</id>
+      <duration>85</duration>
+      <title>Was bleibt</title>
+    </movie>
+    <movie>
+      <id>94</id>
+      <duration>133</duration>
+      <title>Donoma</title>
+    </movie>
+    <movie>
+      <id>95</id>
+      <duration>144</duration>
+      <title>D'un film à l'autre</title>
+    </movie>
+    <movie>
+      <id>96</id>
+      <duration>74</duration>
+      <title>Inni</title>
+    </movie>
+    <movie>
+      <id>97</id>
+      <duration>80</duration>
+      <title>Noseland</title>
+    </movie>
+    <movie>
+      <id>98</id>
+      <duration>102</duration>
+      <title>Un homme et une femme</title>
+    </movie>
+    <movie>
+      <id>99</id>
+      <duration>67</duration>
+      <title>Két világ közt</title>
+    </movie>
+    <movie>
+      <id>100</id>
+      <duration>115</duration>
+      <title>Parada</title>
+    </movie>
+    <movie>
+      <id>101</id>
+      <duration>101</duration>
+      <title>Keep the Lights On</title>
+    </movie>
+    <movie>
+      <id>102</id>
+      <duration>100</duration>
+      <title>Hodejegerne</title>
+    </movie>
+    <movie>
+      <id>103</id>
+      <duration>90</duration>
+      <title>Cerro rico, tierra rica</title>
+    </movie>
+    <movie>
+      <id>104</id>
+      <duration>57</duration>
+      <title>Opfindelsen af Dr. Nakamats</title>
+    </movie>
+    <movie>
+      <id>105</id>
+      <duration>74</duration>
+      <title>Dragonslayer</title>
+    </movie>
+    <movie>
+      <id>106</id>
+      <duration>142</duration>
+      <title>The Shining</title>
+    </movie>
+    <movie>
+      <id>107</id>
+      <duration>109</duration>
+      <title>Klip</title>
+    </movie>
+    <movie>
+      <id>108</id>
+      <duration>78</duration>
+      <title>Ballroom Dancer</title>
+    </movie>
+    <movie>
+      <id>109</id>
+      <duration>101</duration>
+      <title>Shame</title>
+    </movie>
+    <movie>
+      <id>110</id>
+      <duration>111</duration>
+      <title>Khodorkovsky</title>
+    </movie>
+    <movie>
+      <id>111</id>
+      <duration>99</duration>
+      <title>Elles</title>
+    </movie>
+    <movie>
+      <id>112</id>
+      <duration>87</duration>
+      <title>Le gamin au vélo</title>
+    </movie>
+    <movie>
+      <id>113</id>
+      <duration>86</duration>
+      <title>Păcătoasa Teodora</title>
+    </movie>
+    <movie>
+      <id>114</id>
+      <duration>93</duration>
+      <title>Shinboru</title>
+    </movie>
+    <movie>
+      <id>116</id>
+      <duration>111</duration>
+      <title>De jueves a domingo</title>
+    </movie>
+    <movie>
+      <id>117</id>
+      <duration>108</duration>
+      <title>Kuma</title>
+    </movie>
+    <movie>
+      <id>119</id>
+      <duration>92</duration>
+      <title>Kshay</title>
+    </movie>
+    <movie>
+      <id>120</id>
+      <duration>96</duration>
+      <title>Gan-jeung</title>
+    </movie>
+    <movie>
+      <id>121</id>
+      <duration>104</duration>
+      <title>The Silent Thief</title>
+    </movie>
+    <movie>
+      <id>122</id>
+      <duration>76</duration>
+      <title>Få meg på, for faen</title>
+    </movie>
+    <movie>
+      <id>123</id>
+      <duration>89</duration>
+      <title>Dreileben - komm mir nicht nach</title>
+    </movie>
+    <movie>
+      <id>124</id>
+      <duration>159</duration>
+      <title>Eyes Wide Shut</title>
+    </movie>
+    <movie>
+      <id>125</id>
+      <duration>136</duration>
+      <title>A Clockwork Orange</title>
+    </movie>
+    <movie>
+      <id>126</id>
+      <duration>78</duration>
+      <title>900 Dagen</title>
+    </movie>
+    <movie>
+      <id>127</id>
+      <duration>88</duration>
+      <title>Without</title>
+    </movie>
+    <movie>
+      <id>128</id>
+      <duration>94</duration>
+      <title>Mad Bastards</title>
+    </movie>
+    <movie>
+      <id>129</id>
+      <duration>141</duration>
+      <title>2001: A Space Odyssey</title>
+    </movie>
+    <movie>
+      <id>130</id>
+      <duration>105</duration>
+      <title>Fon Tok Kuen Fah</title>
+    </movie>
+    <movie>
+      <id>131</id>
+      <duration>80</duration>
+      <title>Ouwehoeren</title>
+    </movie>
+    <movie>
+      <id>132</id>
+      <duration>119</duration>
+      <title>Detective Dee and the Mystery of the Phantom Flame</title>
+    </movie>
+    <movie>
+      <id>133</id>
+      <duration>72</duration>
+      <title>Bestiaire</title>
+    </movie>
+    <movie>
+      <id>134</id>
+      <duration>107</duration>
+      <title>GasLand</title>
+    </movie>
+    <movie>
+      <id>135</id>
+      <duration>122</duration>
+      <title>Zhao shi gu er</title>
+    </movie>
+    <movie>
+      <id>136</id>
+      <duration>146</duration>
+      <title>A.I. Artificial Intelligence</title>
+    </movie>
+    <movie>
+      <id>137</id>
+      <duration>124</duration>
+      <title>The Best Exotic Marigold Hotel</title>
+    </movie>
+    <movie>
+      <id>138</id>
+      <duration>75</duration>
+      <title>The Great Bear</title>
+    </movie>
+    <movie>
+      <id>139</id>
+      <duration>121</duration>
+      <title>Marécages</title>
+    </movie>
+    <movie>
+      <id>140</id>
+      <duration>103</duration>
+      <title>Oslo, 31. august</title>
+    </movie>
+    <movie>
+      <id>142</id>
+      <duration>173</duration>
+      <title>Les uns et les autres</title>
+    </movie>
+    <movie>
+      <id>143</id>
+      <duration>86</duration>
+      <title>O Lucky Malcolm!</title>
+    </movie>
+    <movie>
+      <id>144</id>
+      <duration>98</duration>
+      <title>A Man's Story</title>
+    </movie>
+    <movie>
+      <id>145</id>
+      <duration>90</duration>
+      <title>The Look</title>
+    </movie>
+    <movie>
+      <id>146</id>
+      <duration>140</duration>
+      <title>Sangue do Meu Sangue</title>
+    </movie>
+    <movie>
+      <id>147</id>
+      <duration>98</duration>
+      <title>Party Monster</title>
+    </movie>
+    <movie>
+      <id>148</id>
+      <duration>114</duration>
+      <title>Under the Hawthorn Tree</title>
+    </movie>
+    <movie>
+      <id>149</id>
+      <duration>89</duration>
+      <title>Á annan veg</title>
+    </movie>
+    <movie>
+      <id>150</id>
+      <duration>115</duration>
+      <title>Hasta la Vista!</title>
+    </movie>
+    <movie>
+      <id>151</id>
+      <duration>73</duration>
+      <title>Crulic – drumul spre dincolo</title>
+    </movie>
+    <movie>
+      <id>152</id>
+      <duration>105</duration>
+      <title>Din dragoste cu cele mai bune intenții</title>
+    </movie>
+    <movie>
+      <id>154</id>
+      <duration>132</duration>
+      <title>Lena</title>
+    </movie>
+    <movie>
+      <id>156</id>
+      <duration>103</duration>
+      <title>Hahithalfut</title>
+    </movie>
+    <movie>
+      <id>158</id>
+      <duration>98</duration>
+      <title>Vissatérés</title>
+    </movie>
+    <movie>
+      <id>159</id>
+      <duration>88</duration>
+      <title>Gone Wild</title>
+    </movie>
+    <movie>
+      <id>160</id>
+      <duration>90</duration>
+      <title>Dreileben - eine minute dunkel</title>
+    </movie>
+    <movie>
+      <id>161</id>
+      <duration>100</duration>
+      <title>Le Chat du rabbin</title>
+    </movie>
+    <movie>
+      <id>162</id>
+      <duration>75</duration>
+      <title>Magyarország 2011</title>
+    </movie>
+    <movie>
+      <id>163</id>
+      <duration>107</duration>
+      <title>Și caii sunt verzi pe pereți</title>
+    </movie>
+    <movie>
+      <id>164</id>
+      <duration>90</duration>
+      <title>Ultimele zile din viaţa Elenei şi a lui Nicolae Ceauşescu</title>
+    </movie>
+    <movie>
+      <id>165</id>
+      <duration>99</duration>
+      <title>Killing Time</title>
+    </movie>
+    <movie>
+      <id>166</id>
+      <duration>93</duration>
+      <title>Iron Sky</title>
+    </movie>
+    <movie>
+      <id>167</id>
+      <duration>122</duration>
+      <title>Toată lumea din familia noastră</title>
+    </movie>
+    <movie>
+      <id>169</id>
+      <duration>142</duration>
+      <title>Stanley Kubrick: A Life in Pictures</title>
+    </movie>
+    <movie>
+      <id>170</id>
+      <duration>105</duration>
+      <title>Portret v sumerkakh</title>
+    </movie>
+    <movie>
+      <id>171</id>
+      <duration>110</duration>
+      <title>Tabu</title>
+    </movie>
+    <movie>
+      <id>172</id>
+      <duration>92</duration>
+      <title>Tyrannosaur</title>
+    </movie>
+    <movie>
+      <id>173</id>
+      <duration>145</duration>
+      <title>Undeva la Palilula</title>
+    </movie>
+    <movie>
+      <id>174</id>
+      <duration>77</duration>
+      <title>Turn Off the Lights</title>
+    </movie>
+    <movie>
+      <id>176</id>
+      <duration>124</duration>
+      <title>The Loneliest Planet</title>
+    </movie>
+    <movie>
+      <id>177</id>
+      <duration>336</duration>
+      <title>Mildred Pierce</title>
+    </movie>
+    <movie>
+      <id>178</id>
+      <duration>67</duration>
+      <title>Scurtmetraje Umbre - Partea 1</title>
+    </movie>
+    <movie>
+      <id>179</id>
+      <duration>72</duration>
+      <title>Scurtmetraje Umbre - Partea 2</title>
+    </movie>
+    <movie>
+      <id>180</id>
+      <duration>93</duration>
+      <title>Alpeis</title>
+    </movie>
+    <movie>
+      <id>181</id>
+      <duration>69</duration>
+      <title>Vorbitor</title>
+    </movie>
+    <movie>
+      <id>182</id>
+      <duration>173</duration>
+      <title>Un gând, un vis, Doyle... și-un pix</title>
+    </movie>
+    <movie>
+      <id>183</id>
+      <duration>51</duration>
+      <title>I bóg stworzł seks</title>
+    </movie>
+    <movie>
+      <id>184</id>
+      <duration>90</duration>
+      <title>Nunta de piatră</title>
+    </movie>
+    <movie>
+      <id>185</id>
+      <duration>90</duration>
+      <title>Despre oameni și melci</title>
+    </movie>
+    <movie>
+      <id>186</id>
+      <duration>125</duration>
+      <title>En la ciudad sin limites</title>
+    </movie>
+    <movie>
+      <id>189</id>
+      <duration>105</duration>
+      <title>Ha-shoter</title>
+    </movie>
+    <movie>
+      <id>190</id>
+      <duration>110</duration>
+      <title>Whores' Glory</title>
+    </movie>
+    <movie>
+      <id>191</id>
+      <duration>97</duration>
+      <title>Des jeunes gens modernes</title>
+    </movie>
+    <movie>
+      <id>192</id>
+      <duration>93</duration>
+      <title>Joshua Tree, 1951: A Portrait of James Dean</title>
+    </movie>
+    <movie>
+      <id>193</id>
+      <duration>100</duration>
+      <title>Ștefan Luchian</title>
+    </movie>
+    <movie>
+      <id>194</id>
+      <duration>73</duration>
+      <title>8 martie</title>
+    </movie>
+    <movie>
+      <id>195</id>
+      <duration>96</duration>
+      <title>Et si on vivait tous ensemble?</title>
+    </movie>
+    <movie>
+      <id>196</id>
+      <duration>103</duration>
+      <title>Starbuck</title>
+    </movie>
+    <movie>
+      <id>198</id>
+      <duration>111</duration>
+      <title>De jueves a domingo</title>
+    </movie>
+  </movies>
+  <showings>
+    <showing>
+      <id>1</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-01T11:00:00.000+02:00</datetime>
+      <movie-id>1</movie-id>
+      <title>Le tableau</title>
+    </showing>
+    <showing>
+      <id>2</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-01T13:00:00.000+02:00</datetime>
+      <movie-id>2</movie-id>
+      <title>Hail</title>
+    </showing>
+    <showing>
+      <id>3</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-01T15:30:00.000+02:00</datetime>
+      <movie-id>3</movie-id>
+      <title>Celal Tan ve Ailesinin Aşırı Acıklı Hikayesi</title>
+    </showing>
+    <showing>
+      <id>4</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-01T18:00:00.000+02:00</datetime>
+      <movie-id>4</movie-id>
+      <title>Poongsan</title>
+    </showing>
+    <showing>
+      <id>5</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-01T21:00:00.000+02:00</datetime>
+      <movie-id>5</movie-id>
+      <title>La fée</title>
+    </showing>
+    <showing>
+      <id>6</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-01T23:00:00.000+02:00</datetime>
+      <movie-id>6</movie-id>
+      <title>Thale</title>
+    </showing>
+    <showing>
+      <id>36</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-02T11:00:00.000+02:00</datetime>
+      <movie-id>36</movie-id>
+      <title>Death of a Superhero</title>
+    </showing>
+    <showing>
+      <id>37</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-02T13:00:00.000+02:00</datetime>
+      <movie-id>37</movie-id>
+      <title>Tao jie</title>
+    </showing>
+    <showing>
+      <id>38</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-02T15:30:00.000+02:00</datetime>
+      <movie-id>38</movie-id>
+      <title>Sleeping Beauty</title>
+    </showing>
+    <showing>
+      <id>39</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-02T17:30:00.000+02:00</datetime>
+      <movie-id>39</movie-id>
+      <title>En Kærlighedshistorie</title>
+    </showing>
+    <showing>
+      <id>40</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-02T19:30:00.000+02:00</datetime>
+      <movie-id>40</movie-id>
+      <title>Diaz: Don't Clean Up This Blood</title>
+    </showing>
+    <showing>
+      <id>41</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-02T22:15:00.000+02:00</datetime>
+      <movie-id>41</movie-id>
+      <title>Barry Lyndon</title>
+    </showing>
+    <showing>
+      <id>76</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-03T11:00:00.000+02:00</datetime>
+      <movie-id>76</movie-id>
+      <title>Cigan</title>
+    </showing>
+    <showing>
+      <id>77</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-03T13:15:00.000+02:00</datetime>
+      <movie-id>77</movie-id>
+      <title>Le Skylab</title>
+    </showing>
+    <showing>
+      <id>78</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-03T15:30:00.000+02:00</datetime>
+      <movie-id>78</movie-id>
+      <title>Bichir Lazhar</title>
+    </showing>
+    <showing>
+      <id>79</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-03T18:00:00.000+02:00</datetime>
+      <movie-id>79</movie-id>
+      <title>Hugo</title>
+    </showing>
+    <showing>
+      <id>80</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-03T20:30:00.000+02:00</datetime>
+      <movie-id>80</movie-id>
+      <title>Electrick Children</title>
+    </showing>
+    <showing>
+      <id>81</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-03T23:00:00.000+02:00</datetime>
+      <movie-id>81</movie-id>
+      <title>Hwanghae</title>
+    </showing>
+    <showing>
+      <id>115</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-04T11:00:00.000+02:00</datetime>
+      <movie-id>61</movie-id>
+      <title>Kompani Orheim</title>
+    </showing>
+    <showing>
+      <id>116</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-04T13:00:00.000+02:00</datetime>
+      <movie-id>26</movie-id>
+      <title>Crawl</title>
+    </showing>
+    <showing>
+      <id>117</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-04T15:00:00.000+02:00</datetime>
+      <movie-id>106</movie-id>
+      <title>The Shining</title>
+    </showing>
+    <showing>
+      <id>118</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-04T18:00:00.000+02:00</datetime>
+      <movie-id>107</movie-id>
+      <title>Klip</title>
+    </showing>
+    <showing>
+      <id>119</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-04T20:30:00.000+02:00</datetime>
+      <movie-id>108</movie-id>
+      <title>Ballroom Dancer</title>
+    </showing>
+    <showing>
+      <id>120</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-04T22:30:00.000+02:00</datetime>
+      <movie-id>109</movie-id>
+      <title>Shame</title>
+    </showing>
+    <showing>
+      <id>156</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-05T11:00:00.000+02:00</datetime>
+      <movie-id>133</movie-id>
+      <title>Bestiaire</title>
+    </showing>
+    <showing>
+      <id>157</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-05T12:30:00.000+02:00</datetime>
+      <movie-id>124</movie-id>
+      <title>Eyes Wide Shut</title>
+    </showing>
+    <showing>
+      <id>158</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-05T18:00:00.000+02:00</datetime>
+      <movie-id>134</movie-id>
+      <title>GasLand</title>
+    </showing>
+    <showing>
+      <id>159</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-05T20:30:00.000+02:00</datetime>
+      <movie-id>135</movie-id>
+      <title>Zhao shi gu er</title>
+    </showing>
+    <showing>
+      <id>160</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-05T23:30:00.000+02:00</datetime>
+      <movie-id>96</movie-id>
+      <title>Inni</title>
+    </showing>
+    <showing>
+      <id>198</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-06T11:30:00.000+02:00</datetime>
+      <movie-id>93</movie-id>
+      <title>Was bleibt</title>
+    </showing>
+    <showing>
+      <id>199</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-06T18:00:00.000+02:00</datetime>
+      <movie-id>149</movie-id>
+      <title>Á annan veg</title>
+    </showing>
+    <showing>
+      <id>200</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-06T20:30:00.000+02:00</datetime>
+      <movie-id>98</movie-id>
+      <title>Un homme et une femme</title>
+    </showing>
+    <showing>
+      <id>201</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-06T23:00:00.000+02:00</datetime>
+      <movie-id>150</movie-id>
+      <title>Hasta la Vista!</title>
+    </showing>
+    <showing>
+      <id>240</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-07T11:00:00.000+02:00</datetime>
+      <movie-id>122</movie-id>
+      <title>Få meg på, for faen</title>
+    </showing>
+    <showing>
+      <id>241</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-07T12:30:00.000+02:00</datetime>
+      <movie-id>146</movie-id>
+      <title>Sangue do Meu Sangue</title>
+    </showing>
+    <showing>
+      <id>242</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-07T15:30:00.000+02:00</datetime>
+      <movie-id>151</movie-id>
+      <title>Crulic – drumul spre dincolo</title>
+    </showing>
+    <showing>
+      <id>243</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-07T18:30:00.000+02:00</datetime>
+      <movie-id>170</movie-id>
+      <title>Portret v sumerkakh</title>
+    </showing>
+    <showing>
+      <id>244</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-07T21:00:00.000+02:00</datetime>
+      <movie-id>171</movie-id>
+      <title>Tabu</title>
+    </showing>
+    <showing>
+      <id>245</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-07T23:30:00.000+02:00</datetime>
+      <movie-id>32</movie-id>
+      <title>Nebe Peklo</title>
+    </showing>
+    <showing>
+      <id>275</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-08T11:00:00.000+02:00</datetime>
+      <movie-id>50</movie-id>
+      <title>Yoru ga owaru basho</title>
+    </showing>
+    <showing>
+      <id>276</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-08T13:30:00.000+02:00</datetime>
+      <movie-id>161</movie-id>
+      <title>Le Chat du rabbin</title>
+    </showing>
+    <showing>
+      <id>277</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-08T15:45:00.000+02:00</datetime>
+      <movie-id>165</movie-id>
+      <title>Killing Time</title>
+    </showing>
+    <showing>
+      <id>278</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-08T18:00:00.000+02:00</datetime>
+      <movie-id>184</movie-id>
+      <title>Nunta de piatră</title>
+    </showing>
+    <showing>
+      <id>279</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-08T20:15:00.000+02:00</datetime>
+      <movie-id>185</movie-id>
+      <title>Despre oameni și melci</title>
+    </showing>
+    <showing>
+      <id>280</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-08T22:45:00.000+02:00</datetime>
+      <movie-id>186</movie-id>
+      <title>En la ciudad sin limites</title>
+    </showing>
+    <showing>
+      <id>312</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-09T11:00:00.000+02:00</datetime>
+      <movie-id>162</movie-id>
+      <title>Magyarország 2011</title>
+    </showing>
+    <showing>
+      <id>313</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-09T13:00:00.000+02:00</datetime>
+      <movie-id>176</movie-id>
+      <title>The Loneliest Planet</title>
+    </showing>
+    <showing>
+      <id>314</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-09T15:45:00.000+02:00</datetime>
+      <movie-id>147</movie-id>
+      <title>Party Monster</title>
+    </showing>
+    <showing>
+      <id>315</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-09T18:15:00.000+02:00</datetime>
+      <movie-id>193</movie-id>
+      <title>Ștefan Luchian</title>
+    </showing>
+    <showing>
+      <id>316</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-09T20:30:00.000+02:00</datetime>
+      <movie-id>71</movie-id>
+      <title>Taxi Driver</title>
+    </showing>
+    <showing>
+      <id>317</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-09T23:00:00.000+02:00</datetime>
+      <movie-id>63</movie-id>
+      <title>Crazy Horse</title>
+    </showing>
+    <showing>
+      <id>351</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-10T11:00:00.000+02:00</datetime>
+      <movie-id>58</movie-id>
+      <title>Play</title>
+    </showing>
+    <showing>
+      <id>352</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-10T14:00:00.000+02:00</datetime>
+      <movie-id>191</movie-id>
+      <title>Des jeunes gens modernes</title>
+    </showing>
+    <showing>
+      <id>353</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-10T17:45:00.000+02:00</datetime>
+      <movie-id>94</movie-id>
+      <title>Donoma</title>
+    </showing>
+    <showing>
+      <id>354</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-10T20:30:00.000+02:00</datetime>
+      <movie-id>34</movie-id>
+      <title>The Hunter</title>
+    </showing>
+    <showing>
+      <id>355</id>
+      <venue-id>1</venue-id>
+      <datetime>2012-06-10T22:30:00.000+02:00</datetime>
+      <movie-id>25</movie-id>
+      <title>Lolita</title>
+    </showing>
+    <showing>
+      <id>7</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-01T10:00:00.000+02:00</datetime>
+      <movie-id>7</movie-id>
+      <title>Aftershock</title>
+    </showing>
+    <showing>
+      <id>8</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-01T12:45:00.000+02:00</datetime>
+      <movie-id>8</movie-id>
+      <title>Scurtmetraje ZFR - Partea 1</title>
+    </showing>
+    <showing>
+      <id>9</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-01T15:00:00.000+02:00</datetime>
+      <movie-id>9</movie-id>
+      <title>La demora</title>
+    </showing>
+    <showing>
+      <id>10</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-01T17:30:00.000+02:00</datetime>
+      <movie-id>10</movie-id>
+      <title>Weekend</title>
+    </showing>
+    <showing>
+      <id>11</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-01T20:00:00.000+02:00</datetime>
+      <movie-id>11</movie-id>
+      <title>Dirch</title>
+    </showing>
+    <showing>
+      <id>12</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-01T22:30:00.000+02:00</datetime>
+      <movie-id>12</movie-id>
+      <title>Beast</title>
+    </showing>
+    <showing>
+      <id>45</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-02T10:00:00.000+02:00</datetime>
+      <movie-id>45</movie-id>
+      <title>Killer's Kiss</title>
+    </showing>
+    <showing>
+      <id>46</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-02T12:30:00.000+02:00</datetime>
+      <movie-id>46</movie-id>
+      <title>Scurtmetraje ZFR - Partea 2</title>
+    </showing>
+    <showing>
+      <id>47</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-02T15:00:00.000+02:00</datetime>
+      <movie-id>47</movie-id>
+      <title>The Light in Her Eyes</title>
+    </showing>
+    <showing>
+      <id>48</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-02T17:30:00.000+02:00</datetime>
+      <movie-id>48</movie-id>
+      <title>Oslo, 31. august</title>
+    </showing>
+    <showing>
+      <id>49</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-02T20:00:00.000+02:00</datetime>
+      <movie-id>49</movie-id>
+      <title>Le moine</title>
+    </showing>
+    <showing>
+      <id>50</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-02T22:00:00.000+02:00</datetime>
+      <movie-id>50</movie-id>
+      <title>Yoru ga owaru basho</title>
+    </showing>
+    <showing>
+      <id>84</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-03T10:00:00.000+02:00</datetime>
+      <movie-id>84</movie-id>
+      <title>Tom Sawyer</title>
+    </showing>
+    <showing>
+      <id>85</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-03T12:30:00.000+02:00</datetime>
+      <movie-id>85</movie-id>
+      <title>Scurtmetraje ZFR - Partea 3</title>
+    </showing>
+    <showing>
+      <id>86</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-03T15:00:00.000+02:00</datetime>
+      <movie-id>66</movie-id>
+      <title>Italy: Love It, or Leave It</title>
+    </showing>
+    <showing>
+      <id>87</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-03T17:30:00.000+02:00</datetime>
+      <movie-id>86</movie-id>
+      <title>The Snowtown Murders</title>
+    </showing>
+    <showing>
+      <id>88</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-03T20:00:00.000+02:00</datetime>
+      <movie-id>87</movie-id>
+      <title>David</title>
+    </showing>
+    <showing>
+      <id>89</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-03T22:30:00.000+02:00</datetime>
+      <movie-id>88</movie-id>
+      <title>Teddy Bear</title>
+    </showing>
+    <showing>
+      <id>124</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-04T10:00:00.000+02:00</datetime>
+      <movie-id>112</movie-id>
+      <title>Le gamin au vélo</title>
+    </showing>
+    <showing>
+      <id>125</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-04T12:30:00.000+02:00</datetime>
+      <movie-id>113</movie-id>
+      <title>Păcătoasa Teodora</title>
+    </showing>
+    <showing>
+      <id>126</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-04T15:00:00.000+02:00</datetime>
+      <movie-id>114</movie-id>
+      <title>Shinboru</title>
+    </showing>
+    <showing>
+      <id>127</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-04T17:30:00.000+02:00</datetime>
+      <movie-id>31</movie-id>
+      <title>The Other Chelsea: A Story from Donetsk</title>
+    </showing>
+    <showing>
+      <id>129</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-04T20:00:00.000+02:00</datetime>
+      <movie-id>116</movie-id>
+      <title>De jueves a domingo</title>
+    </showing>
+    <showing>
+      <id>130</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-04T22:30:00.000+02:00</datetime>
+      <movie-id>117</movie-id>
+      <title>Kuma</title>
+    </showing>
+    <showing>
+      <id>164</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-05T10:00:00.000+02:00</datetime>
+      <movie-id>138</movie-id>
+      <title>The Great Bear</title>
+    </showing>
+    <showing>
+      <id>165</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-05T12:30:00.000+02:00</datetime>
+      <movie-id>126</movie-id>
+      <title>900 Dagen</title>
+    </showing>
+    <showing>
+      <id>166</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-05T15:00:00.000+02:00</datetime>
+      <movie-id>139</movie-id>
+      <title>Marécages</title>
+    </showing>
+    <showing>
+      <id>167</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-05T17:30:00.000+02:00</datetime>
+      <movie-id>30</movie-id>
+      <title>Revision</title>
+    </showing>
+    <showing>
+      <id>169</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-05T20:00:00.000+02:00</datetime>
+      <movie-id>140</movie-id>
+      <title>Oslo, 31. august</title>
+    </showing>
+    <showing>
+      <id>170</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-05T22:15:00.000+02:00</datetime>
+      <movie-id>107</movie-id>
+      <title>Klip</title>
+    </showing>
+    <showing>
+      <id>205</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-06T10:00:00.000+02:00</datetime>
+      <movie-id>151</movie-id>
+      <title>Crulic – drumul spre dincolo</title>
+    </showing>
+    <showing>
+      <id>206</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-06T12:00:00.000+02:00</datetime>
+      <movie-id>21</movie-id>
+      <title>Las acacias</title>
+    </showing>
+    <showing>
+      <id>207</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-06T15:00:00.000+02:00</datetime>
+      <movie-id>152</movie-id>
+      <title>Din dragoste cu cele mai bune intenții</title>
+    </showing>
+    <showing>
+      <id>209</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-06T17:30:00.000+02:00</datetime>
+      <movie-id>154</movie-id>
+      <title>Lena</title>
+    </showing>
+    <showing>
+      <id>210</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-06T20:00:00.000+02:00</datetime>
+      <movie-id>139</movie-id>
+      <title>Marécages</title>
+    </showing>
+    <showing>
+      <id>212</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-06T23:00:00.000+02:00</datetime>
+      <movie-id>156</movie-id>
+      <title>Hahithalfut</title>
+    </showing>
+    <showing>
+      <id>249</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-07T10:00:00.000+02:00</datetime>
+      <movie-id>88</movie-id>
+      <title>Teddy Bear</title>
+    </showing>
+    <showing>
+      <id>250</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-07T12:30:00.000+02:00</datetime>
+      <movie-id>174</movie-id>
+      <title>Turn Off the Lights</title>
+    </showing>
+    <showing>
+      <id>251</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-07T17:00:00.000+02:00</datetime>
+      <movie-id>164</movie-id>
+      <title>Ultimele zile din viaţa Elenei şi a lui Nicolae Ceauşescu</title>
+    </showing>
+    <showing>
+      <id>253</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-07T19:30:00.000+02:00</datetime>
+      <movie-id>176</movie-id>
+      <title>The Loneliest Planet</title>
+    </showing>
+    <showing>
+      <id>392</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-07T22:30:00.000+02:00</datetime>
+      <movie-id>198</movie-id>
+      <title>De jueves a domingo</title>
+    </showing>
+    <showing>
+      <id>281</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-08T10:00:00.000+02:00</datetime>
+      <movie-id>182</movie-id>
+      <title>Un gând, un vis, Doyle... și-un pix</title>
+    </showing>
+    <showing>
+      <id>282</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-08T14:30:00.000+02:00</datetime>
+      <movie-id>154</movie-id>
+      <title>Lena</title>
+    </showing>
+    <showing>
+      <id>283</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-08T17:30:00.000+02:00</datetime>
+      <movie-id>97</movie-id>
+      <title>Noseland</title>
+    </showing>
+    <showing>
+      <id>284</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-08T20:00:00.000+02:00</datetime>
+      <movie-id>156</movie-id>
+      <title>Hahithalfut</title>
+    </showing>
+    <showing>
+      <id>285</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-08T22:30:00.000+02:00</datetime>
+      <movie-id>163</movie-id>
+      <title>Și caii sunt verzi pe pereți</title>
+    </showing>
+    <showing>
+      <id>318</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-09T10:00:00.000+02:00</datetime>
+      <movie-id>85</movie-id>
+      <title>Scurtmetraje ZFR - Partea 3</title>
+    </showing>
+    <showing>
+      <id>319</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-09T12:30:00.000+02:00</datetime>
+      <movie-id>194</movie-id>
+      <title>8 martie</title>
+    </showing>
+    <showing>
+      <id>320</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-09T14:15:00.000+02:00</datetime>
+      <movie-id>117</movie-id>
+      <title>Kuma</title>
+    </showing>
+    <showing>
+      <id>322</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-09T17:45:00.000+02:00</datetime>
+      <movie-id>167</movie-id>
+      <title>Toată lumea din familia noastră</title>
+    </showing>
+    <showing>
+      <id>323</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-09T20:30:00.000+02:00</datetime>
+      <movie-id>189</movie-id>
+      <title>Ha-shoter</title>
+    </showing>
+    <showing>
+      <id>324</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-09T23:00:00.000+02:00</datetime>
+      <movie-id>171</movie-id>
+      <title>Tabu</title>
+    </showing>
+    <showing>
+      <id>357</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-10T10:00:00.000+02:00</datetime>
+      <movie-id>19</movie-id>
+      <title>Prag</title>
+    </showing>
+    <showing>
+      <id>358</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-10T12:30:00.000+02:00</datetime>
+      <movie-id>145</movie-id>
+      <title>The Look</title>
+    </showing>
+    <showing>
+      <id>359</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-10T18:30:00.000+02:00</datetime>
+      <movie-id>91</movie-id>
+      <title>Veljekset</title>
+    </showing>
+    <showing>
+      <id>360</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-10T20:30:00.000+02:00</datetime>
+      <movie-id>172</movie-id>
+      <title>Tyrannosaur</title>
+    </showing>
+    <showing>
+      <id>361</id>
+      <venue-id>2</venue-id>
+      <datetime>2012-06-10T22:30:00.000+02:00</datetime>
+      <movie-id>57</movie-id>
+      <title>Beyrouth hôtel</title>
+    </showing>
+    <showing>
+      <id>13</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-01T10:00:00.000+02:00</datetime>
+      <movie-id>13</movie-id>
+      <title>Ako sa varia dejiny</title>
+    </showing>
+    <showing>
+      <id>14</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-01T12:00:00.000+02:00</datetime>
+      <movie-id>14</movie-id>
+      <title>Paziraie sadeh</title>
+    </showing>
+    <showing>
+      <id>15</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-01T14:30:00.000+02:00</datetime>
+      <movie-id>15</movie-id>
+      <title>Reacciones adversas</title>
+    </showing>
+    <showing>
+      <id>16</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-01T17:00:00.000+02:00</datetime>
+      <movie-id>16</movie-id>
+      <title>Babycall</title>
+    </showing>
+    <showing>
+      <id>17</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-01T19:30:00.000+02:00</datetime>
+      <movie-id>17</movie-id>
+      <title>The Bengali Detective</title>
+    </showing>
+    <showing>
+      <id>18</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-01T21:30:00.000+02:00</datetime>
+      <movie-id>18</movie-id>
+      <title>Spartacus</title>
+    </showing>
+    <showing>
+      <id>52</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-02T10:00:00.000+02:00</datetime>
+      <movie-id>52</movie-id>
+      <title>Magi i luften</title>
+    </showing>
+    <showing>
+      <id>53</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-02T14:30:00.000+02:00</datetime>
+      <movie-id>53</movie-id>
+      <title>The Substance: Albert Hofmann's LSD</title>
+    </showing>
+    <showing>
+      <id>54</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-02T17:00:00.000+02:00</datetime>
+      <movie-id>54</movie-id>
+      <title>El Año del Tigre</title>
+    </showing>
+    <showing>
+      <id>55</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-02T19:00:00.000+02:00</datetime>
+      <movie-id>55</movie-id>
+      <title>Zero Killed</title>
+    </showing>
+    <showing>
+      <id>56</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-02T21:30:00.000+02:00</datetime>
+      <movie-id>56</movie-id>
+      <title>Masks</title>
+    </showing>
+    <showing>
+      <id>90</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-03T10:00:00.000+02:00</datetime>
+      <movie-id>89</movie-id>
+      <title>The Killing</title>
+    </showing>
+    <showing>
+      <id>91</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-03T12:00:00.000+02:00</datetime>
+      <movie-id>65</movie-id>
+      <title>Login 2 Life</title>
+    </showing>
+    <showing>
+      <id>92</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-03T14:30:00.000+02:00</datetime>
+      <movie-id>90</movie-id>
+      <title>Les nuits fauves</title>
+    </showing>
+    <showing>
+      <id>93</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-03T20:00:00.000+02:00</datetime>
+      <movie-id>27</movie-id>
+      <title>Little Matador</title>
+    </showing>
+    <showing>
+      <id>94</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-03T22:30:00.000+02:00</datetime>
+      <movie-id>22</movie-id>
+      <title>The Other Side of Sleep</title>
+    </showing>
+    <showing>
+      <id>132</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-04T10:00:00.000+02:00</datetime>
+      <movie-id>119</movie-id>
+      <title>Kshay</title>
+    </showing>
+    <showing>
+      <id>133</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-04T12:00:00.000+02:00</datetime>
+      <movie-id>64</movie-id>
+      <title>Porfirio</title>
+    </showing>
+    <showing>
+      <id>134</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-04T14:30:00.000+02:00</datetime>
+      <movie-id>120</movie-id>
+      <title>Gan-jeung</title>
+    </showing>
+    <showing>
+      <id>135</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-04T17:00:00.000+02:00</datetime>
+      <movie-id>92</movie-id>
+      <title>Labrador</title>
+    </showing>
+    <showing>
+      <id>136</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-04T22:00:00.000+02:00</datetime>
+      <movie-id>121</movie-id>
+      <title>The Silent Thief</title>
+    </showing>
+    <showing>
+      <id>172</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-05T10:00:00.000+02:00</datetime>
+      <movie-id>104</movie-id>
+      <title>Opfindelsen af Dr. Nakamats</title>
+    </showing>
+    <showing>
+      <id>173</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-05T11:30:00.000+02:00</datetime>
+      <movie-id>142</movie-id>
+      <title>Les uns et les autres</title>
+    </showing>
+    <showing>
+      <id>174</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-05T15:30:00.000+02:00</datetime>
+      <movie-id>29</movie-id>
+      <title>Michael</title>
+    </showing>
+    <showing>
+      <id>175</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-05T17:30:00.000+02:00</datetime>
+      <movie-id>143</movie-id>
+      <title>O Lucky Malcolm!</title>
+    </showing>
+    <showing>
+      <id>176</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-05T20:00:00.000+02:00</datetime>
+      <movie-id>144</movie-id>
+      <title>A Man's Story</title>
+    </showing>
+    <showing>
+      <id>177</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-05T22:30:00.000+02:00</datetime>
+      <movie-id>74</movie-id>
+      <title>Gang de qin</title>
+    </showing>
+    <showing>
+      <id>214</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-06T10:00:00.000+02:00</datetime>
+      <movie-id>69</movie-id>
+      <title>Beul-la-in-deu</title>
+    </showing>
+    <showing>
+      <id>215</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-06T12:15:00.000+02:00</datetime>
+      <movie-id>20</movie-id>
+      <title>Dai - nihonjin</title>
+    </showing>
+    <showing>
+      <id>216</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-06T14:30:00.000+02:00</datetime>
+      <movie-id>158</movie-id>
+      <title>Vissatérés</title>
+    </showing>
+    <showing>
+      <id>217</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-06T20:30:00.000+02:00</datetime>
+      <movie-id>159</movie-id>
+      <title>Gone Wild</title>
+    </showing>
+    <showing>
+      <id>255</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-07T10:00:00.000+02:00</datetime>
+      <movie-id>177</movie-id>
+      <title>Mildred Pierce</title>
+    </showing>
+    <showing>
+      <id>256</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-07T19:15:00.000+02:00</datetime>
+      <movie-id>105</movie-id>
+      <title>Dragonslayer</title>
+    </showing>
+    <showing>
+      <id>257</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-07T21:30:00.000+02:00</datetime>
+      <movie-id>178</movie-id>
+      <title>Scurtmetraje Umbre - Partea 1</title>
+    </showing>
+    <showing>
+      <id>258</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-07T23:30:00.000+02:00</datetime>
+      <movie-id>179</movie-id>
+      <title>Scurtmetraje Umbre - Partea 2</title>
+    </showing>
+    <showing>
+      <id>286</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-08T10:00:00.000+02:00</datetime>
+      <movie-id>8</movie-id>
+      <title>Scurtmetraje ZFR - Partea 1</title>
+    </showing>
+    <showing>
+      <id>287</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-08T12:30:00.000+02:00</datetime>
+      <movie-id>46</movie-id>
+      <title>Scurtmetraje ZFR - Partea 2</title>
+    </showing>
+    <showing>
+      <id>288</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-08T16:30:00.000+02:00</datetime>
+      <movie-id>28</movie-id>
+      <title>Side By Side</title>
+    </showing>
+    <showing>
+      <id>289</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-08T19:00:00.000+02:00</datetime>
+      <movie-id>189</movie-id>
+      <title>Ha-shoter</title>
+    </showing>
+    <showing>
+      <id>290</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-08T22:00:00.000+02:00</datetime>
+      <movie-id>128</movie-id>
+      <title>Mad Bastards</title>
+    </showing>
+    <showing>
+      <id>325</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-09T11:00:00.000+02:00</datetime>
+      <movie-id>174</movie-id>
+      <title>Turn Off the Lights</title>
+    </showing>
+    <showing>
+      <id>326</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-09T13:00:00.000+02:00</datetime>
+      <movie-id>131</movie-id>
+      <title>Ouwehoeren</title>
+    </showing>
+    <showing>
+      <id>327</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-09T18:00:00.000+02:00</datetime>
+      <movie-id>70</movie-id>
+      <title>Swoon</title>
+    </showing>
+    <showing>
+      <id>328</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-09T20:30:00.000+02:00</datetime>
+      <movie-id>101</movie-id>
+      <title>Keep the Lights On</title>
+    </showing>
+    <showing>
+      <id>329</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-09T22:30:00.000+02:00</datetime>
+      <movie-id>33</movie-id>
+      <title>Gut</title>
+    </showing>
+    <showing>
+      <id>362</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-10T10:00:00.000+02:00</datetime>
+      <movie-id>180</movie-id>
+      <title>Alpeis</title>
+    </showing>
+    <showing>
+      <id>363</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-10T12:00:00.000+02:00</datetime>
+      <movie-id>73</movie-id>
+      <title>In film nist</title>
+    </showing>
+    <showing>
+      <id>364</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-10T14:30:00.000+02:00</datetime>
+      <movie-id>190</movie-id>
+      <title>Whores' Glory</title>
+    </showing>
+    <showing>
+      <id>365</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-10T17:00:00.000+02:00</datetime>
+      <movie-id>192</movie-id>
+      <title>Joshua Tree, 1951: A Portrait of James Dean</title>
+    </showing>
+    <showing>
+      <id>366</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-10T19:30:00.000+02:00</datetime>
+      <movie-id>75</movie-id>
+      <title>Go-hyang-i: Jook-eum-eul Bo-neun Doo Gae-eui Noon</title>
+    </showing>
+    <showing>
+      <id>367</id>
+      <venue-id>3</venue-id>
+      <datetime>2012-06-10T22:00:00.000+02:00</datetime>
+      <movie-id>127</movie-id>
+      <title>Without</title>
+    </showing>
+    <showing>
+      <id>19</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-01T15:00:00.000+02:00</datetime>
+      <movie-id>19</movie-id>
+      <title>Prag</title>
+    </showing>
+    <showing>
+      <id>20</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-01T17:30:00.000+02:00</datetime>
+      <movie-id>20</movie-id>
+      <title>Dai - nihonjin</title>
+    </showing>
+    <showing>
+      <id>21</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-01T20:00:00.000+02:00</datetime>
+      <movie-id>21</movie-id>
+      <title>Las acacias</title>
+    </showing>
+    <showing>
+      <id>22</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-01T23:00:00.000+02:00</datetime>
+      <movie-id>22</movie-id>
+      <title>The Other Side of Sleep</title>
+    </showing>
+    <showing>
+      <id>57</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-02T17:30:00.000+02:00</datetime>
+      <movie-id>57</movie-id>
+      <title>Beyrouth hôtel</title>
+    </showing>
+    <showing>
+      <id>58</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-02T20:00:00.000+02:00</datetime>
+      <movie-id>58</movie-id>
+      <title>Play</title>
+    </showing>
+    <showing>
+      <id>59</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-02T23:00:00.000+02:00</datetime>
+      <movie-id>59</movie-id>
+      <title>SuperClásico</title>
+    </showing>
+    <showing>
+      <id>95</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-03T15:00:00.000+02:00</datetime>
+      <movie-id>58</movie-id>
+      <title>Play</title>
+    </showing>
+    <showing>
+      <id>96</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-03T17:30:00.000+02:00</datetime>
+      <movie-id>91</movie-id>
+      <title>Veljekset</title>
+    </showing>
+    <showing>
+      <id>97</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-03T20:00:00.000+02:00</datetime>
+      <movie-id>92</movie-id>
+      <title>Labrador</title>
+    </showing>
+    <showing>
+      <id>98</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-03T23:00:00.000+02:00</datetime>
+      <movie-id>93</movie-id>
+      <title>Was bleibt</title>
+    </showing>
+    <showing>
+      <id>137</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-04T15:00:00.000+02:00</datetime>
+      <movie-id>5</movie-id>
+      <title>La fée</title>
+    </showing>
+    <showing>
+      <id>138</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-04T17:30:00.000+02:00</datetime>
+      <movie-id>19</movie-id>
+      <title>Prag</title>
+    </showing>
+    <showing>
+      <id>139</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-04T20:00:00.000+02:00</datetime>
+      <movie-id>9</movie-id>
+      <title>La demora</title>
+    </showing>
+    <showing>
+      <id>140</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-04T23:00:00.000+02:00</datetime>
+      <movie-id>122</movie-id>
+      <title>Få meg på, for faen</title>
+    </showing>
+    <showing>
+      <id>178</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-05T15:00:00.000+02:00</datetime>
+      <movie-id>145</movie-id>
+      <title>The Look</title>
+    </showing>
+    <showing>
+      <id>179</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-05T17:30:00.000+02:00</datetime>
+      <movie-id>54</movie-id>
+      <title>El Año del Tigre</title>
+    </showing>
+    <showing>
+      <id>180</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-05T20:00:00.000+02:00</datetime>
+      <movie-id>114</movie-id>
+      <title>Shinboru</title>
+    </showing>
+    <showing>
+      <id>181</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-05T23:00:00.000+02:00</datetime>
+      <movie-id>16</movie-id>
+      <title>Babycall</title>
+    </showing>
+    <showing>
+      <id>218</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-06T15:00:00.000+02:00</datetime>
+      <movie-id>72</movie-id>
+      <title>Saya - zamurai</title>
+    </showing>
+    <showing>
+      <id>219</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-06T17:30:00.000+02:00</datetime>
+      <movie-id>12</movie-id>
+      <title>Beast</title>
+    </showing>
+    <showing>
+      <id>220</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-06T19:45:00.000+02:00</datetime>
+      <movie-id>121</movie-id>
+      <title>The Silent Thief</title>
+    </showing>
+    <showing>
+      <id>259</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-07T15:00:00.000+02:00</datetime>
+      <movie-id>39</movie-id>
+      <title>En Kærlighedshistorie</title>
+    </showing>
+    <showing>
+      <id>260</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-07T17:30:00.000+02:00</datetime>
+      <movie-id>83</movie-id>
+      <title>Animal Kingdom</title>
+    </showing>
+    <showing>
+      <id>261</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-07T20:00:00.000+02:00</datetime>
+      <movie-id>180</movie-id>
+      <title>Alpeis</title>
+    </showing>
+    <showing>
+      <id>262</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-07T22:00:00.000+02:00</datetime>
+      <movie-id>142</movie-id>
+      <title>Les uns et les autres</title>
+    </showing>
+    <showing>
+      <id>291</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-08T15:00:00.000+02:00</datetime>
+      <movie-id>110</movie-id>
+      <title>Khodorkovsky</title>
+    </showing>
+    <showing>
+      <id>292</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-08T17:30:00.000+02:00</datetime>
+      <movie-id>11</movie-id>
+      <title>Dirch</title>
+    </showing>
+    <showing>
+      <id>293</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-08T20:00:00.000+02:00</datetime>
+      <movie-id>76</movie-id>
+      <title>Cigan</title>
+    </showing>
+    <showing>
+      <id>294</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-08T22:15:00.000+02:00</datetime>
+      <movie-id>190</movie-id>
+      <title>Whores' Glory</title>
+    </showing>
+    <showing>
+      <id>330</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-09T12:30:00.000+02:00</datetime>
+      <movie-id>151</movie-id>
+      <title>Crulic – drumul spre dincolo</title>
+    </showing>
+    <showing>
+      <id>331</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-09T15:00:00.000+02:00</datetime>
+      <movie-id>152</movie-id>
+      <title>Din dragoste cu cele mai bune intenții</title>
+    </showing>
+    <showing>
+      <id>332</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-09T18:00:00.000+02:00</datetime>
+      <movie-id>111</movie-id>
+      <title>Elles</title>
+    </showing>
+    <showing>
+      <id>333</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-09T20:00:00.000+02:00</datetime>
+      <movie-id>89</movie-id>
+      <title>The Killing</title>
+    </showing>
+    <showing>
+      <id>368</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-10T12:30:00.000+02:00</datetime>
+      <movie-id>176</movie-id>
+      <title>The Loneliest Planet</title>
+    </showing>
+    <showing>
+      <id>369</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-10T15:30:00.000+02:00</datetime>
+      <movie-id>154</movie-id>
+      <title>Lena</title>
+    </showing>
+    <showing>
+      <id>370</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-10T18:30:00.000+02:00</datetime>
+      <movie-id>156</movie-id>
+      <title>Hahithalfut</title>
+    </showing>
+    <showing>
+      <id>371</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-10T21:00:00.000+02:00</datetime>
+      <movie-id>88</movie-id>
+      <title>Teddy Bear</title>
+    </showing>
+    <showing>
+      <id>372</id>
+      <venue-id>4</venue-id>
+      <datetime>2012-06-10T23:00:00.000+02:00</datetime>
+      <movie-id>48</movie-id>
+      <title>Oslo, 31. august</title>
+    </showing>
+    <showing>
+      <id>23</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-01T14:30:00.000+02:00</datetime>
+      <movie-id>23</movie-id>
+      <title>Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb</title>
+    </showing>
+    <showing>
+      <id>24</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-01T17:00:00.000+02:00</datetime>
+      <movie-id>24</movie-id>
+      <title>Csak a szél</title>
+    </showing>
+    <showing>
+      <id>25</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-01T19:30:00.000+02:00</datetime>
+      <movie-id>25</movie-id>
+      <title>Lolita</title>
+    </showing>
+    <showing>
+      <id>26</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-01T22:30:00.000+02:00</datetime>
+      <movie-id>26</movie-id>
+      <title>Crawl</title>
+    </showing>
+    <showing>
+      <id>60</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-02T14:30:00.000+02:00</datetime>
+      <movie-id>60</movie-id>
+      <title>Dreileben - etwas besseres als den tod</title>
+    </showing>
+    <showing>
+      <id>61</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-02T17:00:00.000+02:00</datetime>
+      <movie-id>61</movie-id>
+      <title>Kompani Orheim</title>
+    </showing>
+    <showing>
+      <id>62</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-02T19:30:00.000+02:00</datetime>
+      <movie-id>62</movie-id>
+      <title>Full Metal Jacket</title>
+    </showing>
+    <showing>
+      <id>63</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-02T22:00:00.000+02:00</datetime>
+      <movie-id>63</movie-id>
+      <title>Crazy Horse</title>
+    </showing>
+    <showing>
+      <id>99</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-03T14:30:00.000+02:00</datetime>
+      <movie-id>94</movie-id>
+      <title>Donoma</title>
+    </showing>
+    <showing>
+      <id>100</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-03T17:15:00.000+02:00</datetime>
+      <movie-id>1</movie-id>
+      <title>Le tableau</title>
+    </showing>
+    <showing>
+      <id>101</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-03T19:30:00.000+02:00</datetime>
+      <movie-id>95</movie-id>
+      <title>D'un film à l'autre</title>
+    </showing>
+    <showing>
+      <id>102</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-03T22:15:00.000+02:00</datetime>
+      <movie-id>96</movie-id>
+      <title>Inni</title>
+    </showing>
+    <showing>
+      <id>141</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-04T14:30:00.000+02:00</datetime>
+      <movie-id>123</movie-id>
+      <title>Dreileben - komm mir nicht nach</title>
+    </showing>
+    <showing>
+      <id>142</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-04T16:30:00.000+02:00</datetime>
+      <movie-id>124</movie-id>
+      <title>Eyes Wide Shut</title>
+    </showing>
+    <showing>
+      <id>143</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-04T19:30:00.000+02:00</datetime>
+      <movie-id>80</movie-id>
+      <title>Electrick Children</title>
+    </showing>
+    <showing>
+      <id>144</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-04T22:15:00.000+02:00</datetime>
+      <movie-id>125</movie-id>
+      <title>A Clockwork Orange</title>
+    </showing>
+    <showing>
+      <id>182</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-05T14:30:00.000+02:00</datetime>
+      <movie-id>123</movie-id>
+      <title>Dreileben - komm mir nicht nach</title>
+    </showing>
+    <showing>
+      <id>183</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-05T17:00:00.000+02:00</datetime>
+      <movie-id>6</movie-id>
+      <title>Thale</title>
+    </showing>
+    <showing>
+      <id>184</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-05T19:00:00.000+02:00</datetime>
+      <movie-id>146</movie-id>
+      <title>Sangue do Meu Sangue</title>
+    </showing>
+    <showing>
+      <id>185</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-05T22:15:00.000+02:00</datetime>
+      <movie-id>4</movie-id>
+      <title>Poongsan</title>
+    </showing>
+    <showing>
+      <id>221</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-06T12:30:00.000+02:00</datetime>
+      <movie-id>160</movie-id>
+      <title>Dreileben - eine minute dunkel</title>
+    </showing>
+    <showing>
+      <id>222</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-06T14:30:00.000+02:00</datetime>
+      <movie-id>161</movie-id>
+      <title>Le Chat du rabbin</title>
+    </showing>
+    <showing>
+      <id>223</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-06T17:00:00.000+02:00</datetime>
+      <movie-id>2</movie-id>
+      <title>Hail</title>
+    </showing>
+    <showing>
+      <id>224</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-06T19:30:00.000+02:00</datetime>
+      <movie-id>162</movie-id>
+      <title>Magyarország 2011</title>
+    </showing>
+    <showing>
+      <id>225</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-06T21:30:00.000+02:00</datetime>
+      <movie-id>136</movie-id>
+      <title>A.I. Artificial Intelligence</title>
+    </showing>
+    <showing>
+      <id>263</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-07T14:30:00.000+02:00</datetime>
+      <movie-id>149</movie-id>
+      <title>Á annan veg</title>
+    </showing>
+    <showing>
+      <id>264</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-07T22:15:00.000+02:00</datetime>
+      <movie-id>79</movie-id>
+      <title>Hugo</title>
+    </showing>
+    <showing>
+      <id>295</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-08T12:00:00.000+02:00</datetime>
+      <movie-id>3</movie-id>
+      <title>Celal Tan ve Ailesinin Aşırı Acıklı Hikayesi</title>
+    </showing>
+    <showing>
+      <id>296</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-08T14:30:00.000+02:00</datetime>
+      <movie-id>191</movie-id>
+      <title>Des jeunes gens modernes</title>
+    </showing>
+    <showing>
+      <id>297</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-08T17:00:00.000+02:00</datetime>
+      <movie-id>173</movie-id>
+      <title>Undeva la Palilula</title>
+    </showing>
+    <showing>
+      <id>298</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-08T20:30:00.000+02:00</datetime>
+      <movie-id>170</movie-id>
+      <title>Portret v sumerkakh</title>
+    </showing>
+    <showing>
+      <id>299</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-08T23:00:00.000+02:00</datetime>
+      <movie-id>38</movie-id>
+      <title>Sleeping Beauty</title>
+    </showing>
+    <showing>
+      <id>334</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-09T12:00:00.000+02:00</datetime>
+      <movie-id>40</movie-id>
+      <title>Diaz: Don't Clean Up This Blood</title>
+    </showing>
+    <showing>
+      <id>335</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-09T14:30:00.000+02:00</datetime>
+      <movie-id>134</movie-id>
+      <title>GasLand</title>
+    </showing>
+    <showing>
+      <id>336</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-09T17:00:00.000+02:00</datetime>
+      <movie-id>41</movie-id>
+      <title>Barry Lyndon</title>
+    </showing>
+    <showing>
+      <id>337</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-09T20:30:00.000+02:00</datetime>
+      <movie-id>78</movie-id>
+      <title>Bichir Lazhar</title>
+    </showing>
+    <showing>
+      <id>338</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-09T22:30:00.000+02:00</datetime>
+      <movie-id>129</movie-id>
+      <title>2001: A Space Odyssey</title>
+    </showing>
+    <showing>
+      <id>373</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-10T12:00:00.000+02:00</datetime>
+      <movie-id>149</movie-id>
+      <title>Á annan veg</title>
+    </showing>
+    <showing>
+      <id>374</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-10T14:00:00.000+02:00</datetime>
+      <movie-id>106</movie-id>
+      <title>The Shining</title>
+    </showing>
+    <showing>
+      <id>375</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-10T17:00:00.000+02:00</datetime>
+      <movie-id>37</movie-id>
+      <title>Tao jie</title>
+    </showing>
+    <showing>
+      <id>376</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-10T19:30:00.000+02:00</datetime>
+      <movie-id>81</movie-id>
+      <title>Hwanghae</title>
+    </showing>
+    <showing>
+      <id>377</id>
+      <venue-id>5</venue-id>
+      <datetime>2012-06-10T22:15:00.000+02:00</datetime>
+      <movie-id>133</movie-id>
+      <title>Bestiaire</title>
+    </showing>
+    <showing>
+      <id>27</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-01T17:15:00.000+02:00</datetime>
+      <movie-id>27</movie-id>
+      <title>Little Matador</title>
+    </showing>
+    <showing>
+      <id>28</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-01T19:45:00.000+02:00</datetime>
+      <movie-id>28</movie-id>
+      <title>Side By Side</title>
+    </showing>
+    <showing>
+      <id>29</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-01T22:45:00.000+02:00</datetime>
+      <movie-id>29</movie-id>
+      <title>Michael</title>
+    </showing>
+    <showing>
+      <id>64</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-02T17:15:00.000+02:00</datetime>
+      <movie-id>64</movie-id>
+      <title>Porfirio</title>
+    </showing>
+    <showing>
+      <id>65</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-02T19:45:00.000+02:00</datetime>
+      <movie-id>65</movie-id>
+      <title>Login 2 Life</title>
+    </showing>
+    <showing>
+      <id>66</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-02T22:45:00.000+02:00</datetime>
+      <movie-id>66</movie-id>
+      <title>Italy: Love It, or Leave It</title>
+    </showing>
+    <showing>
+      <id>103</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-03T17:15:00.000+02:00</datetime>
+      <movie-id>97</movie-id>
+      <title>Noseland</title>
+    </showing>
+    <showing>
+      <id>104</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-03T19:45:00.000+02:00</datetime>
+      <movie-id>11</movie-id>
+      <title>Dirch</title>
+    </showing>
+    <showing>
+      <id>105</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-03T22:45:00.000+02:00</datetime>
+      <movie-id>98</movie-id>
+      <title>Un homme et une femme</title>
+    </showing>
+    <showing>
+      <id>145</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-04T17:15:00.000+02:00</datetime>
+      <movie-id>59</movie-id>
+      <title>SuperClásico</title>
+    </showing>
+    <showing>
+      <id>146</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-04T19:45:00.000+02:00</datetime>
+      <movie-id>126</movie-id>
+      <title>900 Dagen</title>
+    </showing>
+    <showing>
+      <id>147</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-04T22:45:00.000+02:00</datetime>
+      <movie-id>127</movie-id>
+      <title>Without</title>
+    </showing>
+    <showing>
+      <id>186</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-05T17:15:00.000+02:00</datetime>
+      <movie-id>53</movie-id>
+      <title>The Substance: Albert Hofmann's LSD</title>
+    </showing>
+    <showing>
+      <id>187</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-05T19:45:00.000+02:00</datetime>
+      <movie-id>17</movie-id>
+      <title>The Bengali Detective</title>
+    </showing>
+    <showing>
+      <id>188</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-05T22:45:00.000+02:00</datetime>
+      <movie-id>15</movie-id>
+      <title>Reacciones adversas</title>
+    </showing>
+    <showing>
+      <id>226</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-06T14:45:00.000+02:00</datetime>
+      <movie-id>163</movie-id>
+      <title>Și caii sunt verzi pe pereți</title>
+    </showing>
+    <showing>
+      <id>227</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-06T17:30:00.000+02:00</datetime>
+      <movie-id>47</movie-id>
+      <title>The Light in Her Eyes</title>
+    </showing>
+    <showing>
+      <id>228</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-06T20:15:00.000+02:00</datetime>
+      <movie-id>87</movie-id>
+      <title>David</title>
+    </showing>
+    <showing>
+      <id>229</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-06T22:45:00.000+02:00</datetime>
+      <movie-id>35</movie-id>
+      <title>Shut Up Little Man! An Audio Misadventure</title>
+    </showing>
+    <showing>
+      <id>265</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-07T19:45:00.000+02:00</datetime>
+      <movie-id>144</movie-id>
+      <title>A Man's Story</title>
+    </showing>
+    <showing>
+      <id>266</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-07T22:15:00.000+02:00</datetime>
+      <movie-id>181</movie-id>
+      <title>Vorbitor</title>
+    </showing>
+    <showing>
+      <id>300</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-08T19:15:00.000+02:00</datetime>
+      <movie-id>169</movie-id>
+      <title>Stanley Kubrick: A Life in Pictures</title>
+    </showing>
+    <showing>
+      <id>301</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-08T22:45:00.000+02:00</datetime>
+      <movie-id>104</movie-id>
+      <title>Opfindelsen af Dr. Nakamats</title>
+    </showing>
+    <showing>
+      <id>339</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-09T19:45:00.000+02:00</datetime>
+      <movie-id>10</movie-id>
+      <title>Weekend</title>
+    </showing>
+    <showing>
+      <id>340</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-09T22:45:00.000+02:00</datetime>
+      <movie-id>103</movie-id>
+      <title>Cerro rico, tierra rica</title>
+    </showing>
+    <showing>
+      <id>378</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-10T12:15:00.000+02:00</datetime>
+      <movie-id>107</movie-id>
+      <title>Klip</title>
+    </showing>
+    <showing>
+      <id>379</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-10T14:45:00.000+02:00</datetime>
+      <movie-id>116</movie-id>
+      <title>De jueves a domingo</title>
+    </showing>
+    <showing>
+      <id>380</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-10T17:15:00.000+02:00</datetime>
+      <movie-id>50</movie-id>
+      <title>Yoru ga owaru basho</title>
+    </showing>
+    <showing>
+      <id>381</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-10T19:45:00.000+02:00</datetime>
+      <movie-id>117</movie-id>
+      <title>Kuma</title>
+    </showing>
+    <showing>
+      <id>382</id>
+      <venue-id>6</venue-id>
+      <datetime>2012-06-10T22:45:00.000+02:00</datetime>
+      <movie-id>139</movie-id>
+      <title>Marécages</title>
+    </showing>
+    <showing>
+      <id>30</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-01T15:15:00.000+02:00</datetime>
+      <movie-id>30</movie-id>
+      <title>Revision</title>
+    </showing>
+    <showing>
+      <id>31</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-01T17:45:00.000+02:00</datetime>
+      <movie-id>31</movie-id>
+      <title>The Other Chelsea: A Story from Donetsk</title>
+    </showing>
+    <showing>
+      <id>32</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-01T20:15:00.000+02:00</datetime>
+      <movie-id>32</movie-id>
+      <title>Nebe Peklo</title>
+    </showing>
+    <showing>
+      <id>33</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-01T22:30:00.000+02:00</datetime>
+      <movie-id>33</movie-id>
+      <title>Gut</title>
+    </showing>
+    <showing>
+      <id>67</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-02T15:15:00.000+02:00</datetime>
+      <movie-id>67</movie-id>
+      <title>Shaolin</title>
+    </showing>
+    <showing>
+      <id>68</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-02T17:45:00.000+02:00</datetime>
+      <movie-id>68</movie-id>
+      <title>Ambassadøren</title>
+    </showing>
+    <showing>
+      <id>69</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-02T20:15:00.000+02:00</datetime>
+      <movie-id>69</movie-id>
+      <title>Beul-la-in-deu</title>
+    </showing>
+    <showing>
+      <id>70</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-02T22:30:00.000+02:00</datetime>
+      <movie-id>70</movie-id>
+      <title>Swoon</title>
+    </showing>
+    <showing>
+      <id>106</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-03T15:15:00.000+02:00</datetime>
+      <movie-id>99</movie-id>
+      <title>Két világ közt</title>
+    </showing>
+    <showing>
+      <id>107</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-03T16:45:00.000+02:00</datetime>
+      <movie-id>56</movie-id>
+      <title>Masks</title>
+    </showing>
+    <showing>
+      <id>108</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-03T19:30:00.000+02:00</datetime>
+      <movie-id>100</movie-id>
+      <title>Parada</title>
+    </showing>
+    <showing>
+      <id>109</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-03T22:30:00.000+02:00</datetime>
+      <movie-id>101</movie-id>
+      <title>Keep the Lights On</title>
+    </showing>
+    <showing>
+      <id>148</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-04T15:15:00.000+02:00</datetime>
+      <movie-id>128</movie-id>
+      <title>Mad Bastards</title>
+    </showing>
+    <showing>
+      <id>149</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-04T18:00:00.000+02:00</datetime>
+      <movie-id>55</movie-id>
+      <title>Zero Killed</title>
+    </showing>
+    <showing>
+      <id>150</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-04T20:15:00.000+02:00</datetime>
+      <movie-id>12</movie-id>
+      <title>Beast</title>
+    </showing>
+    <showing>
+      <id>151</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-04T22:30:00.000+02:00</datetime>
+      <movie-id>39</movie-id>
+      <title>En Kærlighedshistorie</title>
+    </showing>
+    <showing>
+      <id>189</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-05T15:15:00.000+02:00</datetime>
+      <movie-id>35</movie-id>
+      <title>Shut Up Little Man! An Audio Misadventure</title>
+    </showing>
+    <showing>
+      <id>190</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-05T17:45:00.000+02:00</datetime>
+      <movie-id>52</movie-id>
+      <title>Magi i luften</title>
+    </showing>
+    <showing>
+      <id>191</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-05T20:15:00.000+02:00</datetime>
+      <movie-id>13</movie-id>
+      <title>Ako sa varia dejiny</title>
+    </showing>
+    <showing>
+      <id>192</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-05T22:30:00.000+02:00</datetime>
+      <movie-id>82</movie-id>
+      <title>L'exercice de l'État</title>
+    </showing>
+    <showing>
+      <id>230</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-06T15:15:00.000+02:00</datetime>
+      <movie-id>148</movie-id>
+      <title>Under the Hawthorn Tree</title>
+    </showing>
+    <showing>
+      <id>231</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-06T17:45:00.000+02:00</datetime>
+      <movie-id>14</movie-id>
+      <title>Paziraie sadeh</title>
+    </showing>
+    <showing>
+      <id>232</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-06T20:00:00.000+02:00</datetime>
+      <movie-id>164</movie-id>
+      <title>Ultimele zile din viaţa Elenei şi a lui Nicolae Ceauşescu</title>
+    </showing>
+    <showing>
+      <id>233</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-06T22:30:00.000+02:00</datetime>
+      <movie-id>165</movie-id>
+      <title>Killing Time</title>
+    </showing>
+    <showing>
+      <id>267</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-07T16:00:00.000+02:00</datetime>
+      <movie-id>182</movie-id>
+      <title>Un gând, un vis, Doyle... și-un pix</title>
+    </showing>
+    <showing>
+      <id>268</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-07T20:15:00.000+02:00</datetime>
+      <movie-id>158</movie-id>
+      <title>Vissatérés</title>
+    </showing>
+    <showing>
+      <id>269</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-07T22:30:00.000+02:00</datetime>
+      <movie-id>183</movie-id>
+      <title>I bóg stworzł seks</title>
+    </showing>
+    <showing>
+      <id>302</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-08T13:00:00.000+02:00</datetime>
+      <movie-id>120</movie-id>
+      <title>Gan-jeung</title>
+    </showing>
+    <showing>
+      <id>303</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-08T15:15:00.000+02:00</datetime>
+      <movie-id>113</movie-id>
+      <title>Păcătoasa Teodora</title>
+    </showing>
+    <showing>
+      <id>304</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-08T17:45:00.000+02:00</datetime>
+      <movie-id>119</movie-id>
+      <title>Kshay</title>
+    </showing>
+    <showing>
+      <id>305</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-08T20:15:00.000+02:00</datetime>
+      <movie-id>192</movie-id>
+      <title>Joshua Tree, 1951: A Portrait of James Dean</title>
+    </showing>
+    <showing>
+      <id>306</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-08T22:30:00.000+02:00</datetime>
+      <movie-id>109</movie-id>
+      <title>Shame</title>
+    </showing>
+    <showing>
+      <id>341</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-09T13:00:00.000+02:00</datetime>
+      <movie-id>159</movie-id>
+      <title>Gone Wild</title>
+    </showing>
+    <showing>
+      <id>342</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-09T15:15:00.000+02:00</datetime>
+      <movie-id>44</movie-id>
+      <title>Himizu</title>
+    </showing>
+    <showing>
+      <id>343</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-09T17:45:00.000+02:00</datetime>
+      <movie-id>45</movie-id>
+      <title>Killer's Kiss</title>
+    </showing>
+    <showing>
+      <id>344</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-09T20:15:00.000+02:00</datetime>
+      <movie-id>5</movie-id>
+      <title>La fée</title>
+    </showing>
+    <showing>
+      <id>345</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-09T22:30:00.000+02:00</datetime>
+      <movie-id>135</movie-id>
+      <title>Zhao shi gu er</title>
+    </showing>
+    <showing>
+      <id>383</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-10T13:00:00.000+02:00</datetime>
+      <movie-id>194</movie-id>
+      <title>8 martie</title>
+    </showing>
+    <showing>
+      <id>384</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-10T15:00:00.000+02:00</datetime>
+      <movie-id>67</movie-id>
+      <title>Shaolin</title>
+    </showing>
+    <showing>
+      <id>385</id>
+      <venue-id>7</venue-id>
+      <datetime>2012-06-10T22:00:00.000+02:00</datetime>
+      <movie-id>42</movie-id>
+      <title>Paths of Glory</title>
+    </showing>
+    <showing>
+      <id>34</id>
+      <venue-id>8</venue-id>
+      <datetime>2012-06-01T22:00:00.000+02:00</datetime>
+      <movie-id>34</movie-id>
+      <title>The Hunter</title>
+    </showing>
+    <showing>
+      <id>72</id>
+      <venue-id>8</venue-id>
+      <datetime>2012-06-02T22:00:00.000+02:00</datetime>
+      <movie-id>72</movie-id>
+      <title>Saya - zamurai</title>
+    </showing>
+    <showing>
+      <id>111</id>
+      <venue-id>8</venue-id>
+      <datetime>2012-06-03T22:00:00.000+02:00</datetime>
+      <movie-id>57</movie-id>
+      <title>Beyrouth hôtel</title>
+    </showing>
+    <showing>
+      <id>153</id>
+      <venue-id>8</venue-id>
+      <datetime>2012-06-04T22:00:00.000+02:00</datetime>
+      <movie-id>130</movie-id>
+      <title>Fon Tok Kuen Fah</title>
+    </showing>
+    <showing>
+      <id>194</id>
+      <venue-id>8</venue-id>
+      <datetime>2012-06-05T22:00:00.000+02:00</datetime>
+      <movie-id>147</movie-id>
+      <title>Party Monster</title>
+    </showing>
+    <showing>
+      <id>235</id>
+      <venue-id>8</venue-id>
+      <datetime>2012-06-06T22:00:00.000+02:00</datetime>
+      <movie-id>167</movie-id>
+      <title>Toată lumea din familia noastră</title>
+    </showing>
+    <showing>
+      <id>271</id>
+      <venue-id>8</venue-id>
+      <datetime>2012-06-07T22:00:00.000+02:00</datetime>
+      <movie-id>77</movie-id>
+      <title>Le Skylab</title>
+    </showing>
+    <showing>
+      <id>308</id>
+      <venue-id>8</venue-id>
+      <datetime>2012-06-08T22:00:00.000+02:00</datetime>
+      <movie-id>49</movie-id>
+      <title>Le moine</title>
+    </showing>
+    <showing>
+      <id>347</id>
+      <venue-id>8</venue-id>
+      <datetime>2012-06-09T22:00:00.000+02:00</datetime>
+      <movie-id>43</movie-id>
+      <title>Marley</title>
+    </showing>
+    <showing>
+      <id>387</id>
+      <venue-id>8</venue-id>
+      <datetime>2012-06-10T22:00:00.000+02:00</datetime>
+      <movie-id>86</movie-id>
+      <title>The Snowtown Murders</title>
+    </showing>
+    <showing>
+      <id>35</id>
+      <venue-id>9</venue-id>
+      <datetime>2012-06-01T22:00:00.000+02:00</datetime>
+      <movie-id>35</movie-id>
+      <title>Shut Up Little Man! An Audio Misadventure</title>
+    </showing>
+    <showing>
+      <id>73</id>
+      <venue-id>9</venue-id>
+      <datetime>2012-06-02T22:00:00.000+02:00</datetime>
+      <movie-id>73</movie-id>
+      <title>In film nist</title>
+    </showing>
+    <showing>
+      <id>112</id>
+      <venue-id>9</venue-id>
+      <datetime>2012-06-03T22:00:00.000+02:00</datetime>
+      <movie-id>103</movie-id>
+      <title>Cerro rico, tierra rica</title>
+    </showing>
+    <showing>
+      <id>195</id>
+      <venue-id>9</venue-id>
+      <datetime>2012-06-05T22:00:00.000+02:00</datetime>
+      <movie-id>68</movie-id>
+      <title>Ambassadøren</title>
+    </showing>
+    <showing>
+      <id>237</id>
+      <venue-id>9</venue-id>
+      <datetime>2012-06-06T22:00:00.000+02:00</datetime>
+      <movie-id>169</movie-id>
+      <title>Stanley Kubrick: A Life in Pictures</title>
+    </showing>
+    <showing>
+      <id>272</id>
+      <venue-id>9</venue-id>
+      <datetime>2012-06-07T22:00:00.000+02:00</datetime>
+      <movie-id>99</movie-id>
+      <title>Két világ közt</title>
+    </showing>
+    <showing>
+      <id>309</id>
+      <venue-id>9</venue-id>
+      <datetime>2012-06-08T22:00:00.000+02:00</datetime>
+      <movie-id>66</movie-id>
+      <title>Italy: Love It, or Leave It</title>
+    </showing>
+    <showing>
+      <id>348</id>
+      <venue-id>9</venue-id>
+      <datetime>2012-06-09T22:00:00.000+02:00</datetime>
+      <movie-id>143</movie-id>
+      <title>O Lucky Malcolm!</title>
+    </showing>
+    <showing>
+      <id>388</id>
+      <venue-id>9</venue-id>
+      <datetime>2012-06-10T22:00:00.000+02:00</datetime>
+      <movie-id>108</movie-id>
+      <title>Ballroom Dancer</title>
+    </showing>
+    <showing>
+      <id>42</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-02T16:00:00.000+02:00</datetime>
+      <movie-id>42</movie-id>
+      <title>Paths of Glory</title>
+    </showing>
+    <showing>
+      <id>43</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-02T18:00:00.000+02:00</datetime>
+      <movie-id>43</movie-id>
+      <title>Marley</title>
+    </showing>
+    <showing>
+      <id>44</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-02T21:00:00.000+02:00</datetime>
+      <movie-id>44</movie-id>
+      <title>Himizu</title>
+    </showing>
+    <showing>
+      <id>82</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-03T16:00:00.000+02:00</datetime>
+      <movie-id>82</movie-id>
+      <title>L'exercice de l'État</title>
+    </showing>
+    <showing>
+      <id>83</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-03T21:00:00.000+02:00</datetime>
+      <movie-id>83</movie-id>
+      <title>Animal Kingdom</title>
+    </showing>
+    <showing>
+      <id>121</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-04T16:00:00.000+02:00</datetime>
+      <movie-id>110</movie-id>
+      <title>Khodorkovsky</title>
+    </showing>
+    <showing>
+      <id>122</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-04T18:30:00.000+02:00</datetime>
+      <movie-id>111</movie-id>
+      <title>Elles</title>
+    </showing>
+    <showing>
+      <id>123</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-04T21:00:00.000+02:00</datetime>
+      <movie-id>90</movie-id>
+      <title>Les nuits fauves</title>
+    </showing>
+    <showing>
+      <id>161</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-05T16:00:00.000+02:00</datetime>
+      <movie-id>136</movie-id>
+      <title>A.I. Artificial Intelligence</title>
+    </showing>
+    <showing>
+      <id>162</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-05T19:00:00.000+02:00</datetime>
+      <movie-id>137</movie-id>
+      <title>The Best Exotic Marigold Hotel</title>
+    </showing>
+    <showing>
+      <id>163</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-05T21:30:00.000+02:00</datetime>
+      <movie-id>130</movie-id>
+      <title>Fon Tok Kuen Fah</title>
+    </showing>
+    <showing>
+      <id>202</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-06T16:00:00.000+02:00</datetime>
+      <movie-id>95</movie-id>
+      <title>D'un film à l'autre</title>
+    </showing>
+    <showing>
+      <id>203</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-06T18:30:00.000+02:00</datetime>
+      <movie-id>24</movie-id>
+      <title>Csak a szél</title>
+    </showing>
+    <showing>
+      <id>204</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-06T20:45:00.000+02:00</datetime>
+      <movie-id>125</movie-id>
+      <title>A Clockwork Orange</title>
+    </showing>
+    <showing>
+      <id>246</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-07T16:00:00.000+02:00</datetime>
+      <movie-id>172</movie-id>
+      <title>Tyrannosaur</title>
+    </showing>
+    <showing>
+      <id>247</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-07T18:45:00.000+02:00</datetime>
+      <movie-id>173</movie-id>
+      <title>Undeva la Palilula</title>
+    </showing>
+    <showing>
+      <id>248</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-07T22:00:00.000+02:00</datetime>
+      <movie-id>23</movie-id>
+      <title>Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb</title>
+    </showing>
+    <showing>
+      <id>356</id>
+      <venue-id>10</venue-id>
+      <datetime>2012-06-10T21:30:00.000+02:00</datetime>
+      <movie-id>62</movie-id>
+      <title>Full Metal Jacket</title>
+    </showing>
+    <showing>
+      <id>71</id>
+      <venue-id>11</venue-id>
+      <datetime>2012-06-02T21:45:00.000+02:00</datetime>
+      <movie-id>71</movie-id>
+      <title>Taxi Driver</title>
+    </showing>
+    <showing>
+      <id>110</id>
+      <venue-id>11</venue-id>
+      <datetime>2012-06-03T21:45:00.000+02:00</datetime>
+      <movie-id>102</movie-id>
+      <title>Hodejegerne</title>
+    </showing>
+    <showing>
+      <id>152</id>
+      <venue-id>11</venue-id>
+      <datetime>2012-06-04T21:45:00.000+02:00</datetime>
+      <movie-id>129</movie-id>
+      <title>2001: A Space Odyssey</title>
+    </showing>
+    <showing>
+      <id>193</id>
+      <venue-id>11</venue-id>
+      <datetime>2012-06-05T21:45:00.000+02:00</datetime>
+      <movie-id>100</movie-id>
+      <title>Parada</title>
+    </showing>
+    <showing>
+      <id>234</id>
+      <venue-id>11</venue-id>
+      <datetime>2012-06-06T21:45:00.000+02:00</datetime>
+      <movie-id>166</movie-id>
+      <title>Iron Sky</title>
+    </showing>
+    <showing>
+      <id>270</id>
+      <venue-id>11</venue-id>
+      <datetime>2012-06-07T21:45:00.000+02:00</datetime>
+      <movie-id>150</movie-id>
+      <title>Hasta la Vista!</title>
+    </showing>
+    <showing>
+      <id>307</id>
+      <venue-id>11</venue-id>
+      <datetime>2012-06-08T21:45:00.000+02:00</datetime>
+      <movie-id>59</movie-id>
+      <title>SuperClásico</title>
+    </showing>
+    <showing>
+      <id>346</id>
+      <venue-id>11</venue-id>
+      <datetime>2012-06-09T21:45:00.000+02:00</datetime>
+      <movie-id>195</movie-id>
+      <title>Et si on vivait tous ensemble?</title>
+    </showing>
+    <showing>
+      <id>386</id>
+      <venue-id>11</venue-id>
+      <datetime>2012-06-10T21:45:00.000+02:00</datetime>
+      <movie-id>196</movie-id>
+      <title>Starbuck</title>
+    </showing>
+    <showing>
+      <id>74</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-02T18:00:00.000+02:00</datetime>
+      <movie-id>74</movie-id>
+      <title>Gang de qin</title>
+    </showing>
+    <showing>
+      <id>75</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-02T20:30:00.000+02:00</datetime>
+      <movie-id>75</movie-id>
+      <title>Go-hyang-i: Jook-eum-eul Bo-neun Doo Gae-eui Noon</title>
+    </showing>
+    <showing>
+      <id>113</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-03T18:00:00.000+02:00</datetime>
+      <movie-id>104</movie-id>
+      <title>Opfindelsen af Dr. Nakamats</title>
+    </showing>
+    <showing>
+      <id>114</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-03T20:30:00.000+02:00</datetime>
+      <movie-id>105</movie-id>
+      <title>Dragonslayer</title>
+    </showing>
+    <showing>
+      <id>154</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-04T18:00:00.000+02:00</datetime>
+      <movie-id>131</movie-id>
+      <title>Ouwehoeren</title>
+    </showing>
+    <showing>
+      <id>155</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-04T20:30:00.000+02:00</datetime>
+      <movie-id>132</movie-id>
+      <title>Detective Dee and the Mystery of the Phantom Flame</title>
+    </showing>
+    <showing>
+      <id>196</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-05T18:00:00.000+02:00</datetime>
+      <movie-id>148</movie-id>
+      <title>Under the Hawthorn Tree</title>
+    </showing>
+    <showing>
+      <id>197</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-05T20:30:00.000+02:00</datetime>
+      <movie-id>7</movie-id>
+      <title>Aftershock</title>
+    </showing>
+    <showing>
+      <id>238</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-06T18:00:00.000+02:00</datetime>
+      <movie-id>108</movie-id>
+      <title>Ballroom Dancer</title>
+    </showing>
+    <showing>
+      <id>239</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-06T20:30:00.000+02:00</datetime>
+      <movie-id>18</movie-id>
+      <title>Spartacus</title>
+    </showing>
+    <showing>
+      <id>273</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-07T18:00:00.000+02:00</datetime>
+      <movie-id>152</movie-id>
+      <title>Din dragoste cu cele mai bune intenții</title>
+    </showing>
+    <showing>
+      <id>274</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-07T20:30:00.000+02:00</datetime>
+      <movie-id>67</movie-id>
+      <title>Shaolin</title>
+    </showing>
+    <showing>
+      <id>310</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-08T18:00:00.000+02:00</datetime>
+      <movie-id>126</movie-id>
+      <title>900 Dagen</title>
+    </showing>
+    <showing>
+      <id>311</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-08T20:30:00.000+02:00</datetime>
+      <movie-id>56</movie-id>
+      <title>Masks</title>
+    </showing>
+    <showing>
+      <id>349</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-09T18:00:00.000+02:00</datetime>
+      <movie-id>68</movie-id>
+      <title>Ambassadøren</title>
+    </showing>
+    <showing>
+      <id>350</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-09T20:30:00.000+02:00</datetime>
+      <movie-id>15</movie-id>
+      <title>Reacciones adversas</title>
+    </showing>
+    <showing>
+      <id>389</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-10T18:00:00.000+02:00</datetime>
+      <movie-id>135</movie-id>
+      <title>Zhao shi gu er</title>
+    </showing>
+    <showing>
+      <id>390</id>
+      <venue-id>12</venue-id>
+      <datetime>2012-06-10T20:30:00.000+02:00</datetime>
+      <movie-id>183</movie-id>
+      <title>I bóg stworzł seks</title>
+    </showing>
+  </showings>
+</festival-programme>

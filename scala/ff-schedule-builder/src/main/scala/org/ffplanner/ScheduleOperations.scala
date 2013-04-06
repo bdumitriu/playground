@@ -4,10 +4,8 @@ import com.google.common.collect.TreeRangeSet
 import org.joda.time.DateTime
 
 /**
- *
- *
- * @author Bogdan Dumitriu
- */
+  * @author Bogdan Dumitriu
+  */
 trait ScheduleOperations {
 
   /**

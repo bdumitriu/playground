@@ -2,12 +2,11 @@ package org.ffplanner
 
 import `def`.ConstraintDefinition
 
-/**
- * Wrapper around [[org.ffplanner.def.ConstraintDefinition ConstraintDefinition.Movie]] that ensures proper
- * definition of `equals`/`hashCode`.
- *
- * @author Bogdan Dumitriu
- */
+/** Wrapper around [[org.ffplanner.def.ConstraintDefinition ConstraintDefinition.Movie]] that ensures proper
+  * definition of `equals`/`hashCode`.
+  *
+  * @author Bogdan Dumitriu
+  */
 class MovieConstraint(val movieId: Long, val priority: Short) {
 
   def this(movieConstraint: ConstraintDefinition.Movie) = this(movieConstraint.getMovieId, movieConstraint.getPriority)

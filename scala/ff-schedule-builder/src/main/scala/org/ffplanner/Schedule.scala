@@ -3,10 +3,8 @@ package org.ffplanner
 import collection.JavaConversions.setAsJavaSet
 
 /**
- *
- *
- * @author Bogdan Dumitriu
- */
+  * @author Bogdan Dumitriu
+  */
 class Schedule(val showingIds: Set[Long], val missedMovieIds: Set[Long]) extends ScheduleOperations {
 
   val cachedShowingIdsJ: java.util.Set[java.lang.Long] = showingIds.map {Long.box(_)}

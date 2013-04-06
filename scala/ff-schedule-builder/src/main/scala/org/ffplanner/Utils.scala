@@ -3,10 +3,8 @@ package org.ffplanner
 import scala.collection.JavaConversions.collectionAsScalaIterable
 
 /**
- *
- *
- * @author Bogdan Dumitriu
- */
+  * @author Bogdan Dumitriu
+  */
 object Utils {
 
   def ensureNonNull[T](collection: java.util.Collection[T]): List[T] =

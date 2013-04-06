@@ -202,7 +202,7 @@ class ScheduleTests extends FunSuite with ShouldMatchers with TestFestivalProgra
     val intervals: RangeSet[DateTime] = schedule.getShowingsIntervals(festivalProgramme)
     for (missedMovieId <- schedule.missedMovieIds) {
       for (movieShowing <- festivalProgramme.showingsOf(missedMovieId)) {
-        assert(movieShowing.overlapsWith(intervals) || !movieShowing.within(scheduleConstraints),
+        assert(movieShowing.overlapsWith(intervals) || !movieShowing.within(scheduleConstraints.getTimeConstraints),
           "Unscheduled movie "+missedMovieId+" could have been scheduled in the slot:\n\t\t"+movieShowing)
       }
     }

@@ -13,11 +13,11 @@ import static java.util.Collections.emptyList;
  *
  * @author Bogdan Dumitriu
  */
-public interface ScheduleConstraints {
+public interface ScheduleConstraintsDefinition {
 
-    ScheduleConstraints EMPTY = new Empty();
+    ScheduleConstraintsDefinition EMPTY = new Empty();
 
-    class Empty implements ScheduleConstraints {
+    class Empty implements ScheduleConstraintsDefinition {
 
         private Empty() {}
 

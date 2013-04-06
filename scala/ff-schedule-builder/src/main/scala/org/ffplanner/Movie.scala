@@ -3,12 +3,11 @@ package org.ffplanner
 import `def`.MovieDefinition
 import org.joda.time.{DateTimeConstants, Period}
 
-/**
- * Wrapper around [[org.ffplanner.def.MovieDefinition MovieDefinition]] that ensures proper definition of
- * `equals`/`hashCode`.
- *
- * @author Bogdan Dumitriu
- */
+/** Wrapper around [[org.ffplanner.def.MovieDefinition MovieDefinition]] that ensures proper definition of
+  * `equals`/`hashCode`.
+  *
+  * @author Bogdan Dumitriu
+  */
 class Movie(val id: Long, val duration: Period) {
 
   def this(movieDefinition: MovieDefinition) = this(movieDefinition.getId, movieDefinition.getDuration)

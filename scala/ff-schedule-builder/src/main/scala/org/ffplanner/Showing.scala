@@ -1,15 +1,14 @@
 package org.ffplanner
 
-import `def`.{ScheduleConstraints, ShowingDefinition}
+import `def`.{ScheduleConstraintsDefinition, ShowingDefinition}
 import org.joda.time.DateTime
-import com.google.common.collect.{RangeSet, Range}
+import com.google.common.collect.{ImmutableRangeSet, RangeSet, Range}
 
-/**
- * Wrapper around [[org.ffplanner.def.ShowingDefinition ShowingDefinition]] that ensures proper definition of
- * `equals`/`hashCode`.
- *
- * @author Bogdan Dumitriu
- */
+/** Wrapper around [[org.ffplanner.def.ShowingDefinition ShowingDefinition]] that ensures proper definition of
+  * `equals`/`hashCode`.
+  *
+  * @author Bogdan Dumitriu
+  */
 class Showing(val id: Long, val venueId: Long, val dateTime: DateTime, val movie: Movie) {
 
   val interval: Range[DateTime] = Range.closedOpen(this.dateTime, this.dateTime.plus(this.movie.duration))
@@ -17,7 +16,7 @@ class Showing(val id: Long, val venueId: Long, val dateTime: DateTime, val movie
   def this(showingDefinition: ShowingDefinition) = this(showingDefinition.getId, showingDefinition.getVenueId,
     showingDefinition.getDateTime, new Movie(showingDefinition.getMovie))
 
-  def within(scheduleConstraints: ScheduleConstraints) = scheduleConstraints.getTimeConstraints.encloses(interval)
+  def within(timeConstraints: ImmutableRangeSet[DateTime]) = timeConstraints.encloses(interval)
 
   def overlapsWith(showing: Showing) =
     interval.isConnected(showing.interval) && !interval.intersection(showing.interval).isEmpty

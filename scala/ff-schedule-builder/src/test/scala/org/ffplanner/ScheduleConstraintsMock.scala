@@ -1,6 +1,6 @@
 package org.ffplanner
 
-import org.ffplanner.`def`.{ConstraintDefinition, ScheduleConstraints}
+import org.ffplanner.`def`.{ConstraintDefinition, ScheduleConstraintsDefinition}
 import scala.collection.JavaConversions.asJavaCollection
 import org.joda.time.DateTime
 import com.google.common.collect.{Range, ImmutableRangeSet}
@@ -11,7 +11,7 @@ import com.google.common.collect.{Range, ImmutableRangeSet}
 class ScheduleConstraintsMock(
     val movieConstraints: Set[MovieConstraintMock],
     val showingConstraints: Set[ShowingConstraintMock])
-  extends ScheduleConstraints with ScheduleOperations {
+  extends ScheduleConstraintsDefinition with ScheduleOperations {
 
   def getShowingConstraints: java.util.Collection[ConstraintDefinition.Showing] = showingConstraints
 

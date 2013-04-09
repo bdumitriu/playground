@@ -33,6 +33,10 @@ public class MovieBundleInFestivalBean extends EntityBean<MovieBundleInFestival>
         return MovieBundleInFestival.class;
     }
 
+    public MovieBundleInFestival find(Long movieBundleInFestivalId) {
+        return entityManager.find(MovieBundleInFestival.class, movieBundleInFestivalId);
+    }
+
     public MovieBundleInFestival find(Long movieBundleId, Long festivalEditionId, Long sectionId) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<MovieBundleInFestival> query = criteriaBuilder.createQuery(getEntityClass());

@@ -3,12 +3,14 @@ package org.ffplanner.controller;
 import org.ffplanner.Schedule;
 import org.ffplanner.ScheduleBuilder;
 import org.ffplanner.bean.FestivalEditionBean;
+import org.ffplanner.bean.MovieBundleInFestivalBean;
 import org.ffplanner.bean.ShowingBean;
 import org.ffplanner.bean.UserScheduleBean;
 import org.ffplanner.bean.programme.DayProgramme;
 import org.ffplanner.bean.programme.FestivalEditionProgramme;
 import org.ffplanner.bean.programme.FestivalProgrammeBean;
 import org.ffplanner.controller.constraints.ConstraintsData;
+import org.ffplanner.controller.constraints.ConstraintsDumper;
 import org.ffplanner.converter.DayConverter;
 import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.ScheduleConstraintType;
@@ -18,15 +20,14 @@ import org.ffplanner.qualifier.LoggedInUser;
 import org.joda.time.DateTime;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static org.ffplanner.entity.ScheduleConstraintType.MOVIE;
-import static org.ffplanner.entity.ScheduleConstraintType.SHOWING;
-import static org.ffplanner.entity.ScheduleConstraintType.SHOWING_ELSEWHERE;
+import static org.ffplanner.entity.ScheduleConstraintType.*;
 import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID;
 import static org.joda.time.DateTimeConstants.JUNE;
 
@@ -55,6 +56,9 @@ public class DayScheduleController implements Serializable {
 
     @Inject
     private FestivalEditionBean festivalEditionBean;
+
+    @Inject
+    private MovieBundleInFestivalBean movieBundleInFestivalBean;
 
     private final Hour[] hours;
 
@@ -177,10 +181,27 @@ public class DayScheduleController implements Serializable {
     }
 
     public void suggestSchedule() {
+        try {
+            dumpConstraints();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         final ScheduleBuilder scheduleBuilder = festivalProgrammeBean.getScheduleBuilder(DEFAULT_FESTIVAL_EDITION_ID);
         final Schedule schedule = scheduleBuilder.getPossibleSchedulesJ(constraintsData.asScheduleConstraints()).get(0);
         scheduledShowings = new LinkedList<>();
         scheduledShowings.addAll(schedule.showingIdsJ());
+    }
+
+    private void dumpConstraints() throws IOException{
+        final FacesContext facesContext = FacesContext.getCurrentInstance();
+        final String path = facesContext.getExternalContext().getRealPath("constraints.xml");
+        final File file = new File(path);
+        try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+            final ConstraintsDumper constraintsDumper = new ConstraintsDumper(constraintsData.asScheduleConstraints());
+            constraintsDumper.setMovieBundleInFestivalBean(movieBundleInFestivalBean);
+            constraintsDumper.setShowingBean(showingBean);
+            constraintsDumper.write(outputStream);
+        }
     }
 
     public void discardSchedule() {

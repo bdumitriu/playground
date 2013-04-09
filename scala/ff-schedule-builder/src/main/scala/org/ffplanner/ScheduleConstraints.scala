@@ -15,21 +15,17 @@ class ScheduleConstraints(
     val timeConstraints: ImmutableRangeSet[DateTime]) {
 
   def this(constraints: ScheduleConstraintsDefinition) = this(
-    Utils.ensureNonNull(safeConstraints(constraints).getMovieConstraints).map(new MovieConstraint(_)).toSet,
-    Utils.ensureNonNull(safeConstraints(constraints).getShowingConstraints).map(new ShowingConstraint(_)).toSet,
-    safeTimeConstraints(constraints)
+    Utils.ensureNonNull(Utils.safeConstraints(constraints).getMovieConstraints).map(new MovieConstraint(_)).toSet,
+    Utils.ensureNonNull(Utils.safeConstraints(constraints).getShowingConstraints).map(new ShowingConstraint(_)).toSet,
+    Utils.safeTimeConstraints(constraints)
   )
+
+  def this(movieConstraints: Set[MovieConstraint], showingConstraints: Set[ShowingConstraint]) =
+    this(movieConstraints, showingConstraints, Utils.noTimeConstraints)
 
   val movieConstraintIds: Set[Long] = movieConstraints map { s => Long2long(s.movieId) }
 
   val showingConstraintIds: Set[Long] = showingConstraints map { s => Long2long(s.showingId) }
 
-  private def safeConstraints(constraints: ScheduleConstraintsDefinition) = {
-    Option(constraints).getOrElse(ScheduleConstraintsDefinition.EMPTY)
-  }
 
-  private def safeTimeConstraints(constraints: ScheduleConstraintsDefinition) = {
-    Option(safeConstraints(constraints).getTimeConstraints).getOrElse(
-      ImmutableRangeSet.of(Range.closedOpen(new DateTime(Long.MinValue), new DateTime(Long.MaxValue))))
-  }
 }

@@ -6,6 +6,8 @@ version := "1.0-SNAPSHOT"
 
 scalaVersion := "2.10.0"
 
+scalacOptions ++= Seq("-feature")
+
 libraryDependencies += "org.scalaj" % "scalaj-time_2.10.0-M7" % "0.6" withSources()
 
 libraryDependencies += "joda-time" % "joda-time" % "2.2" withSources()

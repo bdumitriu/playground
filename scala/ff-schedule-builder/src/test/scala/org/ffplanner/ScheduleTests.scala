@@ -13,7 +13,7 @@ import org.scalatest.matchers.ShouldMatchers
   * @author Bogdan Dumitriu
   */
 @RunWith(classOf[JUnitRunner])
-class ScheduleTests extends FunSuite with ShouldMatchers with TestFestivalProgrammes{
+class ScheduleTests extends FunSuite with ShouldMatchers with TestFestivalProgrammes {
 
   trait TestFixture1 {
     val festivalProgrammeDefinition: FestivalProgrammeDefinition = festivalProgrammeDefinition1

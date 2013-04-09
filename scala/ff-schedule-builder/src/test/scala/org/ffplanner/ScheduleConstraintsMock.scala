@@ -17,9 +17,7 @@ class ScheduleConstraintsMock(
 
   def getMovieConstraints: java.util.Collection[ConstraintDefinition.Movie] = movieConstraints
 
-  def getTimeConstraints: ImmutableRangeSet[DateTime] =
-    ImmutableRangeSet.of(
-      Range.closedOpen(new DateTime(java.lang.Long.MIN_VALUE), new DateTime(java.lang.Long.MAX_VALUE)))
+  def getTimeConstraints: ImmutableRangeSet[DateTime] = Utils.noTimeConstraints
 
   def getShowingsIntervals(festivalProgramme: FestivalProgramme) =
     getIntervalsOf(showingConstraints.map { showingConstraint => showingConstraint.showingId }, festivalProgramme)

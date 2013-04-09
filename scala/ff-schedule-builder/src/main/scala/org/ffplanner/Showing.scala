@@ -39,3 +39,15 @@ class Showing(val id: Long, val venueId: Long, val dateTime: DateTime, val movie
   private def toString(dateTime: DateTime) =
     dateTime.hourOfDay.get.formatted("%02d")+":"+dateTime.minuteOfHour.get.formatted("%02d")
 }
+
+object Showing {
+
+  implicit object ShowingOrdering extends Ordering[Showing] {
+    def compare(s1: Showing, s2: Showing): Int = {
+      s1.dateTime compareTo s2.dateTime match {
+        case result if result == 0 => s1.id compare s2.id
+        case result => result
+      }
+    }
+  }
+}

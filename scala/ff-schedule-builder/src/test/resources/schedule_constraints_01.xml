@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schedule-constraints>
+    <movies>
+        <movie>
+            <id>1</id>
+            <priority>2</priority>
+            <title>Le tableau</title>
+        </movie>
+        <movie>
+            <id>5</id>
+            <priority>2</priority>
+            <title>La fée</title>
+        </movie>
+        <movie>
+            <id>8</id>
+            <priority>2</priority>
+            <title>Scurtmetraje ZFR - Partea 1</title>
+        </movie>
+        <movie>
+            <id>14</id>
+            <priority>2</priority>
+            <title>Paziraie sadeh</title>
+        </movie>
+        <movie>
+            <id>16</id>
+            <priority>2</priority>
+            <title>Babycall</title>
+        </movie>
+    </movies>
+    <showings>
+        <showing>
+            <id>96</id>
+            <priority>2</priority>
+            <datetime>2012-06-03T17:30:00.000+02:00</datetime>
+            <venue-id>4</venue-id>
+            <movie-id>91</movie-id>
+            <title>Veljekset</title>
+        </showing>
+    </showings>
+</schedule-constraints>

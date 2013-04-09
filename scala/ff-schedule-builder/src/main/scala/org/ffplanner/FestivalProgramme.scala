@@ -2,6 +2,7 @@ package org.ffplanner
 
 import `def`.{ShowingDefinition, FestivalProgrammeDefinition}
 import collection.immutable.SortedSet
+import org.ffplanner.Showing.ShowingOrdering
 
 /** Stores the movies and showings that define the programme of a festival.
   *
@@ -10,9 +11,10 @@ import collection.immutable.SortedSet
 class FestivalProgramme(festivalProgrammeDefinition: FestivalProgrammeDefinition) {
 
   private val sortedShowings: SortedSet[Showing] =
-    SortedSet(wrap(festivalProgrammeDefinition.getShowings): _*)(Ordering.fromLessThan(sortBefore))
+    SortedSet(wrap(festivalProgrammeDefinition.getShowings): _*)
 
-  private val movieShowings: Map[Movie, SortedSet[Showing]] = sortedShowings groupBy { _.movie }
+  private val movieShowings: Map[Movie, SortedSet[Showing]] =
+    sortedShowings groupBy { _.movie } withDefaultValue SortedSet[Showing]()
 
   private val showings: Map[Long, Showing] = sortedShowings.map(s => (Long2long(s.id), s)).toMap
 
@@ -20,14 +22,6 @@ class FestivalProgramme(festivalProgrammeDefinition: FestivalProgrammeDefinition
 
   private def wrap(showings: java.util.List[ShowingDefinition]): List[Showing] =
     Utils.ensureNonNull(showings).map(new Showing(_))
-
-  private def sortBefore(s1: Showing, s2: Showing): Boolean = {
-    s1.dateTime compareTo s2.dateTime match {
-      case result if result < 0 => true
-      case result if result == 0 => s1.id < s2.id
-      case _ => false
-    }
-  }
 
   def getSortedShowings = sortedShowings
 

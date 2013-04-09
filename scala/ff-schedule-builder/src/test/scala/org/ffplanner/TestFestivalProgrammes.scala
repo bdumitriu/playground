@@ -3,7 +3,8 @@ package org.ffplanner
 import `def`.{ShowingDefinition, FestivalProgrammeDefinition}
 import org.joda.time.{Period, DateTime}
 import java.util
-import xml.XML
+import org.ffplanner.io.FestivalProgrammeXmlParser
+import scala.collection.JavaConversions.seqAsJavaList
 
 /** Festival programmes that can be used in tests.
   *
@@ -116,25 +117,7 @@ trait TestFestivalProgrammes {
 
   val tiff2012ProgrammeDefinition = new FestivalProgrammeDefinition {
 
-    var movieList: List[MovieMock] = List()
-
-    val showings: java.util.LinkedList[ShowingDefinition] = new java.util.LinkedList[ShowingDefinition]()
-
-    val programmeElem = XML.load(classOf[TestFestivalProgrammes].getResourceAsStream("/tiff_2012_programme.xml"))
-
-    (programmeElem \\ "movie").map { movie =>
-      movieList ::= new MovieMock((movie \ "id").text.toLong, Period.minutes((movie \ "duration").text.toInt))
-    }
-
-    val movies: Map[Long, MovieMock] = movieList.map(m => (m.id, m)).toMap
-
-    (programmeElem \\ "showing").map { showing =>
-      showings.add(new ShowingMock(
-        (showing \ "id").text.toLong,
-        (showing \ "venue-id").text.toLong,
-        DateTime.parse((showing \ "datetime").text),
-        movies((showing \ "movie-id").text.toLong)))
-    }
+    val showings: util.List[ShowingDefinition] = new FestivalProgrammeXmlParser("/tiff_2012_programme.xml").showings
 
     def getShowings: util.List[ShowingDefinition] = {
       showings

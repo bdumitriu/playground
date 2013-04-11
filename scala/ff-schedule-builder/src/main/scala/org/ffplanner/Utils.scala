@@ -10,8 +10,10 @@ import com.google.common.collect.{Range, ImmutableRangeSet}
   */
 object Utils {
 
-  val noTimeConstraints =
+  val NoTimeConstraints =
     ImmutableRangeSet.of(Range.closedOpen(new DateTime(Long.MinValue), new DateTime(Long.MaxValue)))
+
+  val DefaultPriority: Short = 2
 
   def ensureNonNull[T](collection: java.util.Collection[T]): List[T] = {
     Option(collection).getOrElse(java.util.Collections.emptyList()).toList
@@ -22,6 +24,6 @@ object Utils {
   }
 
   def safeTimeConstraints(constraints: ScheduleConstraintsDefinition) = {
-    Option(safeConstraints(constraints).getTimeConstraints).getOrElse(noTimeConstraints)
+    Option(safeConstraints(constraints).getTimeConstraints).getOrElse(NoTimeConstraints)
   }
 }

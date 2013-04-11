@@ -1,7 +1,7 @@
 package org.ffplanner
 
 import `def`.{ShowingDefinition, FestivalProgrammeDefinition}
-import collection.immutable.SortedSet
+import scala.collection.immutable.SortedSet
 import org.ffplanner.Showing.ShowingOrdering
 
 /** Stores the movies and showings that define the programme of a festival.
@@ -16,7 +16,9 @@ class FestivalProgramme(festivalProgrammeDefinition: FestivalProgrammeDefinition
   private val movieShowings: Map[Movie, SortedSet[Showing]] =
     sortedShowings groupBy { _.movie } withDefaultValue SortedSet[Showing]()
 
-  private val showings: Map[Long, Showing] = sortedShowings.map(s => (Long2long(s.id), s)).toMap
+  private val movies: Map[Long, Movie] = movieShowings.keySet.map(m => (m.id, m)).toMap
+
+  private val showings: Map[Long, Showing] = sortedShowings.map(s => (s.id, s)).toMap
 
   private val conflictMap: ConflictMap = new ConflictMap(this)
 
@@ -25,9 +27,13 @@ class FestivalProgramme(festivalProgrammeDefinition: FestivalProgrammeDefinition
 
   def getSortedShowings = sortedShowings
 
+  def getMovies = movieShowings.keySet
+
   def showingsOf(movieId: Long): SortedSet[Showing] = showingsOf(new Movie(movieId))
 
   def showingsOf(movie: Movie): SortedSet[Showing] = movieShowings(movie)
+
+  def getMovie(movieId: Long): Movie = movies(movieId)
 
   def getShowing(showingId: Long): Showing = showings(showingId)
 

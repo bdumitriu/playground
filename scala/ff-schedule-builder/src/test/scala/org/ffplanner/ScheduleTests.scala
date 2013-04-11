@@ -1,19 +1,20 @@
 package org.ffplanner
 
 import `def`._
-import org.joda.time.{Period, DateTime}
+import org.joda.time.DateTime
 import org.scalatest.FunSuite
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import com.google.common.collect.{TreeRangeSet, RangeSet}
 import org.scalatest.matchers.ShouldMatchers
+import org.ffplanner.TestFestivalProgrammes._
 
 /** Unit tests for [[org.ffplanner.ScheduleCreator ScheduleCreator]].
   *
   * @author Bogdan Dumitriu
   */
 @RunWith(classOf[JUnitRunner])
-class ScheduleTests extends FunSuite with ShouldMatchers with TestFestivalProgrammes {
+class ScheduleTests extends FunSuite with ShouldMatchers {
 
   trait TestFixture1 {
     val festivalProgrammeDefinition: FestivalProgrammeDefinition = festivalProgrammeDefinition1

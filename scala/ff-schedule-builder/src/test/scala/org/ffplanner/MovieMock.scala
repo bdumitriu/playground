@@ -1,7 +1,7 @@
 package org.ffplanner
 
 import `def`.MovieDefinition
-import org.joda.time.{DateTimeConstants, Period}
+import org.joda.time.Period
 import java.lang
 
 /**

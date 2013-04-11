@@ -3,7 +3,7 @@ package org.ffplanner
 import org.ffplanner.`def`.{ConstraintDefinition, ScheduleConstraintsDefinition}
 import scala.collection.JavaConversions.asJavaCollection
 import org.joda.time.DateTime
-import com.google.common.collect.{Range, ImmutableRangeSet}
+import com.google.common.collect.ImmutableRangeSet
 
 /**
   * @author Bogdan Dumitriu
@@ -17,7 +17,7 @@ class ScheduleConstraintsMock(
 
   def getMovieConstraints: java.util.Collection[ConstraintDefinition.Movie] = movieConstraints
 
-  def getTimeConstraints: ImmutableRangeSet[DateTime] = Utils.noTimeConstraints
+  def getTimeConstraints: ImmutableRangeSet[DateTime] = Utils.NoTimeConstraints
 
   def getShowingsIntervals(festivalProgramme: FestivalProgramme) =
     getIntervalsOf(showingConstraints.map { showingConstraint => showingConstraint.showingId }, festivalProgramme)

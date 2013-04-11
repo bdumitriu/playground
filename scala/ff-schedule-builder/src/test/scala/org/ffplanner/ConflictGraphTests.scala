@@ -5,17 +5,19 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FunSuite
 import org.ffplanner.ConflictGraph.Node
+import org.ffplanner.TestFestivalProgrammes.tiff2012Programme
+import org.ffplanner.TestScheduleConstraints._
 
 /** Unit tests for [[org.ffplanner.ConflictGraph SchedulingGraph]].
   *
   * @author Bogdan Dumitriu
   */
 @RunWith(classOf[JUnitRunner])
-class ConflictGraphTests extends FunSuite with ShouldMatchers with TestFestivalProgrammes with TestScheduleConstraints {
+class ConflictGraphTests extends FunSuite with ShouldMatchers {
 
   trait TestFixture1 {
     val graph: ConflictGraph = new ConflictGraph(tiff2012Programme)
-    graph.initializeWith(new ScheduleConstraints(Set((1L to 198).map(new MovieConstraint(_, 2)): _*), Set.empty))
+    graph.initializeWith(tiff2012AllMovieConstraints)
   }
 
   trait TestFixture2 {

@@ -2,7 +2,6 @@ package org.ffplanner
 
 import `def`.{MovieDefinition, ShowingDefinition}
 import org.joda.time.DateTime
-import com.google.common.collect.Range
 import java.lang
 
 /**

@@ -10,7 +10,7 @@ import scala.collection.JavaConversions.seqAsJavaList
   *
   * @author Bogdan Dumitriu
   */
-trait TestFestivalProgrammes {
+object TestFestivalProgrammes {
 
   /** 1 movie shown twice in a row at the same venue */
   val festivalProgrammeDefinition1 = new FestivalProgrammeDefinition {

@@ -7,16 +7,17 @@ import `def`.ConstraintDefinition
   *
   * @author Bogdan Dumitriu
   */
-class MovieConstraint(val movieId: Long, val priority: Short) {
+class MovieConstraint(val movie: Movie, val priority: Short) {
 
-  def this(movieConstraint: ConstraintDefinition.Movie) = this(movieConstraint.getMovieId, movieConstraint.getPriority)
+  def this(festivalProgramme: FestivalProgramme, movieConstraint: ConstraintDefinition.Movie) =
+    this(festivalProgramme.getMovie(movieConstraint.getMovieId), movieConstraint.getPriority)
 
   def canEqual(other: Any): Boolean = other.isInstanceOf[MovieConstraint]
 
   override def equals(other: Any): Boolean = other match {
-    case that: MovieConstraint => this.canEqual(that) && this.movieId == that.movieId
+    case that: MovieConstraint => this.canEqual(that) && this.movie == that.movie
     case _ => false
   }
 
-  override def hashCode: Int = movieId.hashCode
+  override def hashCode: Int = movie.hashCode
 }

@@ -17,5 +17,5 @@ class ScheduleBuilder(val festivalProgrammeDefinition: FestivalProgrammeDefiniti
     getPossibleSchedules(scheduleConstraints)
 
   def getPossibleSchedules(scheduleConstraints: ScheduleConstraintsDefinition): List[Schedule] =
-    new ScheduleCreator(this, new ScheduleConstraints(scheduleConstraints)).getSchedules
+    new ScheduleCreator(this, new ScheduleConstraints(festivalProgramme, scheduleConstraints)).getSchedules
 }

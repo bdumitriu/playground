@@ -1,10 +1,13 @@
 package org.ffplanner
 
+import org.ffplanner.ConflictGraph.Node
+import scala.collection.immutable.{Iterable, SortedSet}
+
 /** Creates a schedule starting from the input `constraints`.
   *
   * @author Bogdan Dumitriu
   */
-class ScheduleCreator(val scheduleBuilder: ScheduleBuilder, val constraints: ScheduleConstraints)
+class ScheduleCreator(val scheduleBuilder: ScheduleBuilder, val scheduleConstraints: ScheduleConstraints)
   extends ScheduleOperations {
 
   val festivalProgramme: FestivalProgramme = scheduleBuilder.festivalProgramme
@@ -13,47 +16,44 @@ class ScheduleCreator(val scheduleBuilder: ScheduleBuilder, val constraints: Sch
     * @return one or more proposed schedules.
     */
   def getSchedules: List[Schedule] = {
-    class ConflictSplit(val nonConflictShowingIds: Set[Long], val conflictMovieIds: Set[Long])
-
-    /** Divides the `movieIdsToSchedule` into no conflicts (for which the first non conflictual showing id is returned) /
-      * with conflicts (for which the movieId is returned).
-      *
-      * @param scheduledShowingIds the showings that are already scheduled
-      * @param movieIdsToSchedule the movies to split
-      * @return the set of non conflictual showing ids and the set of movies for which no showing is conflict-free.
-      */
-    def splitMovieIds(scheduledShowingIds: Set[Long], movieIdsToSchedule: Set[Long]): ConflictSplit = {
-
-      def splitAccordingToConflict(acc: ConflictSplit, movieIdToSchedule: Long): ConflictSplit = {
-        getEarliestShowingIdWithNoConflict(movieIdToSchedule, movieIdsToSchedule, scheduledShowingIds) match {
-          case Some(showingId) => new ConflictSplit(acc.nonConflictShowingIds + showingId, acc.conflictMovieIds)
-          case None => new ConflictSplit(acc.nonConflictShowingIds, acc.conflictMovieIds + movieIdToSchedule)
-        }
-      }
-
-      movieIdsToSchedule.foldLeft(new ConflictSplit(Set(), Set()))(splitAccordingToConflict)
-    }
-
-    def getEarliestShowingIdWithNoConflict(movieId: Long, movieIds: Set[Long], showingIds: Set[Long]): Option[Long] = {
-      festivalProgramme.showingsOf(movieId).
-        find(s => festivalProgramme.getConflictsOf(s.id, movieIds, showingIds).isEmpty).map(_.id)
-    }
-
-    def getSchedules0(showingIds: Set[Long], movieIds: Set[Long]): ConflictSplit = {
-      val conflictSplit: ConflictSplit = splitMovieIds(showingIds, movieIds)
-      if (conflictSplit.nonConflictShowingIds.isEmpty) {
-        new ConflictSplit(showingIds, conflictSplit.conflictMovieIds)
+    def chooseShowing(conflictGraph: ConflictGraph): Option[Long] = {
+      val candidates: Set[Node] = conflictGraph.getNodesWithNeighbourCount(1)
+      if (candidates.isEmpty) {
+        None
       } else {
-        getSchedules0(showingIds ++ conflictSplit.nonConflictShowingIds, conflictSplit.conflictMovieIds)
+        Some(candidates.head.showingId)
       }
     }
 
-    val conflictSplit: ConflictSplit = getSchedules0(constraints.showingConstraintIds, constraints.movieConstraintIds)
-    List(new Schedule(conflictSplit.nonConflictShowingIds, conflictSplit.conflictMovieIds))
+    def getSchedules0(conflictGraph: ConflictGraph, scheduledShowingIds: Set[Long]): Set[Long] = {
+      val scheduleableShowings: SortedSet[Node] = conflictGraph.getIsolatedNodes
+      if (scheduleableShowings.isEmpty) {
+        chooseShowing(conflictGraph) match {
+          case Some(showingId) => {
+            conflictGraph.updateWith(showingId)
+            getSchedules0(conflictGraph, scheduledShowingIds + showingId)
+          }
+          case None => scheduledShowingIds
+        }
+      } else {
+        val scheduleableShowingIds: Iterable[Long] = scheduleableShowings.groupBy(_.movieId).map(_._2.head.showingId)
+        scheduleableShowingIds.foreach(conflictGraph.updateWith)
+        getSchedules0(conflictGraph, scheduledShowingIds ++ scheduleableShowingIds)
+      }
+    }
+
+    def getRemainingMovieIds(scheduledShowingIds: Set[Long]): Set[Long] = {
+      scheduleConstraints.movieConstraintIds -- scheduledShowingIds.map(festivalProgramme.getShowing(_).movie.id)
+    }
+
+    val conflictGraph: ConflictGraph = new ConflictGraph(festivalProgramme)
+    conflictGraph.initializeWith(scheduleConstraints)
+    val scheduledShowingIds: Set[Long] = getSchedules0(conflictGraph, scheduleConstraints.showingConstraintIds)
+    List(new Schedule(scheduledShowingIds, getRemainingMovieIds(scheduledShowingIds)))
   }
 
   /**
    * @return a range set covering the intervals of all the showings imposed via the `showingsConstraints`.
    */
-  def getShowingsIntervals = getIntervalsOf(constraints.showingConstraintIds, festivalProgramme)
+  def getShowingsIntervals = getIntervalsOf(scheduleConstraints.showingConstraintIds, festivalProgramme)
 }

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schedule-constraints>
+  <movies>
+    <movie>
+      <id>2</id>
+      <priority>2</priority>
+      <title>Hail</title>
+    </movie>
+    <movie>
+      <id>4</id>
+      <priority>2</priority>
+      <title>Poongsan</title>
+    </movie>
+    <movie>
+      <id>5</id>
+      <priority>2</priority>
+      <title>La fée</title>
+    </movie>
+    <movie>
+      <id>8</id>
+      <priority>2</priority>
+      <title>Scurtmetraje ZFR - Partea 1</title>
+    </movie>
+    <movie>
+      <id>10</id>
+      <priority>2</priority>
+      <title>Weekend</title>
+    </movie>
+    <movie>
+      <id>11</id>
+      <priority>2</priority>
+      <title>Dirch</title>
+    </movie>
+    <movie>
+      <id>12</id>
+      <priority>2</priority>
+      <title>Beast</title>
+    </movie>
+    <movie>
+      <id>19</id>
+      <priority>2</priority>
+      <title>Prag</title>
+    </movie>
+    <movie>
+      <id>23</id>
+      <priority>2</priority>
+      <title>Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb</title>
+    </movie>
+    <movie>
+      <id>31</id>
+      <priority>2</priority>
+      <title>The Other Chelsea: A Story from Donetsk</title>
+    </movie>
+    <movie>
+      <id>34</id>
+      <priority>2</priority>
+      <title>The Hunter</title>
+    </movie>
+    <movie>
+      <id>43</id>
+      <priority>2</priority>
+      <title>Marley</title>
+    </movie>
+    <movie>
+      <id>46</id>
+      <priority>2</priority>
+      <title>Scurtmetraje ZFR - Partea 2</title>
+    </movie>
+    <movie>
+      <id>48</id>
+      <priority>2</priority>
+      <title>Oslo, 31. august</title>
+    </movie>
+    <movie>
+      <id>52</id>
+      <priority>2</priority>
+      <title>Magi i luften</title>
+    </movie>
+    <movie>
+      <id>58</id>
+      <priority>2</priority>
+      <title>Play</title>
+    </movie>
+    <movie>
+      <id>59</id>
+      <priority>2</priority>
+      <title>SuperClásico</title>
+    </movie>
+    <movie>
+      <id>60</id>
+      <priority>2</priority>
+      <title>Dreileben - etwas besseres als den tod</title>
+    </movie>
+    <movie>
+      <id>63</id>
+      <priority>2</priority>
+      <title>Crazy Horse</title>
+    </movie>
+    <movie>
+      <id>68</id>
+      <priority>2</priority>
+      <title>Ambassadøren</title>
+    </movie>
+    <movie>
+      <id>71</id>
+      <priority>2</priority>
+      <title>Taxi Driver</title>
+    </movie>
+    <movie>
+      <id>76</id>
+      <priority>2</priority>
+      <title>Cigan</title>
+    </movie>
+    <movie>
+      <id>82</id>
+      <priority>2</priority>
+      <title>L'exercice de l'État</title>
+    </movie>
+    <movie>
+      <id>85</id>
+      <priority>2</priority>
+      <title>Scurtmetraje ZFR - Partea 3</title>
+    </movie>
+    <movie>
+      <id>86</id>
+      <priority>2</priority>
+      <title>The Snowtown Murders</title>
+    </movie>
+    <movie>
+      <id>91</id>
+      <priority>2</priority>
+      <title>Veljekset</title>
+    </movie>
+    <movie>
+      <id>98</id>
+      <priority>2</priority>
+      <title>Un homme et une femme</title>
+    </movie>
+    <movie>
+      <id>109</id>
+      <priority>2</priority>
+      <title>Shame</title>
+    </movie>
+    <movie>
+      <id>111</id>
+      <priority>2</priority>
+      <title>Elles</title>
+    </movie>
+    <movie>
+      <id>112</id>
+      <priority>2</priority>
+      <title>Le gamin au vélo</title>
+    </movie>
+    <movie>
+      <id>113</id>
+      <priority>2</priority>
+      <title>Păcătoasa Teodora</title>
+    </movie>
+    <movie>
+      <id>123</id>
+      <priority>2</priority>
+      <title>Dreileben - komm mir nicht nach</title>
+    </movie>
+    <movie>
+      <id>137</id>
+      <priority>2</priority>
+      <title>The Best Exotic Marigold Hotel</title>
+    </movie>
+    <movie>
+      <id>142</id>
+      <priority>2</priority>
+      <title>Les uns et les autres</title>
+    </movie>
+    <movie>
+      <id>152</id>
+      <priority>2</priority>
+      <title>Din dragoste cu cele mai bune intenții</title>
+    </movie>
+    <movie>
+      <id>163</id>
+      <priority>2</priority>
+      <title>Și caii sunt verzi pe pereți</title>
+    </movie>
+    <movie>
+      <id>165</id>
+      <priority>2</priority>
+      <title>Killing Time</title>
+    </movie>
+    <movie>
+      <id>167</id>
+      <priority>2</priority>
+      <title>Toată lumea din familia noastră</title>
+    </movie>
+    <movie>
+      <id>171</id>
+      <priority>2</priority>
+      <title>Tabu</title>
+    </movie>
+    <movie>
+      <id>177</id>
+      <priority>2</priority>
+      <title>Mildred Pierce</title>
+    </movie>
+    <movie>
+      <id>190</id>
+      <priority>2</priority>
+      <title>Whores' Glory</title>
+    </movie>
+    <movie>
+      <id>195</id>
+      <priority>2</priority>
+      <title>Et si on vivait tous ensemble?</title>
+    </movie>
+  </movies>
+  <showings>
+  </showings>
+</schedule-constraints>

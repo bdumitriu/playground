@@ -7,9 +7,9 @@ import collection.JavaConversions.setAsJavaSet
   */
 class Schedule(val showingIds: Set[Long], val missedMovieIds: Set[Long]) extends ScheduleOperations {
 
-  val cachedShowingIdsJ: java.util.Set[java.lang.Long] = showingIds.map {Long.box(_)}
+  val cachedShowingIdsJ: java.util.Set[java.lang.Long] = showingIds.map(Long.box)
 
-  val cachedMissedMovieIdsJ: java.util.Set[java.lang.Long] = missedMovieIds.map {Long.box(_)}
+  val cachedMissedMovieIdsJ: java.util.Set[java.lang.Long] = missedMovieIds.map(Long.box)
 
   def showingIdsJ: java.util.Set[java.lang.Long] = cachedShowingIdsJ
 

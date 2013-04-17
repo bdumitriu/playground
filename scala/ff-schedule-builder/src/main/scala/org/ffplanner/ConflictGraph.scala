@@ -1,7 +1,11 @@
 package org.ffplanner
 
 import scala.language.implicitConversions
+import collection.mutable
 import org.ffplanner.ConflictGraph.Node
+import scala.collection.immutable.SortedSet
+import org.ffplanner.Showing.ShowingOrdering
+import org.ffplanner.ConflictGraph.Node.NodeOrdering
 
 /** A graph whose nodes contain showings (of a movie). An edge between two showing nodes indicates that the two are in
   * conflict.
@@ -10,40 +14,55 @@ import org.ffplanner.ConflictGraph.Node
   */
 class ConflictGraph(val festivalProgramme: FestivalProgramme) {
 
-  private val graph: collection.mutable.Map[Node, collection.mutable.Set[Node]] =
-    collection.mutable.Map.empty.withDefaultValue(collection.mutable.Set.empty)
+  private val graphNodes: mutable.Map[Long, Node] = mutable.Map.empty
 
-  private implicit def createNode(showingId: Long): Node = new Node(showingId)
+  private val graph: mutable.Map[Node, mutable.Set[Node]] = mutable.Map.empty.withDefaultValue(mutable.Set.empty)
+
+  private implicit def graphNodeFor(showing: Showing): Node = graphNodes(showing.id)
+
+  private def getOrBuildNodeFor(showing: Showing, priority: Short): Node = {
+    graphNodes.get(showing.id).getOrElse {
+      val node = new Node(new ShowingConstraint(showing, priority))
+      graphNodes(showing.id) = node
+      node
+    }
+  }
 
   /** Initializes the graph such that all scheduleable showings of the movies in `scheduleConstraints` are added. A
     * showing is not scheduleable if it conflicts with the showings in `scheduleConstraints`.
     */
   def initializeWith(scheduleConstraints: ScheduleConstraints) {
-    def addMovieShowingsToGraph(movieId: Long) {
-      festivalProgramme.showingsOf(movieId).foreach(addShowingToGraph(_))
+    def createGraphNodes(movieConstraint: MovieConstraint) {
+      festivalProgramme.showingsOf(movieConstraint.movie).foreach(getOrBuildNodeFor(_, movieConstraint.priority))
     }
 
-    def addShowingToGraph(showing: Showing) {
+    def addMovieShowingsToGraph(movieConstraint: MovieConstraint) {
+      festivalProgramme.showingsOf(movieConstraint.movie).foreach(addShowingToGraph(_, movieConstraint.priority))
+    }
+
+    def addShowingToGraph(showing: Showing, priority: Short) {
       val conflicts: Set[Long] = festivalProgramme.getConflictsOf(
         showing.id, scheduleConstraints.movieConstraintIds, scheduleConstraints.showingConstraintIds)
       if (conflicts.intersect(scheduleConstraints.showingConstraintIds).isEmpty) {
-        graph(showing.id) = collection.mutable.Set(conflicts.toList: _*).map(createNode)
+        graph(showing) = mutable.Set(conflicts.toList: _*).map(festivalProgramme.getShowing _ andThen graphNodeFor)
       }
     }
 
     graph.clear()
-    scheduleConstraints.movieConstraintIds.foreach(addMovieShowingsToGraph(_))
+    scheduleConstraints.movieConstraints.foreach(createGraphNodes)
+    scheduleConstraints.movieConstraints.foreach(addMovieShowingsToGraph)
   }
 
-  /** Registers the fact that a showing has been scheduled. The showing, all its direct neighbours and all the other
-    * showings of the same movie as well as their direct neighbours will be deleted.
+  /** Registers the scheduling of a showing. The showing, all its direct neighbours and all the other showings of the
+    * same movie will be deleted.
     */
   def updateWith(scheduledShowing: Showing) {
-    def deleteNodeAndNeighbours(showingId: Long) {
-      graph.remove(showingId).foreach(neighbours => neighbours.foreach { deleteNode(_) })
+    def deleteNodeAndNeighbours(showing: Showing) {
+      graph.remove(showing).foreach(neighbours => neighbours.foreach(deleteNode))
     }
 
-    festivalProgramme.showingsOf(scheduledShowing.movie).foreach { showing => deleteNodeAndNeighbours(showing.id) }
+    deleteNodeAndNeighbours(scheduledShowing)
+    (festivalProgramme.showingsOf(scheduledShowing.movie) - scheduledShowing).foreach(graphNodeFor _ andThen deleteNode)
   }
 
   /** Registers the fact that a showing has been scheduled. The showing, all its direct neighbours and all the other
@@ -53,35 +72,52 @@ class ConflictGraph(val festivalProgramme: FestivalProgramme) {
     updateWith(festivalProgramme.getShowing(scheduledShowingId))
   }
 
-  def hasShowing(showingId: Long): Boolean = graph.contains(showingId)
+  def hasShowing(showingId: Long): Boolean = graphNodes.get(showingId).map(graph.contains).getOrElse(false)
 
-  def neighboursOf(showingId: Long): Set[Node] = graph(showingId).toSet
+  def neighboursOf(showingId: Long): Set[Node] = graphNodes.get(showingId).map(graph(_).toSet).getOrElse(Set.empty)
 
-  def getIsolatedNodes: Set[Node] = getNodesWithNeighbourCount(0)
+  /**
+    * @return the isolated nodes in the graph, grouped by movie id.
+    */
+  def getIsolatedNodes: SortedSet[Node] = getNodesWithNeighbourCount(0)
 
-  def getNodesWithNeighbourCount(nrNeighbours: Int): Set[Node] = {
-    graph.keySet.toSet filter { graph(_).size == nrNeighbours }
-  }
+  def getNodesWithNeighbourCount(nrNeighbours: Int): SortedSet[Node] =
+    SortedSet.empty[Node](NodeOrdering) ++ graph.keySet filter { graph(_).size == nrNeighbours }
 
   /** Deletes the `node` and all the edges leading to it form the graph. */
   private def deleteNode(node: Node) {
-    graph.remove(node).foreach(neighbours => neighbours.foreach { graph(_).remove(node.showingId) })
+    graph.remove(node).foreach(neighbours => neighbours.foreach { graph(_).remove(node) })
   }
 }
 
 object ConflictGraph {
 
-  class Node(val showingId: Long) {
+  class Node(val showingConstraint: ShowingConstraint) {
+
+    def showingId: Long = showingConstraint.showing.id
+
+    def movieId: Long = showingConstraint.showing.movie.id
+
+    def priority: Short = showingConstraint.priority
 
     def canEqual(other: Any): Boolean = other.isInstanceOf[Node]
 
     override def equals(other: Any): Boolean = other match {
-      case that: Node => that.canEqual(this) && this.showingId == that.showingId
+      case that: Node => that.canEqual(this) && this.showingConstraint.showing == that.showingConstraint.showing
       case _ => false
     }
 
-    override def hashCode: Int = showingId.hashCode
+    override def hashCode: Int = showingConstraint.showing.hashCode
 
     override def toString: String = "N"+showingId
+  }
+
+  object Node {
+
+    implicit object NodeOrdering extends Ordering[Node] {
+      def compare(node1: Node, node2: Node): Int = {
+        ShowingOrdering.compare(node1.showingConstraint.showing, node2.showingConstraint.showing)
+      }
+    }
   }
 }

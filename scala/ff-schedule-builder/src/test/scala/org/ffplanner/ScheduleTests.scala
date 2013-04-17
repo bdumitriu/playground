@@ -51,7 +51,8 @@ class ScheduleTests extends FunSuite with ShouldMatchers {
         new ScheduleConstraintsMock(Set(new MovieConstraintMock(10, 2)), Set())
       val schedules: List[Schedule] = scheduleBuilder.getPossibleSchedules(scheduleConstraints)
       schedules should have size (1)
-      schedules(0).showingIds.head should (be (15) or be (25))
+      schedules(0).showingIds should have size (1)
+      schedules(0).showingIds.head should be (15)
     }
   }
 

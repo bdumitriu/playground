@@ -87,15 +87,4 @@ public class ProgrammeController implements Serializable {
         }
         return movieBundle;
     }
-
-    public Movie getMovie() {
-        if (movie == null) {
-            final MovieBundleInFestival movieBundleInFestival = getMovieBundle();
-            if (movieBundleInFestival != null) {
-                final List<Movie> movies = movieBundleInFestival.getMovieBundle().getMovies();
-                movie = movies.size() == 1 ? movies.get(0) : null;
-            }
-        }
-        return movie;
-    }
 }

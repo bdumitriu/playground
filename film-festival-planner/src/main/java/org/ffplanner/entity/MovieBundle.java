@@ -66,6 +66,14 @@ public class MovieBundle implements Serializable {
         this.originalTitle = originalTitle;
     }
 
+    public boolean hasSingleMovie() {
+        return movies.size() == 1;
+    }
+
+    public Movie getSingleMovie() {
+        return movies.size() == 1 ? movies.get(0) : null;
+    }
+
     public void addMovies(Collection<Movie> movies) {
         if (this.movies == null) {
             this.movies = new LinkedList<>();

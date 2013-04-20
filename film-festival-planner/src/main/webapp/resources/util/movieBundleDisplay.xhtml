@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:util="http://java.sun.com/jsf/composite/util">
+
+    <composite:interface name="movieBundleDisplay">
+        <composite:attribute name="movieBundleInFestival" required="true"/>
+    </composite:interface>
+
+    <composite:implementation>
+
+        <util:movieDisplay
+                rendered="#{cc.attrs.movieBundleInFestival.movieBundle.hasSingleMovie()}"
+                movie="#{cc.attrs.movieBundleInFestival.movieBundle.singleMovie}"/>
+
+        <h:panelGroup layout="block" id="#{cc.clientId}" rendered="#{not cc.attrs.movieBundleInFestival.movieBundle.hasSingleMovie()}">
+            <h:panelGroup style="font-weight: bold;">
+                <h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.originalTitle}"/>
+            </h:panelGroup>
+            <br/>
+            <h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.englishTitle}"/>
+            <br/>
+            <h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.formattedDuration}"/>
+            <ui:repeat value="#{cc.attrs.movieBundleInFestival.movieBundle.movies}" var="movie">
+                <p><util:movieDisplay movie="#{movie}" /></p>
+            </ui:repeat>
+        </h:panelGroup>
+
+    </composite:implementation>
+</html>

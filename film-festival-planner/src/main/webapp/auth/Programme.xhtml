@@ -6,7 +6,8 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:converters="http://ffplanner.org/converters">
+      xmlns:converters="http://ffplanner.org/converters"
+      xmlns:util="http://java.sun.com/jsf/composite/util">
 
 <f:metadata>
     <f:viewParam name="section" value="#{programmeController.section}" converter="festivalEditionSectionConverter"/>
@@ -35,38 +36,8 @@
                 <br/>
             </ui:repeat>
         </h:panelGroup>
-        <h:panelGroup layout="block" style="float: left; margin-left: 50px; width: 300px" rendered="#{programmeController.movie != null}">
-            <span style="font-weight: bold;"><h:outputLink value="http://www.imdb.com/title/#{programmeController.movie.imdbId}" target="new"><h:outputText value="#{programmeController.movie.originalTitle}"/></h:outputLink></span>
-            <br/>
-            <h:outputText value="#{programmeController.movie.englishTitle}"/>
-            <br/>
-            <h:outputText value="#{programmeController.movie.formattedDuration}"/>
-            <br/>
-            <ui:repeat value="#{programmeController.movie.countries}" var="country">
-                <h:outputText value="#{country.name}"/>,
-            </ui:repeat>
-            <h:outputText value="#{programmeController.movie.year}"/>
-            <br/>
-            <br/>
-            <h:outputText value="#{programmeController.movie.description}"/>
-        </h:panelGroup>
-        <h:panelGroup layout="block" style="float: left; margin-left: 50px; width: 300px" rendered="#{programmeController.movie == null}">
-            <span style="font-weight: bold;"><h:outputText value="#{programmeController.movieBundle.movieBundle.originalTitle}"/></span>
-            <br/>
-            <h:outputText value="#{programmeController.movieBundle.movieBundle.englishTitle}"/>
-            <br/>
-            <h:outputText value="#{programmeController.movieBundle.movieBundle.formattedDuration}"/>
-            <br/>
-            <br/>
-            <ui:repeat value="#{programmeController.movieBundle.movieBundle.movies}" var="movie">
-                <h:outputText value="#{movie.originalTitle}"/>
-                <br/>
-                <h:outputText value="#{movie.year}"/>
-                <br/>
-                <h:outputText value="#{movie.description}"/>
-                <br/>
-                <br/>
-            </ui:repeat>
+        <h:panelGroup layout="block" style="float: left; margin-left: 50px; width: 300px">
+            <util:movieBundleDisplay movieBundleInFestival="#{programmeController.movieBundle}" />
         </h:panelGroup>
     </ui:define>
 </ui:composition>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+    <composite:interface name="movieDisplay">
+        <composite:attribute name="movie" required="true"/>
+    </composite:interface>
+
+    <composite:implementation>
+        <h:panelGroup layout="block" id="#{cc.clientId}">
+            <h:panelGroup style="font-weight: bold;">
+                <h:outputLink rendered="#{empty cc.attrs.movie.imdbId}" value="http://www.imdb.com/title/#{cc.attrs.movie.imdbId}" target="new">
+                    <h:outputText value="#{cc.attrs.movie.originalTitle}"/>
+                </h:outputLink>
+                <h:outputText rendered="#{not empty cc.attrs.movie.imdbId}" value="#{cc.attrs.movie.originalTitle}"/>
+            </h:panelGroup>
+            <br/>
+            <h:outputText value="#{cc.attrs.movie.englishTitle}"/>
+            <br/>
+            <h:outputText value="#{cc.attrs.movie.formattedDuration}"/>
+            <br/>
+            <ui:repeat value="#{cc.attrs.movie.countries}" var="country">
+                <h:outputText value="#{country.name}"/>,
+            </ui:repeat>
+            <h:outputText value="#{cc.attrs.movie.year}"/>
+            <p><h:outputText value="#{cc.attrs.movie.description}"/></p>
+        </h:panelGroup>
+    </composite:implementation>
+</html>

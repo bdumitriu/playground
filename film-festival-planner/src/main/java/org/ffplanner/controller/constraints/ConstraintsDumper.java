@@ -3,7 +3,7 @@ package org.ffplanner.controller.constraints;
 import org.ffplanner.bean.MovieBundleInFestivalBean;
 import org.ffplanner.bean.ShowingBean;
 import org.ffplanner.def.ConstraintDefinition;
-import org.ffplanner.def.ScheduleConstraints;
+import org.ffplanner.def.ScheduleConstraintsDefinition;
 import org.ffplanner.entity.MovieBundleInFestival;
 import org.ffplanner.entity.Showing;
 
@@ -21,9 +21,9 @@ public class ConstraintsDumper {
 
     private ShowingBean showingBean;
 
-    private final ScheduleConstraints scheduleConstraints;
+    private final ScheduleConstraintsDefinition scheduleConstraints;
 
-    public ConstraintsDumper(ScheduleConstraints scheduleConstraints) {
+    public ConstraintsDumper(ScheduleConstraintsDefinition scheduleConstraints) {
         this.scheduleConstraints = scheduleConstraints;
     }
 

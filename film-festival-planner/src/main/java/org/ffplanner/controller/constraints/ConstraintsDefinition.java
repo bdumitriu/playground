@@ -3,7 +3,7 @@ package org.ffplanner.controller.constraints;
 import com.google.common.collect.ImmutableRangeSet;
 import com.google.common.collect.Range;
 import org.ffplanner.def.ConstraintDefinition;
-import org.ffplanner.def.ScheduleConstraints;
+import org.ffplanner.def.ScheduleConstraintsDefinition;
 import org.joda.time.DateTime;
 
 import java.util.Collection;
@@ -13,7 +13,7 @@ import java.util.TreeSet;
 /**
  * @author Bogdan Dumitriu
  */
-public class ConstraintsDefinition implements ScheduleConstraints {
+public class ConstraintsDefinition implements ScheduleConstraintsDefinition {
 
     private Collection<ConstraintDefinition.Showing> showingConstraints;
 

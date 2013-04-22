@@ -131,16 +131,16 @@ root {
     /*background-color: #faffb5;*/
 }
 
-a.sch_movie_cell_embedded, a.sch_movie_cell_embedded:visited {
+.sch_movie_cell_embedded a, a:visited {
     text-decoration: none;
     color: blue;
 }
 
-a.sch_movie_cell_embedded:hover {
+.sch_movie_cell_embedded a:hover {
     color: red;
 }
 
-a.sch_movie_cell_embedded:active {
+.sch_movie_cell_embedded a:active {
     border: none;
 }
 
@@ -270,4 +270,23 @@ a.sch_movie_cell_embedded:active {
 
 #tooltip-text {
     margin: 0;
+}
+
+#movieInfo {
+    display: none;
+    margin: 5px;
+}
+
+.sch_close {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    top: 6px;
+    right: 3px;
+    display: block;
+    background: transparent url('../../resources/img/close_16.png') center top no-repeat;
+}
+
+.sch_close:hover {
+    background-image: url('../../resources/img/close_16_mouse_over.png');
 }

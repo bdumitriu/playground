@@ -11,23 +11,24 @@
     </composite:interface>
 
     <composite:implementation>
+        <h:outputStylesheet library="util" name="movieBundleDisplay.css"/>
 
         <util:movieDisplay
                 rendered="#{cc.attrs.movieBundleInFestival.movieBundle.hasSingleMovie()}"
-                movie="#{cc.attrs.movieBundleInFestival.movieBundle.singleMovie}"/>
+                movie="#{cc.attrs.movieBundleInFestival.movieBundle.singleMovie}"
+                titleStyleClass="movieBundleDisplay-movieTitle"/>
 
-        <h:panelGroup layout="block" id="#{cc.clientId}" rendered="#{not cc.attrs.movieBundleInFestival.movieBundle.hasSingleMovie()}">
-            <h:panelGroup style="font-weight: bold;">
-                <h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.originalTitle}"/>
-            </h:panelGroup>
+        <h:panelGroup layout="block" id="#{cc.clientId}"
+                      rendered="#{not cc.attrs.movieBundleInFestival.movieBundle.hasSingleMovie()}">
+            <h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.originalTitle}"
+                          styleClass="movieBundleDisplay-movieTitle"/>
             <br/>
-            <h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.englishTitle}"/>
+            <h:outputText value="(#{cc.attrs.movieBundleInFestival.movieBundle.englishTitle})"/>
             <br/>
-            <h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.formattedDuration}"/>
+            <i><h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.formattedDuration}"/></i>
             <ui:repeat value="#{cc.attrs.movieBundleInFestival.movieBundle.movies}" var="movie">
-                <p><util:movieDisplay movie="#{movie}" /></p>
+                <p><util:movieDisplay movie="#{movie}" titleStyleClass="movieBundleDisplay-innerMovieTitle"/></p>
             </ui:repeat>
         </h:panelGroup>
-
     </composite:implementation>
 </html>

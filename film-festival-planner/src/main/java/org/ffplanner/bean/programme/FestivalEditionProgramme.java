@@ -10,6 +10,7 @@ import org.ffplanner.util.DateUtils;
 import org.joda.time.Interval;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,8 @@ public class FestivalEditionProgramme {
 
     private final FestivalEdition festivalEdition;
 
+    private final Map<Long, Showing> showings;
+
     private final ListMultimap<MovieBundleInFestival, Showing> movieShowings;
 
     private final Map<Interval, DayProgramme> dayProgrammes;
@@ -28,12 +31,21 @@ public class FestivalEditionProgramme {
 
     public FestivalEditionProgramme(FestivalEdition festivalEdition, List<Showing> festivalShowings) {
         this.festivalEdition = festivalEdition;
+        this.showings = createShowings(festivalShowings);
         this.movieShowings = createMovieShowings(festivalShowings);
         this.dayProgrammes = new DayProgrammesLoader(festivalShowings).getDayProgrammes();
         this.sectionMovies = festivalEdition.getSections();
     }
 
-    private static ListMultimap<MovieBundleInFestival, Showing> createMovieShowings(List<Showing> festivalShowings) {
+    private static Map<Long, Showing> createShowings(Iterable<Showing> festivalShowings) {
+        final Map<Long, Showing> showings = new HashMap<>();
+        for (Showing showing : festivalShowings) {
+            showings.put(showing.getId(), showing);
+        }
+        return showings;
+    }
+
+    private static ListMultimap<MovieBundleInFestival, Showing> createMovieShowings(Iterable<Showing> festivalShowings) {
         final ListMultimap<MovieBundleInFestival, Showing> multimap = ArrayListMultimap.create();
         for (Showing showing : festivalShowings) {
             multimap.put(showing.getMovieBundleInFestival(), showing);
@@ -56,6 +68,10 @@ public class FestivalEditionProgramme {
 
     public List<FestivalEditionSection> getSections() {
         return sectionMovies;
+    }
+
+    public Showing getShowingFor(Long showingId) {
+        return showings.get(showingId);
     }
 
     public List<Showing> getShowingsFor(MovieBundleInFestival movieBundle) {

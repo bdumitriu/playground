@@ -1,0 +1,8 @@
+.movieDisplay-imdb-image {
+    vertical-align: -10px;
+    margin-left: 5px;
+}
+
+.movieDisplay-imdb-link:active, .movieDisplay-imdb-link:focus {
+    outline: none;
+}

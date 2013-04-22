@@ -2,10 +2,39 @@
  * @author Bogdan Dumitriu
  */
 
-function finalizeMovieCell(data) {
+function updateMovieCell(data) {
     if (data.status == "success") {
         addSliders();
     }
+}
+
+function updateMovieInfo(data) {
+    if (data.status == "success") {
+        $.blockUI({
+            message: $('#movieInfo'),
+            fadeIn: 1,
+            fadeOut: 1,
+            css: {
+                backgroundColor: "#EFFBFE",
+                top: ($(window).height() - 600) / 2 + 'px',
+                left: ($(window).width() - 400) / 2 + 'px',
+                height: "600px",
+                width: "400px",
+                textAlign: "left",
+                cursor: "default",
+                overflow: "auto"
+            },
+            overlayCSS: {
+                cursor: "default"
+            }
+        });
+        $('.blockOverlay').click($.unblockUI);
+    }
+}
+
+function closeMovieInfo(event) {
+    event.preventDefault();
+    $.unblockUI();
 }
 
 function configureMovieCellControls() {

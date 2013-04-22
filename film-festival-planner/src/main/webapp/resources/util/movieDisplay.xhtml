@@ -7,20 +7,23 @@
 
     <composite:interface name="movieDisplay">
         <composite:attribute name="movie" required="true"/>
+        <composite:attribute name="titleStyleClass" required="false"/>
     </composite:interface>
 
     <composite:implementation>
-        <h:panelGroup layout="block" id="#{cc.clientId}">
-            <h:panelGroup style="font-weight: bold;">
-                <h:outputLink rendered="#{empty cc.attrs.movie.imdbId}" value="http://www.imdb.com/title/#{cc.attrs.movie.imdbId}" target="new">
-                    <h:outputText value="#{cc.attrs.movie.originalTitle}"/>
-                </h:outputLink>
-                <h:outputText rendered="#{not empty cc.attrs.movie.imdbId}" value="#{cc.attrs.movie.originalTitle}"/>
-            </h:panelGroup>
+        <h:outputStylesheet library="util" name="movieDisplay.css"/>
+        <h:panelGroup layout="block">
+            <h:outputText value="#{cc.attrs.movie.originalTitle}" styleClass="#{cc.attrs.titleStyleClass}"/>
+            <h:outputLink rendered="#{not empty cc.attrs.movie.imdbId}"
+                          value="http://www.imdb.com/title/#{cc.attrs.movie.imdbId}"
+                          target="new"
+                          styleClass="movieDisplay-imdb-link">
+                <h:graphicImage library="img" name="imdb.png" styleClass="movieDisplay-imdb-image"/>
+            </h:outputLink>
             <br/>
-            <h:outputText value="#{cc.attrs.movie.englishTitle}"/>
+            <h:outputText value="(#{cc.attrs.movie.englishTitle})"/>
             <br/>
-            <h:outputText value="#{cc.attrs.movie.formattedDuration}"/>
+            <i><h:outputText value="#{cc.attrs.movie.formattedDuration}"/></i>
             <br/>
             <ui:repeat value="#{cc.attrs.movie.countries}" var="country">
                 <h:outputText value="#{country.name}"/>,

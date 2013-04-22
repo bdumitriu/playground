@@ -12,10 +12,7 @@ import org.ffplanner.bean.programme.FestivalProgrammeBean;
 import org.ffplanner.controller.constraints.ConstraintsData;
 import org.ffplanner.controller.constraints.ConstraintsDumper;
 import org.ffplanner.converter.DayConverter;
-import org.ffplanner.entity.FestivalEdition;
-import org.ffplanner.entity.ScheduleConstraintType;
-import org.ffplanner.entity.User;
-import org.ffplanner.entity.Venue;
+import org.ffplanner.entity.*;
 import org.ffplanner.qualifier.LoggedInUser;
 import org.joda.time.DateTime;
 
@@ -60,11 +57,15 @@ public class DayScheduleController implements Serializable {
     @Inject
     private MovieBundleInFestivalBean movieBundleInFestivalBean;
 
+    private FestivalEditionProgramme festivalProgramme;
+
     private final Hour[] hours;
 
     private Date day;
 
     private Short priority;
+
+    private Showing showing;
 
     private DayProgramme dayProgramme;
 
@@ -93,7 +94,7 @@ public class DayScheduleController implements Serializable {
             this.day = dateTime.toDate();
         }
         final FestivalEdition festivalEdition = festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID);
-        final FestivalEditionProgramme festivalProgramme = festivalProgrammeBean.getProgrammeFor(festivalEdition);
+        festivalProgramme = festivalProgrammeBean.getProgrammeFor(festivalEdition);
         dayProgramme = festivalProgramme.getDayProgramme(this.day);
 
         if (constraintsData == null) {
@@ -154,6 +155,14 @@ public class DayScheduleController implements Serializable {
 
     public void setPriority(Short priority) {
         this.priority = priority;
+    }
+
+    public void setShowing(Long showingId){
+        this.showing = festivalProgramme.getShowingFor(showingId);
+    }
+
+    public Showing getShowing() {
+        return showing;
     }
 
     public void removeInterestClicked(Long showingId) {

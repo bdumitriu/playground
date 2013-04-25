@@ -275,6 +275,7 @@ root {
 #movieInfo {
     display: none;
     margin: 5px;
+    color: #FFFAF0;
 }
 
 .sch_close {

@@ -1,8 +1,15 @@
-.movieBundleDisplay-movieTitle {
-    font-variant: small-caps;
-    font-weight: bold;
+.movieBundleDisplay-title {
+    font-family: 'Special Elite', sans-serif;
+    font-size: 16px;
 }
 
-.movieBundleDisplay-innerMovieTitle {
+.movieBundleDisplay-details {
     font-variant: small-caps;
+    font-size: 14px;
 }
+
+.movieBundleDisplay-innerTitle {
+    font-family: 'The Girl Next Door', sans-serif;
+    font-size: 16px;
+}
+

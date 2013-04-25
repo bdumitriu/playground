@@ -8,10 +8,13 @@
     <composite:interface name="movieDisplay">
         <composite:attribute name="movie" required="true"/>
         <composite:attribute name="titleStyleClass" required="false"/>
+        <composite:attribute name="detailsStyleClass" required="false"/>
     </composite:interface>
 
     <composite:implementation>
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css"/>
         <h:outputStylesheet library="util" name="movieDisplay.css"/>
+
         <h:panelGroup layout="block">
             <h:outputText value="#{cc.attrs.movie.originalTitle}" styleClass="#{cc.attrs.titleStyleClass}"/>
             <h:outputLink rendered="#{not empty cc.attrs.movie.imdbId}"
@@ -20,16 +23,18 @@
                           styleClass="movieDisplay-imdb-link">
                 <h:graphicImage library="img" name="imdb.png" styleClass="movieDisplay-imdb-image"/>
             </h:outputLink>
-            <br/>
-            <h:outputText value="(#{cc.attrs.movie.englishTitle})"/>
-            <br/>
-            <i><h:outputText value="#{cc.attrs.movie.formattedDuration}"/></i>
-            <br/>
-            <ui:repeat value="#{cc.attrs.movie.countries}" var="country">
-                <h:outputText value="#{country.name}"/>,
-            </ui:repeat>
-            <h:outputText value="#{cc.attrs.movie.year}"/>
-            <p><h:outputText value="#{cc.attrs.movie.description}"/></p>
+            <h:panelGroup styleClass="#{cc.attrs.detailsStyleClass}">
+                <br/>
+                <h:outputText value="#{cc.attrs.movie.englishTitle}"/>
+                <br/>
+                <h:outputText value="#{cc.attrs.movie.formattedDuration}"/>
+                <br/>
+                <ui:repeat value="#{cc.attrs.movie.countries}" var="country">
+                    <h:outputText value="#{country.name}" />,
+                </ui:repeat>
+                <h:outputText value="#{cc.attrs.movie.year}"/>
+            </h:panelGroup>
+            <p><h:outputText value="#{cc.attrs.movie.description}" styleClass="movieDisplay-text"/></p>
         </h:panelGroup>
     </composite:implementation>
 </html>

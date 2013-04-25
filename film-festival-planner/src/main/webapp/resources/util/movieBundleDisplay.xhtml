@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:composite="http://java.sun.com/jsf/composite"
       xmlns:util="http://java.sun.com/jsf/composite/util">
 
-    <composite:interface name="movieBundleDisplay">
-        <composite:attribute name="movieBundleInFestival" required="true"/>
-    </composite:interface>
+<composite:interface name="movieBundleDisplay">
+    <composite:attribute name="movieBundleInFestival" required="true"/>
+</composite:interface>
 
-    <composite:implementation>
-        <h:outputStylesheet library="util" name="movieBundleDisplay.css"/>
+<composite:implementation>
+    <link href="http://fonts.googleapis.com/css?family=Special+Elite" rel="stylesheet" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=The+Girl+Next+Door" rel="stylesheet" type="text/css"/>
+    <h:outputStylesheet library="util" name="movieBundleDisplay.css"/>
 
-        <util:movieDisplay
-                rendered="#{cc.attrs.movieBundleInFestival.movieBundle.hasSingleMovie()}"
-                movie="#{cc.attrs.movieBundleInFestival.movieBundle.singleMovie}"
-                titleStyleClass="movieBundleDisplay-movieTitle"/>
+    <util:movieDisplay
+            rendered="#{cc.attrs.movieBundleInFestival.movieBundle.hasSingleMovie()}"
+            movie="#{cc.attrs.movieBundleInFestival.movieBundle.singleMovie}"
+            titleStyleClass="movieBundleDisplay-title"
+            detailsStyleClass="movieBundleDisplay-details"/>
 
-        <h:panelGroup layout="block" id="#{cc.clientId}"
-                      rendered="#{not cc.attrs.movieBundleInFestival.movieBundle.hasSingleMovie()}">
-            <h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.originalTitle}"
-                          styleClass="movieBundleDisplay-movieTitle"/>
+    <h:panelGroup layout="block" id="#{cc.clientId}"
+                  rendered="#{not cc.attrs.movieBundleInFestival.movieBundle.hasSingleMovie()}">
+        <h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.originalTitle}"
+                      styleClass="movieBundleDisplay-title"/>
+        <h:panelGroup styleClass="movieBundleDisplay-details">
             <br/>
-            <h:outputText value="(#{cc.attrs.movieBundleInFestival.movieBundle.englishTitle})"/>
+            <h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.englishTitle}"/>
             <br/>
-            <i><h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.formattedDuration}"/></i>
-            <ui:repeat value="#{cc.attrs.movieBundleInFestival.movieBundle.movies}" var="movie">
-                <p><util:movieDisplay movie="#{movie}" titleStyleClass="movieBundleDisplay-innerMovieTitle"/></p>
-            </ui:repeat>
+            <h:outputText value="#{cc.attrs.movieBundleInFestival.movieBundle.formattedDuration}"/>
         </h:panelGroup>
-    </composite:implementation>
+        <ui:repeat value="#{cc.attrs.movieBundleInFestival.movieBundle.movies}" var="movie">
+            <p><util:movieDisplay movie="#{movie}"
+                                  titleStyleClass="movieBundleDisplay-innerTitle"
+                                  detailsStyleClass="movieBundleDisplay-details"/></p>
+        </ui:repeat>
+    </h:panelGroup>
+</composite:implementation>
 </html>

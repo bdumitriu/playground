@@ -6,3 +6,8 @@
 .movieDisplay-imdb-link:active, .movieDisplay-imdb-link:focus {
     outline: none;
 }
+
+.movieDisplay-text {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+}

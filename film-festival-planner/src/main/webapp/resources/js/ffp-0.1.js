@@ -14,8 +14,9 @@ function updateMovieInfo(data) {
             message: $('#movieInfo'),
             fadeIn: 1,
             fadeOut: 1,
+            bindEvents: false,
             css: {
-                backgroundColor: "#EFFBFE",
+                backgroundColor: "#6D7B8D",
                 top: ($(window).height() - 600) / 2 + 'px',
                 left: ($(window).width() - 400) / 2 + 'px',
                 height: "600px",

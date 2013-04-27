@@ -1,7 +1,10 @@
 package org.ffplanner.bean;
 
 import org.ffplanner.controller.auth.AuthData;
-import org.ffplanner.entity.*;
+import org.ffplanner.entity.User;
+import org.ffplanner.entity.UserToken;
+import org.ffplanner.entity.UserToken_;
+import org.ffplanner.entity.User_;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;

@@ -10,10 +10,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Objects;
+import java.util.*;
 
 import static java.util.Calendar.HOUR_OF_DAY;
 import static java.util.Calendar.MINUTE;
@@ -22,7 +19,7 @@ import static java.util.Calendar.MINUTE;
  * @author Bogdan Dumitriu
  */
 @Entity
-public class Showing implements Serializable, ShowingDefinition {
+public class Showing implements Serializable, Comparable<Showing>, ShowingDefinition {
 
     private static final long serialVersionUID = 1L;
 
@@ -84,14 +81,23 @@ public class Showing implements Serializable, ShowingDefinition {
         return DateUtils.getDayInterval(getDateAndTime());
     }
 
+    public String getDayOfWeek(Locale locale) {
+        final GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(dateAndTime);
+        return calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);
+    }
+
+    public String getDayMonth(Locale locale) {
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMM", locale);
+        return simpleDateFormat.format(dateAndTime);
+    }
+
     public int getHour() {
         return new DateTime(dateAndTime).getHourOfDay();
     }
 
     public int getMinute() {
-        final Calendar calendar = new GregorianCalendar();
-        calendar.setTime(dateAndTime);
-        return calendar.get(MINUTE);
+        return new DateTime(dateAndTime).getMinuteOfHour();
     }
 
     /**
@@ -157,5 +163,14 @@ public class Showing implements Serializable, ShowingDefinition {
         final Showing other = (Showing) obj;
         return Objects.equals(this.movieBundleInFestivalId, other.movieBundleInFestivalId)
                 && Objects.equals(this.dateAndTime, other.dateAndTime) && Objects.equals(this.venueId, other.venueId);
+    }
+
+    @Override
+    public int compareTo(Showing other) {
+        if (this.equals(other)) {
+            return 0;
+        } else {
+            return dateAndTime.compareTo(other.dateAndTime);
+        }
     }
 }

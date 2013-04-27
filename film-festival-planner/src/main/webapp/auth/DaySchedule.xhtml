@@ -9,6 +9,7 @@
 
 <f:metadata>
     <f:viewParam name="day" value="#{dayScheduleController.day}" converter="dayConverter"/>
+    <f:viewParam name="showing" value="#{dayScheduleController.focusShowingId}"/>
     <f:event type="preRenderView" listener="#{dayScheduleController.prepareView}"/>
 </f:metadata>
 
@@ -27,36 +28,36 @@
 
     <ui:define name="buttons">
         <h:panelGroup id="buttons">
-            <span class="header_text">#{bundle.Day} </span>
+            <span class="header_text">#{bundle.Day}</span>
             <h:link value="#{bundle.Previous}" rendered="#{dayScheduleController.previousDay != null}" styleClass="header_button">
                 <f:param name="day" value="#{dayScheduleController.previousDay}"/>
             </h:link>
             <h:link value="#{bundle.Next}" rendered="#{dayScheduleController.nextDay != null}" styleClass="header_button">
-                <f:param name="day" value="${dayScheduleController.nextDay}"/>
+                <f:param name="day" value="#{dayScheduleController.nextDay}"/>
             </h:link>
             <span class="header_text">#{bundle.Schedule}</span>
             <h:form id="buttons_form" styleClass="header_form">
                 <h:outputText value="#{bundle.SelectMoviesFirst}"
-                              rendered="#{not dayScheduleController.hasConstraints() and not dayScheduleController.hasSchedule()}"
+                              rendered="#{not scheduleController.hasConstraints() and not scheduleController.hasSchedule()}"
                               styleClass="header_instruction"/>
-                <h:commandLink action="#{dayScheduleController.suggestSchedule}"
+                <h:commandLink action="#{scheduleController.suggestSchedule}"
                                value="#{bundle.Suggest}"
                                title="#{bundle.SuggestTooltip}"
-                               rendered="#{dayScheduleController.hasConstraints() and not dayScheduleController.hasSchedule()}"
+                               rendered="#{scheduleController.hasConstraints() and not scheduleController.hasSchedule()}"
                                styleClass="header_button">
                     <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
                 </h:commandLink>
-                <h:commandLink action="#{dayScheduleController.suggestSchedule}"
+                <h:commandLink action="#{scheduleController.suggestSchedule}"
                                value="#{bundle.SuggestNew}"
                                title="#{bundle.SuggestNewTooltip}"
-                               rendered="#{dayScheduleController.hasSchedule()}"
+                               rendered="#{scheduleController.hasSchedule()}"
                                styleClass="header_button">
                     <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
                 </h:commandLink>
-                <h:commandLink action="#{dayScheduleController.discardSchedule}"
+                <h:commandLink action="#{scheduleController.discardSchedule}"
                                value="#{bundle.Discard}"
                                title="#{bundle.DiscardTooltip}"
-                               rendered="#{dayScheduleController.hasSchedule()}"
+                               rendered="#{scheduleController.hasSchedule()}"
                                styleClass="header_button">
                     <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
                 </h:commandLink>
@@ -71,6 +72,7 @@
                 removeEmptyHeaderText();
                 resizeTableBody();
                 addSliders();
+                highlightShowing();
             });
             $(window).resize(resizeTableBody);
         </script>
@@ -96,7 +98,7 @@
             </div>
             <h:form id="sch_form" class="sch_table_body">
 
-                <h:inputHidden id="priority" value="#{dayScheduleController.priority}" />
+                <h:inputHidden id="priority" value="#{scheduleController.priority}" />
 
                 <ui:repeat value="#{dayScheduleController.hours}" var="hour" varStatus="status">
                     <div class="sch_row_first">
@@ -105,7 +107,7 @@
                     <ui:repeat value="#{dayScheduleController.getHourLineFor(hour)}" var="hourSlot">
                         <div class="sch_row_rest">
                             <h:panelGroup id="movie_cell"
-                                          styleClass="#{dayScheduleController.getMovieStyleClass(hourSlot.showing.id)}"
+                                          styleClass="#{scheduleController.getMovieStyleClass(hourSlot.showing.id)}#{dayScheduleController.focusShowingId eq hourSlot.showing.id ? ' toHighlight' : ''}"
                                           rendered="#{hourSlot.hasShowing()}"
                                           style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
                                 <span class="sch_movie_cell_embedded">
@@ -119,54 +121,54 @@
                                 </span>
                                 <h:commandLink
                                         title="#{bundle.WatchAnyTooltip}"
-                                        rendered="#{dayScheduleController.isNoConstraintSelectedFor(hourSlot.showing.id)}"
-                                        action="#{dayScheduleController.watchMovieButtonClicked(hourSlot.showing.id)}"
+                                        rendered="#{scheduleController.isNoConstraintSelectedFor(hourSlot.showing.id)}"
+                                        action="#{scheduleController.watchMovieButtonClicked(hourSlot.showing.id)}"
                                         styleClass="sch_check">
                                     <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
                                     <f:ajax execute="@form" render="@form :buttons_form" onevent="updateMovieCell" />
                                 </h:commandLink>
                                 <h:commandLink
                                         title="#{bundle.RemoveInterestTooltip}"
-                                        rendered="#{dayScheduleController.hasUserConstraintFor(hourSlot.showing.id)}"
-                                        action="#{dayScheduleController.removeInterestClicked(hourSlot.showing.id)}"
+                                        rendered="#{scheduleController.hasUserConstraintFor(hourSlot.showing.id)}"
+                                        action="#{scheduleController.removeInterestClicked(hourSlot.showing.id)}"
                                         styleClass="sch_uncheck">
                                     <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
                                     <f:ajax execute="@form" render="@form :buttons_form" onevent="updateMovieCell" />
                                 </h:commandLink>
                                 <h:panelGroup
-                                        rendered="#{dayScheduleController.hasUserConstraintFor(hourSlot.showing.id)}"
+                                        rendered="#{scheduleController.hasUserConstraintFor(hourSlot.showing.id)}"
                                         styleClass="sch_priority_wrapper">
                                     <div class="sch_priority" />
                                     <h:outputText
                                             style="display: none"
-                                            value="#{dayScheduleController.getShowingPriority(hourSlot.showing.id)}" />
+                                            value="#{scheduleController.getShowingPriority(hourSlot.showing.id)}" />
                                     <h:commandButton
                                             style="display: none"
                                             styleClass="priorityButton"
-                                            action="#{dayScheduleController.assignPriority(hourSlot.showing.id)}">
+                                            action="#{scheduleController.assignPriority(hourSlot.showing.id)}">
                                         <f:ajax execute="@form" render="@form" onevent="updateMovieCell" />
                                     </h:commandButton>
                                 </h:panelGroup>
                                 <h:commandLink
                                         title="#{bundle.WatchThisTooltip}"
-                                        rendered="#{dayScheduleController.hasWeakConstraintFor(hourSlot.showing.id)}"
-                                        action="#{dayScheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
+                                        rendered="#{scheduleController.hasWeakConstraintFor(hourSlot.showing.id)}"
+                                        action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
                                         styleClass="sch_pin_user">
                                     <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
                                     <f:ajax execute="@form" render="@form" onevent="updateMovieCell" />
                                 </h:commandLink>
                                 <h:commandLink
                                         title="#{bundle.WatchThisSelectedUser}"
-                                        rendered="#{dayScheduleController.isWatchShowingSelected(hourSlot.showing.id)}"
-                                        action="#{dayScheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
+                                        rendered="#{scheduleController.isWatchShowingSelected(hourSlot.showing.id)}"
+                                        action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
                                         styleClass="sch_unpin_user">
                                     <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
                                     <f:ajax execute="@form" render="@form" onevent="updateMovieCell" />
                                 </h:commandLink>
                                 <h:commandLink
                                         title="#{bundle.WatchThisSelectedSystem}"
-                                        rendered="#{not dayScheduleController.isWatchShowingSelected(hourSlot.showing.id) and dayScheduleController.isScheduled(hourSlot.showing.id)}"
-                                        action="#{dayScheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
+                                        rendered="#{not scheduleController.isWatchShowingSelected(hourSlot.showing.id) and scheduleController.isScheduled(hourSlot.showing.id)}"
+                                        action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
                                         styleClass="sch_pin_system">
                                     <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
                                     <f:ajax execute="@form" render="movie_cell" onevent="updateMovieCell" />
@@ -183,6 +185,20 @@
             <a href="#" class="sch_close" onclick="closeMovieInfo(event)" />
             <util:movieBundleDisplay movieBundleInFestival="#{dayScheduleController.showing.movieBundleInFestival}"
                                      rendered="#{dayScheduleController.showing != null}"/>
+            <h:outputText value="#{bundle.OtherShowings}" styleClass="movieInfoHeader" />
+            <ul>
+                <ui:repeat value="#{dayScheduleController.otherShowings}" var="showing">
+                    <li>
+                        <h:outputLink value="DaySchedule.xhtml">
+                            <h:outputText
+                                    value="#{showing.getDayOfWeek(auth.user.locale)}&lt;br /&gt;#{showing.getDayMonth(auth.user.locale)}"
+                                    escape="false"/>
+                            <f:param name="day" value="#{dayScheduleController.getShowingDay(showing)}"/>
+                            <f:param name="showing" value="#{showing.id}"/>
+                        </h:outputLink>
+                    </li>
+                </ui:repeat>
+            </ul>
         </h:panelGroup>
 
     </ui:define>

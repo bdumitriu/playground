@@ -275,7 +275,45 @@ root {
 #movieInfo {
     display: none;
     margin: 5px;
-    color: #FFFAF0;
+    color: #FFFAF0; /*floralwhite*/
+}
+
+#movieInfo ul {
+    padding: 0;
+}
+
+#movieInfo li {
+    display: block;
+    height: 3em;
+    margin: 0 3px;
+    padding: 3px 7px;
+    background: #FFFFE0;
+    float: left;
+    text-align: center;
+    border: 1px solid #000000;
+    border-radius: 3px;
+    box-shadow: 1px 1px 2px #888888;
+}
+
+#movieInfo a, a:visited {
+    text-decoration: none;
+    color: blue;
+    font-family: Candara, serif;
+    font-variant: small-caps;
+}
+
+#movieInfo a:hover {
+    color: red;
+}
+
+#movieInfo a:active {
+    border: none;
+}
+
+.movieInfoHeader {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    color: #FFE0B0; /*navajowhite;*/
 }
 
 .sch_close {

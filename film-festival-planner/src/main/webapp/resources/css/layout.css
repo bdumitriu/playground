@@ -19,7 +19,7 @@
     display: inline;
 }
 
-.header_button {
+.header_button, .header_button:visited {
     -moz-box-shadow: inset 1px 1px 20px 1px #ffffff;
     -webkit-box-shadow: inset 1px 1px 20px 1px #ffffff;
     box-shadow: inset 1px 1px 20px 1px #ffffff;

@@ -102,6 +102,34 @@ function addSliders() {
     });
 }
 
+function highlightShowing() {
+    var showingDiv = $(".toHighlight");
+    if (showingDiv.length > 0) {
+        $('html, body').animate(computeScrollOffset(showingDiv));
+        showingDiv.effect("highlight", {color: "red"}, 3000);
+    }
+}
+
+function computeScrollOffset(object){
+    var win = $(window);
+
+    var viewport = {
+        top : win.scrollTop(),
+        left : win.scrollLeft()
+    };
+    viewport.right = viewport.left + win.width();
+    viewport.bottom = viewport.top + win.height();
+
+    var bounds = object.offset();
+    bounds.right = bounds.left + object.outerWidth();
+    bounds.bottom = bounds.top + object.outerHeight();
+
+    return {
+        scrollTop: viewport.bottom >= bounds.bottom ? viewport.top : bounds.bottom - win.height(),
+        scrollLeft: viewport.right >= bounds.right ? viewport.left : bounds.right - win.width()
+    }
+}
+
 /**
  * @param sliderHandle the jQuery object representing the slider's handle
  */

@@ -6,6 +6,7 @@ function updateMovieCell(data) {
     if (data.status == "success") {
         addSliders();
     }
+    resizeTableBody();
 }
 
 function updateMovieInfo(data) {

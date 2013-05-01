@@ -96,6 +96,22 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
         return userSchedule;
     }
 
+    public void reset(Long userId, FestivalEdition festivalEdition) {
+        reset(findOrCreateBy(userId, festivalEdition, false));
+    }
+
+    public void reset(UserSchedule userSchedule) {
+        for (MovieBundleConstraint movieConstraint : userSchedule.getMovieConstraints()) {
+            entityManager.remove(movieConstraint);
+        }
+        for (ShowingConstraint showingConstraint : userSchedule.getShowingConstraints()) {
+            entityManager.remove(showingConstraint);
+        }
+        userSchedule.resetConstraints();
+        userSchedule.setLastModified(new Date());
+        entityManager.persist(userSchedule);
+    }
+
     /**
      * Toggles the movie constraint for the movie of {@code showing} as described in {@link MovieConstraintToggler}.
      */

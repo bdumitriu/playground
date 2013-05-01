@@ -9,17 +9,21 @@ import org.ffplanner.bean.UserScheduleBean;
 import org.ffplanner.bean.programme.FestivalEditionProgramme;
 import org.ffplanner.bean.programme.FestivalProgrammeBean;
 import org.ffplanner.controller.constraints.ConstraintsData;
-import org.ffplanner.controller.constraints.ConstraintsDumper;
+import org.ffplanner.controller.constraints.ConstraintsIo;
 import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.ScheduleConstraintType;
 import org.ffplanner.entity.User;
 import org.ffplanner.qualifier.LoggedInUser;
+import org.xml.sax.SAXException;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.nio.file.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -59,10 +63,20 @@ public class ScheduleController implements Serializable {
 
     private List<Long> scheduledShowings;
 
+    private String constraintsFile = "foo";
+
+    private FestivalEdition getFestivalEdition() {
+        return festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID);
+    }
+
+    private FestivalEditionProgramme getFestivalEditionProgramme() {
+        final FestivalEdition festivalEdition = getFestivalEdition();
+        return festivalProgrammeBean.getProgrammeFor(festivalEdition);
+    }
+
     public void updateConstraintsData() {
         if (constraintsData == null) {
-            final FestivalEdition festivalEdition = festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID);
-            final FestivalEditionProgramme festivalProgramme = festivalProgrammeBean.getProgrammeFor(festivalEdition);
+            final FestivalEditionProgramme festivalProgramme = getFestivalEditionProgramme();
             constraintsData = new ConstraintsData(userScheduleBean, festivalProgramme);
             constraintsData.loadFor(this.user);
         } else if (constraintsData.reloadNeeded()) {
@@ -102,9 +116,13 @@ public class ScheduleController implements Serializable {
         return scheduledShowings != null;
     }
 
+    public void resetSchedule() {
+        userScheduleBean.reset(user.getId(), getFestivalEdition());
+    }
+
     public void suggestSchedule() {
         try {
-            dumpConstraints();
+            writeConstraints();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,16 +132,68 @@ public class ScheduleController implements Serializable {
         scheduledShowings.addAll(schedule.showingIdsJ());
     }
 
-    private void dumpConstraints() throws IOException{
+    private void writeConstraints() throws IOException {
         final FacesContext facesContext = FacesContext.getCurrentInstance();
         final String path = facesContext.getExternalContext().getRealPath("constraints.xml");
         final File file = new File(path);
         try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
-            final ConstraintsDumper constraintsDumper = new ConstraintsDumper(constraintsData.asScheduleConstraints());
-            constraintsDumper.setMovieBundleInFestivalBean(movieBundleInFestivalBean);
-            constraintsDumper.setShowingBean(showingBean);
-            constraintsDumper.write(outputStream);
+            final ConstraintsIo constraintsIo = new ConstraintsIo();
+            constraintsIo.setMovieBundleInFestivalBean(movieBundleInFestivalBean);
+            constraintsIo.setShowingBean(showingBean);
+            constraintsIo.write(outputStream, constraintsData.asScheduleConstraints());
         }
+    }
+
+    public List<SelectItem> getConstraintFiles() {
+        final Path scalaTestPath = getConstraintsPath();
+        final List<SelectItem> constraintFiles = new LinkedList<>();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(scalaTestPath)) {
+            for (Path file : stream) {
+                if (Files.isRegularFile(file)) {
+                    final String fileName = file.getFileName().toString();
+                    if (fileName.startsWith("schedule_constraints_")) {
+                        constraintFiles.add(new SelectItem(fileName));
+                    }
+                }
+            }
+        } catch (IOException | DirectoryIteratorException ignored) {
+        }
+        return constraintFiles;
+    }
+
+    public void setConstraintsFile(String constraintsFile) {
+        this.constraintsFile = constraintsFile;
+    }
+
+    public String getConstraintsFile() {
+        return constraintsFile;
+    }
+
+    public void loadConstraintsFile() {
+        if (constraintsFile.startsWith("schedule_constraints_")) {
+            final Path scalaTestPath = getConstraintsPath();
+            try {
+                loadConstraintsFile(scalaTestPath.resolve(constraintsFile).toFile());
+            } catch (IOException | ParserConfigurationException | SAXException ignored) {
+            }
+        }
+        constraintsFile = "foo";
+    }
+
+    private void loadConstraintsFile(File constraintsFile)
+            throws IOException, ParserConfigurationException, SAXException {
+        try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(constraintsFile))) {
+            final ConstraintsIo constraintsIo = new ConstraintsIo();
+            constraintsIo.setUserScheduleBean(userScheduleBean);
+            constraintsIo.readToDatabase(inputStream, getFestivalEditionProgramme(), user.getId());
+        }
+    }
+
+    private static Path getConstraintsPath() {
+        final FacesContext facesContext = FacesContext.getCurrentInstance();
+        final String scalaTestFileName =
+                facesContext.getExternalContext().getRealPath("../../../scala/ff-schedule-builder/src/test/resources");
+        return Paths.get(scalaTestFileName);
     }
 
     public void discardSchedule() {

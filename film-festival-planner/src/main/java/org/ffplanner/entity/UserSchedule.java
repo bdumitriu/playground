@@ -112,6 +112,11 @@ public class UserSchedule implements Serializable {
         return showingConstraints;
     }
 
+    public void resetConstraints() {
+        movieConstraints.clear();
+        showingConstraints.clear();
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(scheduleName, userId, festivalEditionId);

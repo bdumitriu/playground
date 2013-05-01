@@ -21,6 +21,8 @@ public class FestivalEditionProgramme {
 
     private final FestivalEdition festivalEdition;
 
+    private final Map<Long, MovieBundleInFestival> movies;
+
     private final Map<Long, Showing> showings;
 
     private final ListMultimap<MovieBundleInFestival, Showing> movieShowings;
@@ -31,10 +33,20 @@ public class FestivalEditionProgramme {
 
     public FestivalEditionProgramme(FestivalEdition festivalEdition, List<Showing> festivalShowings) {
         this.festivalEdition = festivalEdition;
+        this.movies = createMovies(festivalShowings);
         this.showings = createShowings(festivalShowings);
         this.movieShowings = createMovieShowings(festivalShowings);
         this.dayProgrammes = new DayProgrammesLoader(festivalShowings).getDayProgrammes();
         this.sectionMovies = festivalEdition.getSections();
+    }
+
+    private static Map<Long, MovieBundleInFestival> createMovies(Iterable<Showing> festivalShowings) {
+        final Map<Long, MovieBundleInFestival> movies = new HashMap<>();
+        for (Showing showing : festivalShowings) {
+            final MovieBundleInFestival movieBundleInFestival = showing.getMovieBundleInFestival();
+            movies.put(movieBundleInFestival.getId(), movieBundleInFestival);
+        }
+        return movies;
     }
 
     private static Map<Long, Showing> createShowings(Iterable<Showing> festivalShowings) {
@@ -70,8 +82,16 @@ public class FestivalEditionProgramme {
         return sectionMovies;
     }
 
+    public MovieBundleInFestival getMovie(Long movieBundleInFestivalId) {
+        return movies.get(movieBundleInFestivalId);
+    }
+
     public Showing getShowingFor(Long showingId) {
         return showings.get(showingId);
+    }
+
+    public List<Showing> getShowingsFor(Long movieBundleInFestivalId) {
+        return getShowingsFor(getMovie(movieBundleInFestivalId));
     }
 
     public List<Showing> getShowingsFor(MovieBundleInFestival movieBundle) {

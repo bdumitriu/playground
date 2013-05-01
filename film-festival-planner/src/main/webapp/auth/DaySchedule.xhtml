@@ -60,6 +60,17 @@
                                styleClass="header_button">
                     <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
                 </h:commandLink>
+                <h:commandLink action="#{scheduleController.resetSchedule}"
+                               value="#{bundle.Reset}"
+                               title="#{bundle.ResetTooltip}"
+                               styleClass="header_button">
+                    <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
+                </h:commandLink>
+                <h:selectOneMenu value="#{scheduleController.constraintsFile}">
+                    <f:selectItem itemLabel="Load Constraints..." itemValue="foo"/>
+                    <f:selectItems value="#{scheduleController.constraintFiles}"/>
+                    <f:ajax listener="#{scheduleController.loadConstraintsFile}" render="@form :sch_form" onevent="updateMovieCell" />
+                </h:selectOneMenu>
             </h:form>
         </h:panelGroup>
     </ui:define>

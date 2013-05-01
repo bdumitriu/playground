@@ -1,11 +1,11 @@
 package org.ffplanner.entity;
 
+import org.ffplanner.helper.Day;
+import org.joda.time.DateTime;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Bogdan Dumitriu
@@ -33,6 +33,9 @@ public class FestivalEdition implements Serializable {
     private Date startDay;
 
     private Date endDay;
+
+    @Transient
+    private List<Day> days;
 
     @OneToMany(mappedBy = "festivalEdition")
     @OrderBy("sectionOrder")
@@ -93,16 +96,35 @@ public class FestivalEdition implements Serializable {
         return startDay;
     }
 
-    public void setStartDay(Date startDay) {
+    public synchronized void setStartDay(Date startDay) {
         this.startDay = startDay;
+        this.days = null;
     }
 
     public Date getEndDay() {
         return endDay;
     }
 
-    public void setEndDay(Date endDay) {
+    public synchronized void setEndDay(Date endDay) {
         this.endDay = endDay;
+        this.days = null;
+    }
+
+    public synchronized List<Day> getDays() {
+        if (this.days == null) {
+            this.days = new LinkedList<>();
+            DateTime dateTime = new DateTime(startDay);
+            final DateTime endDateTime = new DateTime(endDay);
+            if (startDay == null || endDay == null || dateTime.isAfter(endDateTime)) {
+                this.days = Collections.emptyList();
+            } else {
+                do {
+                    this.days.add(new Day(dateTime));
+                    dateTime = dateTime.plusDays(1);
+                } while (!dateTime.isAfter(endDateTime));
+            }
+        }
+        return this.days;
     }
 
     public List<FestivalEditionSection> getSections() {

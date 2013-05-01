@@ -7,7 +7,12 @@ import org.ffplanner.bean.programme.FestivalProgrammeBean;
 import org.ffplanner.converter.DayConverter;
 import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.Showing;
+import org.ffplanner.entity.User;
 import org.ffplanner.entity.Venue;
+import org.ffplanner.helper.Day;
+import org.ffplanner.helper.Hour;
+import org.ffplanner.helper.HourSlot;
+import org.ffplanner.qualifier.LoggedInUser;
 import org.joda.time.DateTime;
 
 import javax.enterprise.context.SessionScoped;
@@ -40,13 +45,16 @@ public class DayScheduleController implements Serializable {
     @Inject
     private ScheduleController scheduleController;
 
+    @Inject @LoggedInUser
+    private User user;
+
+    private FestivalEdition festivalEdition;
+
     private FestivalEditionProgramme festivalProgramme;
 
     private final Hour[] hours;
 
     private Date day;
-
-    private Long focusShowingId;
 
     private Showing showing;
 
@@ -64,12 +72,20 @@ public class DayScheduleController implements Serializable {
             final DateTime dateTime = new DateTime(2012, JUNE, 1, 0, 0);
             this.day = dateTime.toDate();
         }
-        final FestivalEdition festivalEdition = festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID);
+        festivalEdition = festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID);
         festivalProgramme = festivalProgrammeBean.getProgrammeFor(festivalEdition);
         dayProgramme = festivalProgramme.getDayProgramme(this.day);
 
         scheduleController.updateConstraintsData();
         log.exiting("DayScheduleController", "prepareView");
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<Day> getDays() {
+        return festivalEdition.getDays();
     }
 
     public Hour[] getHours() {
@@ -90,20 +106,6 @@ public class DayScheduleController implements Serializable {
         return dayProgramme.getHourLineFor(hour);
     }
 
-    public String getPreviousDay() {
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(day);
-        calendar.roll(Calendar.DAY_OF_MONTH, false);
-        return new DayConverter().getAsString(null, null, calendar.getTime());
-    }
-
-    public String getNextDay() {
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(day);
-        calendar.roll(Calendar.DAY_OF_MONTH, true);
-        return new DayConverter().getAsString(null, null, calendar.getTime());
-    }
-
     public void setDay(Date day) {
         log.entering("DayScheduleController", "setDay", day == null ? null : day.toString());
         this.day = day;
@@ -112,14 +114,6 @@ public class DayScheduleController implements Serializable {
 
     public Date getDay() {
         return day;
-    }
-
-    public void setFocusShowingId(Long focusShowingId) {
-        this.focusShowingId = focusShowingId;
-    }
-
-    public Long getFocusShowingId() {
-        return focusShowingId;
     }
 
     public void setShowing(Long showingId) {

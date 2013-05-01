@@ -1,4 +1,4 @@
-package org.ffplanner.controller;
+package org.ffplanner.helper;
 
 import org.ffplanner.entity.Showing;
 

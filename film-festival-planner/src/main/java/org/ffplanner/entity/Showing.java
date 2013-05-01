@@ -10,7 +10,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.Objects;
 
 import static java.util.Calendar.HOUR_OF_DAY;
 import static java.util.Calendar.MINUTE;
@@ -82,14 +85,11 @@ public class Showing implements Serializable, Comparable<Showing>, ShowingDefini
     }
 
     public String getDayOfWeek(Locale locale) {
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(dateAndTime);
-        return calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);
+        return DateUtils.getDayOfWeek(dateAndTime, locale);
     }
 
     public String getDayMonth(Locale locale) {
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMM", locale);
-        return simpleDateFormat.format(dateAndTime);
+        return DateUtils.getDayMonth(dateAndTime, locale);
     }
 
     public int getHour() {

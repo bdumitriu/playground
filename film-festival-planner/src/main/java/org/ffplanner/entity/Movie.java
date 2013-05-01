@@ -97,7 +97,7 @@ public class Movie implements Serializable {
     }
 
     public String getFormattedDuration() {
-        return new DateUtils().formatHoursAndMinutes(duration);
+        return DateUtils.formatHoursAndMinutes(duration);
     }
 
     public void setDuration(Date duration) {
@@ -109,7 +109,7 @@ public class Movie implements Serializable {
      * @throws ParseException if the {@code duration} is not in the correct format
      */
     public void setDuration(String duration) throws ParseException {
-        this.duration = new DateUtils().parseHoursAndMinutes(duration);
+        this.duration = DateUtils.parseHoursAndMinutes(duration);
     }
 
     public String getDescription() {
@@ -150,7 +150,7 @@ public class Movie implements Serializable {
     }
 
     public int getDurationInMinutes() {
-        return new DateUtils().getInMinutes(duration);
+        return DateUtils.getInMinutes(duration);
     }
 
     public List<Person> getActors() {

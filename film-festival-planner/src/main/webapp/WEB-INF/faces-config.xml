@@ -9,7 +9,9 @@
             <var>bundle</var>
         </resource-bundle>
     </application>
-    <!--    <lifecycle>
-            <phase-listener>org.ffplanner.util.LifeCycleListener</phase-listener>
-        </lifecycle>-->
+    <!--
+    <lifecycle>
+        <phase-listener>org.ffplanner.util.LifeCycleListener</phase-listener>
+    </lifecycle>
+    -->
 </faces-config>

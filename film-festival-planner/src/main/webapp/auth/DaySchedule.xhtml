@@ -9,7 +9,6 @@
 
 <f:metadata>
     <f:viewParam name="day" value="#{dayScheduleController.day}" converter="dayConverter"/>
-    <f:viewParam name="showing" value="#{dayScheduleController.focusShowingId}"/>
     <f:event type="preRenderView" listener="#{dayScheduleController.prepareView}"/>
 </f:metadata>
 
@@ -29,12 +28,12 @@
     <ui:define name="buttons">
         <h:panelGroup id="buttons">
             <span class="header_text">#{bundle.Day}</span>
-            <h:link value="#{bundle.Previous}" rendered="#{dayScheduleController.previousDay != null}" styleClass="header_button">
-                <f:param name="day" value="#{dayScheduleController.previousDay}"/>
-            </h:link>
-            <h:link value="#{bundle.Next}" rendered="#{dayScheduleController.nextDay != null}" styleClass="header_button">
-                <f:param name="day" value="#{dayScheduleController.nextDay}"/>
-            </h:link>
+            <ui:repeat value="#{dayScheduleController.days}" var="day">
+                <h:link value="#{day.getDayOfWeek(dayScheduleController.user.locale)}" styleClass="header_button" rendered="#{day.date ne dayScheduleController.day}">
+                    <f:param name="day" value="#{day.asString}"/>
+                </h:link>
+                <h:outputText value="#{day.getDayOfWeek(dayScheduleController.user.locale)}" styleClass="header_button_text_only" rendered="#{day.date eq dayScheduleController.day}"/>
+            </ui:repeat>
             <span class="header_text">#{bundle.Schedule}</span>
             <h:form id="buttons_form" styleClass="header_form">
                 <h:outputText value="#{bundle.SelectMoviesFirst}"
@@ -107,7 +106,7 @@
                     <ui:repeat value="#{dayScheduleController.getHourLineFor(hour)}" var="hourSlot">
                         <div class="sch_row_rest">
                             <h:panelGroup id="movie_cell"
-                                          styleClass="#{scheduleController.getMovieStyleClass(hourSlot.showing.id)}#{dayScheduleController.focusShowingId eq hourSlot.showing.id ? ' toHighlight' : ''}"
+                                          styleClass="#{scheduleController.getMovieStyleClass(hourSlot.showing.id)}#{param['showing'] eq hourSlot.showing.id ? ' toHighlight' : ''}"
                                           rendered="#{hourSlot.hasShowing()}"
                                           style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
                                 <span class="sch_movie_cell_embedded">

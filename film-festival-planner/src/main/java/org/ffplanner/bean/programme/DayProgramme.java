@@ -1,7 +1,7 @@
 package org.ffplanner.bean.programme;
 
-import org.ffplanner.controller.Hour;
-import org.ffplanner.controller.HourSlot;
+import org.ffplanner.helper.Hour;
+import org.ffplanner.helper.HourSlot;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.Venue;
 

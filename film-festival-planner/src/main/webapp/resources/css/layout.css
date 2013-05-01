@@ -19,7 +19,7 @@
     display: inline;
 }
 
-.header_button, .header_button:visited {
+.header_button, .header_button:visited, .header_button_text_only {
     -moz-box-shadow: inset 1px 1px 20px 1px #ffffff;
     -webkit-box-shadow: inset 1px 1px 20px 1px #ffffff;
     box-shadow: inset 1px 1px 20px 1px #ffffff;
@@ -39,6 +39,10 @@
 .header_button:active {
     position: relative;
     top: 1px;
+}
+
+.header_button_text_only {
+    color: #000000;
 }
 
 .header_text {

@@ -86,7 +86,7 @@ public class MovieBundle implements Serializable {
     }
 
     public String getFormattedDuration() {
-        return new DateUtils().formatHoursAndMinutes(getDurationInMinutes());
+        return DateUtils.formatHoursAndMinutes(getDurationInMinutes());
     }
 
     public int getDurationInMinutes() {

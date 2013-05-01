@@ -1,4 +1,4 @@
-package org.ffplanner.controller;
+package org.ffplanner.helper;
 
 import com.google.common.collect.ObjectArrays;
 

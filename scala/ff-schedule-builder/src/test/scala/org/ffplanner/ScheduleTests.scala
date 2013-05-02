@@ -8,6 +8,8 @@ import org.scalatest.junit.JUnitRunner
 import com.google.common.collect.{TreeRangeSet, RangeSet}
 import org.scalatest.matchers.ShouldMatchers
 import org.ffplanner.TestFestivalProgrammes._
+import org.ffplanner.TestScheduleConstraints._
+import scala.collection.immutable.SortedSet
 
 /** Unit tests for [[org.ffplanner.ScheduleCreator ScheduleCreator]].
   *
@@ -153,19 +155,15 @@ class ScheduleTests extends FunSuite with ShouldMatchers {
     }
   }
 
-  test("optimal scheduling - ???") {
+  test("optimal scheduling - showing 14 in conflict with both showing 1 and 8") {
     new Tiff2012Fixture {
-      val scheduleConstraints: ScheduleConstraintsMock = new ScheduleConstraintsMock(
-        Set[MovieConstraintMock](
-          new MovieConstraintMock(156, 2),
-          new MovieConstraintMock(159, 2)
-        ),
-        Set[ShowingConstraintMock]()
-      )
-      val schedules: List[Schedule] = scheduleBuilder.getPossibleSchedules(scheduleConstraints)
-
+      val schedules: List[Schedule] = scheduleBuilder.getPossibleSchedules(scheduleConstraints1)
       schedules should have size (1)
-//      schedules(0).showingIds should (contain (1009L) and contain (1007L))
+
+      for (schedule <- schedules) {
+        assertNoOverlap(schedule, scheduleBuilder.festivalProgramme)
+        assertAllMoviesScheduled(schedule, scheduleConstraints1, scheduleBuilder.festivalProgramme)
+      }
     }
   }
 
@@ -237,5 +235,26 @@ class ScheduleTests extends FunSuite with ShouldMatchers {
       schedule.showingIds.map(festivalProgramme.getShowing(_).movie.id) --
       schedule.missedMovieIds
     movieIdConstraints should be ('empty)
+  }
+
+  def assertAllMoviesScheduled(
+    schedule: Schedule, scheduleConstraints: ScheduleConstraints, festivalProgramme: FestivalProgramme) {
+    assertMoviesScheduled(scheduleConstraints.movieConstraintIds, schedule, festivalProgramme)
+  }
+
+  def assertMoviesScheduled(movieIds: Set[Long], schedule: Schedule, festivalProgramme: FestivalProgramme) {
+    for (movieId <- movieIds) {
+      val movieShowings: SortedSet[Showing] = festivalProgramme.showingsOf(movieId)
+      assertExactlyOneShowingScheduledFrom(movieShowings, schedule)
+    }
+  }
+
+  def assertExactlyOneShowingScheduledFrom(showings: Set[Showing], schedule: Schedule) {
+    assertExactlyOneShowingIdScheduledFrom(showings map {_.id}, schedule)
+  }
+
+  def assertExactlyOneShowingIdScheduledFrom(showingIds: Set[Long], schedule: Schedule) {
+    assert((schedule.showingIds -- showingIds).size == schedule.showingIds.size - 1,
+      "Either none or more than one of "+showingIds+" were scheduled.")
   }
 }

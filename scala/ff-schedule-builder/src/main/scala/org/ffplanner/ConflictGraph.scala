@@ -76,6 +76,8 @@ class ConflictGraph(val festivalProgramme: FestivalProgramme) {
 
   def neighboursOf(showingId: Long): Set[Node] = graphNodes.get(showingId).map(graph(_).toSet).getOrElse(Set.empty)
 
+  def getFirstIsolatedNode: Option[Node] = getIsolatedNodes.headOption
+
   /**
     * @return the isolated nodes in the graph, grouped by movie id.
     */

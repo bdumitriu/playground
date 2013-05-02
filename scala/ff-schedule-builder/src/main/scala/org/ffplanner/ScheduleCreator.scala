@@ -26,8 +26,8 @@ class ScheduleCreator(val scheduleBuilder: ScheduleBuilder, val scheduleConstrai
     }
 
     def getSchedules0(conflictGraph: ConflictGraph, scheduledShowingIds: Set[Long]): Set[Long] = {
-      val scheduleableShowings: SortedSet[Node] = conflictGraph.getIsolatedNodes
-      if (scheduleableShowings.isEmpty) {
+      val scheduleableShowing: Option[Node] = conflictGraph.getFirstIsolatedNode
+      if (scheduleableShowing.isEmpty) {
         chooseShowing(conflictGraph) match {
           case Some(showingId) => {
             conflictGraph.updateWith(showingId)
@@ -36,9 +36,8 @@ class ScheduleCreator(val scheduleBuilder: ScheduleBuilder, val scheduleConstrai
           case None => scheduledShowingIds
         }
       } else {
-        val scheduleableShowingIds: Iterable[Long] = scheduleableShowings.groupBy(_.movieId).map(_._2.head.showingId)
-        scheduleableShowingIds.foreach(conflictGraph.updateWith)
-        getSchedules0(conflictGraph, scheduledShowingIds ++ scheduleableShowingIds)
+        conflictGraph.updateWith(scheduleableShowing.get.showingId)
+        getSchedules0(conflictGraph, scheduledShowingIds + scheduleableShowing.get.showingId)
       }
     }
 

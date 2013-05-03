@@ -16,17 +16,17 @@ import org.ffplanner.TestScheduleConstraints._
 class ConflictGraphTests extends FunSuite with ShouldMatchers {
 
   trait TestFixture1 {
-    val graph: ConflictGraph = new ConflictGraph(tiff2012Programme)
+    val graph: ConflictGraph[Nothing] = new ConflictGraph[Nothing](tiff2012Programme)
     graph.initializeWith(tiff2012AllMovieConstraints)
   }
 
   trait TestFixture2 {
-    val graph: ConflictGraph = new ConflictGraph(tiff2012Programme)
+    val graph: ConflictGraph[Nothing] = new ConflictGraph[Nothing](tiff2012Programme)
     graph.initializeWith(scheduleConstraints1)
   }
 
   trait TestFixture3 {
-    val graph: ConflictGraph = new ConflictGraph(tiff2012Programme)
+    val graph: ConflictGraph[Nothing] = new ConflictGraph[Nothing](tiff2012Programme)
     graph.initializeWith(scheduleConstraints2)
   }
 
@@ -122,14 +122,14 @@ class ConflictGraphTests extends FunSuite with ShouldMatchers {
   }
 
   test("movie priorities are not lost") {
-    def testPriority1(graph: ConflictGraph, neighbourId: Long, priority1Id: Long) {
+    def testPriority1(graph: ConflictGraph[Nothing], neighbourId: Long, priority1Id: Long) {
       graph.neighboursOf(neighbourId).filter(_.priority == 1) should have size (1)
-      val priority1Node: Option[Node] = graph.neighboursOf(neighbourId).find(_.showingId == priority1Id)
+      val priority1Node: Option[Node[Nothing]] = graph.neighboursOf(neighbourId).find(_.showingId == priority1Id)
       assert(priority1Node.isDefined)
       priority1Node.get.priority should be (1)
     }
 
-    val graph: ConflictGraph = new ConflictGraph(tiff2012Programme)
+    val graph: ConflictGraph[Nothing] = new ConflictGraph[Nothing](tiff2012Programme)
     val priority2Constraint: MovieConstraint = tiff2012AllMovieConstraints.movieConstraints.find(_.movie.id == 19).get
     val priority1Constraint: MovieConstraint = new MovieConstraint(priority2Constraint.movie, 1: Short)
     val scheduleConstraints = new ScheduleConstraints(
@@ -141,10 +141,10 @@ class ConflictGraphTests extends FunSuite with ShouldMatchers {
     testPriority1(graph, 362, 357)
   }
 
-  def nodeSetOf(showingIds: Long*): Set[Node] = Set(showingIds: _*).map(nodeOf)
+  def nodeSetOf(showingIds: Long*): Set[Node[Nothing]] = Set(showingIds: _*).map(nodeOf)
 
-  def nodeListOf(showingIds: Long*): List[Node] = List(showingIds: _*).map(nodeOf)
+  def nodeListOf(showingIds: Long*): List[Node[Nothing]] = List(showingIds: _*).map(nodeOf)
 
-  def nodeOf(showingId: Long): Node =
-    new Node(new ShowingConstraint(tiff2012Programme.getShowing(showingId), Utils.DefaultPriority))
+  def nodeOf(showingId: Long): Node[Nothing] =
+    new Node[Nothing](new ShowingConstraint(tiff2012Programme.getShowing(showingId), Utils.DefaultPriority))
 }

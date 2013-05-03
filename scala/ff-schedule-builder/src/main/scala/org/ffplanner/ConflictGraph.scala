@@ -12,17 +12,19 @@ import org.ffplanner.ConflictGraph.Node.NodeOrdering
   *
   * @author Bogdan Dumitriu
   */
-class ConflictGraph(val festivalProgramme: FestivalProgramme) {
+class ConflictGraph[T](val festivalProgramme: FestivalProgramme) {
 
-  private val graphNodes: mutable.Map[Long, Node] = mutable.Map.empty
+  private val graphNodes: mutable.Map[Long, Node[T]] = mutable.Map.empty
 
-  private val graph: mutable.Map[Node, mutable.Set[Node]] = mutable.Map.empty.withDefaultValue(mutable.Set.empty)
+  private val graph: mutable.Map[Node[T], mutable.Set[Node[T]]] = mutable.Map.empty.withDefaultValue(mutable.Set.empty)
 
-  private implicit def graphNodeFor(showing: Showing): Node = graphNodes(showing.id)
+  private implicit def graphNodeFor(showing: Showing): Node[T] = graphNodes(showing.id)
 
-  private def getOrBuildNodeFor(showing: Showing, priority: Short): Node = {
+  private implicit object NodeOrderingT extends NodeOrdering[T]
+
+  private def getOrBuildNodeFor(showing: Showing, priority: Short): Node[T] = {
     graphNodes.get(showing.id).getOrElse {
-      val node = new Node(new ShowingConstraint(showing, priority))
+      val node = new Node[T](new ShowingConstraint(showing, priority))
       graphNodes(showing.id) = node
       node
     }
@@ -74,27 +76,29 @@ class ConflictGraph(val festivalProgramme: FestivalProgramme) {
 
   def hasShowing(showingId: Long): Boolean = graphNodes.get(showingId).map(graph.contains).getOrElse(false)
 
-  def neighboursOf(showingId: Long): Set[Node] = graphNodes.get(showingId).map(graph(_).toSet).getOrElse(Set.empty)
+  def neighboursOf(showingId: Long): Set[Node[T]] = graphNodes.get(showingId).map(graph(_).toSet).getOrElse(Set.empty)
 
-  def getFirstIsolatedNode: Option[Node] = getIsolatedNodes.headOption
+  def getFirstIsolatedNode: Option[Node[T]] = getIsolatedNodes.headOption
 
   /**
     * @return the isolated nodes in the graph, grouped by movie id.
     */
-  def getIsolatedNodes: SortedSet[Node] = getNodesWithNeighbourCount(0)
+  def getIsolatedNodes: SortedSet[Node[T]] = getNodesWithNeighbourCount(0)
 
-  def getNodesWithNeighbourCount(nrNeighbours: Int): SortedSet[Node] =
-    SortedSet.empty[Node](NodeOrdering) ++ graph.keySet filter { graph(_).size == nrNeighbours }
+  def getNodesWithNeighbourCount(nrNeighbours: Int): SortedSet[Node[T]] =
+    SortedSet.empty[Node[T]](NodeOrderingT) ++ graph.keySet filter { graph(_).size == nrNeighbours }
 
   /** Deletes the `node` and all the edges leading to it form the graph. */
-  private def deleteNode(node: Node) {
+  private def deleteNode(node: Node[T]) {
     graph.remove(node).foreach(neighbours => neighbours.foreach { graph(_).remove(node) })
   }
 }
 
 object ConflictGraph {
 
-  class Node(val showingConstraint: ShowingConstraint) {
+  class Node[T](val showingConstraint: ShowingConstraint) {
+
+    var data: T = null.asInstanceOf[T]
 
     def showingId: Long = showingConstraint.showing.id
 
@@ -102,10 +106,10 @@ object ConflictGraph {
 
     def priority: Short = showingConstraint.priority
 
-    def canEqual(other: Any): Boolean = other.isInstanceOf[Node]
+    def canEqual(other: Any): Boolean = other.isInstanceOf[Node[T]]
 
     override def equals(other: Any): Boolean = other match {
-      case that: Node => that.canEqual(this) && this.showingConstraint.showing == that.showingConstraint.showing
+      case that: Node[T] => that.canEqual(this) && this.showingConstraint.showing == that.showingConstraint.showing
       case _ => false
     }
 
@@ -116,8 +120,8 @@ object ConflictGraph {
 
   object Node {
 
-    implicit object NodeOrdering extends Ordering[Node] {
-      def compare(node1: Node, node2: Node): Int = {
+    trait NodeOrdering[T] extends Ordering[Node[T]] {
+      def compare(node1: Node[T], node2: Node[T]): Int = {
         ShowingOrdering.compare(node1.showingConstraint.showing, node2.showingConstraint.showing)
       }
     }

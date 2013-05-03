@@ -15,29 +15,14 @@ class ScheduleCreator(val scheduleBuilder: ScheduleBuilder, val scheduleConstrai
   /**
     * @return one or more proposed schedules.
     */
-  def getSchedules: List[Schedule] = {
-    def chooseShowing(conflictGraph: ConflictGraph): Option[Long] = {
-      val candidates: Set[Node] = conflictGraph.getNodesWithNeighbourCount(1)
-      if (candidates.isEmpty) {
-        None
-      } else {
-        Some(candidates.head.showingId)
-      }
-    }
-
-    def getSchedules0(conflictGraph: ConflictGraph, scheduledShowingIds: Set[Long]): Set[Long] = {
-      val scheduleableShowing: Option[Node] = conflictGraph.getFirstIsolatedNode
-      if (scheduleableShowing.isEmpty) {
-        chooseShowing(conflictGraph) match {
-          case Some(showingId) => {
-            conflictGraph.updateWith(showingId)
-            getSchedules0(conflictGraph, scheduledShowingIds + showingId)
-          }
-          case None => scheduledShowingIds
+  def getSchedules[T](planningStrategy: PlanningStrategy[T]): List[Schedule] = {
+    def getSchedules0(conflictGraph: ConflictGraph[T], scheduledShowingIds: Set[Long]): Set[Long] = {
+      planningStrategy.chooseNextShowing(conflictGraph) match {
+        case Some(showingId) => {
+          conflictGraph.updateWith(showingId)
+          getSchedules0(conflictGraph, scheduledShowingIds + showingId)
         }
-      } else {
-        conflictGraph.updateWith(scheduleableShowing.get.showingId)
-        getSchedules0(conflictGraph, scheduledShowingIds + scheduleableShowing.get.showingId)
+        case None => scheduledShowingIds
       }
     }
 
@@ -45,7 +30,7 @@ class ScheduleCreator(val scheduleBuilder: ScheduleBuilder, val scheduleConstrai
       scheduleConstraints.movieConstraintIds -- scheduledShowingIds.map(festivalProgramme.getShowing(_).movie.id)
     }
 
-    val conflictGraph: ConflictGraph = new ConflictGraph(festivalProgramme)
+    val conflictGraph: ConflictGraph[T] = new ConflictGraph[T](festivalProgramme)
     conflictGraph.initializeWith(scheduleConstraints)
     val scheduledShowingIds: Set[Long] = getSchedules0(conflictGraph, scheduleConstraints.showingConstraintIds)
     List(new Schedule(scheduledShowingIds, getRemainingMovieIds(scheduledShowingIds)))

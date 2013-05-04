@@ -18,10 +18,13 @@ class ConflictMap(val festivalProgramme: FestivalProgramme) {
         val conflictMap: Map[Long, SortedSet[Showing]]) {}
 
     def f(acc: Acc, showing: Showing): Acc = {
-      val showingSets: (SortedSet[Showing], SortedSet[Showing]) = acc.showings.span(_.overlapsWith(showing))
-      val slidingWindow: SortedSet[Showing] = acc.slidingWindow.dropWhile(!_.overlapsWith(showing)) ++ showingSets._1
-      new Acc(showingSets._2, slidingWindow,
-        acc.conflictMap + (showing.id -> (slidingWindow -- festivalProgramme.showingsOf(showing.movie))))
+      val showingsSplit: (SortedSet[Showing], SortedSet[Showing]) = acc.showings.span(_.overlapsWith(showing))
+      val slidingWindowSplit: (SortedSet[Showing], SortedSet[Showing]) =
+        acc.slidingWindow.partition(_.overlapsWith(showing))
+      val newShowings: SortedSet[Showing] = showingsSplit._2 ++ slidingWindowSplit._2.filter(_.after(showing))
+      val newSlidingWindow: SortedSet[Showing] = showingsSplit._1 ++ slidingWindowSplit._1
+      new Acc(newShowings, newSlidingWindow,
+        acc.conflictMap + (showing.id -> (newSlidingWindow -- festivalProgramme.showingsOf(showing.movie))))
     }
 
     val sortedShowings: SortedSet[Showing] = festivalProgramme.getSortedShowings

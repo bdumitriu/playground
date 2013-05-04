@@ -18,8 +18,11 @@ class Showing(val id: Long, val venueId: Long, val dateTime: DateTime, val movie
 
   def within(timeConstraints: ImmutableRangeSet[DateTime]) = timeConstraints.encloses(interval)
 
-  def overlapsWith(showing: Showing) =
+  def overlapsWith(showing: Showing): Boolean =
     interval.isConnected(showing.interval) && !interval.intersection(showing.interval).isEmpty
+
+  def after(showing: Showing): Boolean =
+    interval.lowerEndpoint().isAfter(showing.interval.lowerEndpoint())
 
   def overlapsWith(intervals: RangeSet[DateTime]) = !intervals.subRangeSet(interval).isEmpty
 

@@ -87,4 +87,17 @@ class ConflictMapTests extends FunSuite with ShouldMatchers {
     val showingIds: Set[Long] = conflictDetector.conflictingShowingIds(53, Set((1L to 198): _*), Set())
     showingIds should be (Set(37L, 38, 47, 60, 67))
   }
+
+  test("correct conflicts between showings 275, 281, 286, 287 and 295 (bug)") {
+    val conflictDetector: ConflictMap = new ConflictMap(tiff2012Programme)
+    conflictDetector.conflictingShowingIds(
+      275, Set(), Set(275L, 281L, 286L, 287L, 295L)) should be (Set(281L, 286, 287, 295))
+    conflictDetector.conflictingShowingIds(
+      281, Set(), Set(275L, 281L, 286L, 287L, 295L)) should be (Set(275L, 286, 287, 295))
+    conflictDetector.conflictingShowingIds(286, Set(), Set(275L, 281L, 286L, 287L, 295L)) should be (Set(275L, 281))
+    conflictDetector.conflictingShowingIds(
+      287, Set(), Set(275L, 281L, 286L, 287L, 295L)) should be (Set(275L, 281, 295))
+    conflictDetector.conflictingShowingIds(
+      295, Set(), Set(275L, 281L, 286L, 287L, 295L)) should be (Set(275L, 281, 287))
+  }
 }

@@ -2,6 +2,7 @@ package org.ffplanner
 
 import `def`.{ScheduleConstraintsDefinition, FestivalProgrammeDefinition}
 import scala.collection.JavaConversions.seqAsJavaList
+import org.ffplanner.strategy.DefaultPlanningStrategy
 
 
 /** The entry point to the scheduling library.

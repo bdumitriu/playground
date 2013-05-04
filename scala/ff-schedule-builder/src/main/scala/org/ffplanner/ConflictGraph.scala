@@ -18,8 +18,6 @@ class ConflictGraph[T](val festivalProgramme: FestivalProgramme) {
 
   private val graph: mutable.Map[Node[T], mutable.Set[Node[T]]] = mutable.Map.empty.withDefaultValue(mutable.Set.empty)
 
-  private implicit def graphNodeFor(showing: Showing): Node[T] = graphNodes(showing.id)
-
   private implicit object NodeOrderingT extends NodeOrdering[T]
 
   private def getOrBuildNodeFor(showing: Showing, priority: Short): Node[T] = {
@@ -35,24 +33,23 @@ class ConflictGraph[T](val festivalProgramme: FestivalProgramme) {
     */
   def initializeWith(scheduleConstraints: ScheduleConstraints) {
     def createGraphNodes(movieConstraint: MovieConstraint) {
-      festivalProgramme.showingsOf(movieConstraint.movie).foreach(getOrBuildNodeFor(_, movieConstraint.priority))
-    }
-
-    def addMovieShowingsToGraph(movieConstraint: MovieConstraint) {
-      festivalProgramme.showingsOf(movieConstraint.movie).foreach(addShowingToGraph(_, movieConstraint.priority))
-    }
-
-    def addShowingToGraph(showing: Showing, priority: Short) {
-      val conflicts: Set[Long] = festivalProgramme.getConflictsOf(
-        showing.id, scheduleConstraints.movieConstraintIds, scheduleConstraints.showingConstraintIds)
-      if (conflicts.intersect(scheduleConstraints.showingConstraintIds).isEmpty) {
-        graph(showing) = mutable.Set(conflicts.toList: _*).map(festivalProgramme.getShowing _ andThen graphNodeFor)
+      val movieShowings =  festivalProgramme.showingsOf(movieConstraint.movie).filter { showing: Showing =>
+        festivalProgramme.getConflictsOf(showing.id, Set.empty, scheduleConstraints.showingConstraintIds).isEmpty
       }
+      movieShowings.foreach(getOrBuildNodeFor(_, movieConstraint.priority))
+    }
+
+    def addShowingToGraph(node: Node[T]) {
+      // we cannot have conflicts with scheduleConstraints.showingConstraintIds because nodes that had such conflicts
+      // have already been eliminated in createGraphNodes
+      val conflicts: Set[Long] =
+        festivalProgramme.getConflictsOf(node.showingId, scheduleConstraints.movieConstraintIds, Set.empty)
+      graph(node) = mutable.Set(conflicts.toList: _*).filter(graphNodes.get(_).isDefined).map(graphNodes)
     }
 
     graph.clear()
     scheduleConstraints.movieConstraints.foreach(createGraphNodes)
-    scheduleConstraints.movieConstraints.foreach(addMovieShowingsToGraph)
+    graphNodes.values.foreach(addShowingToGraph)
   }
 
   /** Registers the scheduling of a showing. The showing, all its direct neighbours and all the other showings of the
@@ -60,11 +57,13 @@ class ConflictGraph[T](val festivalProgramme: FestivalProgramme) {
     */
   def updateWith(scheduledShowing: Showing) {
     def deleteNodeAndNeighbours(showing: Showing) {
-      graph.remove(showing).foreach(neighbours => neighbours.foreach(deleteNode))
+      graph.remove(graphNodes.get(showing.id).getOrElse(null)).foreach(neighbours => neighbours.foreach(deleteNode))
     }
 
     deleteNodeAndNeighbours(scheduledShowing)
-    (festivalProgramme.showingsOf(scheduledShowing.movie) - scheduledShowing).foreach(graphNodeFor _ andThen deleteNode)
+    (festivalProgramme.showingsOf(scheduledShowing.movie) - scheduledShowing).foreach { showing: Showing =>
+      graphNodes.get(showing.id).map(deleteNode)
+    }
   }
 
   /** Registers the fact that a showing has been scheduled. The showing, all its direct neighbours and all the other
@@ -78,6 +77,10 @@ class ConflictGraph[T](val festivalProgramme: FestivalProgramme) {
 
   def neighboursOf(showingId: Long): Set[Node[T]] = graphNodes.get(showingId).map(graph(_).toSet).getOrElse(Set.empty)
 
+  def neighboursOf(node: Node[T]): Set[Node[T]] = graph.get(node).map(_.toSet).getOrElse(Set.empty)
+
+  def numberOfNeighboursOf(node: Node[T]) = graph.get(node).map(_.size).getOrElse(0)
+
   def getFirstIsolatedNode: Option[Node[T]] = getIsolatedNodes.headOption
 
   /**
@@ -87,6 +90,13 @@ class ConflictGraph[T](val festivalProgramme: FestivalProgramme) {
 
   def getNodesWithNeighbourCount(nrNeighbours: Int): SortedSet[Node[T]] =
     SortedSet.empty[Node[T]](NodeOrderingT) ++ graph.keySet filter { graph(_).size == nrNeighbours }
+
+  def getNodesSortedBy(ordering: Ordering[Node[T]]): SortedSet[Node[T]] =
+    SortedSet.empty[Node[T]](ordering) ++ graph.keySet
+
+  def visit(visitNode: Node[T] => Unit) {
+    graph.keySet foreach visitNode
+  }
 
   /** Deletes the `node` and all the edges leading to it form the graph. */
   private def deleteNode(node: Node[T]) {

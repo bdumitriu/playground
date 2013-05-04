@@ -1,6 +1,7 @@
-package org.ffplanner
+package org.ffplanner.strategy
 
 import org.ffplanner.ConflictGraph.Node
+import org.ffplanner.ConflictGraph
 
 /** Provides a strategy for choosing which showing to schedule next in a given
   * [[org.ffplanner.ConflictGraph ConflictGraph]] configuration.

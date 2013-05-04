@@ -2,6 +2,7 @@ package org.ffplanner
 
 import org.ffplanner.ConflictGraph.Node
 import scala.collection.immutable.{Iterable, SortedSet}
+import org.ffplanner.strategy.PlanningStrategy
 
 /** Creates a schedule starting from the input `constraints`.
   *

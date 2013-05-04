@@ -18,4 +18,7 @@ object TestScheduleConstraints {
 
   val scheduleConstraints2 = new ScheduleConstraints(
     tiff2012Programme, new ShowingConstraintsXmlParser("/schedule_constraints_02.xml").scheduleConstraints)
+
+  val scheduleConstraints3 = new ScheduleConstraints(
+    tiff2012Programme, new ShowingConstraintsXmlParser("/schedule_constraints_03.xml").scheduleConstraints)
 }

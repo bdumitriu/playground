@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schedule-constraints>
+  <movies>
+    <movie>
+      <id>1</id>
+      <priority>2</priority>
+      <title>Le tableau</title>
+    </movie>
+    <movie>
+      <id>2</id>
+      <priority>2</priority>
+      <title>Hail</title>
+    </movie>
+    <movie>
+      <id>3</id>
+      <priority>2</priority>
+      <title>Celal Tan ve Ailesinin Aşırı Acıklı Hikayesi</title>
+    </movie>
+    <movie>
+      <id>4</id>
+      <priority>2</priority>
+      <title>Poongsan</title>
+    </movie>
+    <movie>
+      <id>5</id>
+      <priority>2</priority>
+      <title>La fée</title>
+    </movie>
+    <movie>
+      <id>6</id>
+      <priority>2</priority>
+      <title>Thale</title>
+    </movie>
+    <movie>
+      <id>7</id>
+      <priority>2</priority>
+      <title>Aftershock</title>
+    </movie>
+    <movie>
+      <id>8</id>
+      <priority>2</priority>
+      <title>Scurtmetraje ZFR - Partea 1</title>
+    </movie>
+    <movie>
+      <id>9</id>
+      <priority>2</priority>
+      <title>La demora</title>
+    </movie>
+    <movie>
+      <id>10</id>
+      <priority>2</priority>
+      <title>Weekend</title>
+    </movie>
+    <movie>
+      <id>11</id>
+      <priority>2</priority>
+      <title>Dirch</title>
+    </movie>
+    <movie>
+      <id>12</id>
+      <priority>2</priority>
+      <title>Beast</title>
+    </movie>
+    <movie>
+      <id>13</id>
+      <priority>2</priority>
+      <title>Ako sa varia dejiny</title>
+    </movie>
+    <movie>
+      <id>14</id>
+      <priority>2</priority>
+      <title>Paziraie sadeh</title>
+    </movie>
+    <movie>
+      <id>15</id>
+      <priority>2</priority>
+      <title>Reacciones adversas</title>
+    </movie>
+    <movie>
+      <id>16</id>
+      <priority>2</priority>
+      <title>Babycall</title>
+    </movie>
+    <movie>
+      <id>17</id>
+      <priority>2</priority>
+      <title>The Bengali Detective</title>
+    </movie>
+    <movie>
+      <id>18</id>
+      <priority>2</priority>
+      <title>Spartacus</title>
+    </movie>
+    <movie>
+      <id>19</id>
+      <priority>2</priority>
+      <title>Prag</title>
+    </movie>
+    <movie>
+      <id>20</id>
+      <priority>2</priority>
+      <title>Dai - nihonjin</title>
+    </movie>
+    <movie>
+      <id>21</id>
+      <priority>2</priority>
+      <title>Las acacias</title>
+    </movie>
+    <movie>
+      <id>22</id>
+      <priority>2</priority>
+      <title>The Other Side of Sleep</title>
+    </movie>
+    <movie>
+      <id>23</id>
+      <priority>2</priority>
+      <title>Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb</title>
+    </movie>
+    <movie>
+      <id>24</id>
+      <priority>2</priority>
+      <title>Csak a szél</title>
+    </movie>
+    <movie>
+      <id>25</id>
+      <priority>2</priority>
+      <title>Lolita</title>
+    </movie>
+    <movie>
+      <id>26</id>
+      <priority>2</priority>
+      <title>Crawl</title>
+    </movie>
+    <movie>
+      <id>27</id>
+      <priority>2</priority>
+      <title>Little Matador</title>
+    </movie>
+    <movie>
+      <id>28</id>
+      <priority>2</priority>
+      <title>Side By Side</title>
+    </movie>
+    <movie>
+      <id>29</id>
+      <priority>2</priority>
+      <title>Michael</title>
+    </movie>
+    <movie>
+      <id>30</id>
+      <priority>2</priority>
+      <title>Revision</title>
+    </movie>
+    <movie>
+      <id>31</id>
+      <priority>2</priority>
+      <title>The Other Chelsea: A Story from Donetsk</title>
+    </movie>
+    <movie>
+      <id>32</id>
+      <priority>2</priority>
+      <title>Nebe Peklo</title>
+    </movie>
+    <movie>
+      <id>33</id>
+      <priority>2</priority>
+      <title>Gut</title>
+    </movie>
+    <movie>
+      <id>34</id>
+      <priority>2</priority>
+      <title>The Hunter</title>
+    </movie>
+    <movie>
+      <id>35</id>
+      <priority>2</priority>
+      <title>Shut Up Little Man! An Audio Misadventure</title>
+    </movie>
+  </movies>
+  <showings>
+  </showings>
+</schedule-constraints>

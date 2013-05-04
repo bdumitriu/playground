@@ -140,8 +140,8 @@ root {
     color: red;
 }
 
-.sch_movie_cell_embedded a:active {
-    border: none;
+.sch_movie_cell a:active, a:focus {
+    outline: none;
 }
 
 .sch_uncheck {

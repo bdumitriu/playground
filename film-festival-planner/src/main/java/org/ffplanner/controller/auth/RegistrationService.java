@@ -1,5 +1,6 @@
 package org.ffplanner.controller.auth;
 
+import org.ffplanner.util.FacesUtils;
 import org.ffplanner.util.Logging;
 import org.openid4java.association.AssociationException;
 import org.openid4java.consumer.*;
@@ -12,7 +13,7 @@ import org.openid4java.message.ax.FetchRequest;
 import org.openid4java.message.ax.FetchResponse;
 
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletRequest;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -152,9 +153,12 @@ public class RegistrationService {
      */
     public static String getReturnToUrl() {
         final FacesContext facesContext = FacesContext.getCurrentInstance();
-        final ServletRequest request = (ServletRequest) facesContext.getExternalContext().getRequest();
-        return "http://" + request.getServerName() + ":" + request.getServerPort()
-                + facesContext.getApplication().getViewHandler().getActionURL(facesContext, "/NewAccount.xhtml");
+        try {
+            return FacesUtils.getUrlToView(facesContext, "/NewAccount.xhtml");
+        } catch (MalformedURLException e) {
+            Logging.getInstance().log(logger, "Failed to build URL: ", e);
+            return "";
+        }
     }
 
     private static ConsumerManager getConsumerManager() {

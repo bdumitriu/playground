@@ -6,6 +6,10 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core">
 
+<f:metadata>
+    <f:event type="preRenderView" listener="#{loginController.processOpenIDProviderResponse}"/>
+</f:metadata>
+
 <h:head>
     <title>Log in</title>
 </h:head>
@@ -15,9 +19,9 @@
         <h:outputLabel value="Log in using"/>
         <br/><br/>
         <h:commandButton image="resources/img/google.png" style="width: 100px; height: 100px;"
-                         action="#{auth.logInWithGoogle(session.getAttribute('redirectTo'))}"/>
+                         action="#{auth.logInWithGoogle()}"/>
         <h:commandButton image="resources/img/yahoo.png" style="margin-left: 10px; width: 100px; height: 100px;"
-                         action="#{auth.logInWithYahoo(session.getAttribute('redirectTo'))}"/>
+                         action="#{auth.logInWithYahoo()}"/>
     </h:form>
 </h:body>
 

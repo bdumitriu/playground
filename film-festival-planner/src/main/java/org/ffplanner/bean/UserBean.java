@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Bogdan Dumitriu
@@ -55,6 +56,7 @@ public class UserBean extends BasicEntityBean<User> implements Serializable {
         user.setFirstName(authData.getFirstName());
         user.setLastName(authData.getLastName());
         user.setEmailAddress(authData.getEmailAddress());
+        user.setLocale(Locale.ENGLISH);
         final UserToken userToken = new UserToken();
         userToken.setUser(user);
         userToken.setToken(authData.getOpenId());

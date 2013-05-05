@@ -5,6 +5,7 @@ import org.ffplanner.controller.auth.AuthData;
 import org.ffplanner.controller.auth.RegistrationService;
 import org.ffplanner.entity.User;
 import org.ffplanner.qualifier.LoggedInUser;
+import org.ffplanner.util.FacesUtils;
 import org.ffplanner.util.Logging;
 import org.openid4java.discovery.DiscoveryInformation;
 import org.openid4java.message.AuthRequest;
@@ -36,8 +37,6 @@ public class AuthController implements Serializable {
 
     private static final String YAHOO_OPENID_URL = "https://me.yahoo.com/"; //NON-NLS
 
-    private String redirectPath;
-
     private DiscoveryInformation discoveryInformation;
 
     private AuthData authData;
@@ -58,17 +57,16 @@ public class AuthController implements Serializable {
         }
     }
 
-    public void logInWithGoogle(String redirectPath) {
-        logIn(GOOGLE_OPENID_URL, redirectPath);
+    public void logInWithGoogle() {
+        logIn(GOOGLE_OPENID_URL);
     }
 
-    public void logInWithYahoo(String redirectPath) {
-        logIn(YAHOO_OPENID_URL, redirectPath);
+    public void logInWithYahoo() {
+        logIn(YAHOO_OPENID_URL);
     }
 
-    private void logIn(String identifier, String redirectPath) {
+    private void logIn(String identifier) {
         discoveryInformation = RegistrationService.performDiscoveryOnUserSuppliedIdentifier(identifier);
-        this.redirectPath = redirectPath;
         final String returnToUrl = RegistrationService.getReturnToUrl();
         final AuthRequest authRequest = RegistrationService.createOpenIdAuthRequest(discoveryInformation, returnToUrl);
         try {
@@ -79,14 +77,18 @@ public class AuthController implements Serializable {
     }
 
     public void processOpenIDProviderResponse() {
-        if (user == null && authData == null) {
-            final ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        if (user == null) {
+            final FacesContext facesContext = FacesContext.getCurrentInstance();
+            final ExternalContext externalContext = facesContext.getExternalContext();
             final Map<String, String> parameterMap = externalContext.getRequestParameterMap();
-            authData = RegistrationService.processReturn(
+            final AuthData returnData = RegistrationService.processReturn(
                     discoveryInformation, parameterMap, RegistrationService.getReturnToUrl());
+            if (returnData != null) {
+                authData = returnData;
+            }
             if (authData == null) {
                 try {
-                    if (!FacesContext.getCurrentInstance().getResponseComplete()) {
+                    if (!facesContext.getResponseComplete()) {
                         externalContext.redirect("Login.xhtml");
                     }
                 } catch (IOException e) {
@@ -97,17 +99,7 @@ public class AuthController implements Serializable {
                 if (user != null) {
                     authData = null;
                     setUser(user);
-                    try {
-                        if (!FacesContext.getCurrentInstance().getResponseComplete()) {
-                            if (redirectPath != null) {
-                                externalContext.redirect(redirectPath);
-                            } else {
-                                externalContext.redirect("auth/DaySchedule.xhtml");
-                            }
-                        }
-                    } catch (IOException e) {
-                        Logging.getInstance().log(logger, "Redirect failed: ", e);
-                    }
+                    redirectToUserRequestedPage();
                 }
             }
         }
@@ -117,18 +109,27 @@ public class AuthController implements Serializable {
         if (user == null && authData != null) {
             user = userBean.createWith(authData);
             authData = null;
-            if (redirectPath != null) {
-                try {
-                    FacesContext.getCurrentInstance().getExternalContext().redirect(redirectPath);
-                } catch (IOException e) {
-                    Logging.getInstance().log(logger, "Redirect failed: ", e);
-                }
-                return null;
-            } else {
-                return "/auth/DaySchedule";
-            }
+            redirectToUserRequestedPage();
+            return null;
         } else {
             return null;
+        }
+    }
+
+    private static void redirectToUserRequestedPage() {
+        final FacesContext facesContext = FacesContext.getCurrentInstance();
+        final ExternalContext externalContext = facesContext.getExternalContext();
+        try {
+            if (!facesContext.getResponseComplete()) {
+                final String redirectPath = (String) externalContext.getSessionMap().get("redirectTo");
+                if (redirectPath != null) {
+                    externalContext.redirect(redirectPath);
+                } else {
+                    externalContext.redirect(FacesUtils.getUrlToRoot(facesContext));
+                }
+            }
+        } catch (IOException e) {
+            Logging.getInstance().log(logger, "Redirect failed: ", e);
         }
     }
 

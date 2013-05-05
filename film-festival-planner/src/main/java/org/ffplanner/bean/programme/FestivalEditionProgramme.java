@@ -98,6 +98,10 @@ public class FestivalEditionProgramme {
         return movieShowings.get(movieBundle);
     }
 
+    public List<Showing> getShowingsForSameMovieAs(Long showingId) {
+        return getShowingsForSameMovieAs(getShowingFor(showingId));
+    }
+
     public List<Showing> getShowingsForSameMovieAs(Showing showing) {
         final MovieBundleInFestival movieBundleInFestival = showing.getMovieBundleInFestival();
         return getShowingsFor(movieBundleInFestival);

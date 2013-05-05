@@ -12,6 +12,7 @@ import org.ffplanner.controller.constraints.ConstraintsData;
 import org.ffplanner.controller.constraints.ConstraintsIo;
 import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.ScheduleConstraintType;
+import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.User;
 import org.ffplanner.qualifier.LoggedInUser;
 import org.xml.sax.SAXException;
@@ -57,6 +58,8 @@ public class ScheduleController implements Serializable {
     @Inject
     private UserScheduleBean userScheduleBean;
 
+    private FestivalEditionProgramme festivalProgramme;
+
     private Short priority;
 
     private ConstraintsData constraintsData;
@@ -70,8 +73,11 @@ public class ScheduleController implements Serializable {
     }
 
     private FestivalEditionProgramme getFestivalEditionProgramme() {
-        final FestivalEdition festivalEdition = getFestivalEdition();
-        return festivalProgrammeBean.getProgrammeFor(festivalEdition);
+        if (festivalProgramme == null) {
+            final FestivalEdition festivalEdition = getFestivalEdition();
+            festivalProgramme = festivalProgrammeBean.getProgrammeFor(festivalEdition);
+        }
+        return festivalProgramme;
     }
 
     public void updateConstraintsData() {
@@ -208,6 +214,17 @@ public class ScheduleController implements Serializable {
         return hasSchedule() && scheduledShowings.contains(showingId);
     }
 
+    public boolean isScheduledElsewhere(Long showingId) {
+        if (hasSchedule()) {
+            for (Showing showing : getFestivalEditionProgramme().getShowingsForSameMovieAs(showingId)) {
+                if (scheduledShowings.contains(showing.getId())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean isWatchMovieSelected(Long showingId) {
         return isConstraintSelected(showingId, MOVIE);
     }
@@ -227,6 +244,8 @@ public class ScheduleController implements Serializable {
             stringBuilder.append(" sch_movie_cell_watch_showing");
         } else if (isScheduled(showingId)) {
             stringBuilder.append(" sch_movie_cell_scheduled");
+        } else if (isScheduledElsewhere(showingId)) {
+            stringBuilder.append(" sch_movie_cell_watch_elsewhere");
         } else if (isWatchMovieSelected(showingId)) {
             stringBuilder.append(" sch_movie_cell_watch_movie");
         } else if (isWatchElsewhereSelected(showingId)) {

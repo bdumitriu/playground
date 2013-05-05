@@ -299,7 +299,7 @@ CREATE TABLE `moviebundle` (
   `englishTitle` varchar(255) DEFAULT NULL,
   `originalTitle` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=199 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -337,6 +337,7 @@ CREATE TABLE `moviebundle_constraint` (
 
 LOCK TABLES `moviebundle_constraint` WRITE;
 /*!40000 ALTER TABLE `moviebundle_constraint` DISABLE KEYS */;
+INSERT INTO `moviebundle_constraint` VALUES (1,2,2),(2,2,2),(3,2,2),(4,2,2),(5,2,2),(6,2,2),(7,2,2),(8,2,2),(9,2,2),(10,2,2),(11,2,2),(12,2,2),(13,2,2),(14,2,2),(15,2,2),(16,2,2),(17,2,2),(18,2,2),(19,2,2),(20,2,2),(21,2,2),(22,2,2),(23,2,2),(24,2,2),(25,2,2),(26,2,2),(27,2,2),(28,2,2),(29,2,2),(30,2,2),(31,2,2),(32,2,2),(33,2,2),(34,2,2),(35,2,2);
 /*!40000 ALTER TABLE `moviebundle_constraint` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -462,7 +463,7 @@ CREATE TABLE `showing` (
   KEY `FKDE7117A572E97975` (`movieBundleInFestival_id`),
   CONSTRAINT `FKDE7117A572E97975` FOREIGN KEY (`movieBundleInFestival_id`) REFERENCES `moviebundle_festivaledition_section` (`id`),
   CONSTRAINT `FKDE7117A57FEFA715` FOREIGN KEY (`venue_id`) REFERENCES `venue` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=394 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=393 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -515,6 +516,7 @@ CREATE TABLE `user` (
   `emailAddress` varchar(255) DEFAULT NULL,
   `firstName` varchar(255) DEFAULT NULL,
   `lastName` varchar(255) DEFAULT NULL,
+  `locale` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -525,7 +527,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'bdumitriu@gmail.com','Bogdan','Dumitriu'),(8,'bdumitriu@gmail.com','Bogdan','Dumitriu');
+INSERT INTO `user` VALUES (8,'bdumitriu@gmail.com','Bogdan','Dumitriu','en');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -557,7 +559,7 @@ CREATE TABLE `userschedule` (
 
 LOCK TABLES `userschedule` WRITE;
 /*!40000 ALTER TABLE `userschedule` DISABLE KEYS */;
-INSERT INTO `userschedule` VALUES (2,'My Schedule',1,NULL,8,'2013-03-09 19:35:30');
+INSERT INTO `userschedule` VALUES (2,'My Schedule',1,NULL,8,'2013-05-04 20:39:36');
 /*!40000 ALTER TABLE `userschedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -610,7 +612,7 @@ CREATE TABLE `usertoken` (
 
 LOCK TABLES `usertoken` WRITE;
 /*!40000 ALTER TABLE `usertoken` DISABLE KEYS */;
-INSERT INTO `usertoken` VALUES ('https://www.google.com/accounts/o8/id?id=AItOawlsq73u5em7mw-reXHK8OTwqOusm4U2nGM',1),('https://www.google.com/accounts/o8/id?id=AItOawmRvW2-_usLcBkjxSChGUFLpzb6otPX6Pk',8);
+INSERT INTO `usertoken` VALUES ('https://www.google.com/accounts/o8/id?id=AItOawmRvW2-_usLcBkjxSChGUFLpzb6otPX6Pk',8);
 /*!40000 ALTER TABLE `usertoken` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -648,4 +650,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-04-02 21:52:08
+-- Dump completed on 2013-05-05 11:33:27

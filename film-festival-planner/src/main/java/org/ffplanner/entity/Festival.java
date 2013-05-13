@@ -3,6 +3,7 @@ package org.ffplanner.entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -10,6 +11,7 @@ import java.util.Objects;
  * @author Bogdan Dumitriu
  */
 @Entity
+@Table(name = "festival")
 public class Festival implements Serializable {
 
     private static final long serialVersionUID = 1L;

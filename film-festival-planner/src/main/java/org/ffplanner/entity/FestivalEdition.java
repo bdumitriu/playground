@@ -11,6 +11,7 @@ import java.util.*;
  * @author Bogdan Dumitriu
  */
 @Entity
+@Table(name = "festivaledition")
 public class FestivalEdition implements Serializable {
 
     private static final long serialVersionUID = 1L;

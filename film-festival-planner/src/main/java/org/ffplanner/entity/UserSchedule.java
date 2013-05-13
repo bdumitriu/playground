@@ -11,6 +11,7 @@ import java.util.Set;
  * @author Bogdan Dumitriu
  */
 @Entity
+@Table(name = "userschedule")
 public class UserSchedule implements Serializable {
 
     private static final long serialVersionUID = 1L;

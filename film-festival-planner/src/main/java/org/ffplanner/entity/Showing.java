@@ -22,6 +22,7 @@ import static java.util.Calendar.MINUTE;
  * @author Bogdan Dumitriu
  */
 @Entity
+@Table(name = "showing")
 public class Showing implements Serializable, Comparable<Showing>, ShowingDefinition {
 
     private static final long serialVersionUID = 1L;

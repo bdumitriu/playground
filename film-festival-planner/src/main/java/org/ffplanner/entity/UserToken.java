@@ -1,9 +1,6 @@
 package org.ffplanner.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -11,6 +8,7 @@ import java.util.Objects;
  * @author Bogdan Dumitriu
  */
 @Entity
+@Table(name = "usertoken")
 public class UserToken implements Serializable {
 
     private static final long serialVersionUID = 1L;

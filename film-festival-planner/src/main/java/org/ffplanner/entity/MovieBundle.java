@@ -10,6 +10,7 @@ import java.util.*;
  * @author Bogdan Dumitriu
  */
 @Entity
+@Table(name = "moviebundle")
 public class MovieBundle implements Serializable {
 
     private static final long serialVersionUID = 1L;

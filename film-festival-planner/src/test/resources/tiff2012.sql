@@ -173,7 +173,7 @@ CREATE TABLE `hibernate_sequence` (
 
 LOCK TABLES `hibernate_sequence` WRITE;
 /*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
-INSERT INTO `hibernate_sequence` VALUES (12);
+INSERT INTO `hibernate_sequence` VALUES (22);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -337,7 +337,6 @@ CREATE TABLE `moviebundle_constraint` (
 
 LOCK TABLES `moviebundle_constraint` WRITE;
 /*!40000 ALTER TABLE `moviebundle_constraint` DISABLE KEYS */;
-INSERT INTO `moviebundle_constraint` VALUES (1,2,2),(2,2,2),(3,2,2),(4,2,2),(5,2,2),(6,2,2),(7,2,2),(8,2,2),(9,2,2),(10,2,2),(11,2,2),(12,2,2),(13,2,2),(14,2,2),(15,2,2),(16,2,2),(17,2,2),(18,2,2),(19,2,2),(20,2,2),(21,2,2),(22,2,2),(23,2,2),(24,2,2),(25,2,2),(26,2,2),(27,2,2),(28,2,2),(29,2,2),(30,2,2),(31,2,2),(32,2,2),(33,2,2),(34,2,2),(35,2,2);
 /*!40000 ALTER TABLE `moviebundle_constraint` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -518,7 +517,7 @@ CREATE TABLE `user` (
   `lastName` varchar(255) DEFAULT NULL,
   `locale` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -527,8 +526,33 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (8,'bdumitriu@gmail.com','Bogdan','Dumitriu','en');
+INSERT INTO `user` VALUES (8,'bdumitriu@gmail.com','Bogdan','Dumitriu','en'),(18,'bdumitriu@gmail.com','Bogdan','Dumitriu','en'),(20,'','','','en');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_role`
+--
+
+DROP TABLE IF EXISTS `user_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_role` (
+  `user_id` bigint(20) NOT NULL,
+  `role` varchar(255) NOT NULL,
+  PRIMARY KEY (`user_id`,`role`),
+  KEY `FK143BF46AD61976BF` (`user_id`),
+  CONSTRAINT `FK143BF46AD61976BF` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_role`
+--
+
+LOCK TABLES `user_role` WRITE;
+/*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -550,7 +574,7 @@ CREATE TABLE `userschedule` (
   KEY `FKB26C3BA2D61976BF` (`user_id`),
   CONSTRAINT `FKB26C3BA2A9538DD5` FOREIGN KEY (`festivalEdition_id`) REFERENCES `festivaledition` (`id`),
   CONSTRAINT `FKB26C3BA2D61976BF` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -559,7 +583,7 @@ CREATE TABLE `userschedule` (
 
 LOCK TABLES `userschedule` WRITE;
 /*!40000 ALTER TABLE `userschedule` DISABLE KEYS */;
-INSERT INTO `userschedule` VALUES (2,'My Schedule',1,NULL,8,'2013-05-04 20:39:36');
+INSERT INTO `userschedule` VALUES (2,'My Schedule',1,NULL,8,'2013-05-15 22:35:52'),(21,'My Schedule',1,NULL,20,NULL);
 /*!40000 ALTER TABLE `userschedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -612,7 +636,7 @@ CREATE TABLE `usertoken` (
 
 LOCK TABLES `usertoken` WRITE;
 /*!40000 ALTER TABLE `usertoken` DISABLE KEYS */;
-INSERT INTO `usertoken` VALUES ('https://www.google.com/accounts/o8/id?id=AItOawmRvW2-_usLcBkjxSChGUFLpzb6otPX6Pk',8);
+INSERT INTO `usertoken` VALUES ('https://www.google.com/accounts/o8/id?id=AItOawmRvW2-_usLcBkjxSChGUFLpzb6otPX6Pk',8),('https://bdumitriu.myopenid.com/',20);
 /*!40000 ALTER TABLE `usertoken` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -650,4 +674,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-05-05 11:33:27
+-- Dump completed on 2013-05-15 23:36:08

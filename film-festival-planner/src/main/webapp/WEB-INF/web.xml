@@ -3,7 +3,8 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
-        <param-value>Development</param-value>
+        <param-value>Production</param-value>
+        <!--<param-value>Development</param-value>-->
     </context-param>
     <context-param>
         <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
@@ -28,10 +29,19 @@
         <url-pattern>*.xhtml</url-pattern>
         <url-pattern>/faces/*</url-pattern>
     </servlet-mapping>
+    <filter-mapping>
+        <filter-name>loginFilter</filter-name>
+        <url-pattern>/faces/auth/*</url-pattern>
+        <url-pattern>/faces/admin/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>adminFilter</filter-name>
+        <url-pattern>/faces/admin/*</url-pattern>
+    </filter-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>faces/auth/index.xhtml</welcome-file>
+        <welcome-file>faces/Index.xhtml</welcome-file>
     </welcome-file-list>
 </web-app>

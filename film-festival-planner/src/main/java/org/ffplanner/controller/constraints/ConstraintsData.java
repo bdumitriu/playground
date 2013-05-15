@@ -11,7 +11,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.ffplanner.entity.ScheduleConstraintType.*;
+import static org.ffplanner.controller.constraints.ScheduleConstraintType.*;
 
 /**
  * @author Bogdan Dumitriu

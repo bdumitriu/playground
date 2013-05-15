@@ -1,4 +1,4 @@
-package org.ffplanner.entity;
+package org.ffplanner.controller.constraints;
 
 import java.io.Serializable;
 import java.util.EnumSet;

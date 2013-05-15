@@ -1,5 +1,9 @@
-label {
-    float: left;
-    clear: left;
-    width: 150px;
+html {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+}
+
+.text {
+    display: inline-block;
+    width: 500px;
 }

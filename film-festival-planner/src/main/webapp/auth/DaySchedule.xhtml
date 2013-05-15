@@ -14,7 +14,7 @@
 
 <ui:composition template="layout.xhtml">
 
-    <ui:define name="title">Day Schedule</ui:define>
+    <ui:define name="title">#{bundle.TitleDaySchedule}</ui:define>
 
     <ui:define name="additional-headers">
         <h:outputStylesheet name="css/base/jquery-ui.min.css" />
@@ -66,11 +66,13 @@
                                styleClass="header_button">
                     <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
                 </h:commandLink>
-                <h:selectOneMenu value="#{scheduleController.constraintsFile}">
-                    <f:selectItem itemLabel="Load Constraints..." itemValue="foo"/>
-                    <f:selectItems value="#{scheduleController.constraintFiles}"/>
-                    <f:ajax listener="#{scheduleController.loadConstraintsFile}" render="@form :sch_form" onevent="updateMovieCell" />
-                </h:selectOneMenu>
+                <ui:remove>
+                    <h:selectOneMenu value="#{scheduleController.constraintsFile}">
+                        <f:selectItem itemLabel="Load Constraints..." itemValue="foo"/>
+                        <f:selectItems value="#{scheduleController.constraintFiles}"/>
+                        <f:ajax listener="#{scheduleController.loadConstraintsFile}" render="@form :sch_form" onevent="updateMovieCell" />
+                    </h:selectOneMenu>
+                </ui:remove>
             </h:form>
         </h:panelGroup>
     </ui:define>
@@ -122,12 +124,11 @@
                                           style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
                                 <span class="sch_movie_cell_embedded">
                                 <h:commandLink action="#{dayScheduleController.setShowing(hourSlot.showing.id)}"
-                                               value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle} (#{hourSlot.showing.movieBundleInFestival.movieBundle.durationInMinutes})">
-                                               <!--styleClass="sch_movie_cell_embedded">-->
+                                               value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle} (#{hourSlot.showing.movieBundleInFestival.movieBundle.durationInMinutes}')">
                                     <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
                                     <f:ajax execute="@form" render=":movieInfo" onevent="updateMovieInfo" />
                                 </h:commandLink>
-                                <span style="color: red"><h:outputText styleClass="sch_movie_cell_embedded" value="S#{hourSlot.showing.id}/M#{hourSlot.showing.movieBundleInFestival.id}"/></span>
+                                <!--<span style="color: red"><h:outputText styleClass="sch_movie_cell_embedded" value="S#{hourSlot.showing.id}/M#{hourSlot.showing.movieBundleInFestival.id}"/></span>-->
                                 </span>
                                 <h:commandLink
                                         title="#{bundle.WatchAnyTooltip}"

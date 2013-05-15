@@ -11,17 +11,24 @@
 </f:metadata>
 
 <h:head>
-    <title>Log in</title>
+    <title><h:outputText value="#{bundle.TitleLogin}"/></title>
+    <h:outputStylesheet name="css/screen.css"/>
 </h:head>
 
 <h:body>
     <h:form>
-        <h:outputLabel value="Log in using"/>
+        <h:outputLabel value="#{bundle.Login}"/>
         <br/><br/>
         <h:commandButton image="resources/img/google.png" style="width: 100px; height: 100px;"
                          action="#{auth.logInWithGoogle()}"/>
         <h:commandButton image="resources/img/yahoo.png" style="margin-left: 10px; width: 100px; height: 100px;"
                          action="#{auth.logInWithYahoo()}"/>
+        <br/><br/>
+        <h:outputLabel styleClass="text" value="#{bundle.LoginDetails}"/>
+        <br/><br/>
+        <h:outputFormat styleClass="text" value="#{bundle.OpenID}" escape="false">
+            <f:param value="http://openid.net/what"/>
+        </h:outputFormat>
     </h:form>
 </h:body>
 

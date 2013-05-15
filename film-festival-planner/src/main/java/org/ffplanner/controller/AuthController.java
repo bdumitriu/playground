@@ -48,10 +48,11 @@ public class AuthController implements Serializable {
     private User user;
 
     public void logOut() {
-        final ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        final FacesContext facesContext = FacesContext.getCurrentInstance();
+        final ExternalContext context = facesContext.getExternalContext();
         ((HttpSession) context.getSession(false)).invalidate();
         try {
-            context.redirect(context.getRequestContextPath());
+            context.redirect(FacesUtils.getUrlToRoot(facesContext));
         } catch (IOException e) {
             Logging.getInstance().log(logger, "Redirect failed: ", e);
         }

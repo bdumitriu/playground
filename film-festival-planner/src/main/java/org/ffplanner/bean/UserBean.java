@@ -47,7 +47,9 @@ public class UserBean extends BasicEntityBean<User> implements Serializable {
             return null;
         } else {
             assert result.size() == 1;
-            return result.get(0).getUser();
+            final User user = result.get(0).getUser();
+            user.loadLazyFields();
+            return user;
         }
     }
 

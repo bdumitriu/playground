@@ -1,6 +1,5 @@
 package org.ffplanner.controller.constraints;
 
-import org.ffplanner.entity.ScheduleConstraintType;
 import org.ffplanner.entity.Showing;
 
 /**

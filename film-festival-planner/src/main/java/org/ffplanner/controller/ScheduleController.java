@@ -11,7 +11,7 @@ import org.ffplanner.bean.programme.FestivalProgrammeBean;
 import org.ffplanner.controller.constraints.ConstraintsData;
 import org.ffplanner.controller.constraints.ConstraintsIo;
 import org.ffplanner.entity.FestivalEdition;
-import org.ffplanner.entity.ScheduleConstraintType;
+import org.ffplanner.controller.constraints.ScheduleConstraintType;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.User;
 import org.ffplanner.qualifier.LoggedInUser;
@@ -28,7 +28,7 @@ import java.nio.file.*;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.ffplanner.entity.ScheduleConstraintType.*;
+import static org.ffplanner.controller.constraints.ScheduleConstraintType.*;
 import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID;
 
 /**

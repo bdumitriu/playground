@@ -1,7 +1,5 @@
 package org.ffplanner.controller.constraints;
 
-import org.ffplanner.entity.ScheduleConstraintType;
-
 /**
  * A pseudo-constraint indicating that the user selected a certain movie at a different time and venue.
  *

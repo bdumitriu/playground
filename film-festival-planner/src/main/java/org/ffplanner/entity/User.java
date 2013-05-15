@@ -1,12 +1,11 @@
 package org.ffplanner.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.EnumSet;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Bogdan Dumitriu
@@ -28,6 +27,16 @@ public class User implements Serializable {
     private String emailAddress;
 
     private Locale locale;
+
+    @ElementCollection(targetClass = UserRole.class)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<UserRole> userRoles = EnumSet.noneOf(UserRole.class);
+
+    public void loadLazyFields() {
+        userRoles.iterator();
+    }
 
     public Long getId() {
         return id;
@@ -67,6 +76,10 @@ public class User implements Serializable {
 
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    public boolean hasRole(UserRole userRole) {
+        return userRoles.contains(userRole);
     }
 
     @Override

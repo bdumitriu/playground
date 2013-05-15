@@ -1,7 +1,6 @@
 package org.ffplanner.controller.constraints;
 
 import org.ffplanner.def.ConstraintDefinition;
-import org.ffplanner.entity.ScheduleConstraintType;
 
 import java.util.Objects;
 

@@ -12,30 +12,31 @@
 </f:metadata>
 
 <h:head>
-    <title>Create new account</title>
+    <title><h:outputText value="#{bundle.TitleNewAccount}"/></title>
     <h:outputStylesheet name="css/screen.css"/>
 </h:head>
 
 <h:body>
 
-    <h:outputText value="#{session.getAttribute('from')}"/>
-    This is the first time you have logged in using this OpenID (<h:outputText value="#{auth.authData.openId}"/>).
-    <br/>
-    We are about to create a new account for you using the data obtained from your OpenID provider.
-    <br/>
-    Please review it, modify it if necessary, and confirm the account creation.
+    <h:outputFormat styleClass="text" value="#{bundle.NewAccountDetails}" escape="false">
+        <f:param value="#{auth.authData.openId}"/>
+    </h:outputFormat>
+
     <br/>
     <br/>
 
     <h:form>
-        <h:outputLabel value="First name:" /> <h:inputText value="#{auth.authData.firstName}"/>
+        <h:outputLabel value="#{bundle.FirstName} " for="firstName"/>
+        <h:inputText id="firstName" value="#{auth.authData.firstName}" label="#{bundle.FirstName}"/>
         <br/>
-        <h:outputLabel value="Last name:" /> <h:inputText value="#{auth.authData.lastName}"/>
+        <h:outputLabel value="#{bundle.LastName} " for="lastName"/>
+        <h:inputText id="lastName" value="#{auth.authData.lastName}" label="#{bundle.LastName}"/>
         <br/>
-        <h:outputLabel value="Email address:" /> <h:inputText value="#{auth.authData.emailAddress}"/>
+        <h:outputLabel value="#{bundle.EmailAddress} " for="emailAddress"/>
+        <h:inputText id="emailAddress" value="#{auth.authData.emailAddress}" label="#{bundle.EmailAddress}"/>
         <br/>
         <br/>
-        <h:commandButton value="Create account" action="#{auth.createNewAccount}"/>
+        <h:commandButton value="#{bundle.CreateAccount}" action="#{auth.createNewAccount}"/>
     </h:form>
 
 </h:body>

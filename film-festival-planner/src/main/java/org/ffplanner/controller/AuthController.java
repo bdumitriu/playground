@@ -37,6 +37,8 @@ public class AuthController implements Serializable {
 
     private static final String YAHOO_OPENID_URL = "https://me.yahoo.com/"; //NON-NLS
 
+    private static final String MY_OPENID_URL = "https://myopenid.com/"; //NON-NLS
+
     private DiscoveryInformation discoveryInformation;
 
     private AuthData authData;
@@ -64,6 +66,10 @@ public class AuthController implements Serializable {
 
     public void logInWithYahoo() {
         logIn(YAHOO_OPENID_URL);
+    }
+
+    public void logInWithMyOpenId() {
+        logIn(MY_OPENID_URL);
     }
 
     private void logIn(String identifier) {

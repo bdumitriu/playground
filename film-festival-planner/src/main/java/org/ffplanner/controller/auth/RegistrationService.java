@@ -98,12 +98,12 @@ public class RegistrationService {
             final VerificationResult verificationResult =
                     getConsumerManager().verify(returnToUrl, response, discoveryInformation);
             final Identifier verifiedIdentifier = verificationResult.getVerifiedId();
-            if (verifiedIdentifier != null) {
+            if (verifiedIdentifier != null && verifiedIdentifier.getIdentifier() != null) {
+                authData.setOpenId(verifiedIdentifier.getIdentifier());
                 final AuthSuccess authSuccess = (AuthSuccess) verificationResult.getAuthResponse();
                 if (authSuccess.hasExtension(AxMessage.OPENID_NS_AX)) {
                     final MessageExtension extension = authSuccess.getExtension(AxMessage.OPENID_NS_AX);
                     if (extension instanceof FetchResponse) {
-                        authData.setOpenId(verifiedIdentifier.getIdentifier());
                         final FetchResponse axResponse = (FetchResponse) extension;
                         final String emailAddress = axResponse.getAttributeValue("email");
                         if (emailAddress != null) {

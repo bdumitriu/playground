@@ -2,20 +2,19 @@
  * Author: Bogdan Dumitriu
  */
 
-root {
-    display: block;
-}
-
 .sch_container {
+    background-color: #ffffff;
     font-family: Candara, serif;
     white-space: nowrap;
+
+    /* display and width are necessary to avoid the collapsing of the outer div: */
+    /* http://stackoverflow.com/questions/218760/how-do-you-keep-parents-of-floated-elements-from-collapsing */
+    display: inline-block;
 }
 
-.sch_header_first {
+.sch_cell_first, .sch_cell_rest {
     display: inline-block;
-    width: 50px;
     height: 60px;
-    background-color: #fffbff;
     border-color: #cccccc;
     border-right-width: 1px;
     border-right-style: solid;
@@ -23,69 +22,43 @@ root {
     border-bottom-style: solid;
 }
 
-.sch_header_first_embedded {
+.sch_cell_first {
+    width: 50px;
+}
+
+.sch_cell_rest {
+    width: 150px;
+}
+
+.sch_header_first_embedded, .sch_row_first_embedded {
     width: 50px;
     height: 60px;
+    background-color: #fffbff;
     padding-left: 5px;
     display: table-cell;
-    vertical-align: bottom;
     text-align: left;
+    white-space: normal;
     font-variant: small-caps;
     font-weight: bold;
 }
 
-.sch_header_rest {
-    display: inline-block;
-    width: 150px;
-    height: 60px;
-    background-color: #fffffb;
-    border-color: #cccccc;
-    border-right-width: 1px;
-    border-right-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
+.sch_header_first_embedded {
+    vertical-align: bottom;
+}
+
+.sch_row_first_embedded {
+    vertical-align: top;
 }
 
 .sch_header_rest_embedded {
     width: 150px;
     height: 60px;
+    background-color: #fffffb;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
-    font-variant: small-caps;
-}
-
-.sch_table_body {
     white-space: normal;
-}
-
-.sch_row_first {
-    width: 50px;
-    height: 60px;
-    clear: both;
-    float: left;
-    border-color: #cccccc;
-    background-color: #fffbff;
-    border-right-width: 1px;
-    border-right-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-}
-
-.sch_hour_text {
-    font-weight: bold;
-    padding-left: 5px;
-}
-
-.sch_row_rest {
-    width: 150px;
-    height: 60px;
-    float: left;
-    border-color: #cccccc;
-    border-right-width: 1px;
-    border-right-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
+    font-variant: small-caps;
 }
 
 .sch_movie_cell {
@@ -93,6 +66,7 @@ root {
     position: relative;
     margin-top: -1px;
     float: left;
+    white-space: normal;
     border: 1px solid;
     /*border-color: #B0C4DE;*/
     background-color: #FFFFE0;
@@ -105,19 +79,20 @@ root {
     /*background-color: #FF9999;*/
     /*background-color: #FAFAFA;*/
     /*background-color: #F2F2F2;*/
-    background-color: #FFE5E5;
+
+    /*background-color: #FFE5E5;*/
 }
 
 .sch_movie_cell_watch_showing {
-    background-color: #FFE5E5;
+    /*background-color: #FFE5E5;*/
 }
 
 .sch_movie_cell_watch_movie {
-    background-color: #F0FFF0;
+    /*background-color: #F0FFF0;*/
 }
 
 .sch_movie_cell_watch_elsewhere {
-    background-color: #FAFAFA;
+    /*background-color: #FAFAFA;*/
 }
 
 .sch_movie_cell_embedded {

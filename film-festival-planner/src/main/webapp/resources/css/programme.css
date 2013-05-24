@@ -1,0 +1,44 @@
+.sections {
+    float: left;
+}
+
+.movies {
+    float: left;
+    margin-left: 1em;
+}
+
+.movie {
+    float: left;
+    margin-left: 4em;
+    width: 20em;
+}
+
+.sections ul, .movies ul {
+    width: 12em;
+}
+
+.sections li, .movies li {
+    list-style: none;
+    border-top: solid 1px #039;
+    text-align: left;
+    margin: 0;
+}
+
+.sections .last, .movies .last {
+    border-bottom: solid 1px #039;
+}
+
+.sections a, .movies a, .selected {
+    display: block;
+    padding: .25em;
+    text-decoration: none;
+}
+
+.sections a:link, .movies a:link, .sections a:visited, .movies a:visited {
+    color: blue;
+}
+
+.sections a:hover, .movies a:hover {
+    color: red;
+    background-color: #EFFBFE;
+}

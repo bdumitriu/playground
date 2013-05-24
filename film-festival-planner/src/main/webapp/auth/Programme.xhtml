@@ -15,31 +15,46 @@
 </f:metadata>
 
 <ui:composition template="layout.xhtml">
-    <ui:define name="title">Programme</ui:define>
-    <ui:define name="body">
-        <h:panelGroup layout="block" style="float: left">
-            <ui:repeat value="#{programmeController.sections}" var="section">
-                <h:outputText value="#{section.section.name}" rendered="#{section == programmeController.section}"/>
-                <h:link value="#{section.section.name}" outcome="Programme" rendered="#{section != programmeController.section}">
-                    <f:param name="section" value="#{converters:convertSection(section)}"/>
-                </h:link>
-                <br/>
-            </ui:repeat>
+
+    <ui:param name="page" value="Programme" />
+
+    <ui:define name="title"><h:outputText value="#{bundle.TitleProgramme}"/></ui:define>
+
+    <ui:define name="additional-headers">
+        <h:outputStylesheet library="css" name="programme.css"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:panelGroup layout="block" styleClass="sections">
+            <ul>
+                <ui:repeat value="#{programmeController.sections}" var="section" varStatus="status">
+                    <li class="#{status.last ? 'last' : ''}">
+                        <h:outputText styleClass="selected" value="#{section.section.name}" rendered="#{section == programmeController.section}"/>
+                        <h:link value="#{section.section.name}" outcome="Programme" rendered="#{section != programmeController.section}">
+                            <f:param name="section" value="#{converters:convertSection(section)}"/>
+                        </h:link>
+                    </li>
+                </ui:repeat>
+            </ul>
         </h:panelGroup>
-        <h:panelGroup layout="block" style="float: left; margin-left: 50px" rendered="#{programmeController.section != null}">
-            <ui:repeat value="#{programmeController.section.movieBundles}" var="movieBundle">
-                <h:outputText value="#{movieBundle.movieBundle.englishTitle}" rendered="#{movieBundle == programmeController.movieBundle}"/>
-                <h:link value="#{movieBundle.movieBundle.englishTitle}" outcome="Programme" rendered="#{movieBundle != programmeController.movieBundle}">
-                    <f:param name="section" value="#{converters:convertSection(programmeController.section)}"/>
-                    <f:param name="movieBundle" value="#{converters:convertMovieBundleInFestival(movieBundle)}"/>
-                </h:link>
-                <br/>
-            </ui:repeat>
+        <h:panelGroup layout="block" styleClass="movies" rendered="#{programmeController.section != null}">
+            <ul>
+                <ui:repeat value="#{programmeController.section.movieBundles}" var="movieBundle" varStatus="status">
+                    <li class="#{status.last ? 'last' : ''}">
+                        <h:outputText styleClass="selected" value="#{movieBundle.movieBundle.englishTitle}" rendered="#{movieBundle == programmeController.movieBundle}"/>
+                        <h:link value="#{movieBundle.movieBundle.englishTitle}" outcome="Programme" rendered="#{movieBundle != programmeController.movieBundle}">
+                            <f:param name="section" value="#{converters:convertSection(programmeController.section)}"/>
+                            <f:param name="movieBundle" value="#{converters:convertMovieBundleInFestival(movieBundle)}"/>
+                        </h:link>
+                    </li>
+                </ui:repeat>
+            </ul>
         </h:panelGroup>
-        <h:panelGroup layout="block" style="float: left; margin-left: 50px; width: 300px">
+        <h:panelGroup layout="block" styleClass="movie">
             <util:movieBundleDisplay movieBundleInFestival="#{programmeController.movieBundle}" />
         </h:panelGroup>
     </ui:define>
+
 </ui:composition>
 
 </html>

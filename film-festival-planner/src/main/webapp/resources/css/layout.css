@@ -1,3 +1,14 @@
+.body {
+    margin: 0;
+    background-color: #FFFFF0;
+}
+
+.content {
+    margin-top: 34px;
+    display: inline-block;
+    width: 100%;
+}
+
 .header {
     position: fixed;
     top: 0;
@@ -54,8 +65,4 @@
 .header_instruction {
     font-family: Garamond, serif;
     color: #a52a2a;
-}
-
-.body {
-    margin-top: 34px;
 }

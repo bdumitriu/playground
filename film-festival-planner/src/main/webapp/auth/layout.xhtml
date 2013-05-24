@@ -16,9 +16,13 @@
     <ui:insert name="additional-headers"/>
 </h:head>
 
-<h:body style="margin: 0">
+<h:body styleClass="body">
     <div class="header">
         <div class="left_header">
+            <h:link outcome="Programme" value="#{bundle.TitleProgramme}" styleClass="header_button" rendered="#{page ne 'Programme'}" />
+            <h:outputText value="#{bundle.TitleProgramme}" styleClass="header_button_text_only" rendered="#{page eq 'Programme'}"/>
+            <h:link outcome="DaySchedule" value="#{bundle.TitleDaySchedule}" styleClass="header_button" rendered="#{page ne 'DaySchedule'}" />
+            <h:outputText value="#{bundle.TitleDaySchedule}" styleClass="header_button_text_only" rendered="#{page eq 'DaySchedule'}"/>
             <ui:insert name="buttons"/>
         </div>
         <div class="right_header">
@@ -28,8 +32,8 @@
         </div>
     </div>
     <div style="clear: both"/>
-    <div class="body">
-        <ui:insert name="body"/>
+    <div class="content">
+        <ui:insert name="content"/>
     </div>
 </h:body>
 

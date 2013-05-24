@@ -6,7 +6,7 @@ function updateMovieCell(data) {
     if (data.status == "success") {
         addSliders();
     }
-    resizeTableBody();
+    removeEmptyTextNodes();
 }
 
 function updateMovieInfo(data) {
@@ -57,22 +57,16 @@ function configureMovieCellControls() {
     });
 }
 
-function removeEmptyHeaderText() {
-    $(".sch_header_first, .sch_header_rest").each(function() {
+function removeEmptyTextNodes() {
+    $(".sch_cell_first, .sch_cell_rest").each(function() {
         var maybeEmptyTextNode = $(this).get(0).nextSibling;
-        var wsRegexp = new RegExp(/^\s*$/);
-        if (maybeEmptyTextNode.nodeType == 3 && wsRegexp.test(maybeEmptyTextNode.nodeValue)) {
-            $(maybeEmptyTextNode).remove();
+        if (maybeEmptyTextNode != null) {
+            var wsRegexp = new RegExp(/^\s*$/);
+            if (maybeEmptyTextNode.nodeType == 3 && wsRegexp.test(maybeEmptyTextNode.nodeValue)) {
+                $(maybeEmptyTextNode).remove();
+            }
         }
     });
-}
-
-function resizeTableBody() {
-    var totalWidth = 0;
-    $(".sch_header_first, .sch_header_rest").each(function() {
-        totalWidth += $(this).outerWidth();
-    });
-    $(".sch_table_body").width(totalWidth + 4); // adding 4 to avoid problems at all zoom levels
 }
 
 function addSliders() {

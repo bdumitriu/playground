@@ -14,6 +14,8 @@
 
 <ui:composition template="layout.xhtml">
 
+    <ui:param name="page" value="DaySchedule" />
+
     <ui:define name="title">#{bundle.TitleDaySchedule}</ui:define>
 
     <ui:define name="additional-headers">
@@ -77,16 +79,14 @@
         </h:panelGroup>
     </ui:define>
 
-    <ui:define name="body">
+    <ui:define name="content">
         <script type="text/javascript">
             $(document).ready(function() {
                 configureMovieCellControls();
-                removeEmptyHeaderText();
-                resizeTableBody();
+                removeEmptyTextNodes();
                 addSliders();
                 highlightShowing();
             });
-            $(window).resize(resizeTableBody);
         </script>
 
         <div id="tooltip">
@@ -95,13 +95,13 @@
 
         <div class="sch_container">
             <div class="sch_header">
-                <div class="sch_header_first">
+                <div class="sch_cell_first">
                     <div class="sch_header_first_embedded">
                         <h:outputText value="#{bundle.Time}" />
                     </div>
                 </div>
                 <ui:repeat value="#{dayScheduleController.venues}" var="venue">
-                    <div class="sch_header_rest">
+                    <div class="sch_cell_rest">
                         <div class="sch_header_rest_embedded">
                             <h:outputText value="#{venue.name}" />
                         </div>
@@ -113,81 +113,82 @@
                 <h:inputHidden id="priority" value="#{scheduleController.priority}" />
 
                 <ui:repeat value="#{dayScheduleController.hours}" var="hour" varStatus="status">
-                    <div class="sch_row_first">
-                        <h:outputText value="#{hour.formatted}" styleClass="sch_hour_text"/>
-                    </div>
-                    <ui:repeat value="#{dayScheduleController.getHourLineFor(hour)}" var="hourSlot">
-                        <div class="sch_row_rest">
-                            <h:panelGroup id="movie_cell"
-                                          styleClass="#{scheduleController.getMovieStyleClass(hourSlot.showing.id)}#{param['showing'] eq hourSlot.showing.id ? ' toHighlight' : ''}"
-                                          rendered="#{hourSlot.hasShowing()}"
-                                          style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
-                                <span class="sch_movie_cell_embedded">
-                                <h:commandLink action="#{dayScheduleController.setShowing(hourSlot.showing.id)}"
-                                               value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle} (#{hourSlot.showing.movieBundleInFestival.movieBundle.durationInMinutes}')">
-                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
-                                    <f:ajax execute="@form" render=":movieInfo" onevent="updateMovieInfo" />
-                                </h:commandLink>
-                                <!--<span style="color: red"><h:outputText styleClass="sch_movie_cell_embedded" value="S#{hourSlot.showing.id}/M#{hourSlot.showing.movieBundleInFestival.id}"/></span>-->
-                                </span>
-                                <h:commandLink
-                                        title="#{bundle.WatchAnyTooltip}"
-                                        rendered="#{scheduleController.isNoConstraintSelectedFor(hourSlot.showing.id)}"
-                                        action="#{scheduleController.watchMovieButtonClicked(hourSlot.showing.id)}"
-                                        styleClass="sch_check">
-                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
-                                    <f:ajax execute="@form" render="@form :buttons_form" onevent="updateMovieCell" />
-                                </h:commandLink>
-                                <h:commandLink
-                                        title="#{bundle.RemoveInterestTooltip}"
-                                        rendered="#{scheduleController.hasUserConstraintFor(hourSlot.showing.id)}"
-                                        action="#{scheduleController.removeInterestClicked(hourSlot.showing.id)}"
-                                        styleClass="sch_uncheck">
-                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
-                                    <f:ajax execute="@form" render="@form :buttons_form" onevent="updateMovieCell" />
-                                </h:commandLink>
-                                <h:panelGroup
-                                        rendered="#{scheduleController.hasUserConstraintFor(hourSlot.showing.id)}"
-                                        styleClass="sch_priority_wrapper">
-                                    <div class="sch_priority" />
-                                    <h:outputText
-                                            style="display: none"
-                                            value="#{scheduleController.getShowingPriority(hourSlot.showing.id)}" />
-                                    <h:commandButton
-                                            style="display: none"
-                                            styleClass="priorityButton"
-                                            action="#{scheduleController.assignPriority(hourSlot.showing.id)}">
-                                        <f:ajax execute="@form" render="@form" onevent="updateMovieCell" />
-                                    </h:commandButton>
-                                </h:panelGroup>
-                                <h:commandLink
-                                        title="#{bundle.WatchThisTooltip}"
-                                        rendered="#{scheduleController.hasWeakConstraintFor(hourSlot.showing.id)}"
-                                        action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
-                                        styleClass="sch_pin_user">
-                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
-                                    <f:ajax execute="@form" render="@form" onevent="updateMovieCell" />
-                                </h:commandLink>
-                                <h:commandLink
-                                        title="#{bundle.WatchThisSelectedUser}"
-                                        rendered="#{scheduleController.isWatchShowingSelected(hourSlot.showing.id)}"
-                                        action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
-                                        styleClass="sch_unpin_user">
-                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
-                                    <f:ajax execute="@form" render="@form" onevent="updateMovieCell" />
-                                </h:commandLink>
-                                <h:commandLink
-                                        title="#{bundle.WatchThisSelectedSystem}"
-                                        rendered="#{not scheduleController.isWatchShowingSelected(hourSlot.showing.id) and scheduleController.isScheduled(hourSlot.showing.id)}"
-                                        action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
-                                        styleClass="sch_pin_system">
-                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
-                                    <f:ajax execute="@form" render="movie_cell" onevent="updateMovieCell" />
-                                </h:commandLink>
-                            </h:panelGroup>
+                    <div class="sch_row">
+                        <div class="sch_cell_first">
+                            <h:outputText value="#{hour.formatted}" styleClass="sch_row_first_embedded"/>
                         </div>
-                    </ui:repeat>
-                    <br />
+                        <ui:repeat value="#{dayScheduleController.getHourLineFor(hour)}" var="hourSlot">
+                            <div class="sch_cell_rest">
+                                <h:panelGroup id="movie_cell"
+                                              styleClass="#{scheduleController.getMovieStyleClass(hourSlot.showing.id)}#{param['showing'] eq hourSlot.showing.id ? ' toHighlight' : ''}"
+                                              rendered="#{hourSlot.hasShowing()}"
+                                              style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
+                                    <span class="sch_movie_cell_embedded">
+                                    <h:commandLink action="#{dayScheduleController.setShowing(hourSlot.showing.id)}"
+                                                   value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle} (#{hourSlot.showing.movieBundleInFestival.movieBundle.durationInMinutes}')">
+                                        <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                        <f:ajax execute="@form" render=":movieInfo" onevent="updateMovieInfo" />
+                                    </h:commandLink>
+                                    <!--<span style="color: red"><h:outputText styleClass="sch_movie_cell_embedded" value="S#{hourSlot.showing.id}/M#{hourSlot.showing.movieBundleInFestival.id}"/></span>-->
+                                    </span>
+                                    <h:commandLink
+                                            title="#{bundle.WatchAnyTooltip}"
+                                            rendered="#{scheduleController.isNoConstraintSelectedFor(hourSlot.showing.id)}"
+                                            action="#{scheduleController.watchMovieButtonClicked(hourSlot.showing.id)}"
+                                            styleClass="sch_check">
+                                        <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                        <f:ajax execute="@form" render="@form :buttons_form" onevent="updateMovieCell" />
+                                    </h:commandLink>
+                                    <h:commandLink
+                                            title="#{bundle.RemoveInterestTooltip}"
+                                            rendered="#{scheduleController.hasUserConstraintFor(hourSlot.showing.id)}"
+                                            action="#{scheduleController.removeInterestClicked(hourSlot.showing.id)}"
+                                            styleClass="sch_uncheck">
+                                        <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                        <f:ajax execute="@form" render="@form :buttons_form" onevent="updateMovieCell" />
+                                    </h:commandLink>
+                                    <h:panelGroup
+                                            rendered="#{scheduleController.hasUserConstraintFor(hourSlot.showing.id)}"
+                                            styleClass="sch_priority_wrapper">
+                                        <div class="sch_priority" />
+                                        <h:outputText
+                                                style="display: none"
+                                                value="#{scheduleController.getShowingPriority(hourSlot.showing.id)}" />
+                                        <h:commandButton
+                                                style="display: none"
+                                                styleClass="priorityButton"
+                                                action="#{scheduleController.assignPriority(hourSlot.showing.id)}">
+                                            <f:ajax execute="@form" render="@form" onevent="updateMovieCell" />
+                                        </h:commandButton>
+                                    </h:panelGroup>
+                                    <h:commandLink
+                                            title="#{bundle.WatchThisTooltip}"
+                                            rendered="#{scheduleController.hasWeakConstraintFor(hourSlot.showing.id)}"
+                                            action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
+                                            styleClass="sch_pin_user">
+                                        <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                        <f:ajax execute="@form" render="@form" onevent="updateMovieCell" />
+                                    </h:commandLink>
+                                    <h:commandLink
+                                            title="#{bundle.WatchThisSelectedUser}"
+                                            rendered="#{scheduleController.isWatchShowingSelected(hourSlot.showing.id)}"
+                                            action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
+                                            styleClass="sch_unpin_user">
+                                        <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                        <f:ajax execute="@form" render="@form" onevent="updateMovieCell" />
+                                    </h:commandLink>
+                                    <h:commandLink
+                                            title="#{bundle.WatchThisSelectedSystem}"
+                                            rendered="#{not scheduleController.isWatchShowingSelected(hourSlot.showing.id) and scheduleController.isScheduled(hourSlot.showing.id)}"
+                                            action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
+                                            styleClass="sch_pin_system">
+                                        <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                        <f:ajax execute="@form" render="movie_cell" onevent="updateMovieCell" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                            </div>
+                        </ui:repeat>
+                    </div>
                 </ui:repeat>
             </h:form>
         </div>

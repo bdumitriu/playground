@@ -125,7 +125,7 @@
                                               style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
                                     <span class="sch_movie_cell_embedded">
                                     <h:commandLink action="#{dayScheduleController.setShowing(hourSlot.showing.id)}"
-                                                   value="#{hourSlot.showing.movieBundleInFestival.movieBundle.originalTitle} (#{hourSlot.showing.movieBundleInFestival.movieBundle.durationInMinutes}')">
+                                                   value="#{hourSlot.showing.movieBundleInFestival.movieBundle.englishTitle} (#{hourSlot.showing.movieBundleInFestival.movieBundle.durationInMinutes}')">
                                         <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
                                         <f:ajax execute="@form" render=":movieInfo" onevent="updateMovieInfo" />
                                     </h:commandLink>

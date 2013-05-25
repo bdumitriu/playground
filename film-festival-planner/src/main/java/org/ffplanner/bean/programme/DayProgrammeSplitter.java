@@ -14,18 +14,19 @@ public class DayProgrammeSplitter {
 
     private final Map<Venue, Map<Integer, Showing>> showingsByVenuesAndHours = new HashMap<>();
 
-    private final Collection<Venue> venues = new LinkedList<>();
+    private final SortedSet<Venue> venues;
 
     private Map<Integer, Showing> showingsByHour = new HashMap<>();
 
     private Venue venue;
 
-    public DayProgrammeSplitter(Collection<Showing> showings) {
+    public DayProgrammeSplitter(Collection<Showing> showings, Comparator<Venue> venueComparator) {
         this.showings = showings;
+        this.venues = new TreeSet<>(venueComparator);
         splitByVenueAndHour();
     }
 
-    public Collection<Venue> getVenues() {
+    public SortedSet<Venue> getVenues() {
         return venues;
     }
 

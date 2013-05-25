@@ -12,9 +12,11 @@ import java.util.*;
  */
 public class DayProgramme {
 
-    private static final DayProgramme EMPTY_PROGRAMME = new DayProgramme(Collections.<Showing>emptyList());
+    private static final DayProgramme EMPTY_PROGRAMME = new DayProgramme(Collections.<Showing>emptyList(), null);
 
     private final Collection<Showing> showings;
+
+    private final Comparator<Venue> venueComparator;
 
     private final Map<Hour, Collection<HourSlot>> hourSlots;
 
@@ -26,8 +28,9 @@ public class DayProgramme {
      * @param showings
      *             all of a day's showings, expected in venue-sorted order
      */
-    public DayProgramme(Collection<Showing> showings) {
+    public DayProgramme(Collection<Showing> showings, Comparator<Venue> venueComparator) {
         this.showings = showings;
+        this.venueComparator = venueComparator;
         this.hourSlots = new EnumMap<>(Hour.class);
         splitByVenueAndHour();
         createHourSlots();
@@ -54,9 +57,9 @@ public class DayProgramme {
     }
 
     private void splitByVenueAndHour() {
-        final DayProgrammeSplitter dayProgrammeSplitter = new DayProgrammeSplitter(showings);
+        final DayProgrammeSplitter dayProgrammeSplitter = new DayProgrammeSplitter(showings, venueComparator);
         showingsByVenuesAndHours = dayProgrammeSplitter.getShowingsByVenuesAndHours();
-        venues = dayProgrammeSplitter.getVenues();
+        venues = new LinkedList<>(dayProgrammeSplitter.getVenues());
     }
 
     private void createHourSlots() {

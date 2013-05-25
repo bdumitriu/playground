@@ -36,7 +36,7 @@ public class FestivalEditionProgramme {
         this.movies = createMovies(festivalShowings);
         this.showings = createShowings(festivalShowings);
         this.movieShowings = createMovieShowings(festivalShowings);
-        this.dayProgrammes = new DayProgrammesLoader(festivalShowings).getDayProgrammes();
+        this.dayProgrammes = new DayProgrammesLoader(festivalShowings, festivalEdition.getVenues()).getDayProgrammes();
         this.sectionMovies = festivalEdition.getSections();
     }
 

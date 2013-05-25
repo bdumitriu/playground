@@ -1,7 +1,7 @@
 package org.ffplanner.scripts
 
-import org.ffplanner.bean.{MovieBundleInFestivalBean, MovieBean}
-import java.nio.file.{Files, Paths, Path}
+import org.ffplanner.bean.{MovieBundleBean, MovieBundleInFestivalBean, MovieBean}
+import java.nio.file.{Files, Path}
 import org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl
 import xml.{XML, Node}
 import collection.JavaConversions
@@ -10,12 +10,13 @@ import org.ffplanner.entity.{Movie, MovieBundle}
 import java.util
 import java.nio.charset.StandardCharsets
 import org.ffplanner.util.ConstantsToGetRidOf
+import org.apache.commons.lang3.text.WordUtils
 
 /**
  *
  * @author Bogdan Dumitriu
  */
-class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleInFestivalBean: MovieBundleInFestivalBean) {
+class TiffMovies(beanBundle: BeanBundle) {
 
   private val TitleAndCountries = """(.*) \((.*)\)""".r
 
@@ -75,12 +76,12 @@ class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleInFesti
       _.\("@class").text.contains("synopsis")
     }
     val movieLinks = synopsisNode \\ "a" filter {
-      _.\("@href").text.startsWith("http://tiff.ro/en/film")
+      _.\("@href").text.startsWith("http://tiff.ro/en/tiff/film")
     } map {
       _.\("@href").text
     }
-    movieLinks.reverseMap({
-      (link: String) => movies = getMovie(link).toList ::: movies
+    movieLinks.reverseMap({ link: String =>
+      movies = getMovie(link).toList ::: movies
     })
     if (movieLinks.isEmpty) {
       movies = processMovieDetails(movieBundleEnglishTitle, movieBundleDetailsNode) :: movies
@@ -91,8 +92,22 @@ class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleInFesti
       movieBundle.setEnglishTitle(movieBundleEnglishTitle)
       movieBundle.setOriginalTitle(movieBundleOriginalTitle)
     }
-    movieBundle.addMovies(JavaConversions.asJavaCollection(movies))
-    movieBundleInFestivalBean.addShowing(movieBundle, ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID, section)
+    if (Config.DryRun) {
+      println("adding movie bundle "+movieBundle.getEnglishTitle+" / "+movieBundle.getOriginalTitle)
+      println()
+    } else {
+      try {
+        beanBundle.movieBundleBean.createWith(movieBundle, JavaConversions.asJavaCollection(movies.map(_.getId)))
+        beanBundle.movieBundleInFestivalBean.addMovieBundleInFestival(
+          movieBundle.getId, Config.FestivalEditionId, section)
+      } catch {
+        case e: Exception =>
+          println("=== <ERROR-processMovieOrMovieBundleDetails> ===")
+          println(e.getMessage)
+          println("=== </ERROR-processMovieOrMovieBundleDetails> ===")
+          throw e
+      }
+    }
     movieBundle
   }
 
@@ -116,10 +131,10 @@ class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleInFesti
       if (durationString != "N/A") {
         movie.setDuration(durationString.replace("h", "h:").replace("min", "m").replaceAll("\\s+", ""))
       } else {
-        movie.setDuration("00h:15m")
+        movie.setDuration("00h:00m")
       }
     } catch {
-      case e: util.NoSuchElementException => movie.setDuration("00h:15m")
+      case e: util.NoSuchElementException => movie.setDuration("00h:00m")
     }
     try {
       movie.setImdbId(movieInfo("imdbID").asInstanceOf[String])
@@ -127,16 +142,43 @@ class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleInFesti
       case e: util.NoSuchElementException =>
     }
 
-    movieBean.createWith(movie, toIterable(movieDirectors), toIterable(movieCast), toIterable(movieCountries))
+    if (Config.DryRun) {
+      println("adding movie "+movie.getEnglishTitle+" / "+movie.getOriginalTitle+" / "+movie.getYear)
+      println("  directors  : "+movieDirectors)
+      println("  cast       : "+movieCast)
+      println("  countries  : "+movieCountries)
+      println("  duration   : "+movie.getDurationInMinutes)
+      println("  imdbID     : "+movie.getImdbId)
+      println("  description: ")
+      println(WordUtils.wrap(movie.getDescription, 100))
+      println()
+    } else {
+      try {
+        beanBundle.movieBean.createWith(
+          movie, toIterable(movieDirectors), toIterable(movieCast), toIterable(movieCountries))
+      } catch {
+        case e: Exception =>
+          println("=== <ERROR-processMovieDetails> ===")
+          println(e.getMessage)
+          println("=== </ERROR-processMovieDetails> ===")
+          throw e
+      }
+    }
     movie
   }
 
   def cleanSynopsis(synopsis: String): String = {
     val cutSynopsis = Array(
       "festivals:",
+      "festivals\n",
+      "*screening",
       "awards:",
+      "awards\n",
       "you can purchase tickets here",
-      "here you can purchase your tickets").foldLeft(synopsis)({
+      "you can purchase tickets here\n",
+      "here you can purchase your tickets",
+      "here you can purchase your tickets\n"
+    ).foldLeft(synopsis)({
       cutBefore(_, _)
     })
     cutSynopsis.replaceAll("\\s+", " ").trim
@@ -174,8 +216,8 @@ class TiffMovies(alsoDownload: Boolean, movieBean: MovieBean, movieBundleInFesti
   def downloadMovieFile(address: String): Path = {
     val addressTokens = address.split("/")
     val fileName = addressTokens(addressTokens.length - 1) + ".html"
-    val path = Paths.get(fileName)
-    if (alsoDownload && !Files.isRegularFile(path)) {
+    val path = ScalaUtils.DownloadDirectory.resolve(fileName)
+    if (Config.AlsoDownload && !Files.isRegularFile(path)) {
       ScalaUtils.downloadPage(address, path)
     }
     path

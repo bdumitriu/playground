@@ -32,7 +32,7 @@ public class SectionBean extends BasicEntityBean<Section> implements Serializabl
         return Section_.id;
     }
 
-    public Section findBy(String sectionName) {
+    public Section findOrCreateBy(String sectionName) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Section> query = criteriaBuilder.createQuery(Section.class);
         final Root<Section> root = query.from(Section.class);
@@ -42,6 +42,7 @@ public class SectionBean extends BasicEntityBean<Section> implements Serializabl
         final Section section;
         if (result.isEmpty()) {
             section = new Section(sectionName);
+            entityManager.persist(section);
         } else {
             assert result.size() == 1;
             section = result.get(0);

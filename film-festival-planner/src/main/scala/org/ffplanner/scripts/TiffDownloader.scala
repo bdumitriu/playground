@@ -1,29 +1,34 @@
 package org.ffplanner.scripts
 
-import org.ffplanner.bean.{MovieBundleInFestivalBean, MovieBundleBean, MovieBean, ShowingBean}
 import org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl
 import java.nio.file._
-import java.text.SimpleDateFormat
 import xml.{Node, XML}
 import java.util
 import java.nio.charset.StandardCharsets
-
+import org.ffplanner.util.ConstantsToGetRidOf
+import java.text.SimpleDateFormat
 
 /**
- *
- * @author Bogdan Dumitriu
- */
-class TiffDownloader(showingBean: ShowingBean) {
+  * @author Bogdan Dumitriu
+  */
+object Config {
 
-  private val alsoDownload = true
+  val FestivalEditionId = ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID
 
-  private var tiffMovies: TiffMovies = _
+  val AlsoDownload = true
 
-  def fillDatabaseFromSite(movieBean: MovieBean, movieBundleInFestivalBean: MovieBundleInFestivalBean) {
-    tiffMovies = new TiffMovies(alsoDownload, movieBean, movieBundleInFestivalBean)
+  val DryRun = false
+}
 
-    val path = Paths.get("tiff.html")
-    if (alsoDownload && !Files.isRegularFile(path)) {
+class TiffDownloader(beanBundle: BeanBundle) {
+
+  private val tiffMovies: TiffMovies = new TiffMovies(beanBundle)
+
+  private var nrShowingToProcess = Int.MaxValue
+
+  def fillDatabaseFromSite() {
+    val path = ScalaUtils.DownloadDirectory.resolve("tiff.html")
+    if (Config.AlsoDownload && !Files.isRegularFile(path)) {
       ScalaUtils.downloadPage("http://www.tiff.ro/en/program", path)
     }
 
@@ -47,14 +52,28 @@ class TiffDownloader(showingBean: ShowingBean) {
   }
 
   def processShowing(day: util.Date, venue: String, showingNode: Node) {
-    val cells = showingNode.\("td")
-    if (cells(2).text.trim == "Movie") {
-      val showingHour = cells(0).text.trim
-      val section = cells(3).text.trim
-      val movieBundle = tiffMovies.getMovieBundle(getMovieLink(cells(1)), section)
-      if (movieBundle.isDefined) {
-        showingBean.createWith(movieBundle.get, day, showingHour, venue)
+    if (nrShowingToProcess > 0) {
+      val cells = showingNode.\("td")
+      if (cells(2).text.trim == "Movie") {
+        val showingHour = cells(0).text.trim
+        val section = cells(3).text.trim
+        if (!Config.DryRun){
+          println(s"Processing ${getMovieLink(cells(1))}...")
+        }
+        val movieBundle = tiffMovies.getMovieBundle(getMovieLink(cells(1)), section)
+        if (movieBundle.isDefined && !Config.DryRun) {
+          try {
+            beanBundle.showingBean.createWith(movieBundle.get, Config.FestivalEditionId, day, showingHour, venue)
+          } catch {
+            case e: Exception =>
+              println("=== <ERROR-processShowing> ===")
+              println(e.getMessage)
+              println("=== </ERROR-processShowing> ===")
+              throw e
+          }
+        }
       }
+      nrShowingToProcess -= 1
     }
   }
 

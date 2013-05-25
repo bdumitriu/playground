@@ -23,6 +23,9 @@ public class MovieBundleInFestivalBean extends EntityBean<MovieBundleInFestival>
     private static final long serialVersionUID = 1L;
 
     @Inject
+    private MovieBundleBean movieBundleBean;
+
+    @Inject
     private SectionBean sectionBean;
 
     @Inject
@@ -75,10 +78,14 @@ public class MovieBundleInFestivalBean extends EntityBean<MovieBundleInFestival>
         }
     }
 
-    public void addShowing(MovieBundle movieBundle, Long festivalEditionId, String sectionName) {
-        final MovieBundleInFestival movieBundleInFestival = new MovieBundleInFestival(
-                movieBundle, festivalEditionSectionBean.find(festivalEditionId, sectionBean.findBy(sectionName)));
-        entityManager.persist(movieBundle);
-        entityManager.persist(movieBundleInFestival);
+    public void addMovieBundleInFestival(Long movieBundleId, Long festivalEditionId, String sectionName) {
+        final MovieBundle movieBundleReference = movieBundleBean.getReference(movieBundleId);
+        if (movieBundleReference == null) {
+            throw new RuntimeException("Not implemented: the movie bundle was expected to be in the database already.");
+        } else {
+            final MovieBundleInFestival movieBundleInFestival = new MovieBundleInFestival(movieBundleReference,
+                    festivalEditionSectionBean.findOrCreate(festivalEditionId, sectionName));
+            entityManager.persist(movieBundleInFestival);
+        }
     }
 }

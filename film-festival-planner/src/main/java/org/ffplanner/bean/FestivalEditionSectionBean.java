@@ -4,6 +4,7 @@ import org.ffplanner.entity.*;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -17,6 +18,12 @@ import java.io.Serializable;
 public class FestivalEditionSectionBean extends ConnectorEntityBean<FestivalEditionSection> implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @Inject
+    private FestivalEditionBean festivalEditionBean;
+
+    @Inject
+    private SectionBean sectionBean;
 
     @Override
     protected Class<FestivalEditionSection> getEntityClass() {
@@ -38,7 +45,15 @@ public class FestivalEditionSectionBean extends ConnectorEntityBean<FestivalEdit
         return super.find(festivalEditionId, sectionId);
     }
 
-    public FestivalEditionSection find(Long festivalEditionId, Section section) {
-        return find(festivalEditionId, section.getId());
+    public FestivalEditionSection findOrCreate(Long festivalEditionId, String sectionName) {
+        final Section section = sectionBean.findOrCreateBy(sectionName);
+        FestivalEditionSection festivalEditionSection = find(festivalEditionId, section.getId());
+        if (festivalEditionSection == null) {
+            festivalEditionSection = new FestivalEditionSection();
+            festivalEditionSection.setFestivalEdition(festivalEditionBean.find(festivalEditionId));
+            festivalEditionSection.setSection(section);
+            entityManager.persist(festivalEditionSection);
+        }
+        return festivalEditionSection;
     }
 }

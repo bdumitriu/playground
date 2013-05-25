@@ -32,6 +32,30 @@ public class FestivalEditionVenue implements Serializable {
 
     private Integer venueOrder;
 
+    public FestivalEdition getFestivalEdition() {
+        return festivalEdition;
+    }
+
+    public void setFestivalEdition(FestivalEdition festivalEdition) {
+        this.festivalEdition = festivalEdition;
+    }
+
+    public Venue getVenue() {
+        return venue;
+    }
+
+    public void setVenue(Venue venue) {
+        this.venue = venue;
+    }
+
+    public Integer getVenueOrder() {
+        return venueOrder;
+    }
+
+    public void setVenueOrder(Integer venueOrder) {
+        this.venueOrder = venueOrder;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(festivalEditionId, venueId);

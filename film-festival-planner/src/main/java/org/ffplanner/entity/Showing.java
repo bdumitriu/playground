@@ -32,7 +32,7 @@ public class Showing implements Serializable, Comparable<Showing>, ShowingDefini
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("H:m");
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -41,7 +41,7 @@ public class Showing implements Serializable, Comparable<Showing>, ShowingDefini
     @Column(name = "venue_id", insertable = false, updatable = false)
     private Long venueId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "venue_id")
     private Venue venue;
 

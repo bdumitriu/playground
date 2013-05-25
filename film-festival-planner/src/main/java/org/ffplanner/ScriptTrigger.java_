@@ -1,12 +1,12 @@
 package org.ffplanner;
 
-import org.ffplanner.bean.MovieBean;
-import org.ffplanner.bean.MovieBundleBean;
-import org.ffplanner.bean.ShowingBean;
+import org.ffplanner.bean.*;
+import org.ffplanner.scripts.BeanBundle;
 import org.ffplanner.scripts.TiffDownloader;
 
 import javax.inject.Inject;
 import javax.jws.WebService;
+import java.nio.file.Paths;
 
 /**
  * @author Bogdan Dumitriu
@@ -15,15 +15,21 @@ import javax.jws.WebService;
 public class ScriptTrigger {
 
     @Inject
-    private ShowingBean showingBean;
-
-    @Inject
     private MovieBean movieBean;
 
     @Inject
     private MovieBundleBean movieBundleBean;
 
-    public void triggerTiffDownload() {
-        new TiffDownloader(showingBean).fillDatabaseFromSite(movieBean, movieBundleBean);
+    @Inject
+    private MovieBundleInFestivalBean movieBundleInFestivalBean;
+
+    @Inject
+    private ShowingBean showingBean;
+
+    public String triggerTiffDownload() {
+        final BeanBundle beanBundle =
+                new BeanBundle(movieBean, movieBundleBean, movieBundleInFestivalBean, showingBean);
+        new TiffDownloader(beanBundle).fillDatabaseFromSite();
+        return Paths.get("tiff.html").toAbsolutePath().toString();
     }
 }

@@ -32,7 +32,7 @@ public class VenueBean extends BasicEntityBean<Venue> implements Serializable {
         return Venue_.id;
     }
 
-    public Venue getVenue(String venueName) {
+    public Venue findOrCreateBy(String venueName) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Venue> query = criteriaBuilder.createQuery(Venue.class);
         final Root<Venue> root = query.from(Venue.class);
@@ -42,6 +42,7 @@ public class VenueBean extends BasicEntityBean<Venue> implements Serializable {
         final Venue venue;
         if (result.isEmpty()) {
             venue = new Venue(venueName);
+            entityManager.persist(venue);
         } else {
             assert result.size() == 1;
             venue = result.get(0);

@@ -13,6 +13,7 @@
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="update" />
             <property name="hibernate.show_sql" value="false"/>
+            <!--<property name="hibernate.show_sql" value="true"/>-->
             <!--<property name="hibernate.format_sql" value="true"/>-->
             <!--<property name="hibernate.transaction.flush_before_completion" value="true"/>-->
             <!-- no other properties needed here to get UTF-8 -->

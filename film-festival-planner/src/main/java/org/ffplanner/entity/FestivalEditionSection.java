@@ -46,8 +46,24 @@ public class FestivalEditionSection implements Serializable {
         return festivalEdition;
     }
 
+    public void setFestivalEdition(FestivalEdition festivalEdition) {
+        this.festivalEdition = festivalEdition;
+    }
+
     public Section getSection() {
         return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
+    }
+
+    public Integer getSectionOrder() {
+        return sectionOrder;
+    }
+
+    public void setSectionOrder(Integer sectionOrder) {
+        this.sectionOrder = sectionOrder;
     }
 
     public List<MovieBundleInFestival> getMovieBundles() {

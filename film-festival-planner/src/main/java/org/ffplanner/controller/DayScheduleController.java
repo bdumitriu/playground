@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID;
-import static org.joda.time.DateTimeConstants.JUNE;
+import static org.joda.time.DateTimeConstants.MAY;
 
 /**
  * @author Bogdan Dumitriu
@@ -69,7 +69,7 @@ public class DayScheduleController implements Serializable {
 //        log.setLevel(Level.ALL);
         log.entering("DayScheduleController", "prepareView");
         if (this.day == null) {
-            final DateTime dateTime = new DateTime(2012, JUNE, 1, 0, 0);
+            final DateTime dateTime = new DateTime(2013, MAY, 31, 0, 0);
             this.day = dateTime.toDate();
         }
         festivalEdition = festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID);

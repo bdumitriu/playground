@@ -1,5 +1,6 @@
 package org.ffplanner.bean;
 
+import org.ffplanner.entity.Movie;
 import org.ffplanner.entity.MovieBundle;
 import org.ffplanner.entity.MovieBundle_;
 
@@ -8,6 +9,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.metamodel.SingularAttribute;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * @author Bogdan Dumitriu
@@ -38,5 +41,19 @@ public class MovieBundleBean extends BasicEntityBean<MovieBundle> implements Ser
             movieBundle.loadLazyFields();
         }
         return movieBundle;
+    }
+
+    public void createWith(MovieBundle movieBundle, Iterable<Long> movieIds) {
+        final Collection<Movie> movieReferences = new LinkedList<>();
+        for (Long movieId : movieIds) {
+            final Movie movieReference = movieBean.getReference(movieId);
+            if (movieReference == null) {
+                throw new RuntimeException("Not implemented: the movie was expected to be in the database already.");
+            } else {
+                movieReferences.add(movieReference);
+            }
+        }
+        movieBundle.addMovies(movieReferences);
+        entityManager.persist(movieBundle);
     }
 }

@@ -94,7 +94,7 @@ CREATE TABLE `festivaledition` (
 
 LOCK TABLES `festivaledition` WRITE;
 /*!40000 ALTER TABLE `festivaledition` DISABLE KEYS */;
-INSERT INTO `festivaledition` VALUES (1,'TIFF 2012',11,'2012-06-10 00:00:00','2012-06-01 00:00:00',1);
+INSERT INTO `festivaledition` VALUES (1,'TIFF 2012',11,'2012-06-10 00:00:00','2012-06-01 00:00:00',1),(2,'TIFF 2013',12,'2013-06-09 00:00:00','2013-05-31 00:00:00',1);
 /*!40000 ALTER TABLE `festivaledition` ENABLE KEYS */;
 UNLOCK TABLES;
 

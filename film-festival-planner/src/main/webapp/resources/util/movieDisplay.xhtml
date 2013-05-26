@@ -19,7 +19,7 @@
             <h:outputText value="#{cc.attrs.movie.originalTitle}" styleClass="#{cc.attrs.titleStyleClass}"/>
             <h:outputLink rendered="#{not empty cc.attrs.movie.imdbId}"
                           value="http://www.imdb.com/title/#{cc.attrs.movie.imdbId}"
-                          target="new"
+                          target="blank"
                           styleClass="movieDisplay-imdb-link">
                 <h:graphicImage library="img" name="imdb.png" styleClass="movieDisplay-imdb-image"/>
             </h:outputLink>

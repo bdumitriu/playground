@@ -10,8 +10,8 @@ import org.ffplanner.bean.programme.FestivalEditionProgramme;
 import org.ffplanner.bean.programme.FestivalProgrammeBean;
 import org.ffplanner.controller.constraints.ConstraintsData;
 import org.ffplanner.controller.constraints.ConstraintsIo;
-import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.controller.constraints.ScheduleConstraintType;
+import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.User;
 import org.ffplanner.qualifier.LoggedInUser;
@@ -25,6 +25,7 @@ import javax.inject.Named;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.nio.file.*;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,6 +61,8 @@ public class ScheduleController implements Serializable {
 
     private FestivalEditionProgramme festivalProgramme;
 
+    private Date festivalProgrammeLastInit;
+
     private Short priority;
 
     private ConstraintsData constraintsData;
@@ -73,9 +76,10 @@ public class ScheduleController implements Serializable {
     }
 
     private FestivalEditionProgramme getFestivalEditionProgramme() {
-        if (festivalProgramme == null) {
+        if (festivalProgramme == null || festivalProgrammeBean.changedAfter(festivalProgrammeLastInit)) {
             final FestivalEdition festivalEdition = getFestivalEdition();
             festivalProgramme = festivalProgrammeBean.getProgrammeFor(festivalEdition);
+            festivalProgrammeLastInit = new Date();
         }
         return festivalProgramme;
     }

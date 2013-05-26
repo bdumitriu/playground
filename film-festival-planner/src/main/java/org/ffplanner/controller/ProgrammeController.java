@@ -10,6 +10,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID;
@@ -28,6 +29,8 @@ public class ProgrammeController implements Serializable {
 
     private FestivalEditionSection[] sections;
 
+    private Date sectionsLastInit;
+
     private FestivalEditionSection section;
 
     private MovieBundleInFestival movieBundle;
@@ -35,11 +38,12 @@ public class ProgrammeController implements Serializable {
     private Movie movie;
 
     public FestivalEditionSection[] getSections() {
-        if (sections == null) {
+        if (sections == null || festivalProgrammeBean.changedAfter(sectionsLastInit)) {
             final FestivalEditionProgramme programme =
                     festivalProgrammeBean.getProgrammeFor(DEFAULT_FESTIVAL_EDITION_ID);
             final List<FestivalEditionSection> festivalSections = programme.getSections();
             sections = festivalSections.toArray(new FestivalEditionSection[festivalSections.size()]);
+            sectionsLastInit = new Date();
         }
         return sections;
     }

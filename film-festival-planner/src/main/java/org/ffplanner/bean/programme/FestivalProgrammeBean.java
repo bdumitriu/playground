@@ -12,10 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.*;
 import javax.inject.Inject;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Bogdan Dumitriu
@@ -38,8 +35,12 @@ public class FestivalProgrammeBean implements Serializable {
 
     private final Map<FestivalEdition, ScheduleBuilder> scheduleBuilders = new HashMap<>();
 
+    private Date lastInit;
+
     @PostConstruct
-    public void initialize() {
+    public synchronized void reinitialize() {
+        programmes.clear();
+        scheduleBuilders.clear();
         final List<FestivalEdition> festivalEditions = festivalEditionBean.findAll();
         for (FestivalEdition festivalEdition : festivalEditions) {
             festivalEdition.loadLazyFields();
@@ -48,17 +49,23 @@ public class FestivalProgrammeBean implements Serializable {
             scheduleBuilders.put(
                     festivalEdition, new ScheduleBuilder(getFestivalProgrammeDefinition(festivalShowings)));
         }
+        lastInit = new Date();
     }
 
-    public FestivalEditionProgramme getProgrammeFor(Long festivalEditionId) {
+    public synchronized boolean changedAfter(Date date) {
+        assert lastInit != null;
+        return date == null || lastInit == null || lastInit.after(date);
+    }
+
+    public synchronized FestivalEditionProgramme getProgrammeFor(Long festivalEditionId) {
         return getProgrammeFor(festivalEditionBean.find(festivalEditionId));
     }
 
-    public FestivalEditionProgramme getProgrammeFor(FestivalEdition festivalEdition) {
+    public synchronized FestivalEditionProgramme getProgrammeFor(FestivalEdition festivalEdition) {
         return programmes.get(festivalEdition);
     }
 
-    public ScheduleBuilder getScheduleBuilder(Long festivalEditionId) {
+    public synchronized ScheduleBuilder getScheduleBuilder(Long festivalEditionId) {
         return getScheduleBuilder(festivalEditionBean.find(festivalEditionId));
     }
 

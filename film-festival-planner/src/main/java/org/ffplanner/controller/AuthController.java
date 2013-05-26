@@ -4,6 +4,7 @@ import org.ffplanner.bean.UserBean;
 import org.ffplanner.controller.auth.AuthData;
 import org.ffplanner.controller.auth.RegistrationService;
 import org.ffplanner.entity.User;
+import org.ffplanner.entity.UserRole;
 import org.ffplanner.qualifier.LoggedInUser;
 import org.ffplanner.util.FacesUtils;
 import org.ffplanner.util.Logging;
@@ -48,6 +49,10 @@ public class AuthController implements Serializable {
 
     @Produces @LoggedInUser
     private User user;
+
+    public boolean isAdminUser() {
+        return user != null && user.hasRole(UserRole.ADMIN);
+    }
 
     public void logOut() {
         final FacesContext facesContext = FacesContext.getCurrentInstance();

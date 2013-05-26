@@ -27,6 +27,7 @@
         </div>
         <div class="right_header">
             <h:form styleClass="header_form">
+                <h:commandLink action="#{admin.rereadFestivalData}" styleClass="header_button" rendered="#{auth.isAdminUser()}">#{bundle.RereadFestivalData}</h:commandLink>
                 <h:commandLink action="#{auth.logOut}" styleClass="header_button">#{bundle.Logout}</h:commandLink>
             </h:form>
         </div>

@@ -1,6 +1,6 @@
 .movieDisplay-imdb-image {
-    vertical-align: -10px;
-    margin-left: 5px;
+    display: block;
+    margin-left: -2px;
 }
 
 .movieDisplay-imdb-link:active, .movieDisplay-imdb-link:focus {

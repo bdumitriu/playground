@@ -20,7 +20,7 @@
 
     <ui:define name="additional-headers">
         <h:outputStylesheet name="css/base/jquery-ui.min.css" />
-        <h:outputStylesheet library="css" name="schedule.css"/>
+        <h:outputStylesheet library="css" name="day_schedule.css"/>
         <h:outputScript library="js" name="jquery-1.9.1.js" />
         <h:outputScript library="js" name="jquery-ui-1.10.1.custom.js" />
         <h:outputScript library="js" name="jquery.blockUI.js" />
@@ -133,8 +133,8 @@
                                     </span>
                                     <h:commandLink
                                             title="#{bundle.WatchAnyTooltip}"
-                                            rendered="#{scheduleController.isNoConstraintSelectedFor(hourSlot.showing.id)}"
-                                            action="#{scheduleController.watchMovieButtonClicked(hourSlot.showing.id)}"
+                                            rendered="#{scheduleController.isNoConstraintSelectedForShowing(hourSlot.showing.id)}"
+                                            action="#{scheduleController.watchMovieButtonClickedViaShowing(hourSlot.showing.id)}"
                                             styleClass="sch_check">
                                         <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
                                         <f:ajax execute="@form" render="@form :buttons_form" onevent="updateMovieCell" />
@@ -142,7 +142,7 @@
                                     <h:commandLink
                                             title="#{bundle.RemoveInterestTooltip}"
                                             rendered="#{scheduleController.hasUserConstraintFor(hourSlot.showing.id)}"
-                                            action="#{scheduleController.removeInterestClicked(hourSlot.showing.id)}"
+                                            action="#{scheduleController.removeInterestClickedViaShowing(hourSlot.showing.id)}"
                                             styleClass="sch_uncheck">
                                         <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
                                         <f:ajax execute="@form" render="@form :buttons_form" onevent="updateMovieCell" />

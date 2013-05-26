@@ -94,16 +94,30 @@ public class ScheduleController implements Serializable {
         }
     }
 
-    public void removeInterestClicked(Long showingId) {
-        userScheduleBean.toggleMovieConstraint(showingId, user.getId());
+    public void removeInterestClickedViaShowing(Long showingId) {
+        userScheduleBean.toggleMovieConstraintViaShowing(showingId, user.getId());
         /* TODO: temporary */
         if (hasSchedule()) {
             scheduledShowings.remove(showingId);
         }
     }
 
-    public void watchMovieButtonClicked(Long showingId) {
-        userScheduleBean.toggleMovieConstraint(showingId, user.getId());
+    public void removeInterestClicked(Long movieBundleId) {
+        userScheduleBean.toggleMovieConstraint(movieBundleId, user.getId());
+        /* TODO: temporary */
+        if (hasSchedule()) {
+            for (Showing showing : getFestivalEditionProgramme().getShowingsFor(movieBundleId)) {
+                scheduledShowings.remove(showing.getId());
+            }
+        }
+    }
+
+    public void watchMovieButtonClickedViaShowing(Long showingId) {
+        userScheduleBean.toggleMovieConstraintViaShowing(showingId, user.getId());
+    }
+
+    public void watchMovieButtonClicked(Long movieBundleId) {
+        userScheduleBean.toggleMovieConstraint(movieBundleId, user.getId());
     }
 
     public void watchShowingButtonClicked(Long showingId) {
@@ -270,8 +284,12 @@ public class ScheduleController implements Serializable {
         return constraintsData.hasUserConstraintFor(showingId);
     }
 
-    public boolean isNoConstraintSelectedFor(Long showingId) {
-        return constraintsData.hasNoConstraintFor(showingId);
+    public boolean isNoConstraintSelectedForShowing(Long showingId) {
+        return constraintsData.hasNoConstraintForShowing(showingId);
+    }
+
+    public boolean isNoConstraintSelectedForMovie(Long movieBundleId) {
+        return constraintsData.hasNoConstraintForMovie(movieBundleId);
     }
 
     public short getShowingPriority(Long showingId) {

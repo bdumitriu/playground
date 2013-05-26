@@ -1,6 +1,7 @@
 package org.ffplanner.bean;
 
 import org.ffplanner.bean.constraints.MovieConstraintToggler;
+import org.ffplanner.bean.constraints.MovieConstraintViaShowingToggler;
 import org.ffplanner.bean.constraints.PriorityChanger;
 import org.ffplanner.bean.constraints.ShowingConstraintToggler;
 import org.ffplanner.bean.programme.FestivalEditionProgramme;
@@ -35,11 +36,26 @@ public class UserScheduleConstraintsBean implements Serializable {
         return programme.getShowingsForSameMovieAs(showing);
     }
 
+    private List<Showing> getShowingsFor(MovieBundleInFestival movieBundle) {
+        final FestivalEditionProgramme programme =
+                festivalProgrammeBean.getProgrammeFor(movieBundle.getFestivalEditionSection().getFestivalEdition());
+        return programme.getShowingsFor(movieBundle);
+    }
+
     /**
-     * Toggles the movie constraint for the movie of {@code showing} as described in {@link MovieConstraintToggler}.
+     * Toggles the movie constraint for {@code movieBundle} as described in {@link MovieConstraintToggler}.
      */
-    public void toggleMovieConstraint(Showing showing, UserSchedule userSchedule) {
-        new MovieConstraintToggler(entityManager, showing, getShowingsForSameMovieAs(showing), userSchedule).change();
+    public void toggleMovieConstraint(MovieBundleInFestival movieBundle, UserSchedule userSchedule) {
+        new MovieConstraintToggler(entityManager, movieBundle, getShowingsFor(movieBundle), userSchedule).change();
+    }
+
+    /**
+     * Toggles the movie constraint for the movie of {@code showing} as described in
+     * {@link MovieConstraintViaShowingToggler}.
+     */
+    public void toggleMovieConstraintViaShowing(Showing showing, UserSchedule userSchedule) {
+        new MovieConstraintViaShowingToggler(
+                entityManager, showing, getShowingsForSameMovieAs(showing), userSchedule).change();
     }
 
     /**

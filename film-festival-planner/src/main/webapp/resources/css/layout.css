@@ -5,7 +5,6 @@
 
 .content {
     margin-top: 34px;
-    display: inline-block;
     width: 100%;
 }
 
@@ -13,6 +12,7 @@
     position: fixed;
     top: 0;
     background-color: #effbfe;
+    height: 34px;
     width: 100%;
     overflow: hidden; /* without this, the div will not "contain" the embedded div's */
     z-index: 100;

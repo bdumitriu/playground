@@ -16,8 +16,8 @@ import java.util.Collection;
 public class PriorityChanger extends ConstraintChanger {
 
     public PriorityChanger(EntityManager entityManager,
-            Showing showing, Collection<Showing> otherShowings, UserSchedule userSchedule) {
-        super(entityManager, showing, otherShowings, userSchedule);
+            Showing showing, Collection<Showing> allShowings, UserSchedule userSchedule) {
+        super(entityManager, showing, allShowings, userSchedule);
     }
 
     public void change(Short priority) {

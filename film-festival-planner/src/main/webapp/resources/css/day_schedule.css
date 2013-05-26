@@ -6,10 +6,6 @@
     background-color: #ffffff;
     font-family: Candara, serif;
     white-space: nowrap;
-
-    /* display and width are necessary to avoid the collapsing of the outer div: */
-    /* http://stackoverflow.com/questions/218760/how-do-you-keep-parents-of-floated-elements-from-collapsing */
-    display: inline-block;
 }
 
 .sch_cell_first, .sch_cell_rest {
@@ -119,67 +115,15 @@
     outline: none;
 }
 
-.sch_uncheck {
+.sch_uncheck, .sch_check {
     position: absolute;
-    width: 19px;
-    height: 19px;
     top: -1px;
-    display: block;
-    background: transparent url('../../resources/img/check_16_mouse_over.png') center top no-repeat;
-}
-
-.sch_uncheck:hover {
-    background-image: url('../../resources/img/check_16.png');
-}
-
-.sch_check {
-    position: absolute;
-    width: 19px;
-    height: 19px;
-    top: -1px;
-    visibility: hidden;
-    display: block;
-    background: transparent url('../../resources/img/check_16.png') center top no-repeat;
-}
-
-.sch_check:hover {
-    background-image: url('../../resources/img/check_16_mouse_over.png');
 }
 
 .sch_pin_user, .sch_unpin_user, .sch_pin_system {
     position: absolute;
-    width: 19px;
-    height: 19px;
     top: 3px;
     right: -2px;
-    display: block;
-    background: transparent no-repeat center;
-}
-
-.sch_pin_user {
-    visibility: hidden;
-    background-image: url('../../resources/img/pin_user_button_16.png');
-}
-
-.sch_pin_user:hover {
-    background-image: url('../../resources/img/pin_user_button_16_mouse_over.png');
-}
-
-.sch_unpin_user {
-    background-image: url('../../resources/img/pin_user_16.png');
-}
-
-.sch_unpin_user:hover {
-    top: 1px;
-    background-image: url('../../resources/img/pin_user_16_mouse_over.png');
-}
-
-.sch_pin_system {
-    background-image: url('../../resources/img/pin_system_16.png');
-}
-
-.sch_pin_system:hover {
-    background-image: url('../../resources/img/pin_system_16_mouse_over.png');
 }
 
 .sch_priority_wrapper {

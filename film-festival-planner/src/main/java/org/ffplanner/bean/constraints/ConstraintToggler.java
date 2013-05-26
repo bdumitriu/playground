@@ -12,8 +12,8 @@ import java.util.Collection;
 public abstract class ConstraintToggler extends ConstraintChanger {
 
     protected ConstraintToggler(EntityManager entityManager,
-            Showing showing, Collection<Showing> otherShowings, UserSchedule userSchedule) {
-        super(entityManager, showing, otherShowings, userSchedule);
+            Showing showing, Collection<Showing> allShowings, UserSchedule userSchedule) {
+        super(entityManager, showing, allShowings, userSchedule);
     }
 
     protected ConstraintToggler(ConstraintChanger constraintChanger) {

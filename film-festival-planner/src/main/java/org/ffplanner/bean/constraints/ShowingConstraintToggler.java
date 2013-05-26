@@ -22,8 +22,8 @@ import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_PRIORITY;
 public class ShowingConstraintToggler extends ConstraintToggler {
 
     public ShowingConstraintToggler(EntityManager entityManager,
-            Showing showing, Collection<Showing> otherShowings, UserSchedule userSchedule) {
-        super(entityManager, showing, otherShowings, userSchedule);
+            Showing showing, Collection<Showing> allShowings, UserSchedule userSchedule) {
+        super(entityManager, showing, allShowings, userSchedule);
     }
 
     protected ShowingConstraintToggler(ConstraintChanger constraintChanger) {

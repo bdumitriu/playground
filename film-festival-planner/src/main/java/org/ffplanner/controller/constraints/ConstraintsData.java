@@ -154,8 +154,17 @@ public class ConstraintsData {
     /**
      * @return true if no constraint is set for {@code showingId}.
      */
-    public boolean hasNoConstraintFor(Long showingId) {
+    public boolean hasNoConstraintForShowing(Long showingId) {
         return constraints.get(showingId) == null;
+    }
+
+    public boolean hasNoConstraintForMovie(Long movieBundleId) {
+        for (Showing showing : festivalProgramme.getShowingsFor(movieBundleId)) {
+            if (constraints.get(showing.getId()) != null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Short getConstraintPriority(Long showingId) {

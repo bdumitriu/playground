@@ -6,7 +6,7 @@ import org.ffplanner.entity.FestivalEditionSection;
 import org.ffplanner.entity.Movie;
 import org.ffplanner.entity.MovieBundleInFestival;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -19,13 +19,16 @@ import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID
  * @author Bogdan Dumitriu
  */
 @Named
-@RequestScoped
+@SessionScoped
 public class ProgrammeController implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Inject
     private FestivalProgrammeBean festivalProgrammeBean;
+
+    @Inject
+    private ScheduleController scheduleController;
 
     private FestivalEditionSection[] sections;
 
@@ -36,6 +39,10 @@ public class ProgrammeController implements Serializable {
     private MovieBundleInFestival movieBundle;
 
     private Movie movie;
+
+    public void prepareView() {
+        scheduleController.updateConstraintsData();
+    }
 
     public FestivalEditionSection[] getSections() {
         if (sections == null || festivalProgrammeBean.changedAfter(sectionsLastInit)) {
@@ -51,7 +58,10 @@ public class ProgrammeController implements Serializable {
     public void setSection(FestivalEditionSection festivalEditionSection) {
         for (FestivalEditionSection section : sections) {
             if (section.equals(festivalEditionSection)) {
-                this.section = section;
+                if (this.section != section) {
+                    this.section = section;
+                    this.movieBundle = null;
+                }
                 return;
             }
         }

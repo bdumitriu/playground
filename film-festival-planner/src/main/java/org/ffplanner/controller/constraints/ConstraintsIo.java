@@ -176,7 +176,7 @@ public class ConstraintsIo {
             final List<Showing> showings = festivalEditionProgramme.getShowingsFor(id);
             if (!showings.isEmpty()) {
                 final Showing showing = showings.get(0);
-                userScheduleBean.toggleMovieConstraint(showing.getId(), userId);
+                userScheduleBean.toggleMovieConstraintViaShowing(showing.getId(), userId);
                 userScheduleBean.setConstraintPriority(showing.getId(), userId, priority);
             }
         }

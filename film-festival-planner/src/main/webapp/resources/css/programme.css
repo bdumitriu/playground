@@ -11,6 +11,7 @@
     float: left;
     margin-left: 4em;
     width: 20em;
+    padding-top: 0.7em;
 }
 
 .sections ul, .movies ul {
@@ -18,27 +19,50 @@
 }
 
 .sections li, .movies li {
+    display: inline-block;
+    width: 100%;
     list-style: none;
     border-top: solid 1px #039;
     text-align: left;
     margin: 0;
+    white-space: nowrap;
 }
 
 .sections .last, .movies .last {
     border-bottom: solid 1px #039;
 }
 
-.sections a, .movies a, .selected {
+.sections .menu, .movies .menu, .selected {
     display: block;
     padding: .25em;
     text-decoration: none;
+    white-space: normal;
 }
 
-.sections a:link, .movies a:link, .sections a:visited, .movies a:visited {
+.sections .menu:link, .movies .menu:link, .sections .menu:visited, .movies .menu:visited {
     color: blue;
 }
 
-.sections a:hover, .movies a:hover {
+.sections .menu:hover, .movies .menu:hover {
     color: red;
     background-color: #EFFBFE;
+}
+
+.layout_block_check {
+    display: block;
+    float: left;
+    width: 1.5em;
+}
+
+.layout_block_link {
+    display: block;
+    float: left;
+    width: 10.5em;
+}
+
+.sch_uncheck, .sch_check {
+    visibility: visible;
+    position: relative;
+    vertical-align: top;
+    top: 0.17em;
 }

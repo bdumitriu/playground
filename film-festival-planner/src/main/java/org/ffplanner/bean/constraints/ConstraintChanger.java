@@ -22,11 +22,11 @@ public abstract class ConstraintChanger {
     protected final UserSchedule userSchedule;
 
     protected ConstraintChanger(EntityManager entityManager,
-            final Showing showing, Collection<Showing> otherShowings, UserSchedule userSchedule) {
+            final Showing showing, Collection<Showing> allShowings, UserSchedule userSchedule) {
         this.entityManager = entityManager;
         this.showing = showing;
         this.otherShowingConstraints = Collections2.filter(
-                Collections2.transform(otherShowings, new Function<Showing, ShowingConstraint>() {
+                Collections2.transform(allShowings, new Function<Showing, ShowingConstraint>() {
                     @Override
                     public ShowingConstraint apply(Showing input) {
                         return getShowingConstraint(input.getId());
@@ -35,7 +35,7 @@ public abstract class ConstraintChanger {
                 new Predicate<ShowingConstraint>() {
                     @Override
                     public boolean apply(ShowingConstraint input) {
-                        return input != null && (showing == null || showing.getId() != input.getShowing().getId());
+                        return input != null && (showing == null || !showing.getId().equals(input.getShowing().getId()));
                     }
                 }
         );
@@ -44,17 +44,21 @@ public abstract class ConstraintChanger {
 
     protected ConstraintChanger(ConstraintChanger constraintChanger) {
         this.entityManager = constraintChanger.entityManager;
-        this.showing = constraintChanger.showing;
+        this.showing = constraintChanger.getShowing();
         this.otherShowingConstraints = constraintChanger.otherShowingConstraints;
         this.userSchedule = constraintChanger.userSchedule;
     }
 
+    protected Showing getShowing() {
+        return showing;
+    }
+
     protected ShowingConstraint getShowingConstraint() {
-        final Long showingId = showing.getId();
+        final Long showingId = getShowing().getId();
         return getShowingConstraint(showingId);
     }
 
-    private ShowingConstraint getShowingConstraint(Long showingId) {
+    protected ShowingConstraint getShowingConstraint(Long showingId) {
         final ShowingConstraintId constraintId = new ShowingConstraintId(userSchedule.getId(), showingId);
         return entityManager.find(ShowingConstraint.class, constraintId);
     }
@@ -67,7 +71,7 @@ public abstract class ConstraintChanger {
 
     protected void createShowingConstraint(Short priority) {
         final ShowingConstraint showingConstraint = new ShowingConstraint();
-        showingConstraint.setShowing(showing);
+        showingConstraint.setShowing(getShowing());
         showingConstraint.setUserSchedule(userSchedule);
         showingConstraint.setPriority(priority);
         entityManager.persist(showingConstraint);
@@ -82,7 +86,7 @@ public abstract class ConstraintChanger {
     }
 
     protected MovieBundleInFestival getMovieBundle() {
-        return showing.getMovieBundleInFestival();
+        return getShowing().getMovieBundleInFestival();
     }
 
     protected void createOrUpdateMovieConstraint(MovieBundleConstraint movieConstraint, Short priority) {

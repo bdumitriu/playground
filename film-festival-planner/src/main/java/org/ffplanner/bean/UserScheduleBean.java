@@ -1,6 +1,7 @@
 package org.ffplanner.bean;
 
 import org.ffplanner.bean.constraints.MovieConstraintToggler;
+import org.ffplanner.bean.constraints.MovieConstraintViaShowingToggler;
 import org.ffplanner.bean.constraints.ShowingConstraintToggler;
 import org.ffplanner.entity.*;
 import org.ffplanner.qualifier.Messages;
@@ -35,6 +36,8 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
 
     @Inject
     private ShowingBean showingBean;
+
+    @Inject MovieBundleInFestivalBean movieBundleInFestivalBean;
 
     @Inject
     private UserScheduleConstraintsBean constraintsBean;
@@ -113,27 +116,40 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
     }
 
     /**
-     * Toggles the movie constraint for the movie of {@code showing} as described in {@link MovieConstraintToggler}.
+     * Toggles the movie constraint for {@code movieBundleId} as described in {@link MovieConstraintToggler}.
      */
-    public void toggleMovieConstraint(Long showingId, Long userId) {
+    public void toggleMovieConstraint(Long movieBundleId, Long userId) {
         new ConstraintChanger() {
             @Override
-            protected void change(Showing showing, UserSchedule userSchedule) {
-                constraintsBean.toggleMovieConstraint(showing, userSchedule);
+            protected void change(MovieBundleInFestival movieBundle, UserSchedule userSchedule) {
+                constraintsBean.toggleMovieConstraint(movieBundle, userSchedule);
             }
-        }.changeConstraint(showingId, userId);
+        }.changeConstraint(movieBundleId, userId);
+    }
+
+    /**
+     * Toggles the movie constraint for the movie of {@code showingId} as described in
+     * {@link MovieConstraintViaShowingToggler}.
+     */
+    public void toggleMovieConstraintViaShowing(Long showingId, Long userId) {
+        new ConstraintChangerViaShowing() {
+            @Override
+            protected void change(Showing showing, UserSchedule userSchedule) {
+                constraintsBean.toggleMovieConstraintViaShowing(showing, userSchedule);
+            }
+        }.changeConstraintViaShowing(showingId, userId);
     }
 
     /**
      * Toggles the showing constraint for {@code showing} as described in {@link ShowingConstraintToggler}.
      */
     public void toggleShowingConstraint(Long showingId, Long userId) {
-        new ConstraintChanger() {
+        new ConstraintChangerViaShowing() {
             @Override
             protected void change(Showing showing, UserSchedule userSchedule) {
                 constraintsBean.toggleShowingConstraint(showing, userSchedule);
             }
-        }.changeConstraint(showingId, userId);
+        }.changeConstraintViaShowing(showingId, userId);
     }
 
     public boolean isMovieConstraintSelected(Long showingId, Long userId) {
@@ -157,17 +173,17 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
     }
 
     public void setConstraintPriority(Long showingId, Long userId, final Short priority) {
-        new ConstraintChanger() {
+        new ConstraintChangerViaShowing() {
             @Override
             protected void change(Showing showing, UserSchedule userSchedule) {
                 constraintsBean.setConstraintPriority(showing, userSchedule, priority);
             }
-        }.changeConstraint(showingId, userId);
+        }.changeConstraintViaShowing(showingId, userId);
     }
 
-    private abstract class ConstraintChanger {
+    private abstract class ConstraintChangerViaShowing {
 
-        protected void changeConstraint(Long showingId, Long userId) {
+        protected void changeConstraintViaShowing(Long showingId, Long userId) {
             final Showing showing = showingBean.find(showingId);
             if (showing != null) {
                 final UserSchedule userSchedule = findOrCreateBy(userId, showing.getFestivalEdition(), false);
@@ -178,5 +194,21 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
         }
 
         protected abstract void change(Showing showing, UserSchedule userSchedule);
+    }
+
+    private abstract class ConstraintChanger {
+
+        protected void changeConstraint(Long movieBundleInFestivalId, Long userId) {
+            final MovieBundleInFestival movieBundle = movieBundleInFestivalBean.find(movieBundleInFestivalId);
+            if (movieBundle != null) {
+                final UserSchedule userSchedule =
+                        findOrCreateBy(userId, movieBundle.getFestivalEditionSection().getFestivalEdition(), false);
+                change(movieBundle, userSchedule);
+                userSchedule.setLastModified(new Date());
+                entityManager.merge(userSchedule);
+            }
+        }
+
+        protected abstract void change(MovieBundleInFestival movieBundle, UserSchedule userSchedule);
     }
 }

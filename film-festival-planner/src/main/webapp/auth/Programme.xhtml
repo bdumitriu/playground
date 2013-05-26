@@ -12,6 +12,7 @@
 <f:metadata>
     <f:viewParam name="section" value="#{programmeController.section}" converter="festivalEditionSectionConverter"/>
     <f:viewParam name="movieBundle" value="#{programmeController.movieBundle}" converter="movieBundleInFestivalConverter"/>
+    <f:event type="preRenderView" listener="#{programmeController.prepareView}"/>
 </f:metadata>
 
 <ui:composition template="layout.xhtml">
@@ -30,7 +31,7 @@
                 <ui:repeat value="#{programmeController.sections}" var="section" varStatus="status">
                     <li class="#{status.last ? 'last' : ''}">
                         <h:outputText styleClass="selected" value="#{section.section.name}" rendered="#{section == programmeController.section}"/>
-                        <h:link value="#{section.section.name}" outcome="Programme" rendered="#{section != programmeController.section}">
+                        <h:link styleClass="menu" value="#{section.section.name}" outcome="Programme" rendered="#{section != programmeController.section}">
                             <f:param name="section" value="#{converters:convertSection(section)}"/>
                         </h:link>
                     </li>
@@ -38,17 +39,39 @@
             </ul>
         </h:panelGroup>
         <h:panelGroup layout="block" styleClass="movies" rendered="#{programmeController.section != null}">
-            <ul>
-                <ui:repeat value="#{programmeController.section.movieBundles}" var="movieBundle" varStatus="status">
-                    <li class="#{status.last ? 'last' : ''}">
-                        <h:outputText styleClass="selected" value="#{movieBundle.movieBundle.englishTitle}" rendered="#{movieBundle == programmeController.movieBundle}"/>
-                        <h:link value="#{movieBundle.movieBundle.englishTitle}" outcome="Programme" rendered="#{movieBundle != programmeController.movieBundle}">
-                            <f:param name="section" value="#{converters:convertSection(programmeController.section)}"/>
-                            <f:param name="movieBundle" value="#{converters:convertMovieBundleInFestival(movieBundle)}"/>
-                        </h:link>
-                    </li>
-                </ui:repeat>
-            </ul>
+            <h:form>
+                <ul>
+                    <ui:repeat value="#{programmeController.section.movieBundles}" var="movieBundle" varStatus="status">
+                        <li class="#{status.last ? 'last' : ''}">
+                            <h:panelGroup layout="block" styleClass="layout_block_check">
+                                <h:commandLink
+                                        title="#{bundle.WatchAnyTooltip}"
+                                        rendered="#{scheduleController.isNoConstraintSelectedForMovie(movieBundle.id)}"
+                                        action="#{scheduleController.watchMovieButtonClicked(movieBundle.id)}"
+                                        styleClass="sch_check">
+                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                    <f:ajax execute="@form" render="@form"/>
+                                </h:commandLink>
+                                <h:commandLink
+                                        title="#{bundle.RemoveInterestTooltip}"
+                                        rendered="#{!scheduleController.isNoConstraintSelectedForMovie(movieBundle.id)}"
+                                        action="#{scheduleController.removeInterestClicked(movieBundle.id)}"
+                                        styleClass="sch_uncheck">
+                                    <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
+                                    <f:ajax execute="@form" render="@form"/>
+                                </h:commandLink>
+                            </h:panelGroup>
+                            <h:panelGroup layout="block" styleClass="layout_block_link">
+                                <h:outputText styleClass="selected" value="#{movieBundle.movieBundle.englishTitle}" rendered="#{movieBundle == programmeController.movieBundle}"/>
+                                <h:link styleClass="menu" value="#{movieBundle.movieBundle.englishTitle}" outcome="Programme" rendered="#{movieBundle != programmeController.movieBundle}">
+                                    <f:param name="section" value="#{converters:convertSection(programmeController.section)}"/>
+                                    <f:param name="movieBundle" value="#{converters:convertMovieBundleInFestival(movieBundle)}"/>
+                                </h:link>
+                            </h:panelGroup>
+                        </li>
+                    </ui:repeat>
+                </ul>
+            </h:form>
         </h:panelGroup>
         <h:panelGroup layout="block" styleClass="movie">
             <util:movieBundleDisplay movieBundleInFestival="#{programmeController.movieBundle}" />

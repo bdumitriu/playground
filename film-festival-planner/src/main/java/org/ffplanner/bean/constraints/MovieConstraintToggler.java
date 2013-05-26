@@ -4,6 +4,7 @@ import org.ffplanner.entity.*;
 
 import javax.persistence.EntityManager;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_PRIORITY;
 
@@ -11,49 +12,67 @@ import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_PRIORITY;
  * Toggles a "watch no matter which showing of this movie" constraint as follows:
  * <ul>
  *     <li><i>if missing</i>, it creates it;</li>
- *     <li><i>if existing</i>, it removes it as well as the "watch this showing of a movie" constraint for the given
- *     {@code showing} (but other "watch this showing of a movie" for the same movie are maintained).</li>
+ *     <li><i>if existing</i>, it removes it as well as any "watch this showing of a movie" constraint for all showings
+ *     of this movie.</li>
  * </ul>
  *
  * @author Bogdan Dumitriu
  */
 public class MovieConstraintToggler extends ConstraintToggler {
 
-    public MovieConstraintToggler(EntityManager entityManager,
-            Showing showing, Collection<Showing> otherShowings, UserSchedule userSchedule) {
-        super(entityManager, showing, otherShowings, userSchedule);
+    private final MovieBundleInFestival movieBundle;
+
+    public MovieConstraintToggler(EntityManager entityManager, MovieBundleInFestival movieBundle,
+            Collection<Showing> allShowings, UserSchedule userSchedule) {
+        super(entityManager, null, allShowings, userSchedule);
+        this.movieBundle = movieBundle;
+    }
+
+    @Override
+    protected MovieBundleInFestival getMovieBundle() {
+        return movieBundle;
     }
 
     @Override
     public void change() {
-        final ShowingConstraint showingConstraint = getShowingConstraint();
+        final Collection<ShowingConstraint> showingConstraints = getShowingConstraints();
         final MovieBundleConstraint movieConstraint = getMovieConstraint();
         if (movieConstraint == null) {
-            onConstraintNotExists(showingConstraint);
+            onConstraintNotExists(showingConstraints);
         } else {
-            onConstraintExists(showingConstraint, movieConstraint);
+            onConstraintExists(showingConstraints, movieConstraint);
         }
     }
 
-    private void onConstraintNotExists(ShowingConstraint showingConstraint) {
-        if (showingConstraint == null) {
-            if (otherShowingConstraints.isEmpty()) {
-                createMovieConstraint(DEFAULT_PRIORITY);
-            } else {
-                assert false;
+    private Collection<ShowingConstraint> getShowingConstraints() {
+        final Collection<ShowingConstraint> showingConstraints = new LinkedList<>();
+        // since null is passed to the parent class, otherShowingConstraint will contain all showing constraints
+        for (ShowingConstraint otherShowingConstraint : otherShowingConstraints) {
+            final ShowingConstraint showingConstraint =
+                    getShowingConstraint(otherShowingConstraint.getShowing().getId());
+            if (showingConstraint != null) {
+                showingConstraints.add(showingConstraint);
             }
+        }
+        return showingConstraints;
+    }
+
+    private void onConstraintNotExists(Collection<ShowingConstraint> showingConstraints) {
+        if (showingConstraints.isEmpty()) {
+            createMovieConstraint(DEFAULT_PRIORITY);
         } else {
-            if (otherShowingConstraints.isEmpty()) {
-                removeShowingConstraint(showingConstraint);
-            } else {
-                new ShowingConstraintToggler(this).change();
-            }
+            removeAll(showingConstraints);
         }
     }
 
-    private void onConstraintExists(ShowingConstraint showingConstraint, MovieBundleConstraint movieConstraint) {
+    private void onConstraintExists(
+            Iterable<ShowingConstraint> showingConstraints, MovieBundleConstraint movieConstraint) {
         removeMovieConstraint(movieConstraint);
-        if (showingConstraint != null) {
+        removeAll(showingConstraints);
+    }
+
+    private void removeAll(Iterable<ShowingConstraint> showingConstraints) {
+        for (ShowingConstraint showingConstraint : showingConstraints) {
             removeShowingConstraint(showingConstraint);
         }
     }

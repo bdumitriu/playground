@@ -11,6 +11,7 @@ import org.ffplanner.bean.programme.FestivalProgrammeBean;
 import org.ffplanner.controller.constraints.ConstraintsData;
 import org.ffplanner.controller.constraints.ConstraintsIo;
 import org.ffplanner.controller.constraints.ScheduleConstraintType;
+import org.ffplanner.controller.schedule.ScheduleData;
 import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.User;
@@ -67,7 +68,7 @@ public class ScheduleController implements Serializable {
 
     private ConstraintsData constraintsData;
 
-    private List<Long> scheduledShowings;
+    private ScheduleData scheduleData;
 
     private String constraintsFile = "foo";
 
@@ -94,22 +95,22 @@ public class ScheduleController implements Serializable {
         }
     }
 
+    public void updateScheduleData() {
+        if (scheduleData == null) {
+            final FestivalEditionProgramme festivalProgramme = getFestivalEditionProgramme();
+            scheduleData = new ScheduleData(userScheduleBean, festivalProgramme);
+            scheduleData.loadFor(this.user);
+        } else if (scheduleData.reloadNeeded()) {
+            scheduleData.loadFor(this.user);
+        }
+    }
+
     public void removeInterestClickedViaShowing(Long showingId) {
         userScheduleBean.toggleMovieConstraintViaShowing(showingId, user.getId());
-        /* TODO: temporary */
-        if (hasSchedule()) {
-            scheduledShowings.remove(showingId);
-        }
     }
 
     public void removeInterestClicked(Long movieBundleId) {
         userScheduleBean.toggleMovieConstraint(movieBundleId, user.getId());
-        /* TODO: temporary */
-        if (hasSchedule()) {
-            for (Showing showing : getFestivalEditionProgramme().getShowingsFor(movieBundleId)) {
-                scheduledShowings.remove(showing.getId());
-            }
-        }
     }
 
     public void watchMovieButtonClickedViaShowing(Long showingId) {
@@ -136,24 +137,19 @@ public class ScheduleController implements Serializable {
         userScheduleBean.setConstraintPriority(showingId, user.getId(), priority);
     }
 
-    public boolean hasSchedule() {
-        return scheduledShowings != null;
-    }
-
-    public void resetSchedule() {
-        userScheduleBean.reset(user.getId(), getFestivalEdition());
+    public void resetConstraints() {
+        userScheduleBean.resetConstraints(user.getId(), getFestivalEdition());
     }
 
     public void suggestSchedule() {
-        try {
+        /*try {
             writeConstraints();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         final ScheduleBuilder scheduleBuilder = festivalProgrammeBean.getScheduleBuilder(DEFAULT_FESTIVAL_EDITION_ID);
-        final Schedule schedule = scheduleBuilder.getPossibleSchedulesJ(constraintsData.asScheduleConstraints()).get(0);
-        scheduledShowings = new LinkedList<>();
-        scheduledShowings.addAll(schedule.showingIdsJ());
+        final List<Schedule> schedules = scheduleBuilder.getPossibleSchedulesJ(constraintsData.asScheduleConstraints());
+        userScheduleBean.replaceSchedules(user.getId(), getFestivalEdition(), schedules);
     }
 
     private void writeConstraints() throws IOException {
@@ -221,21 +217,25 @@ public class ScheduleController implements Serializable {
     }
 
     public void discardSchedule() {
-        scheduledShowings = null;
+        userScheduleBean.resetSchedules(user.getId(), getFestivalEdition());
+    }
+
+    public boolean hasSchedule() {
+        return scheduleData.size() > 0;
+    }
+
+    public boolean isScheduled(Long showingId) {
+        return scheduleData.isScheduled(showingId);
     }
 
     public boolean hasConstraints() {
         return constraintsData.size() > 0;
     }
 
-    public boolean isScheduled(Long showingId) {
-        return hasSchedule() && scheduledShowings.contains(showingId);
-    }
-
     public boolean isScheduledElsewhere(Long showingId) {
         if (hasSchedule()) {
             for (Showing showing : getFestivalEditionProgramme().getShowingsForSameMovieAs(showingId)) {
-                if (scheduledShowings.contains(showing.getId())) {
+                if (isScheduled(showing.getId())) {
                     return true;
                 }
             }

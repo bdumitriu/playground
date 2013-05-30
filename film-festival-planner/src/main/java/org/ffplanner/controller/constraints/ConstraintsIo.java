@@ -58,7 +58,7 @@ public class ConstraintsIo {
         final Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
         final NodeList movies = document.getElementsByTagName("movie");
         final NodeList showings = document.getElementsByTagName("showing");
-        userScheduleBean.reset(userId, festivalEditionProgramme.getFestivalEdition());
+        userScheduleBean.resetConstraints(userId, festivalEditionProgramme.getFestivalEdition());
         new MovieConstraintLoader(userId, festivalEditionProgramme).load(movies);
         new ShowingConstraintLoader(userId).load(showings);
     }

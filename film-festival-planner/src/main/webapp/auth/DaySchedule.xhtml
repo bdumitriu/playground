@@ -28,46 +28,38 @@
     </ui:define>
 
     <ui:define name="buttons">
-        <h:panelGroup id="buttons">
-            <span class="header_text">#{bundle.Day}</span>
+        <h:panelGroup styleClass="buttons">
             <ui:repeat value="#{dayScheduleController.days}" var="day">
                 <h:link value="#{day.getDayOfWeek(dayScheduleController.user.locale)}" styleClass="header_button" rendered="#{day.date ne dayScheduleController.day}">
                     <f:param name="day" value="#{day.asString}"/>
                 </h:link>
                 <h:outputText value="#{day.getDayOfWeek(dayScheduleController.user.locale)}" styleClass="header_button_text_only" rendered="#{day.date eq dayScheduleController.day}"/>
             </ui:repeat>
-            <span class="header_text">#{bundle.Schedule}</span>
+            <ui:remove><span class="header_text">#{bundle.Schedule}</span></ui:remove>
             <h:form id="buttons_form" styleClass="header_form">
-                <h:outputText value="#{bundle.SelectMoviesFirst}"
-                              rendered="#{not scheduleController.hasConstraints() and not scheduleController.hasSchedule()}"
-                              styleClass="header_instruction"/>
-                <h:commandLink action="#{scheduleController.suggestSchedule}"
-                               value="#{bundle.Suggest}"
-                               title="#{bundle.SuggestTooltip}"
-                               rendered="#{scheduleController.hasConstraints() and not scheduleController.hasSchedule()}"
-                               styleClass="header_button">
-                    <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
-                </h:commandLink>
-                <h:commandLink action="#{scheduleController.suggestSchedule}"
-                               value="#{bundle.SuggestNew}"
-                               title="#{bundle.SuggestNewTooltip}"
-                               rendered="#{scheduleController.hasSchedule()}"
-                               styleClass="header_button">
-                    <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
-                </h:commandLink>
-                <h:commandLink action="#{scheduleController.discardSchedule}"
-                               value="#{bundle.Discard}"
-                               title="#{bundle.DiscardTooltip}"
-                               rendered="#{scheduleController.hasSchedule()}"
-                               styleClass="header_button">
-                    <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
-                </h:commandLink>
-                <h:commandLink action="#{scheduleController.resetSchedule}"
-                               value="#{bundle.Reset}"
-                               title="#{bundle.ResetTooltip}"
-                               styleClass="header_button">
-                    <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
-                </h:commandLink>
+                <h:panelGroup styleClass="schedule_buttons" rendered="#{scheduleController.hasConstraints() or scheduleController.hasSchedule()}">
+                    <h:commandLink action="#{scheduleController.suggestSchedule}"
+                                   value="#{bundle.Suggest}"
+                                   title="#{bundle.SuggestTooltip}"
+                                   rendered="#{scheduleController.hasConstraints() and not scheduleController.hasSchedule()}"
+                                   styleClass="header_button">
+                        <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
+                    </h:commandLink>
+                    <h:commandLink action="#{scheduleController.suggestSchedule}"
+                                   value="#{bundle.SuggestNew}"
+                                   title="#{bundle.SuggestNewTooltip}"
+                                   rendered="#{scheduleController.hasSchedule()}"
+                                   styleClass="header_button">
+                        <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
+                    </h:commandLink>
+                    <h:commandLink action="#{scheduleController.discardSchedule}"
+                                   value="#{bundle.Discard}"
+                                   title="#{bundle.DiscardTooltip}"
+                                   rendered="#{scheduleController.hasSchedule()}"
+                                   styleClass="header_button">
+                        <f:ajax render="@form :sch_form" onevent="updateMovieCell" />
+                    </h:commandLink>
+                </h:panelGroup>
                 <ui:remove>
                     <h:selectOneMenu value="#{scheduleController.constraintsFile}">
                         <f:selectItem itemLabel="Load Constraints..." itemValue="foo"/>
@@ -125,7 +117,7 @@
                                               style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
                                     <span class="sch_movie_cell_embedded">
                                     <h:commandLink action="#{dayScheduleController.setShowing(hourSlot.showing.id)}"
-                                                   value="#{hourSlot.showing.movieBundleInFestival.movieBundle.englishTitle} (#{hourSlot.showing.movieBundleInFestival.movieBundle.durationInMinutes}')">
+                                                   value="#{hourSlot.showing.movieBundleInFestival.movieBundle.englishTitle} (#{hourSlot.showing.movieBundleInFestival.movieBundle.durationInMinutes}') - #{hourSlot.showing.movieBundleInFestival.festivalEditionSection.section.name}">
                                         <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
                                         <f:ajax execute="@form" render=":movieInfo" onevent="updateMovieInfo" />
                                     </h:commandLink>

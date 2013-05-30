@@ -2,6 +2,18 @@
  * Author: Bogdan Dumitriu
  */
 
+.buttons {
+    border-left: 2px solid grey;
+    margin-left: 5px;
+    padding: 2px 5px;
+}
+
+.schedule_buttons {
+    border-left: 2px solid grey;
+    margin-left: 1px;
+    padding: 2px 3px;
+}
+
 .sch_container {
     background-color: #ffffff;
     font-family: Candara, serif;
@@ -76,19 +88,19 @@
     /*background-color: #FAFAFA;*/
     /*background-color: #F2F2F2;*/
 
-    /*background-color: #FFE5E5;*/
+    background-color: #F0FFF0;
 }
 
 .sch_movie_cell_watch_showing {
-    /*background-color: #FFE5E5;*/
+    background-color: #F0FFF0;
 }
 
 .sch_movie_cell_watch_movie {
-    /*background-color: #F0FFF0;*/
+    background-color: #FFE5E5;
 }
 
 .sch_movie_cell_watch_elsewhere {
-    /*background-color: #FAFAFA;*/
+    background-color: #FAFAFA;
 }
 
 .sch_movie_cell_embedded {

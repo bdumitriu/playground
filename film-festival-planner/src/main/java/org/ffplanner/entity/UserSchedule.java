@@ -36,7 +36,9 @@ public class UserSchedule implements Serializable {
 
     private Date lastUsed;
 
-    private Date lastModified;
+    private Date constraintsLastModified;
+
+    private Date scheduleLastModified;
 
     @OneToMany(mappedBy = "userSchedule")
     private Set<UserScheduleShowing> showings = new HashSet<>();
@@ -93,12 +95,20 @@ public class UserSchedule implements Serializable {
         this.lastUsed = lastUsed;
     }
 
-    public Date getLastModified() {
-        return lastModified;
+    public Date getConstraintsLastModified() {
+        return constraintsLastModified;
     }
 
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
+    public void setConstraintsLastModified(Date constraintsLastModified) {
+        this.constraintsLastModified = constraintsLastModified;
+    }
+
+    public Date getScheduleLastModified() {
+        return scheduleLastModified;
+    }
+
+    public void setScheduleLastModified(Date scheduleLastModified) {
+        this.scheduleLastModified = scheduleLastModified;
     }
 
     public Set<UserScheduleShowing> getShowings() {
@@ -116,6 +126,10 @@ public class UserSchedule implements Serializable {
     public void resetConstraints() {
         movieConstraints.clear();
         showingConstraints.clear();
+    }
+
+    public void resetSchedule() {
+        showings.clear();
     }
 
     @Override

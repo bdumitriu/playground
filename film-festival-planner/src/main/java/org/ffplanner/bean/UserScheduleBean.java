@@ -1,5 +1,6 @@
 package org.ffplanner.bean;
 
+import org.ffplanner.Schedule;
 import org.ffplanner.bean.constraints.MovieConstraintToggler;
 import org.ffplanner.bean.constraints.MovieConstraintViaShowingToggler;
 import org.ffplanner.bean.constraints.ShowingConstraintToggler;
@@ -9,6 +10,7 @@ import org.ffplanner.qualifier.Messages;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,6 +20,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static org.ffplanner.entity.QueryName.USER_SCHEDULE_SHOWING__DELETE_SCHEDULES_BY_USER_SCHEDULE_ID;
+import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_SCHEDULE_PROPOSAL_ID;
 
 /**
  * @author Bogdan Dumitriu
@@ -99,11 +104,53 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
         return userSchedule;
     }
 
-    public void reset(Long userId, FestivalEdition festivalEdition) {
-        reset(findOrCreateBy(userId, festivalEdition, false));
+    public void resetSchedules(Long userId, FestivalEdition festivalEdition) {
+        resetSchedules(findOrCreateBy(userId, festivalEdition, false));
     }
 
-    public void reset(UserSchedule userSchedule) {
+    private void resetSchedules(UserSchedule userSchedule) {
+        // TODO: update to criteria delete when upgrading to JPA 2.1
+        final Query query = entityManager.createNamedQuery(USER_SCHEDULE_SHOWING__DELETE_SCHEDULES_BY_USER_SCHEDULE_ID);
+        query.setParameter("userScheduleId", userSchedule.getId());
+        query.executeUpdate();
+
+        userSchedule.resetSchedule();
+        userSchedule.setScheduleLastModified(new Date());
+        entityManager.persist(userSchedule);
+    }
+
+    public void replaceSchedules(Long userId, FestivalEdition festivalEdition, Iterable<Schedule> proposedSchedules) {
+        final UserSchedule userSchedule = findOrCreateBy(userId, festivalEdition, false);
+        resetSchedules(userSchedule);
+        addSchedules(userSchedule, proposedSchedules);
+
+        userSchedule.setConstraintsLastModified(new Date());
+        entityManager.persist(userSchedule);
+    }
+
+    private void addSchedules(UserSchedule userSchedule, Iterable<Schedule> proposedSchedules) {
+        long proposalId = DEFAULT_SCHEDULE_PROPOSAL_ID;
+        for (Schedule proposedSchedule : proposedSchedules) {
+            addSchedule(userSchedule, proposalId, proposedSchedule);
+            proposalId++;
+        }
+    }
+
+    private void addSchedule(UserSchedule userSchedule, Long proposalId, Schedule proposedSchedule) {
+        for (Long showingId : proposedSchedule.showingIdsJ()) {
+            final UserScheduleShowing userScheduleShowing = new UserScheduleShowing();
+            userScheduleShowing.setUserSchedule(userSchedule);
+            userScheduleShowing.setProposalId(proposalId);
+            userScheduleShowing.setShowing(showingBean.getReference(showingId));
+            entityManager.persist(userScheduleShowing);
+        }
+    }
+
+    public void resetConstraints(Long userId, FestivalEdition festivalEdition) {
+        resetConstraints(findOrCreateBy(userId, festivalEdition, false));
+    }
+
+    public void resetConstraints(UserSchedule userSchedule) {
         for (MovieBundleConstraint movieConstraint : userSchedule.getMovieConstraints()) {
             entityManager.remove(movieConstraint);
         }
@@ -111,7 +158,7 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
             entityManager.remove(showingConstraint);
         }
         userSchedule.resetConstraints();
-        userSchedule.setLastModified(new Date());
+        userSchedule.setConstraintsLastModified(new Date());
         entityManager.persist(userSchedule);
     }
 
@@ -188,7 +235,7 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
             if (showing != null) {
                 final UserSchedule userSchedule = findOrCreateBy(userId, showing.getFestivalEdition(), false);
                 change(showing, userSchedule);
-                userSchedule.setLastModified(new Date());
+                userSchedule.setConstraintsLastModified(new Date());
                 entityManager.merge(userSchedule);
             }
         }
@@ -204,7 +251,7 @@ public class UserScheduleBean extends BasicEntityBean<UserSchedule> implements S
                 final UserSchedule userSchedule =
                         findOrCreateBy(userId, movieBundle.getFestivalEditionSection().getFestivalEdition(), false);
                 change(movieBundle, userSchedule);
-                userSchedule.setLastModified(new Date());
+                userSchedule.setConstraintsLastModified(new Date());
                 entityManager.merge(userSchedule);
             }
         }

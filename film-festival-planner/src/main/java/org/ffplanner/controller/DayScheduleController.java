@@ -77,6 +77,7 @@ public class DayScheduleController implements Serializable {
         dayProgramme = festivalProgramme.getDayProgramme(this.day);
 
         scheduleController.updateConstraintsData();
+        scheduleController.updateScheduleData();
         log.exiting("DayScheduleController", "prepareView");
     }
 

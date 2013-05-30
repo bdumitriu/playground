@@ -1,6 +1,5 @@
 package org.ffplanner.controller.constraints;
 
-import com.google.common.base.Objects;
 import org.ffplanner.bean.UserScheduleBean;
 import org.ffplanner.bean.programme.FestivalEditionProgramme;
 import org.ffplanner.def.ScheduleConstraintsDefinition;
@@ -95,7 +94,7 @@ public class ConstraintsData {
     }
 
     public boolean reloadNeeded() {
-        final Date lastUpdate = userSchedule.getLastModified();
+        final Date lastUpdate = userSchedule.getConstraintsLastModified();
         final UserSchedule currentSchedule = userScheduleBean.find(userSchedule.getId());
         return scheduleDeleted(currentSchedule) || scheduleUpdatedSince(lastUpdate, currentSchedule);
     }
@@ -105,7 +104,8 @@ public class ConstraintsData {
     }
 
     private static boolean scheduleUpdatedSince(Date lastUpdate, UserSchedule currentSchedule) {
-        return currentSchedule != null && !Objects.equal(lastUpdate, currentSchedule.getLastModified());
+        return currentSchedule != null
+                && (lastUpdate == null || currentSchedule.getConstraintsLastModified().after(lastUpdate));
     }
 
     /**

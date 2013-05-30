@@ -12,18 +12,25 @@ public class UserScheduleShowingId implements Serializable {
 
     private Long userSchedule;
 
+    private Long proposalId;
+
     private Long showing;
 
     public UserScheduleShowingId() {
     }
 
-    public UserScheduleShowingId(Long userSchedule, Long showing) {
+    public UserScheduleShowingId(Long userSchedule, Long proposalId, Long showing) {
         this.userSchedule = userSchedule;
+        this.proposalId = proposalId;
         this.showing = showing;
     }
 
     public Long getUserSchedule() {
         return userSchedule;
+    }
+
+    public Long getProposalId() {
+        return proposalId;
     }
 
     public Long getShowing() {
@@ -32,7 +39,7 @@ public class UserScheduleShowingId implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userSchedule, showing);
+        return Objects.hash(userSchedule, proposalId, showing);
     }
 
     @Override
@@ -44,6 +51,7 @@ public class UserScheduleShowingId implements Serializable {
             return false;
         }
         final UserScheduleShowingId other = (UserScheduleShowingId) obj;
-        return Objects.equals(this.userSchedule, other.userSchedule) && Objects.equals(this.showing, other.showing);
+        return Objects.equals(this.userSchedule, other.userSchedule)
+                && Objects.equals(proposalId, other.proposalId) && Objects.equals(this.showing, other.showing);
     }
 }

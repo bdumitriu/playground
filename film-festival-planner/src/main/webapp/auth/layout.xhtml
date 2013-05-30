@@ -19,10 +19,10 @@
 <h:body styleClass="body">
     <div class="header">
         <div class="left_header">
-            <h:link outcome="Programme" value="#{bundle.TitleProgramme}" styleClass="header_button" rendered="#{page ne 'Programme'}" />
-            <h:outputText value="#{bundle.TitleProgramme}" styleClass="header_button_text_only" rendered="#{page eq 'Programme'}"/>
-            <h:link outcome="DaySchedule" value="#{bundle.TitleDaySchedule}" styleClass="header_button" rendered="#{page ne 'DaySchedule'}" />
-            <h:outputText value="#{bundle.TitleDaySchedule}" styleClass="header_button_text_only" rendered="#{page eq 'DaySchedule'}"/>
+            <h:link outcome="Lineup" value="#{bundle.TitleLineup}" styleClass="header_button" rendered="#{page ne 'Lineup'}" />
+            <h:outputText value="#{bundle.TitleLineup}" styleClass="header_button_text_only" rendered="#{page eq 'Lineup'}"/>
+            <h:link outcome="Program" value="#{bundle.TitleProgram}" styleClass="header_button" rendered="#{page ne 'Program'}" />
+            <h:outputText value="#{bundle.TitleProgram}" styleClass="header_button_text_only" rendered="#{page eq 'Program'}"/>
             <ui:insert name="buttons"/>
         </div>
         <div class="right_header">

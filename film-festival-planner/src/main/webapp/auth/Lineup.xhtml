@@ -10,38 +10,38 @@
       xmlns:util="http://java.sun.com/jsf/composite/util">
 
 <f:metadata>
-    <f:viewParam name="section" value="#{programmeController.section}" converter="festivalEditionSectionConverter"/>
-    <f:viewParam name="movieBundle" value="#{programmeController.movieBundle}" converter="movieBundleInFestivalConverter"/>
-    <f:event type="preRenderView" listener="#{programmeController.prepareView}"/>
+    <f:viewParam name="section" value="#{lineupController.section}" converter="festivalEditionSectionConverter"/>
+    <f:viewParam name="movieBundle" value="#{lineupController.movieBundle}" converter="movieBundleInFestivalConverter"/>
+    <f:event type="preRenderView" listener="#{lineupController.prepareView}"/>
 </f:metadata>
 
 <ui:composition template="layout.xhtml">
 
-    <ui:param name="page" value="Programme" />
+    <ui:param name="page" value="Lineup" />
 
-    <ui:define name="title"><h:outputText value="#{bundle.TitleProgramme}"/></ui:define>
+    <ui:define name="title"><h:outputText value="#{bundle.TitleLineup}"/></ui:define>
 
     <ui:define name="additional-headers">
-        <h:outputStylesheet library="css" name="programme.css"/>
+        <h:outputStylesheet library="css" name="lineup.css"/>
     </ui:define>
 
     <ui:define name="content">
         <h:panelGroup layout="block" styleClass="sections">
             <ul>
-                <ui:repeat value="#{programmeController.sections}" var="section" varStatus="status">
+                <ui:repeat value="#{lineupController.sections}" var="section" varStatus="status">
                     <li class="#{status.last ? 'last' : ''}">
-                        <h:outputText styleClass="selected" value="#{section.section.name}" rendered="#{section == programmeController.section}"/>
-                        <h:link styleClass="menu" value="#{section.section.name}" outcome="Programme" rendered="#{section != programmeController.section}">
+                        <h:outputText styleClass="selected" value="#{section.section.name}" rendered="#{section == lineupController.section}"/>
+                        <h:link styleClass="menu" value="#{section.section.name}" outcome="Lineup" rendered="#{section != lineupController.section}">
                             <f:param name="section" value="#{converters:convertSection(section)}"/>
                         </h:link>
                     </li>
                 </ui:repeat>
             </ul>
         </h:panelGroup>
-        <h:panelGroup layout="block" styleClass="movies" rendered="#{programmeController.section != null}">
+        <h:panelGroup layout="block" styleClass="movies" rendered="#{lineupController.section != null}">
             <h:form>
                 <ul>
-                    <ui:repeat value="#{programmeController.section.movieBundles}" var="movieBundle" varStatus="status">
+                    <ui:repeat value="#{lineupController.section.movieBundles}" var="movieBundle" varStatus="status">
                         <li class="#{status.last ? 'last' : ''}">
                             <h:panelGroup layout="block" styleClass="layout_block_check">
                                 <h:commandLink
@@ -62,9 +62,9 @@
                                 </h:commandLink>
                             </h:panelGroup>
                             <h:panelGroup layout="block" styleClass="layout_block_link">
-                                <h:outputText styleClass="selected" value="#{movieBundle.movieBundle.englishTitle}" rendered="#{movieBundle == programmeController.movieBundle}"/>
-                                <h:link styleClass="menu" value="#{movieBundle.movieBundle.englishTitle}" outcome="Programme" rendered="#{movieBundle != programmeController.movieBundle}">
-                                    <f:param name="section" value="#{converters:convertSection(programmeController.section)}"/>
+                                <h:outputText styleClass="selected" value="#{movieBundle.movieBundle.englishTitle}" rendered="#{movieBundle == lineupController.movieBundle}"/>
+                                <h:link styleClass="menu" value="#{movieBundle.movieBundle.englishTitle}" outcome="Lineup" rendered="#{movieBundle != lineupController.movieBundle}">
+                                    <f:param name="section" value="#{converters:convertSection(lineupController.section)}"/>
                                     <f:param name="movieBundle" value="#{converters:convertMovieBundleInFestival(movieBundle)}"/>
                                 </h:link>
                             </h:panelGroup>
@@ -74,7 +74,7 @@
             </h:form>
         </h:panelGroup>
         <h:panelGroup layout="block" styleClass="movie">
-            <util:movieBundleDisplay movieBundleInFestival="#{programmeController.movieBundle}" />
+            <util:movieBundleDisplay movieBundleInFestival="#{lineupController.movieBundle}" />
         </h:panelGroup>
     </ui:define>
 

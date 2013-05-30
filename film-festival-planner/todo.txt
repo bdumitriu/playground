@@ -1,11 +1,10 @@
 * replace entityManager.find(...) with entityManager.getReference(...) where only the ID of the result is needed
 * see about adding @Cache to @Entity classes
 * ShowingController does not allow for more than one movie at the same hour because a map hour -> movie is used
-* fix the visual display of divs in DaySchedule (simply making some of the divs invisible will not work because there
-  may be movies starting in those divs that would be implicitly invisible as well then)
 
 Feature requests;
 * see movie section in day schedule
-* priority setting in programme view
+* priority setting in lineup view
 * mark movies for not watching - trash icon
 * pinned movies should automatically change those in conflict with them to grey
+* allow undo of accidental clicks in Lineup

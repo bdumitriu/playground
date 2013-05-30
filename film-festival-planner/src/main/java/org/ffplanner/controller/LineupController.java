@@ -20,7 +20,7 @@ import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID
  */
 @Named
 @SessionScoped
-public class ProgrammeController implements Serializable {
+public class LineupController implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

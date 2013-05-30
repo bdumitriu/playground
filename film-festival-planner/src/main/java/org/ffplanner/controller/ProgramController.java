@@ -30,11 +30,11 @@ import static org.joda.time.DateTimeConstants.MAY;
  */
 @Named
 @SessionScoped
-public class DayScheduleController implements Serializable {
+public class ProgramController implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final Logger log = Logger.getLogger(DayScheduleController.class.getName());
+    private final Logger log = Logger.getLogger(ProgramController.class.getName());
 
     @Inject
     private FestivalProgrammeBean festivalProgrammeBean;
@@ -60,14 +60,14 @@ public class DayScheduleController implements Serializable {
 
     private DayProgramme dayProgramme;
 
-    public DayScheduleController() {
-        log.entering("DayScheduleController", "init");
+    public ProgramController() {
+        log.entering("ProgramController", "init");
         hours = Hour.hoursFrom(9, 2);
     }
 
     public void prepareView() {
 //        log.setLevel(Level.ALL);
-        log.entering("DayScheduleController", "prepareView");
+        log.entering("ProgramController", "prepareView");
         if (this.day == null) {
             final DateTime dateTime = new DateTime(2013, MAY, 31, 0, 0);
             this.day = dateTime.toDate();
@@ -78,7 +78,7 @@ public class DayScheduleController implements Serializable {
 
         scheduleController.updateConstraintsData();
         scheduleController.updateScheduleData();
-        log.exiting("DayScheduleController", "prepareView");
+        log.exiting("ProgramController", "prepareView");
     }
 
     public User getUser() {
@@ -94,12 +94,12 @@ public class DayScheduleController implements Serializable {
     }
 
     public Collection<Venue> getVenues() {
-        log.entering("DayScheduleController", "getVenues");
+        log.entering("ProgramController", "getVenues");
         final Collection<Venue> venues = dayProgramme.getVenues();
         try {
             return venues;
         } finally {
-            log.exiting("DayScheduleController", "getVenues", venues == null ? "null" : venues.size());
+            log.exiting("ProgramController", "getVenues", venues == null ? "null" : venues.size());
         }
     }
 
@@ -108,9 +108,9 @@ public class DayScheduleController implements Serializable {
     }
 
     public void setDay(Date day) {
-        log.entering("DayScheduleController", "setDay", day == null ? null : day.toString());
+        log.entering("ProgramController", "setDay", day == null ? null : day.toString());
         this.day = day;
-        log.exiting("DayScheduleController", "setDay");
+        log.exiting("ProgramController", "setDay");
     }
 
     public Date getDay() {

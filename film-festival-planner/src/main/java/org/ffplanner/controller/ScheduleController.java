@@ -235,7 +235,7 @@ public class ScheduleController implements Serializable {
     public boolean isScheduledElsewhere(Long showingId) {
         if (hasSchedule()) {
             for (Showing showing : getFestivalEditionProgramme().getShowingsForSameMovieAs(showingId)) {
-                if (isScheduled(showing.getId())) {
+                if (!showingId.equals(showing.getId()) && isScheduled(showing.getId())) {
                     return true;
                 }
             }

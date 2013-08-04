@@ -133,7 +133,7 @@
                                     </h:commandLink>
                                     <h:commandLink
                                             title="#{bundle.RemoveInterestTooltip}"
-                                            rendered="#{scheduleController.hasUserConstraintFor(hourSlot.showing.id)}"
+                                            rendered="#{scheduleController.hasUserConstraintFor(hourSlot.showing.id) and not scheduleController.isScheduledElsewhere(hourSlot.showing.id)}"
                                             action="#{scheduleController.removeInterestClickedViaShowing(hourSlot.showing.id)}"
                                             styleClass="sch_uncheck">
                                         <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->

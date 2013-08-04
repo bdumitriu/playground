@@ -1,10 +1,32 @@
+Code:
+* merge MySchedule.xhtml and Program.xhtml and control with classes implementing an interface
 * replace entityManager.find(...) with entityManager.getReference(...) where only the ID of the result is needed
 * see about adding @Cache to @Entity classes
 * ShowingController does not allow for more than one movie at the same hour because a map hour -> movie is used
 
-Feature requests;
+Features/Improvements:
+* in the schedule view,
+  * only show scheduled movies + missed movies (unnecessary venues to be filtered out)
+  * replace movie priority with a "Validate" button in movie cell. On hover, an animation should replace the blue pin,
+    showing the pin turning from blue to red
+  * offer limited controls: the "Validate" button, pinning an unselected movie (others?)
+
+* mark movies for not watching (trash icon?)
+* add dots in movie cell for other showings of the same movie
+
+* warnings set + possibility to restore all (send warning configuration as JSON bit array to all pages?)
+* on first marking of a movie, a dialog with "Watch whenever" and "Watch exactly on ...", with associated icons, should
+  be shown
+* on first press on "Propose schedule", a Calibrate dialog should be shown, with what preferences should and should not
+  be taken into account, and in what order (prefer schedule with minimal venue changes, use movie priorities, etc.)
+  * each proposed schedule could be shown a score (possibly with details about subscores)
+
+* animated icon when communicating with server
+* free scheduling / constrained scheduling modes
+  * in constrained scheduling, pinning a movie should unpin any movies in conflict with it
+    * offer a maximum allowed overlap
+
 * see movie section in day schedule
 * priority setting in lineup view
-* mark movies for not watching - trash icon
-* pinned movies should automatically change those in conflict with them to grey
-* allow undo of accidental clicks in Lineup
+* add constraint versioning functionality, including restore older version
+* (maybe) allow undo of accidental clicks in Lineup

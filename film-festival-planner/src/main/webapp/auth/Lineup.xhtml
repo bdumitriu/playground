@@ -15,14 +15,14 @@
     <f:event type="preRenderView" listener="#{lineupController.prepareView}"/>
 </f:metadata>
 
-<ui:composition template="layout.xhtml">
+<ui:composition template="/WEB-INF/templates/layout.xhtml">
 
     <ui:param name="page" value="Lineup" />
 
     <ui:define name="title"><h:outputText value="#{bundle.TitleLineup}"/></ui:define>
 
     <ui:define name="additional-headers">
-        <h:outputStylesheet library="css" name="lineup.css"/>
+        <h:outputStylesheet name="css/lineup.css"/>
     </ui:define>
 
     <ui:define name="content">

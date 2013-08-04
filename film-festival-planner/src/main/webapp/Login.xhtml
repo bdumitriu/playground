@@ -19,11 +19,11 @@
     <h:form>
         <h:outputLabel value="#{bundle.Login}"/>
         <br/><br/>
-        <h:commandButton image="resources/img/google.png" style="width: 100px; height: 100px;"
+        <h:commandButton image="#{resource['img/google.png']}" style="width: 100px; height: 100px;"
                          action="#{auth.logInWithGoogle()}"/>
-        <h:commandButton image="resources/img/yahoo.png" style="margin-left: 10px; width: 100px; height: 100px;"
+        <h:commandButton image="#{resource['img/yahoo.png']}" style="margin-left: 10px; width: 100px; height: 100px;"
                          action="#{auth.logInWithYahoo()}"/>
-        <h:commandButton image="resources/img/myopenid.png" style="margin-left: 10px; width: 100px; height: 100px;"
+        <h:commandButton image="#{resource['img/myopenid.png']}" style="margin-left: 10px; width: 100px; height: 100px;"
                          action="#{auth.logInWithMyOpenId()}"/>
         <br/><br/>
         <h:outputLabel styleClass="text" value="#{bundle.LoginDetails}"/>

@@ -254,9 +254,9 @@
     top: 6px;
     right: 3px;
     display: block;
-    background: transparent url('../../resources/img/close_16.png') center top no-repeat;
+    background: transparent url(#{resource['img/close_16.png']}) center top no-repeat;
 }
 
 .sch_close:hover {
-    background-image: url('../../resources/img/close_16_mouse_over.png');
+    background-image: url(#{resource['img/close_16_mouse_over.png']});
 }

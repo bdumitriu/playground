@@ -12,7 +12,7 @@
     <f:event type="preRenderView" listener="#{programController.prepareView}"/>
 </f:metadata>
 
-<ui:composition template="layout.xhtml">
+<ui:composition template="/WEB-INF/templates/layout.xhtml">
 
     <ui:param name="page" value="MySchedule" />
 
@@ -20,11 +20,11 @@
 
     <ui:define name="additional-headers">
         <h:outputStylesheet name="css/base/jquery-ui.min.css" />
-        <h:outputStylesheet library="css" name="program.css"/>
-        <h:outputScript library="js" name="jquery-1.9.1.js" />
-        <h:outputScript library="js" name="jquery-ui-1.10.1.custom.js" />
-        <h:outputScript library="js" name="jquery.blockUI.js" />
-        <h:outputScript library="js" name="ffp-0.1.js" />
+        <h:outputStylesheet name="css/program.css"/>
+        <h:outputScript name="js/jquery-1.9.1.js" />
+        <h:outputScript name="js/jquery-ui-1.10.1.custom.js" />
+        <h:outputScript name="js/jquery.blockUI.js" />
+        <h:outputScript name="js/ffp-0.1.js" />
     </ui:define>
 
     <ui:define name="buttons">

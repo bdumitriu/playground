@@ -44,4 +44,12 @@
     <welcome-file-list>
         <welcome-file>faces/Index.xhtml</welcome-file>
     </welcome-file-list>
+    <security-constraint>
+        <display-name>Restrict direct access to the /resources folder.</display-name>
+        <web-resource-collection>
+            <web-resource-name>The /resources folder.</web-resource-name>
+            <url-pattern>/faces/resources/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint />
+    </security-constraint>
 </web-app>

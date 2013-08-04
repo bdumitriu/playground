@@ -15,20 +15,20 @@ html {
 }
 
 .sch_uncheck {
-    background: transparent url('../../resources/img/check_16_mouse_over.png') center top no-repeat;
+    background: transparent url(#{resource['img/check_16_mouse_over.png']}) center top no-repeat;
 }
 
 .sch_uncheck:hover {
-    /*background-image: url('../../resources/img/check_16.png');*/
+    /*background-image: url(#{resource['img/check_16.png']});*/
 }
 
 .sch_check {
     visibility: hidden;
-    background: transparent url('../../resources/img/check_16.png') center top no-repeat;
+    background: transparent url(#{resource['img/check_16.png']}) center top no-repeat;
 }
 
 .sch_check:hover {
-    /*background-image: url('../../resources/img/check_16_mouse_over.png');*/
+    /*background-image: url(#{resource['img/check_16_mouse_over.png']});*/
 }
 
 .sch_pin_user, .sch_unpin_user, .sch_pin_system {
@@ -40,26 +40,26 @@ html {
 
 .sch_pin_user {
     visibility: hidden;
-    background-image: url('../../resources/img/pin_user_button_16.png');
+    background-image: url(#{resource['img/pin_user_button_16.png']});
 }
 
 .sch_pin_user:hover {
-    background-image: url('../../resources/img/pin_user_button_16_mouse_over.png');
+    background-image: url(#{resource['img/pin_user_button_16_mouse_over.png']});
 }
 
 .sch_unpin_user {
-    background-image: url('../../resources/img/pin_user_16.png');
+    background-image: url(#{resource['img/pin_user_16.png']});
 }
 
 .sch_unpin_user:hover {
     top: 1px;
-    background-image: url('../../resources/img/pin_user_16_mouse_over.png');
+    background-image: url(#{resource['img/pin_user_16_mouse_over.png']});
 }
 
 .sch_pin_system {
-    background-image: url('../../resources/img/pin_system_16.png');
+    background-image: url(#{resource['img/pin_system_16.png']});
 }
 
 .sch_pin_system:hover {
-    background-image: url('../../resources/img/pin_system_16_mouse_over.png');
+    background-image: url(#{resource['img/pin_system_16_mouse_over.png']});
 }

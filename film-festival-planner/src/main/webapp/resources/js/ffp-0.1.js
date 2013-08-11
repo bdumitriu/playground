@@ -2,7 +2,7 @@
  * @author Bogdan Dumitriu
  */
 
-function updateMovieCell(data) {
+function repairCalendarAfterAjaxCall(data) {
     if (data.status == "success") {
         addSliders();
     }
@@ -84,7 +84,7 @@ function addSliders() {
             setTimeout(function() {showTooltip($(ui.handle))}, 10);
         },
         stop: function(event, ui) {
-            $("#sch_form").find("input[id*='priority'][type=hidden]").val(ui.value);
+            $(".sch_table_body").find("input[id*='priority'][type=hidden]").val(ui.value);
             $(ui.handle).parents(".sch_priority_wrapper").find(".priorityButton").click();
         }
     });

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:util="http://java.sun.com/jsf/composite/util">
+
+<ui:composition template="/WEB-INF/templates/Layout.xhtml">
+
+    <ui:param name="page" value="#{config.pageName}" />
+
+    <ui:define name="title">#{config.pageTitle}</ui:define>
+
+    <ui:define name="additional-headers">
+        <h:outputStylesheet name="css/base/jquery-ui.min.css" />
+        <h:outputStylesheet name="css/calendar-view.css"/>
+        <h:outputScript name="js/jquery-1.9.1.js" />
+        <h:outputScript name="js/jquery-ui-1.10.1.custom.js" />
+        <h:outputScript name="js/jquery.blockUI.js" />
+        <h:outputScript name="js/ffp-0.1.js" />
+    </ui:define>
+
+    <ui:define name="buttons">
+        <h:panelGroup styleClass="buttons">
+            <ui:repeat value="#{programController.days}" var="day">
+                <h:link value="#{day.getDayOfWeek(programController.user.locale)}" styleClass="header_button" rendered="#{day.date ne programController.day}">
+                    <f:param name="day" value="#{day.asString}"/>
+                </h:link>
+                <h:outputText value="#{day.getDayOfWeek(programController.user.locale)}" styleClass="header_button_text_only" rendered="#{day.date eq programController.day}"/>
+            </ui:repeat>
+            <ui:remove><span class="header_text">#{bundle.Schedule}</span></ui:remove>
+            <h:form id="buttons_form" styleClass="header_form">
+                <h:panelGroup styleClass="schedule_buttons" rendered="#{scheduleController.hasConstraints() or scheduleController.hasSchedule()}">
+                    <h:commandLink action="#{scheduleController.suggestSchedule}"
+                                   value="#{bundle.ProposeSchedule}"
+                                   title="#{bundle.ProposeScheduleTooltip}"
+                                   rendered="#{scheduleController.hasConstraints() and not scheduleController.hasSchedule()}"
+                                   styleClass="header_button">
+                        <f:ajax render="@form :calendar:#{config.calendarConfig.calendarFormId}"
+                                onevent="#{config.calendarConfig.onEventOnConstraintsChange}" />
+                    </h:commandLink>
+                    <h:commandLink action="#{scheduleController.suggestSchedule}"
+                                   value="#{bundle.RenewSchedule}"
+                                   title="#{bundle.RenewScheduleTooltip}"
+                                   rendered="#{scheduleController.hasSchedule()}"
+                                   styleClass="header_button">
+                        <f:ajax render="@form :calendar:#{config.calendarConfig.calendarFormId}"
+                                onevent="#{config.calendarConfig.onEventOnConstraintsChange}" />
+                    </h:commandLink>
+                    <h:commandLink action="#{scheduleController.discardSchedule}"
+                                   value="#{bundle.ForgetSchedule}"
+                                   title="#{bundle.ForgetScheduleTooltip}"
+                                   rendered="#{scheduleController.hasSchedule()}"
+                                   styleClass="header_button">
+                        <f:ajax render="@form :calendar:#{config.calendarConfig.calendarFormId}"
+                                onevent="#{config.calendarConfig.onEventOnConstraintsChange}" />
+                    </h:commandLink>
+                </h:panelGroup>
+                <ui:remove>
+                    <h:selectOneMenu value="#{scheduleController.constraintsFile}">
+                        <f:selectItem itemLabel="Load Constraints..." itemValue="foo"/>
+                        <f:selectItems value="#{scheduleController.constraintFiles}"/>
+                        <f:ajax listener="#{scheduleController.loadConstraintsFile}"
+                                render="@form :calendar:#{config.calendarConfig.calendarFormId}"
+                                onevent="#{config.calendarConfig.onEventOnConstraintsChange}" />
+                    </h:selectOneMenu>
+                </ui:remove>
+            </h:form>
+        </h:panelGroup>
+    </ui:define>
+
+    <ui:define name="content">
+        <util:Calendar config="#{config.calendarConfig}" id="calendar"/>
+        <h:panelGroup layout="block" id="movieInfo">
+            <a href="#" class="sch_close" onclick="closeMovieInfo(event)" />
+            <util:MovieBundleDisplay movieBundleInFestival="#{programController.showing.movieBundleInFestival}"
+                                     rendered="#{programController.showing != null}"/>
+            <h:outputText value="#{bundle.OtherShowings}" styleClass="movieInfoHeader" />
+            <ul>
+                <ui:repeat value="#{programController.otherShowings}" var="showing">
+                    <li>
+                        <h:outputLink value="#{config.pageName}.xhtml">
+                            <h:outputText
+                                    value="#{showing.getDayOfWeek(auth.user.locale)}&lt;br /&gt;#{showing.getDayMonth(auth.user.locale)}"
+                                    escape="false"/>
+                            <f:param name="day" value="#{programController.getShowingDay(showing)}"/>
+                            <f:param name="showing" value="#{showing.id}"/>
+                        </h:outputLink>
+                    </li>
+                </ui:repeat>
+            </ul>
+        </h:panelGroup>
+    </ui:define>
+
+</ui:composition>
+
+</html>

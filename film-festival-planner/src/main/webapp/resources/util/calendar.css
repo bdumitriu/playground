@@ -1,0 +1,250 @@
+/*
+ * Author: Bogdan Dumitriu
+ */
+
+.sch_container {
+    background-color: #ffffff;
+    font-family: Candara, serif;
+    white-space: nowrap;
+}
+
+.sch_cell_first, .sch_cell_rest {
+    display: inline-block;
+    height: 60px;
+    border-color: #cccccc;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+.sch_cell_first {
+    width: 50px;
+}
+
+.sch_cell_rest {
+    width: 150px;
+}
+
+.sch_header_first_embedded, .sch_row_first_embedded {
+    width: 50px;
+    height: 60px;
+    background-color: #fffbff;
+    padding-left: 5px;
+    display: table-cell;
+    text-align: left;
+    white-space: normal;
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+.sch_header_first_embedded {
+    vertical-align: bottom;
+}
+
+.sch_row_first_embedded {
+    vertical-align: top;
+}
+
+.sch_header_rest_embedded {
+    width: 150px;
+    height: 60px;
+    background-color: #fffffb;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    white-space: normal;
+    font-variant: small-caps;
+}
+
+.sch_movie_cell {
+    width: 148px;
+    position: relative;
+    margin-top: -1px;
+    float: left;
+    white-space: normal;
+    border: 1px solid;
+    /*border-color: #B0C4DE;*/
+    background-color: #FFFFE0;
+    border-radius: 3px;
+    box-shadow: 1px 1px 2px #888888;
+    z-index: 99;
+}
+
+.sch_movie_cell_scheduled {
+    /*background-color: #FF9999;*/
+    /*background-color: #FAFAFA;*/
+    /*background-color: #F2F2F2;*/
+
+    background-color: #F0FFF0;
+}
+
+.sch_movie_cell_watch_showing {
+    background-color: #F0FFF0;
+}
+
+.sch_movie_cell_watch_movie {
+    background-color: #FFE5E5;
+}
+
+.sch_movie_cell_watch_elsewhere {
+    background-color: #FAFAFA;
+}
+
+.sch_movie_cell_embedded {
+    width: 110px;
+    height: 100%;
+    position: relative;
+    margin-left: 19px;
+    display: block;
+    text-align: center;
+    font-variant: small-caps;
+    /*background-color: #faffb5;*/
+}
+
+.sch_movie_cell_embedded a, a:visited {
+    text-decoration: none;
+    color: blue;
+}
+
+.sch_movie_cell_embedded a:hover {
+    color: red;
+}
+
+.sch_movie_cell a:active, a:focus {
+    outline: none;
+}
+
+.sch_uncheck, .sch_check {
+    position: absolute;
+    top: -1px;
+}
+
+.sch_pin_user, .sch_unpin_user, .sch_pin_system {
+    position: absolute;
+    top: 3px;
+    right: -2px;
+}
+
+.sch_priority_wrapper {
+    position: absolute;
+    width: 130px;
+    height: 30px;
+    font-size: 10px;
+    bottom: 0;
+    right: 9px;
+    opacity: 0.5;
+}
+
+.sch_priority {
+    margin-top: 13px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.ui-slider-range {
+    background: #DDEEFF;
+}
+
+#tooltip {
+    position: absolute;
+    visibility: hidden;
+    z-index: 100;
+    min-width: 100px;
+    padding: 5px;
+    font-size: 14px;
+    text-align: center;
+    /*color: rgb(113, 157, 171);*/
+    background: #DDEEFF;
+    border: 1px solid;
+    border-radius: 5px;
+    text-shadow: rgba(0, 0, 0, 0.1) 1px 1px 1px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 1px 2px 0;
+}
+
+#tooltip:after, #tooltip:before {
+    bottom: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+}
+
+#tooltip:after {
+    border-color: rgba(221, 238, 255, 0);
+    border-bottom-color: #DDEEFF;
+    border-width: 5px;
+    left: 50%;
+    margin-left: -5px;
+}
+
+#tooltip:before {
+    border-color: rgba(0, 0, 0, 0);
+    border-bottom-color: #000000;
+    border-width: 6px;
+    left: 50%;
+    margin-left: -6px;
+}
+
+#tooltip-text {
+    margin: 0;
+}
+
+#movieInfo {
+    display: none;
+    margin: 5px;
+    color: #FFFAF0; /*floralwhite*/
+}
+
+#movieInfo ul {
+    padding: 0;
+}
+
+#movieInfo li {
+    display: block;
+    height: 3em;
+    margin: 0 3px;
+    padding: 3px 7px;
+    background: #FFFFE0;
+    float: left;
+    text-align: center;
+    border: 1px solid #000000;
+    border-radius: 3px;
+    box-shadow: 1px 1px 2px #888888;
+}
+
+#movieInfo a, a:visited {
+    text-decoration: none;
+    color: blue;
+    font-family: Candara, serif;
+    font-variant: small-caps;
+}
+
+#movieInfo a:hover {
+    color: red;
+}
+
+#movieInfo a:active {
+    border: none;
+}
+
+.movieInfoHeader {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    color: #FFE0B0; /*navajowhite;*/
+}
+
+.sch_close {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    top: 6px;
+    right: 3px;
+    display: block;
+    background: transparent url(#{resource['img/close_16.png']}) center top no-repeat;
+}
+
+.sch_close:hover {
+    background-image: url(#{resource['img/close_16_mouse_over.png']});
+}

@@ -1,0 +1,15 @@
+/*
+ * Author: Bogdan Dumitriu
+ */
+
+.buttons {
+    border-left: 2px solid grey;
+    margin-left: 5px;
+    padding: 2px 5px;
+}
+
+.schedule_buttons {
+    border-left: 2px solid grey;
+    margin-left: 1px;
+    padding: 2px 3px;
+}

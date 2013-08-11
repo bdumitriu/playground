@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 /**
  * @author Bogdan Dumitriu
  */
-@RequestScoped
 @Named
+@RequestScoped
 public class LoginController {
 
     private static final Logger logger = Logger.getLogger(LoginController.class.getName());

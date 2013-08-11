@@ -15,7 +15,7 @@
     <f:event type="preRenderView" listener="#{lineupController.prepareView}"/>
 </f:metadata>
 
-<ui:composition template="/WEB-INF/templates/layout.xhtml">
+<ui:composition template="/WEB-INF/templates/Layout.xhtml">
 
     <ui:param name="page" value="Lineup" />
 
@@ -74,7 +74,7 @@
             </h:form>
         </h:panelGroup>
         <h:panelGroup layout="block" styleClass="movie">
-            <util:movieBundleDisplay movieBundleInFestival="#{lineupController.movieBundle}" />
+            <util:MovieBundleDisplay movieBundleInFestival="#{lineupController.movieBundle}" />
         </h:panelGroup>
     </ui:define>
 

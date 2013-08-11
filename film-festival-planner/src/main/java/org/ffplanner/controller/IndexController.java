@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 /**
  * @author Bogdan Dumitriu
  */
-@RequestScoped
 @Named
+@RequestScoped
 public class IndexController {
 
     private static final Logger logger = Logger.getLogger(IndexController.class.getName());

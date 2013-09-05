@@ -16,6 +16,7 @@ import org.ffplanner.entity.FestivalEdition;
 import org.ffplanner.entity.Showing;
 import org.ffplanner.entity.User;
 import org.ffplanner.qualifier.LoggedInUser;
+import org.ffplanner.util.JsfViews;
 import org.xml.sax.SAXException;
 
 import javax.enterprise.context.SessionScoped;
@@ -141,7 +142,7 @@ public class ScheduleController implements Serializable {
         userScheduleBean.resetConstraints(user.getId(), getFestivalEdition());
     }
 
-    public void suggestSchedule() {
+    public String suggestSchedule() {
         /*try {
             writeConstraints();
         } catch (IOException e) {
@@ -150,6 +151,7 @@ public class ScheduleController implements Serializable {
         final ScheduleBuilder scheduleBuilder = festivalProgrammeBean.getScheduleBuilder(DEFAULT_FESTIVAL_EDITION_ID);
         final List<Schedule> schedules = scheduleBuilder.getPossibleSchedulesJ(constraintsData.asScheduleConstraints());
         userScheduleBean.replaceSchedules(user.getId(), getFestivalEdition(), schedules);
+        return JsfViews.MY_SCHEDULE_REDIRECT_TARGET.toString();
     }
 
     private void writeConstraints() throws IOException {
@@ -216,8 +218,9 @@ public class ScheduleController implements Serializable {
         return Paths.get(scalaTestFileName);
     }
 
-    public void discardSchedule() {
+    public String discardSchedule() {
         userScheduleBean.resetSchedules(user.getId(), getFestivalEdition());
+        return JsfViews.PROGRAM_REDIRECT_TARGET.toString();
     }
 
     public boolean hasSchedule() {

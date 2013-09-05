@@ -2,6 +2,7 @@ package org.ffplanner;
 
 import org.ffplanner.controller.AuthController;
 import org.ffplanner.entity.User;
+import org.ffplanner.util.JsfViews;
 
 import javax.inject.Inject;
 import javax.servlet.*;
@@ -38,7 +39,7 @@ public class LoginFilter implements Filter {
             if (requestURL != null) {
                 session.setAttribute("redirectTo", requestURL + (queryString == null ? "" : "?" + queryString));
             }
-            response.sendRedirect(request.getContextPath() + "/faces/Login.xhtml");
+            response.sendRedirect(request.getContextPath() + "/faces" + JsfViews.LOGIN_TARGET.toString());
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
         }

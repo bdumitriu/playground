@@ -3,16 +3,35 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core">
 
 <f:metadata>
     <f:viewParam name="day" value="#{programController.day}" converter="dayConverter"/>
-    <f:event type="preRenderView" listener="#{programController.prepareView}"/>
 </f:metadata>
 
 <ui:composition template="/WEB-INF/templates/CalendarView.xhtml">
 
     <ui:param name="config" value="#{myScheduleCalendarViewConfig}" />
+
+    <ui:define name="page_buttons">
+        <h:panelGroup styleClass="schedule_buttons" rendered="#{scheduleController.hasSchedule()}">
+            <h:commandLink action="#{scheduleController.suggestSchedule}"
+                           value="#{bundle.RenewSchedule}"
+                           title="#{bundle.RenewScheduleTooltip}"
+                           styleClass="header_button">
+                <f:ajax render="@form :calendar:#{myScheduleCalendarViewConfig.calendarConfig.calendarFormId}"
+                        onevent="#{myScheduleCalendarViewConfig.calendarConfig.onEventOnConstraintsChange}" />
+            </h:commandLink>
+            <h:commandLink action="#{scheduleController.discardSchedule}"
+                           value="#{bundle.ForgetSchedule}"
+                           title="#{bundle.ForgetScheduleTooltip}"
+                           styleClass="header_button">
+                <f:ajax render="@form :calendar:#{myScheduleCalendarViewConfig.calendarConfig.calendarFormId}"
+                        onevent="#{myScheduleCalendarViewConfig.calendarConfig.onEventOnConstraintsChange}" />
+            </h:commandLink>
+        </h:panelGroup>
+    </ui:define>
 
 </ui:composition>
 

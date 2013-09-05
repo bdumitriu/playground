@@ -1,8 +1,9 @@
 package org.ffplanner.util;
 
+import javax.faces.application.ConfigurableNavigationHandler;
+import javax.faces.application.NavigationCase;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -11,19 +12,16 @@ import java.net.URL;
  */
 public class FacesUtils {
 
-    public static String getUrlToRoot(FacesContext facesContext) throws MalformedURLException {
+    public static String getUrlToRoot(FacesContext facesContext) {
         final ExternalContext externalContext = facesContext.getExternalContext();
-        final ServletRequest request = (ServletRequest) externalContext.getRequest();
-        final URL url = new URL(request.getScheme(), request.getServerName(), request.getServerPort(),
-                externalContext.getRequestContextPath());
-        return url.toExternalForm();
+        return externalContext.getRequestContextPath();
     }
 
     public static String getUrlToView(FacesContext facesContext, String viewId) throws MalformedURLException {
-        final ExternalContext externalContext = facesContext.getExternalContext();
-        final ServletRequest request = (ServletRequest) externalContext.getRequest();
-        final URL url = new URL(request.getScheme(), request.getServerName(), request.getServerPort(),
-                facesContext.getApplication().getViewHandler().getActionURL(facesContext, viewId));
+        final ConfigurableNavigationHandler navigationHandler =
+                (ConfigurableNavigationHandler) facesContext.getApplication().getNavigationHandler();
+        final NavigationCase navigationCase = navigationHandler.getNavigationCase(facesContext, null, viewId);
+        final URL url = navigationCase.getBookmarkableURL(facesContext);
         return url.toExternalForm();
     }
 }

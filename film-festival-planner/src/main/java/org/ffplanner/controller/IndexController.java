@@ -1,6 +1,7 @@
 package org.ffplanner.controller;
 
 import org.ffplanner.util.FacesUtils;
+import org.ffplanner.util.JsfViews;
 import org.ffplanner.util.Logging;
 
 import javax.enterprise.context.RequestScoped;
@@ -20,7 +21,7 @@ public class IndexController {
 
     public String getRedirectUrl() {
         try {
-            return FacesUtils.getUrlToView(FacesContext.getCurrentInstance(), "/auth/Program.xhtml");
+            return FacesUtils.getUrlToView(FacesContext.getCurrentInstance(), JsfViews.PROGRAM_TARGET.toString());
         } catch (MalformedURLException e) {
             Logging.getInstance().log(logger, "Malformed root URL: ", e);
             return "http://www.google.com/";

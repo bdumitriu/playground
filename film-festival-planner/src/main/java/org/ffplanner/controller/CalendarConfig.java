@@ -24,4 +24,6 @@ public interface CalendarConfig {
      * TODO: after switch to JavaEE 7, replace with constant and refer from EL as #{T(org.ffplanner.controller.CalendarViewConfig).ON_EVENT_ON_CONSTRAINTS_CHANGE}
      */
     String getOnEventOnConstraintsChange();
+
+    boolean showMovieId(Long showingId);
 }

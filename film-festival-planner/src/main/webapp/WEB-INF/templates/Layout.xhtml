@@ -19,10 +19,14 @@
 <h:body styleClass="body">
     <div class="header">
         <div class="left_header">
-            <h:link outcome="Lineup" value="#{bundle.TitleLineup}" styleClass="header_button" rendered="#{page ne 'Lineup'}" />
+            <h:link outcome="/auth/Lineup" value="#{bundle.TitleLineup}" styleClass="header_button" rendered="#{page ne 'Lineup'}" />
             <h:outputText value="#{bundle.TitleLineup}" styleClass="header_button_text_only" rendered="#{page eq 'Lineup'}"/>
-            <h:link outcome="Program" value="#{bundle.TitleProgram}" styleClass="header_button" rendered="#{page ne 'Program'}" />
+            <h:link outcome="/auth/Program?includeViewParams=true" value="#{bundle.TitleProgram}" styleClass="header_button" rendered="#{page ne 'Program'}" />
             <h:outputText value="#{bundle.TitleProgram}" styleClass="header_button_text_only" rendered="#{page eq 'Program'}"/>
+            <h:link outcome="/auth/MySchedule?includeViewParams=true" value="#{bundle.TitleMySchedule}" styleClass="header_button"
+                    rendered="#{scheduleController.hasSchedule() and page ne 'MySchedule'}" />
+            <h:outputText value="#{bundle.TitleMySchedule}" styleClass="header_button_text_only"
+                          rendered="#{scheduleController.hasSchedule() and page eq 'MySchedule'}"/>
             <ui:insert name="buttons"/>
         </div>
         <div class="right_header">

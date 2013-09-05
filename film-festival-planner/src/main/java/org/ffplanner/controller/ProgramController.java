@@ -13,9 +13,12 @@ import org.ffplanner.helper.Day;
 import org.ffplanner.helper.Hour;
 import org.ffplanner.helper.HourSlot;
 import org.ffplanner.qualifier.LoggedInUser;
+import org.ffplanner.util.JsfViewHelper;
+import org.ffplanner.util.JsfViews;
 import org.joda.time.DateTime;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -23,6 +26,8 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static org.ffplanner.util.ConstantsToGetRidOf.DEFAULT_FESTIVAL_EDITION_ID;
+import static org.ffplanner.util.JsfViewHelper.FR_IVP;
+import static org.ffplanner.util.JsfViewHelper.Path.INCLUDED;
 import static org.joda.time.DateTimeConstants.MAY;
 
 /**
@@ -68,16 +73,27 @@ public class ProgramController implements Serializable {
     public void prepareView() {
 //        log.setLevel(Level.ALL);
         log.entering("ProgramController", "prepareView");
+        final FacesContext facesContext = FacesContext.getCurrentInstance();
         if (this.day == null) {
             final DateTime dateTime = new DateTime(2013, MAY, 31, 0, 0);
             this.day = dateTime.toDate();
+            new JsfViewHelper(INCLUDED, facesContext.getViewRoot().getViewId(), FR_IVP).redirectTo();
+            return;
         }
+
         festivalEdition = festivalEditionBean.find(DEFAULT_FESTIVAL_EDITION_ID);
         festivalProgramme = festivalProgrammeBean.getProgrammeFor(festivalEdition);
         dayProgramme = festivalProgramme.getDayProgramme(this.day);
 
         scheduleController.updateConstraintsData();
         scheduleController.updateScheduleData();
+
+        if (!scheduleController.hasSchedule()
+            && JsfViews.MY_SCHEDULE_TARGET.toString().equals(facesContext.getViewRoot().getViewId())) {
+            JsfViews.PROGRAM_REDIRECT_TARGET.redirectTo();
+            return;
+        }
+
         log.exiting("ProgramController", "prepareView");
     }
 

@@ -18,7 +18,8 @@ public class MyScheduleCalendarViewConfig implements CalendarViewConfig {
     @Messages
     private ResourceBundle bundle;
 
-    private final CalendarConfig calendarConfig = new MyScheduleCalendarConfig();
+    @Inject
+    private MyScheduleCalendarConfig calendarConfig;
 
     @Override
     public String getPageName() {

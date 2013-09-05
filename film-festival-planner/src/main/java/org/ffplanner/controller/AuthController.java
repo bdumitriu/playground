@@ -6,8 +6,7 @@ import org.ffplanner.controller.auth.RegistrationService;
 import org.ffplanner.entity.User;
 import org.ffplanner.entity.UserRole;
 import org.ffplanner.qualifier.LoggedInUser;
-import org.ffplanner.util.FacesUtils;
-import org.ffplanner.util.Logging;
+import org.ffplanner.util.*;
 import org.openid4java.discovery.DiscoveryInformation;
 import org.openid4java.message.AuthRequest;
 
@@ -99,12 +98,8 @@ public class AuthController implements Serializable {
                 authData = returnData;
             }
             if (authData == null) {
-                try {
-                    if (!facesContext.getResponseComplete()) {
-                        externalContext.redirect("Login.xhtml");
-                    }
-                } catch (IOException e) {
-                    Logging.getInstance().log(logger, "Redirect failed: ", e);
+                if (!facesContext.getResponseComplete()) {
+                    JsfViews.LOGIN_TARGET.redirectTo("#{auth.processOpenIDProviderResponse}");
                 }
             } else {
                 final User user = userBean.findBy(authData.getOpenId());

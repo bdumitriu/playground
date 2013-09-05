@@ -7,7 +7,15 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:util="http://java.sun.com/jsf/composite/util">
 
-<ui:composition template="/WEB-INF/templates/Layout.xhtml">
+<ui:remove> <!-- you will need to copy/paste the metadata below where you use this template -->
+    <f:metadata>
+        <f:viewParam name="day" value="#{programController.day}" converter="dayConverter"/>
+    </f:metadata>
+</ui:remove>
+
+<f:event type="preRenderView" listener="#{programController.prepareView}"/>
+
+<ui:decorate template="/WEB-INF/templates/Layout.xhtml">
 
     <ui:param name="page" value="#{config.pageName}" />
 
@@ -32,32 +40,7 @@
             </ui:repeat>
             <ui:remove><span class="header_text">#{bundle.Schedule}</span></ui:remove>
             <h:form id="buttons_form" styleClass="header_form">
-                <h:panelGroup styleClass="schedule_buttons" rendered="#{scheduleController.hasConstraints() or scheduleController.hasSchedule()}">
-                    <h:commandLink action="#{scheduleController.suggestSchedule}"
-                                   value="#{bundle.ProposeSchedule}"
-                                   title="#{bundle.ProposeScheduleTooltip}"
-                                   rendered="#{scheduleController.hasConstraints() and not scheduleController.hasSchedule()}"
-                                   styleClass="header_button">
-                        <f:ajax render="@form :calendar:#{config.calendarConfig.calendarFormId}"
-                                onevent="#{config.calendarConfig.onEventOnConstraintsChange}" />
-                    </h:commandLink>
-                    <h:commandLink action="#{scheduleController.suggestSchedule}"
-                                   value="#{bundle.RenewSchedule}"
-                                   title="#{bundle.RenewScheduleTooltip}"
-                                   rendered="#{scheduleController.hasSchedule()}"
-                                   styleClass="header_button">
-                        <f:ajax render="@form :calendar:#{config.calendarConfig.calendarFormId}"
-                                onevent="#{config.calendarConfig.onEventOnConstraintsChange}" />
-                    </h:commandLink>
-                    <h:commandLink action="#{scheduleController.discardSchedule}"
-                                   value="#{bundle.ForgetSchedule}"
-                                   title="#{bundle.ForgetScheduleTooltip}"
-                                   rendered="#{scheduleController.hasSchedule()}"
-                                   styleClass="header_button">
-                        <f:ajax render="@form :calendar:#{config.calendarConfig.calendarFormId}"
-                                onevent="#{config.calendarConfig.onEventOnConstraintsChange}" />
-                    </h:commandLink>
-                </h:panelGroup>
+                <ui:insert name="page_buttons"/>
                 <ui:remove>
                     <h:selectOneMenu value="#{scheduleController.constraintsFile}">
                         <f:selectItem itemLabel="Load Constraints..." itemValue="foo"/>
@@ -81,19 +64,19 @@
             <ul>
                 <ui:repeat value="#{programController.otherShowings}" var="showing">
                     <li>
-                        <h:outputLink value="#{config.pageName}.xhtml">
+                        <h:link>
                             <h:outputText
                                     value="#{showing.getDayOfWeek(auth.user.locale)}&lt;br /&gt;#{showing.getDayMonth(auth.user.locale)}"
                                     escape="false"/>
                             <f:param name="day" value="#{programController.getShowingDay(showing)}"/>
                             <f:param name="showing" value="#{showing.id}"/>
-                        </h:outputLink>
+                        </h:link>
                     </li>
                 </ui:repeat>
             </ul>
         </h:panelGroup>
     </ui:define>
 
-</ui:composition>
+</ui:decorate>
 
 </html>

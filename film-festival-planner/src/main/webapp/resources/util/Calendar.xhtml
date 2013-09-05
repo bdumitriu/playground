@@ -56,7 +56,7 @@
                         <div class="sch_cell_rest">
                             <h:panelGroup id="movie_cell"
                                           styleClass="#{scheduleController.getMovieStyleClass(hourSlot.showing.id)}#{param['showing'] eq hourSlot.showing.id ? ' toHighlight' : ''}"
-                                          rendered="#{hourSlot.hasShowing()}"
+                                          rendered="#{hourSlot.hasShowing() and cc.attrs.config.showMovieId(hourSlot.showing.id)}"
                                           style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
                                     <span class="sch_movie_cell_embedded">
                                     <h:commandLink action="#{programController.setShowing(hourSlot.showing.id)}"

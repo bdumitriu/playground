@@ -29,4 +29,9 @@ public abstract class DefaultCalendarConfig implements CalendarConfig {
     public String getOnEventOnConstraintsChange() {
         return "repairCalendarAfterAjaxCall";
     }
+
+    @Override
+    public boolean showMovieId(Long showingId) {
+        return true;
+    }
 }

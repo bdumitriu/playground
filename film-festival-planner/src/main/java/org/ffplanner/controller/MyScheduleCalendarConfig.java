@@ -1,12 +1,20 @@
 package org.ffplanner.controller;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+import javax.inject.Inject;
+import java.io.Serializable;
 
 /**
  * @author Bogdan Dumitriu
  */
-@Named
-@RequestScoped
-public class MyScheduleCalendarConfig extends DefaultCalendarConfig {
+public class MyScheduleCalendarConfig extends DefaultCalendarConfig implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Inject
+    private ScheduleController scheduleController;
+
+    @Override
+    public boolean showMovieId(Long showingId) {
+        return scheduleController.isScheduled(showingId);
+    }
 }

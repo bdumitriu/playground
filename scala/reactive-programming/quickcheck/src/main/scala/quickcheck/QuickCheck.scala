@@ -32,7 +32,7 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
   }
 
   def isSorted(l: List[A]): Boolean =
-    l.isEmpty || (l, l.tail).zipped.forall(ord.lteq(_, _))
+    l.isEmpty || (l, l.tail).zipped.forall(ord.lteq)
 
   def heapToList(h: H): List[A] =
     if (isEmpty(h)) Nil else findMin(h) :: heapToList(deleteMin(h))

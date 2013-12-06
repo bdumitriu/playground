@@ -83,12 +83,14 @@ trait NetworkStack {
         case europeError => europeError.getMessage.toCharArray.map(_.toByte)
       }
 
+/*
     def retry[T](noTimes: Int)(block: => Future[T]): Future[T] = {
       val failed: Future[Nothing] = Future.failed(new Exception("sorry"))
       (1 to noTimes).iterator.map(_ => () => block).foldLeft(failed) { (c, block) =>
         c recoverWith { block() }
       }
     }
+*/
 
     def apply() = this
   }

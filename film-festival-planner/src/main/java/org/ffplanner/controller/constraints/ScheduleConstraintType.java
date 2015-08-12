@@ -20,6 +20,6 @@ public enum ScheduleConstraintType implements Serializable {
     /** the constraints that are set by the user directly (as opposed to computed by the system) */
     public static final EnumSet<ScheduleConstraintType> USER_CONSTRAINTS = EnumSet.of(SHOWING, MOVIE);
 
-    /** the constraints that can still be changed to a stronger one */
+    /** the constraints that can still be changed to stronger ones */
     public static final EnumSet<ScheduleConstraintType> WEAK_CONSTRAINTS = EnumSet.complementOf(EnumSet.of(SHOWING));
 }

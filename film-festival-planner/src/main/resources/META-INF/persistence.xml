@@ -5,18 +5,20 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
     <persistence-unit name="ffp" transaction-type="JTA">
         <description>Film Festival Planner Persistence Unit</description>
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!--<jta-data-source>jdbc/ffp</jta-data-source>-->
-        <jta-data-source>java:jboss/datasources/ffp</jta-data-source>
+        <jta-data-source>java:global/datasources/ffp</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <!--<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>-->
         <properties>
-            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.show_sql" value="false"/>
             <!--<property name="hibernate.show_sql" value="true"/>-->
             <!--<property name="hibernate.format_sql" value="true"/>-->
             <!--<property name="hibernate.transaction.flush_before_completion" value="true"/>-->
             <!-- no other properties needed here to get UTF-8 -->
+            <!-- needed for wildfly, otherwise the web.xml-defined data-source generates an error on deployment -->
+            <property name="wildfly.jpa.twophasebootstrap" value="false"/>
         </properties>
     </persistence-unit>
 <!--

@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+    <data-source>
+        <name>java:global/datasources/ffp</name>
+        <class-name>org.postgresql.xa.PGXADataSource</class-name>
+        <server-name>localhost</server-name>
+        <database-name>ffp</database-name>
+        <user>ffp</user>
+        <password>ffp</password>
+        <transactional>true</transactional>
+        <isolation-level>TRANSACTION_READ_COMMITTED</isolation-level>
+        <initial-pool-size>2</initial-pool-size>
+        <max-pool-size>10</max-pool-size>
+        <min-pool-size>5</min-pool-size>
+        <max-statements>0</max-statements>
+    </data-source>
+
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <!--<param-value>Production</param-value>-->

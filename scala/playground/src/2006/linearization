@@ -1,0 +1,19 @@
+L(Iter) = { Iter, L(RichIterator) + L(StringIterator) }
+        = { Iter, { RichIterator, AbsIterator, ScalaObject, AnyRef } + { StringIterator,  AbsIterator, ScalaObject, AnyRef } }
+        = { Iter, RichIterator, StringIterator,  AbsIterator, ScalaObject, AnyRef }
+
+L(RichIterator) = { RichIterator, L(AbsIterator) }
+                = { RichIterator,  { AbsIterator, ScalaObject, AnyRef } }
+                = { RichIterator, AbsIterator, ScalaObject, AnyRef }
+
+L(StringIterator) = { StringIterator, L(AbsIterator) }
+                  = { StringIterator,  { AbsIterator, ScalaObject, AnyRef } }
+                  = { StringIterator,  AbsIterator, ScalaObject, AnyRef }
+
+L(AbsIterator) = { AbsIterator, L(ScalaObject) + L(AnyRef) }
+               = { AbsIterator, { ScalaObject } + { AnyRef } }
+               = { AbsIterator, ScalaObject, AnyRef }
+
+L(ScalaObject) = { ScalaObject }
+
+L(AnyRef) = { AnyRef }

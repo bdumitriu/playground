@@ -55,7 +55,7 @@
                     <ui:repeat value="#{programController.getHourLineFor(hour)}" var="hourSlot">
                         <div class="sch_cell_rest">
                             <h:panelGroup id="movie_cell"
-                                          styleClass="#{scheduleController.getMovieStyleClass(hourSlot.showing.id)}#{param['showing'] eq hourSlot.showing.id ? ' toHighlight' : ''}"
+                                          styleClass="#{cc.attrs.config.getMovieStyleClass(hourSlot.showing.id)}#{param['showing'] eq hourSlot.showing.id ? ' toHighlight' : ''}"
                                           rendered="#{hourSlot.hasShowing() and cc.attrs.config.showMovieId(hourSlot.showing.id)}"
                                           style="margin-top: #{hourSlot.getMargin(60) - 1}px; height: #{hourSlot.getHeight(60) lt 20 ? 20 : hourSlot.getHeight(60)}px;">
                                     <span class="sch_movie_cell_embedded">
@@ -68,7 +68,7 @@
                                     </span>
                                 <h:commandLink
                                         title="#{bundle.WatchAnyTooltip}"
-                                        rendered="#{scheduleController.isNoConstraintSelectedForShowing(hourSlot.showing.id)}"
+                                        rendered="#{cc.attrs.config.showWatchAnyFor(hourSlot.showing.id)}"
                                         action="#{scheduleController.watchMovieButtonClickedViaShowing(hourSlot.showing.id)}"
                                         styleClass="sch_check">
                                     <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
@@ -76,14 +76,14 @@
                                 </h:commandLink>
                                 <h:commandLink
                                         title="#{bundle.RemoveInterestTooltip}"
-                                        rendered="#{scheduleController.hasUserConstraintFor(hourSlot.showing.id) and not scheduleController.isScheduledElsewhere(hourSlot.showing.id)}"
+                                        rendered="#{cc.attrs.config.showRemoveInterestFor(hourSlot.showing.id)}"
                                         action="#{scheduleController.removeInterestClickedViaShowing(hourSlot.showing.id)}"
                                         styleClass="sch_uncheck">
                                     <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
                                     <f:ajax execute="@form" render="@form #{cc.attrs.config.renderOnConstraintsChange}" onevent="#{cc.attrs.config.onEventOnConstraintsChange}" />
                                 </h:commandLink>
                                 <h:panelGroup
-                                        rendered="#{scheduleController.hasUserConstraintFor(hourSlot.showing.id)}"
+                                        rendered="#{cc.attrs.config.showPriorityControlFor(hourSlot.showing.id)}"
                                         styleClass="sch_priority_wrapper">
                                     <div class="sch_priority" />
                                     <h:outputText
@@ -98,7 +98,7 @@
                                 </h:panelGroup>
                                 <h:commandLink
                                         title="#{bundle.WatchThisTooltip}"
-                                        rendered="#{scheduleController.hasWeakConstraintFor(hourSlot.showing.id)}"
+                                        rendered="#{cc.attrs.config.showWatchThisFor(hourSlot.showing.id)}"
                                         action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
                                         styleClass="sch_pin_user">
                                     <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
@@ -106,7 +106,7 @@
                                 </h:commandLink>
                                 <h:commandLink
                                         title="#{bundle.WatchThisSelectedUser}"
-                                        rendered="#{scheduleController.isWatchShowingSelected(hourSlot.showing.id)}"
+                                        rendered="#{cc.attrs.config.showWatchThisSelectedByUserFor(hourSlot.showing.id)}"
                                         action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
                                         styleClass="sch_unpin_user">
                                     <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->
@@ -114,7 +114,7 @@
                                 </h:commandLink>
                                 <h:commandLink
                                         title="#{bundle.WatchThisSelectedSystem}"
-                                        rendered="#{not scheduleController.isWatchShowingSelected(hourSlot.showing.id) and scheduleController.isScheduled(hourSlot.showing.id)}"
+                                        rendered="#{cc.attrs.config.showWatchThisSelectedBySystemFor(hourSlot.showing.id)}"
                                         action="#{scheduleController.watchShowingButtonClicked(hourSlot.showing.id)}"
                                         styleClass="sch_pin_system">
                                     <!-- todo: remove execute="@form" (or just remove execute) when upgrading to jboss 7.2 (more specifically, to mojarra >= 2.1.15) -->

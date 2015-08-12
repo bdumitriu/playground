@@ -1,0 +1,93 @@
+<project name="Film Festival Planner Setup" default="all" basedir="../">
+    <description>
+        The various steps to prepare, build and deploy the webapp
+    </description>
+
+    <property name="postgresql.home" location="C:/Program Files/PostgreSQL/9.3"/>
+    <property name="postgresql.admin.username" value="postgres"/>
+    <property name="postgresql.admin.password" value="lode6uiFUbUVnVx9mCBX"/>
+    <property name="postgresql.jdbc.jar.filename" value="postgresql-9.3-1101.jdbc41.jar"/>
+
+    <!-- these are derived properties; no need to edit them -->
+    <property name="postgresql.jdbc.jar.folder" location="bin/lib"/>
+    <property name="postgresql.jdbc.jar.file" location="${postgresql.jdbc.jar.folder}/${postgresql.jdbc.jar.filename}"/>
+    <property name="db.username" value="ffp"/>
+    <property name="db.password" value="ffp"/>
+    <property name="db.name" value="ffp"/>
+
+    <target name="download-postgresql-jdbc-jar">
+        <mkdir dir="${postgresql.jdbc.jar.folder}"/>
+        <get src="http://jdbc.postgresql.org/download/${postgresql.jdbc.jar.filename}"
+             dest="${postgresql.jdbc.jar.folder}" skipexisting="true"/>
+    </target>
+
+    <macrodef name="run-postgresql-sql">
+        <text name="sql-code" optional="no"/>
+        <sequential>
+            <sql driver="org.postgresql.Driver"
+                 classpath="${postgresql.jdbc.jar.file}"
+                 url="jdbc:postgresql://localhost/template1"
+                 userid="${postgresql.admin.username}"
+                 password="${postgresql.admin.password}"
+                 autocommit="true"
+                 delimiter="/* END_STATEMENT */"
+                 delimitertype="row">
+
+                @{sql-code}
+
+            </sql>
+        </sequential>
+    </macrodef>
+
+    <target name="create-postgresql-user" depends="download-postgresql-jdbc-jar">
+        <run-postgresql-sql>
+            DO
+            $body$
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT *
+                    FROM   pg_catalog.pg_user
+                    WHERE  usename = '${db.username}') THEN
+
+                    CREATE USER ${db.username} WITH PASSWORD '${db.password}';
+                END IF;
+            END
+            $body$
+            /* END_STATEMENT */
+        </run-postgresql-sql>
+    </target>
+
+    <target name="create-postgresql-db" depends="create-postgresql-user, drop-postgressql-db">
+        <run-postgresql-sql>
+            CREATE DATABASE ${db.name}
+                WITH OWNER ${db.username}
+                ENCODING 'UTF8'
+                LC_COLLATE = 'C'
+                LC_CTYPE = 'C'
+                TEMPLATE template0;
+        </run-postgresql-sql>
+    </target>
+
+
+    <target name="all" depends="create-postgresql-db" description="do everything"/>
+
+    <target name="clean" description="clean up" >
+        <delete dir="bin/lib"/>
+    </target>
+
+    <target name="drop-postgressql-user">
+        <run-postgresql-sql>
+            DROP USER IF EXISTS ${db.username};
+        </run-postgresql-sql>
+    </target>
+
+    <target name="drop-postgressql-db">
+        <run-postgresql-sql>
+            DROP DATABASE IF EXISTS ${db.username};
+        </run-postgresql-sql>
+    </target>
+
+    <target name="clean-postgresql" description="clean up everything from the postgres database" depends="drop-postgressql-user">
+
+    </target>
+</project>

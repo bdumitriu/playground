@@ -26,4 +26,18 @@ public interface CalendarConfig {
     String getOnEventOnConstraintsChange();
 
     boolean showMovieId(Long showingId);
+
+    String getMovieStyleClass(Long showingId);
+
+    boolean showWatchAnyFor(Long showingId);
+
+    boolean showRemoveInterestFor(Long showingId);
+
+    boolean showPriorityControlFor(Long showingId);
+
+    boolean showWatchThisFor(Long showingId);
+
+    boolean showWatchThisSelectedByUserFor(Long showingId);
+
+    boolean showWatchThisSelectedBySystemFor(Long showingId);
 }

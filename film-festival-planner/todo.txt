@@ -1,10 +1,6 @@
-Code:
-* merge MySchedule.xhtml and Program.xhtml and control with classes implementing an interface
-* replace entityManager.find(...) with entityManager.getReference(...) where only the ID of the result is needed
-* see about adding @Cache to @Entity classes
-* ShowingController does not allow for more than one movie at the same hour because a map hour -> movie is used
-
 Features/Improvements:
+======================
+
 * in the schedule view,
   * only show scheduled movies + missed movies (unnecessary venues to be filtered out)
   * replace movie priority with a "Validate" button in movie cell. On hover, an animation should replace the blue pin,
@@ -30,3 +26,52 @@ Features/Improvements:
 * priority setting in lineup view
 * add constraint versioning functionality, including restore older version
 * (maybe) allow undo of accidental clicks in Lineup
+
+UI Ideas:
+=========
+* ask for profile: 3 movies, 1 a day (using a scheduler is overkill), 15-20, I have a TIFF card and I want to use it,
+  sky's the limit
+* ask about time: weekend only, weekend + evenings, from ... to ..., mornings, evenings, dawn till dusk, whenever,
+  round the clock [intro: Based on your profile we figure you for a ... type of TIFFer, but do tell us if we're wrong]
+* then take user to schedule view where he should only be able to select "watch exactly here" movies
+* then take him to list view where he should only be able to select "watch anywhere"/"don't wanna watch" movies
+* when in list view, he should be able to tell the system: make random selection in remaining time slots
+* as user selects movies, make unschedulable ones disappear
+
+Calendar component:
+===================
+* data model:
+  {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "title": "Movie Planner Data Model",
+      "description": "The data model backing a movie planner UI component",
+
+      "definitions": {
+          "venue" {
+              "description": "...",
+              "type": "object",
+              "properties": {
+                  "..."
+              }
+          }
+      }
+
+      "type": "object",
+      "properties": {
+          "venues": {
+              "description": "the list of venues where movies are being shown",
+              "type": "array",
+              "items": { "$ref": "#/definitions/venue" }
+          }
+      }
+      "required": ["venues"]
+  }
+  "event": { "$ref": "http: //json-schema.org/calendar" }
+
+
+Code:
+=====
+* replace entityManager.find(...) with entityManager.getReference(...) where only the ID of the result is needed
+* see about adding @Cache to @Entity classes
+* ShowingController does not allow for more than one movie at the same hour because a map hour -> movie is used
+* ShowingController#couldNotBeScheduled is computationally expensive - the missed movies should be persisted instead

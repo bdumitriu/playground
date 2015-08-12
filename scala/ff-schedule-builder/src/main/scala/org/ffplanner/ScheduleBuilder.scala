@@ -7,6 +7,10 @@ import org.ffplanner.strategy.DefaultPlanningStrategy
 
 /** The entry point to the scheduling library.
   *
+  * [[org.ffplanner.ScheduleBuilder.getPossibleSchedulesJ]] will return a list of proposed schedules that satisfy the
+  * supplied `scheduleConstraints`. Showing constraints will '''not''' be included in the proposed schedules, but they
+  * are taken into account when generating the proposed schedules.
+  *
   * @author Bogdan Dumitriu
   */
 class ScheduleBuilder(val festivalProgrammeDefinition: FestivalProgrammeDefinition) {

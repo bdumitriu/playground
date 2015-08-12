@@ -231,6 +231,10 @@ public class ScheduleController implements Serializable {
         return scheduleData.isScheduled(showingId);
     }
 
+    public boolean couldNotBeScheduled(Long showingId) {
+        return isWatchMovieSelected(showingId) && !isScheduled(showingId);
+    }
+
     public boolean hasConstraints() {
         return constraintsData.size() > 0;
     }
@@ -254,25 +258,8 @@ public class ScheduleController implements Serializable {
         return isConstraintSelected(showingId, SHOWING);
     }
 
-    public boolean isWatchElsewhereSelected(Long showingId) {
+    public boolean isWatchShowingSelectedElsewhere(Long showingId) {
         return isConstraintSelected(showingId, SHOWING_ELSEWHERE);
-    }
-
-    public String getMovieStyleClass(Long showingId) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("sch_movie_cell");
-        if (isWatchShowingSelected(showingId)) {
-            stringBuilder.append(" sch_movie_cell_watch_showing");
-        } else if (isScheduled(showingId)) {
-            stringBuilder.append(" sch_movie_cell_scheduled");
-        } else if (isScheduledElsewhere(showingId)) {
-            stringBuilder.append(" sch_movie_cell_watch_elsewhere");
-        } else if (isWatchMovieSelected(showingId)) {
-            stringBuilder.append(" sch_movie_cell_watch_movie");
-        } else if (isWatchElsewhereSelected(showingId)) {
-            stringBuilder.append(" sch_movie_cell_watch_elsewhere");
-        }
-        return stringBuilder.toString();
     }
 
     private boolean isConstraintSelected(Long showingId, ScheduleConstraintType constraintType) {
@@ -287,11 +274,11 @@ public class ScheduleController implements Serializable {
         return constraintsData.hasUserConstraintFor(showingId);
     }
 
-    public boolean isNoConstraintSelectedForShowing(Long showingId) {
+    public boolean hasNoConstraintForShowing(Long showingId) {
         return constraintsData.hasNoConstraintForShowing(showingId);
     }
 
-    public boolean isNoConstraintSelectedForMovie(Long movieBundleId) {
+    public boolean hasNoConstraintForMovie(Long movieBundleId) {
         return constraintsData.hasNoConstraintForMovie(movieBundleId);
     }
 

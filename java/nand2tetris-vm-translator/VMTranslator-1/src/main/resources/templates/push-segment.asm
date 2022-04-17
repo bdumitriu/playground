@@ -1,3 +1,23 @@
-function-name = push
-function-type = {0}
-function-args = {1}
+@{0}
+D=M
+@R13
+M=D
+@'{0,number,#}'
+D=A
+(PUSH_{0}.'{1,number,#}'.LOOP)
+D=D-1
+@PUSH_{0}.'{1,number,#}'.END
+D;JLT
+@R13
+M=M+1
+@PUSH_{0}.'{1,number,#}'.LOOP
+D;JGE
+(PUSH_{0}.'{1,number,#}'.END)
+@R13
+A=M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1

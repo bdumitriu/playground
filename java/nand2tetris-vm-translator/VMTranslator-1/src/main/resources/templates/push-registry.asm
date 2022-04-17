@@ -1,5 +1,5 @@
-@{0,number,#}
-D=A
+@R{0,number,#}
+D=M
 @SP
 A=M
 M=D

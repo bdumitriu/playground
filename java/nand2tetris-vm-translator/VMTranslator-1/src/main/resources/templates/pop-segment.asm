@@ -1,3 +1,26 @@
-function-name = pop
-function-type = {0}
-function-args = {1}
+@SP
+AM=M-1
+D=M
+@R13
+M=D
+@{0}
+D=M
+@R14
+M=D
+@'{0,number,#}'
+D=A
+@{0}
+(POP_{0}.'{1,number,#}'.LOOP)
+D=D-1
+@POP_{0}.'{1,number,#}'.END
+D;JLT
+@R14
+M=M+1
+@POP_{0}.'{1,number,#}'.LOOP
+D;JGE
+(POP_{0}.'{1,number,#}'.END)
+@R13
+D=M
+@R14
+A=M
+M=D

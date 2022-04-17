@@ -13,10 +13,10 @@ public class TranslatorProgramTest {
     static Stream<Arguments> resourceNames() {
         return Stream.of(
                 Arguments.of("vm/BasicTest.vm"),
-//                Arguments.of("vm/PointerTest.vm"),
+                Arguments.of("vm/PointerTest.vm"),
                 Arguments.of("vm/SimpleAdd.vm"),
-                Arguments.of("vm/StackTest.vm"));
-//                Arguments.of("vm/StaticTest.vm"));
+                Arguments.of("vm/StackTest.vm"),
+                Arguments.of("vm/StaticTest.vm"));
     }
 
     @DisplayName("All commands from example files are translated successfully")

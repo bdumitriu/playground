@@ -1,0 +1,8 @@
+@SP
+AM=M-1
+D=M
+@SP
+AM=M-1
+M=M{0}D
+@SP
+M=M+1

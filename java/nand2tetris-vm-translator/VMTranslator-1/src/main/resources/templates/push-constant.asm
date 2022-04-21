@@ -1,4 +1,4 @@
-@{0,number,#}
+@'{0,number,#}'
 D=A
 @SP
 A=M

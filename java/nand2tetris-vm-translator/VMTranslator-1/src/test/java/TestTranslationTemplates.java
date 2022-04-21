@@ -1,5 +1,4 @@
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -276,13 +275,135 @@ public enum TestTranslationTemplates {
             @R{0}
             M=D""";
 
-    private final static Map<String, String> TEST_NO_ARG_TEMPLATE = new HashMap<>();
+    private final static Map<String, String> TEST_TEMPLATE_COMMANDS_WITHOUT_MODIFIER = new HashMap<>();
 
     static {
-        Arrays.stream(TranslationTemplates.INSTANCE.NO_ARG_COMMANDS).forEach(command ->
-            TEST_NO_ARG_TEMPLATE.put(command, MessageFormat.format("""
-                        function-name = {0}
-                        function-args = N/A""", command)));
+        TEST_TEMPLATE_COMMANDS_WITHOUT_MODIFIER.put("add", """
+                @SP
+                AM=M-1
+                D=M
+                @SP
+                AM=M-1
+                M=M+D
+                @SP
+                M=M+1""");
+        TEST_TEMPLATE_COMMANDS_WITHOUT_MODIFIER.put("sub", """
+                @SP
+                AM=M-1
+                D=M
+                @SP
+                AM=M-1
+                M=M-D
+                @SP
+                M=M+1""");
+        TEST_TEMPLATE_COMMANDS_WITHOUT_MODIFIER.put("eq", """
+                @SP
+                AM=M-1
+                D=M
+                @SP
+                AM=M-1
+                D=M-D
+                @COMP.{0}.TRUE
+                D;JEQ
+                @COMP.{0}.FALSE
+                0;JMP
+                (COMP.{0}.TRUE)
+                @SP
+                A=M
+                M=-1
+                @SP
+                M=M+1
+                @COMP.{0}.END
+                0;JMP
+                (COMP.{0}.FALSE)
+                @SP
+                A=M
+                M=0
+                @SP
+                M=M+1
+                (COMP.{0}.END)""");
+        TEST_TEMPLATE_COMMANDS_WITHOUT_MODIFIER.put("lt", """
+                @SP
+                AM=M-1
+                D=M
+                @SP
+                AM=M-1
+                D=M-D
+                @COMP.{0}.TRUE
+                D;JLT
+                @COMP.{0}.FALSE
+                0;JMP
+                (COMP.{0}.TRUE)
+                @SP
+                A=M
+                M=-1
+                @SP
+                M=M+1
+                @COMP.{0}.END
+                0;JMP
+                (COMP.{0}.FALSE)
+                @SP
+                A=M
+                M=0
+                @SP
+                M=M+1
+                (COMP.{0}.END)""");
+        TEST_TEMPLATE_COMMANDS_WITHOUT_MODIFIER.put("gt", """
+                @SP
+                AM=M-1
+                D=M
+                @SP
+                AM=M-1
+                D=M-D
+                @COMP.{0}.TRUE
+                D;JGT
+                @COMP.{0}.FALSE
+                0;JMP
+                (COMP.{0}.TRUE)
+                @SP
+                A=M
+                M=-1
+                @SP
+                M=M+1
+                @COMP.{0}.END
+                0;JMP
+                (COMP.{0}.FALSE)
+                @SP
+                A=M
+                M=0
+                @SP
+                M=M+1
+                (COMP.{0}.END)""");
+        TEST_TEMPLATE_COMMANDS_WITHOUT_MODIFIER.put("neg", """
+                @SP
+                AM=M-1
+                M=-M
+                @SP
+                M=M+1""");
+        TEST_TEMPLATE_COMMANDS_WITHOUT_MODIFIER.put("and", """
+                @SP
+                AM=M-1
+                D=M
+                @SP
+                AM=M-1
+                M=M&D
+                @SP
+                M=M+1""");
+        TEST_TEMPLATE_COMMANDS_WITHOUT_MODIFIER.put("or", """
+                @SP
+                AM=M-1
+                D=M
+                @SP
+                AM=M-1
+                M=M|D
+                @SP
+                M=M+1""");
+        TEST_TEMPLATE_COMMANDS_WITHOUT_MODIFIER.put("not", """
+                @SP
+                AM=M-1
+                M=!M
+                @SP
+                M=M+1""");
     }
 
     public String getPushConstantTemplateFor(Object... args) {
@@ -345,8 +466,8 @@ public enum TestTranslationTemplates {
         return getTemplateFor(TEST_TEMPLATE_POP_POINTER, args);
     }
 
-    public String getNoArgCommandTemplateFor(String command) {
-        return TEST_NO_ARG_TEMPLATE.get(command);
+    public String getNoModifierCommandTemplateFor(String command, Object... args) {
+        return getTemplateFor(TEST_TEMPLATE_COMMANDS_WITHOUT_MODIFIER.get(command), args);
     }
 
     private String getTemplateFor(String template, Object... args) {

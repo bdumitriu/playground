@@ -12,6 +12,9 @@ web
 # Others
 3rd party
 java-libraries-sources
+java-spring/spring-in-action/taco-cloud/mvnw
+java-spring/spring-in-action/taco-cloud/mvnw.cmd
+java-spring/spring-in-action/taco-cloud/HELP.md
 
 # IDE
 .idea/
@@ -27,3 +30,4 @@ workspace/
 derby.log
 target/
 .forge_settings
+.mvn
